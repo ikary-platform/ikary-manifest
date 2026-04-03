@@ -1,0 +1,42 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: PolicyDefinitions
+description: |
+  Access control policies for entities and fields.
+  Contains both EntityPoliciesDefinition and FieldPoliciesDefinition.
+
+definitions:
+  ActionPolicy:
+    type: object
+    required: [scope]
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        enum: [public, tenant, workspace, owner, role, custom]
+      condition:
+        type: string
+        minLength: 1
+
+  EntityPoliciesDefinition:
+    type: object
+    additionalProperties: false
+    properties:
+      view:
+        $ref: "#/definitions/ActionPolicy"
+      create:
+        $ref: "#/definitions/ActionPolicy"
+      update:
+        $ref: "#/definitions/ActionPolicy"
+      delete:
+        $ref: "#/definitions/ActionPolicy"
+
+  FieldPoliciesDefinition:
+    type: object
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        view:
+          $ref: "#/definitions/ActionPolicy"
+        update:
+          $ref: "#/definitions/ActionPolicy"

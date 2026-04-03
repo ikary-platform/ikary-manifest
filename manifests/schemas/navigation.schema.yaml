@@ -1,0 +1,50 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: NavigationDefinition
+description: Top-level navigation menu for a Cell.
+
+type: object
+required: [items]
+additionalProperties: false
+
+properties:
+  items:
+    type: array
+    minItems: 1
+    items:
+      $ref: "#/$defs/NavigationItem"
+
+$defs:
+  NavigationItem:
+    description: |
+      A navigation entry. Discriminated on "type".
+      Type "page" links to a page; type "group" nests children.
+    oneOf:
+      - title: PageItem
+        type: object
+        required: [type, key, pageKey]
+        additionalProperties: false
+        properties:
+          type: { const: page }
+          key: { type: string, minLength: 1 }
+          pageKey:
+            type: string
+            minLength: 1
+            description: Must reference a declared page key.
+          label: { type: string }
+          icon: { type: string }
+          order: { type: number }
+
+      - title: GroupItem
+        type: object
+        required: [type, key, label]
+        additionalProperties: false
+        properties:
+          type: { const: group }
+          key: { type: string, minLength: 1 }
+          label: { type: string, minLength: 1 }
+          icon: { type: string }
+          order: { type: number }
+          children:
+            type: array
+            items:
+              $ref: "#/$defs/NavigationItem"

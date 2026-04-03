@@ -1,0 +1,64 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: ComputedFieldDefinition
+description: |
+  A derived field computed at runtime. Discriminated on "formulaType".
+  Three types: expression, conditional, aggregation.
+
+oneOf:
+  - title: Expression
+    type: object
+    required: [key, name, type, formulaType, expression]
+    additionalProperties: false
+    properties:
+      key: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+      name: { type: string, minLength: 1 }
+      type: { type: string, enum: [number, string, boolean, date, datetime] }
+      formulaType: { const: expression }
+      expression: { type: string, minLength: 1 }
+      helpText: { type: string }
+      dependencies:
+        type: array
+        items: { type: string }
+        uniqueItems: true
+
+  - title: Conditional
+    type: object
+    required: [key, name, type, formulaType, condition, then, else]
+    additionalProperties: false
+    properties:
+      key: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+      name: { type: string, minLength: 1 }
+      type: { type: string, enum: [number, string, boolean, date, datetime] }
+      formulaType: { const: conditional }
+      condition: { type: string, minLength: 1 }
+      then: { type: string, minLength: 1 }
+      else: { type: string, minLength: 1 }
+      helpText: { type: string }
+      dependencies:
+        type: array
+        items: { type: string }
+        uniqueItems: true
+
+  - title: Aggregation
+    type: object
+    required: [key, name, type, formulaType, relation, operation]
+    additionalProperties: false
+    properties:
+      key: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+      name: { type: string, minLength: 1 }
+      type: { type: string, enum: [number, string, boolean, date, datetime] }
+      formulaType: { const: aggregation }
+      relation: { type: string, minLength: 1 }
+      operation:
+        type: string
+        enum: [sum, count, avg, min, max]
+      field:
+        type: string
+        minLength: 1
+        description: Required for sum/avg/min/max. Forbidden for count.
+      filter: { type: string, minLength: 1 }
+      helpText: { type: string }
+      dependencies:
+        type: array
+        items: { type: string }
+        uniqueItems: true
