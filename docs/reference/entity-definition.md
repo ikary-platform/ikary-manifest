@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # IKARY Entity Definition Standard
 
 Version: 1.0
