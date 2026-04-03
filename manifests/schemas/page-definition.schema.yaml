@@ -1,0 +1,87 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: PageDefinition
+description: |
+  A page within a Cell application.
+  Entity-bound types (entity-list, entity-detail, entity-create, entity-edit)
+  require the "entity" property.
+
+type: object
+required: [key, type, title, path]
+additionalProperties: false
+
+properties:
+  key:
+    type: string
+    minLength: 1
+  type:
+    type: string
+    enum:
+      - entity-list
+      - entity-detail
+      - entity-create
+      - entity-edit
+      - dashboard
+      - custom
+  title:
+    type: string
+    minLength: 1
+  path:
+    type: string
+    minLength: 1
+    pattern: "^/"
+    description: Must start with "/".
+  entity:
+    type: string
+    minLength: 1
+    description: |
+      Required for entity-bound page types
+      (entity-list, entity-detail, entity-create, entity-edit).
+
+  menu:
+    type: object
+    additionalProperties: false
+    properties:
+      label: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      order: { type: integer }
+
+  options:
+    type: object
+    additionalProperties: true
+
+  dataContext:
+    type: object
+    additionalProperties: false
+    properties:
+      entityKey: { type: string, minLength: 1 }
+      idParam:
+        type: string
+        minLength: 1
+        default: id
+
+  dataProviders:
+    type: array
+    items:
+      type: object
+      required: [key, entityKey, mode]
+      additionalProperties: false
+      properties:
+        key: { type: string, minLength: 1 }
+        entityKey: { type: string, minLength: 1 }
+        mode:
+          type: string
+          enum: [single, list]
+        idFrom: { type: string }
+        filterBy:
+          type: object
+          additionalProperties: false
+          properties:
+            field: { type: string, minLength: 1 }
+            valueFrom: { type: string, minLength: 1 }
+        query:
+          type: object
+          additionalProperties: false
+          properties:
+            pageSize: { type: number }
+            sortField: { type: string }
+            sortDir: { type: string, enum: [asc, desc] }

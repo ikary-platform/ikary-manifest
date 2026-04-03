@@ -1,0 +1,51 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: EntityValidation
+description: |
+  Entity-level validation rules and cross-entity validators.
+  At least one of entityRules or serverValidators must be provided.
+
+type: object
+additionalProperties: false
+
+properties:
+  entityRules:
+    type: array
+    items:
+      type: object
+      required: [ruleId, type, paths, messageKey, clientSafe, blocking, severity]
+      additionalProperties: false
+      properties:
+        ruleId: { type: string, minLength: 1 }
+        type: { const: entity_invariant }
+        paths:
+          type: array
+          items: { type: string }
+          minItems: 1
+        messageKey: { type: string, minLength: 1 }
+        defaultMessage: { type: string }
+        clientSafe: { type: boolean }
+        blocking: { type: boolean }
+        severity: { type: string, enum: [error, warning] }
+        validatorRef: { type: string }
+
+  serverValidators:
+    type: array
+    items:
+      type: object
+      required: [ruleId, type, validatorRef, messageKey, clientSafe, async, blocking, severity]
+      additionalProperties: false
+      properties:
+        ruleId: { type: string, minLength: 1 }
+        type:
+          type: string
+          enum: [cross_entity, lifecycle, persistence_preview]
+        validatorRef: { type: string, minLength: 1 }
+        messageKey: { type: string, minLength: 1 }
+        defaultMessage: { type: string }
+        clientSafe: { const: false }
+        async: { const: true }
+        blocking: { type: boolean }
+        severity: { type: string, enum: [error, warning] }
+        targetPaths:
+          type: array
+          items: { type: string }

@@ -1,37 +1,70 @@
 # Manifests
 
-This directory is the **language-neutral source of truth** for Ikary cell definitions.
+This directory is the **language-neutral source of truth** for Ikary cell definitions. Everything here is YAML.
 
 ## Structure
 
 ```
 manifests/
-  entities/       # Standalone entity YAML fragments (composable)
+  entities/       # Standalone entity YAML files (composable)
   examples/       # Complete Cell manifest examples
-  schemas/        # Generated JSON Schema files
+  schemas/        # YAML schemas (JSON Schema syntax in YAML)
 ```
 
-## Why YAML?
+## Conventions
 
-YAML is the authoring format for cell manifests because:
+### Schema references
 
-- It is readable and writable by humans without tooling
-- It is language-neutral -- both TypeScript and Python runtimes consume the same files
-- It decouples the manifest definition from any specific runtime implementation
-- It allows non-developers (product owners, domain experts) to review and author contracts
+Every manifest and entity file declares which schema it conforms to:
+
+```yaml
+$schema: "../schemas/cell-manifest.schema.yaml"
+```
+
+### Entity composition via `$ref`
+
+Manifests reference standalone entity files using the standard `$ref` keyword:
+
+```yaml
+spec:
+  entities:
+    - $ref: "../entities/customer.entity.yaml"
+    - $ref: "../entities/invoice.entity.yaml"
+```
+
+This is the same `$ref` convention used by JSON Schema and OpenAPI. The loader strips unresolved `$ref` entries before validation; full file-based resolution is a planned feature.
+
+### Schema cross-references
+
+Schema files reference each other using `$ref` with relative paths:
+
+```yaml
+# In entity-definition.schema.yaml
+fields:
+  type: array
+  items:
+    $ref: "./field-definition.schema.yaml"
+```
+
+## Why YAML everywhere?
+
+- Readable and writable by humans without tooling
+- Language-neutral — TypeScript and Python consume the same files
+- Decouples definitions from any runtime implementation
+- Diffable and reviewable by non-engineers (product, domain, compliance)
+- No JSON noise (quotes, commas, brackets)
 
 ## How it works
 
-1. Authors write or edit YAML manifests in this directory
-2. The TypeScript runtime (`@ikary-manifest/loader`) parses YAML into JSON objects
-3. Zod schemas (`@ikary-manifest/contract`) validate and normalize the parsed objects
-4. The engine (`@ikary-manifest/engine`) compiles validated manifests into runtime-ready structures
-5. Python consumers use the generated JSON Schema files for structural validation
+1. Authors write YAML manifests and entity files in this directory
+2. The TypeScript runtime (`@ikary-manifest/loader`) parses YAML, strips meta-properties, validates via Zod
+3. The engine (`@ikary-manifest/engine`) compiles validated manifests into runtime-ready structures
+4. Python consumers use the YAML schemas for structural validation
 
 ## Shared artifacts
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
 | YAML manifests | `entities/`, `examples/` | Authoring source of truth |
-| JSON Schema | `schemas/` | Language-neutral structural validation |
-| Normalized JSON | Generated at runtime | Runtime consumption by any language |
+| YAML schemas | `schemas/` | Language-neutral structural validation |
+| Bundled JSON Schema | `node/dist/schemas/` (generated) | Tooling that requires single-file JSON |

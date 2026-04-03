@@ -1,0 +1,106 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: RelationDefinition
+description: |
+  Relation between entities. Discriminated on the "relation" field.
+  Five types: belongs_to, has_many, many_to_many, self, polymorphic.
+
+oneOf:
+  - title: BelongsTo
+    type: object
+    required: [key, relation, entity]
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+      relation:
+        const: belongs_to
+      entity:
+        type: string
+        minLength: 1
+      label: { type: string, minLength: 1 }
+      required: { type: boolean }
+      foreignKey: { type: string }
+      createPolicy:
+        type: string
+        enum: [create, attach, create-or-attach]
+      displayField: { type: string, minLength: 1 }
+
+  - title: HasMany
+    type: object
+    required: [key, relation, entity, foreignKey]
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+      relation:
+        const: has_many
+      entity:
+        type: string
+        minLength: 1
+      foreignKey:
+        type: string
+        minLength: 1
+      label: { type: string, minLength: 1 }
+
+  - title: ManyToMany
+    type: object
+    required: [key, relation, entity, through, sourceKey, targetKey]
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+      relation:
+        const: many_to_many
+      entity:
+        type: string
+        minLength: 1
+      through:
+        type: string
+        minLength: 1
+      sourceKey:
+        type: string
+        minLength: 1
+      targetKey:
+        type: string
+        minLength: 1
+      label: { type: string, minLength: 1 }
+
+  - title: Self
+    type: object
+    required: [key, relation, kind]
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+      relation:
+        const: self
+      kind:
+        type: string
+        enum: [belongs_to, has_many, many_to_many]
+      label: { type: string, minLength: 1 }
+
+  - title: Polymorphic
+    type: object
+    required: [key, relation, typeField, idField]
+    additionalProperties: false
+    properties:
+      key:
+        type: string
+        pattern: "^[a-z][a-z0-9_]*$"
+      relation:
+        const: polymorphic
+      typeField:
+        type: string
+        minLength: 1
+      idField:
+        type: string
+        minLength: 1
+      allowedEntities:
+        type: array
+        items: { type: string }
+        minItems: 1
+      label: { type: string, minLength: 1 }
