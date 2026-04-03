@@ -1,0 +1,104 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: CapabilityDefinition
+description: |
+  An action an entity supports. Discriminated on "type".
+  Five types: transition, mutation, workflow, export, integration.
+
+oneOf:
+  - title: TransitionCapability
+    type: object
+    required: [key, type, transition]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      type: { const: transition }
+      transition:
+        type: string
+        minLength: 1
+        description: Must reference a declared lifecycle transition key.
+      description: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      visible: { type: boolean }
+      confirm: { type: boolean }
+      scope: { type: string, enum: [entity, selection, global] }
+      inputs:
+        type: array
+        items:
+          $ref: "./capability-input.schema.yaml"
+
+  - title: MutationCapability
+    type: object
+    required: [key, type, updates]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      type: { const: mutation }
+      updates:
+        type: object
+        additionalProperties: true
+      description: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      visible: { type: boolean }
+      confirm: { type: boolean }
+      scope: { type: string, enum: [entity, selection, global] }
+      inputs:
+        type: array
+        items:
+          $ref: "./capability-input.schema.yaml"
+
+  - title: WorkflowCapability
+    type: object
+    required: [key, type, workflow]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      type: { const: workflow }
+      workflow: { type: string, minLength: 1 }
+      description: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      visible: { type: boolean }
+      confirm: { type: boolean }
+      scope: { type: string, enum: [entity, selection, global] }
+      inputs:
+        type: array
+        items:
+          $ref: "./capability-input.schema.yaml"
+
+  - title: ExportCapability
+    type: object
+    required: [key, type, format]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      type: { const: export }
+      format:
+        type: string
+        enum: [pdf, csv, xlsx, json]
+      description: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      visible: { type: boolean }
+      confirm: { type: boolean }
+      scope: { type: string, enum: [entity, selection, global] }
+      inputs:
+        type: array
+        items:
+          $ref: "./capability-input.schema.yaml"
+
+  - title: IntegrationCapability
+    type: object
+    required: [key, type, provider]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      type: { const: integration }
+      provider: { type: string, minLength: 1 }
+      operation: { type: string, minLength: 1 }
+      description: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      visible: { type: boolean }
+      confirm: { type: boolean }
+      scope: { type: string, enum: [entity, selection, global] }
+      inputs:
+        type: array
+        items:
+          $ref: "./capability-input.schema.yaml"

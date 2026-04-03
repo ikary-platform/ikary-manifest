@@ -1,0 +1,21 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: CellMountDefinition
+description: Where and how a Cell is mounted in the host application.
+
+type: object
+required: [mountPath, landingPage]
+additionalProperties: false
+
+properties:
+  title:
+    type: string
+    minLength: 1
+  mountPath:
+    type: string
+    minLength: 1
+    pattern: "^/"
+    description: Must start with "/".
+  landingPage:
+    type: string
+    minLength: 1
+    description: Key of the page shown on first load.

@@ -1,0 +1,79 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: FieldDefinition
+description: |
+  A single field on an entity. Supports nested object fields via the
+  recursive "fields" property (max depth 3, enforced at runtime).
+
+type: object
+required: [key, type, name]
+additionalProperties: false
+
+properties:
+  key:
+    type: string
+    pattern: "^[a-z][a-z0-9_]*$"
+    description: Snake-case identifier.
+  type:
+    type: string
+    enum: [string, text, number, boolean, date, datetime, enum, object]
+  name:
+    type: string
+    minLength: 1
+  enumValues:
+    type: array
+    items:
+      type: string
+    description: Required when type is "enum".
+  system:
+    type: boolean
+  helpText:
+    type: string
+  smallTip:
+    type: string
+  readonly:
+    type: boolean
+  sensitive:
+    type: string
+    enum: [pii, secret, credential, token, binary-reference]
+
+  # Operation-level overrides
+  list:
+    type: object
+    additionalProperties: false
+    properties:
+      visible: { type: boolean }
+      sortable: { type: boolean }
+      searchable: { type: boolean }
+      filterable: { type: boolean }
+  form:
+    type: object
+    additionalProperties: false
+    properties:
+      visible: { type: boolean }
+      placeholder: { type: string }
+  create:
+    type: object
+    additionalProperties: false
+    properties:
+      visible: { type: boolean }
+      order: { type: number }
+      placeholder: { type: string }
+  edit:
+    type: object
+    additionalProperties: false
+    properties:
+      visible: { type: boolean }
+      order: { type: number }
+      placeholder: { type: string }
+
+  display:
+    $ref: "./display.schema.yaml"
+
+  validation:
+    $ref: "./field-validation.schema.yaml"
+
+  # Recursive nesting for type "object"
+  fields:
+    type: array
+    items:
+      $ref: "#"

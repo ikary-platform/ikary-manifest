@@ -1,8 +1,11 @@
 /**
- * Generates language-neutral JSON Schema files from the TypeScript/Zod contract.
+ * Generates bundled JSON Schema from the TypeScript/Zod contract.
  *
- * Output goes to manifests/schemas/ so Python (and other languages) can validate
- * manifests without depending on the TypeScript runtime.
+ * Output goes to node/dist/schemas/ as a build artifact for tooling that
+ * requires single-file JSON Schema (e.g. Python's jsonschema library).
+ *
+ * The human-readable YAML schemas live in manifests/schemas/ and are
+ * hand-authored with $ref cross-references.
  *
  * Usage: tsx node/scripts/generate-json-schema.ts
  */
@@ -16,7 +19,7 @@ import {
 } from '@ikary-manifest/contract';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT_DIR = join(__dirname, '..', '..', 'manifests', 'schemas');
+const OUT_DIR = join(__dirname, '..', 'dist', 'schemas');
 
 const schemas = [
   {
@@ -39,7 +42,6 @@ for (const { name, schema, description } of schemas) {
     $refStrategy: 'none',
   });
 
-  // Add a description to the top-level schema
   if (typeof jsonSchema === 'object' && jsonSchema !== null) {
     (jsonSchema as Record<string, unknown>)['description'] = description;
   }
@@ -49,4 +51,4 @@ for (const { name, schema, description } of schemas) {
   console.log(`Generated: ${outPath}`);
 }
 
-console.log(`\nDone. ${schemas.length} schema(s) written to ${OUT_DIR}`);
+console.log(`\nDone. ${schemas.length} bundled schema(s) written to ${OUT_DIR}`);
