@@ -1,0 +1,144 @@
+import { defineConfig } from 'vitepress';
+
+export default defineConfig({
+  title: 'IKARY Manifest',
+  description:
+    'Open-source declarative cell contracts — AI should generate manifests, not code.',
+
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/brand/original-symbol.svg' }],
+    ['meta', { name: 'theme-color', content: '#0a1329' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:title', content: 'IKARY Manifest' }],
+    [
+      'meta',
+      {
+        property: 'og:description',
+        content:
+          'Open-source declarative cell contracts — AI should generate manifests, not code.',
+      },
+    ],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:site', content: '@ikary_platform' }],
+  ],
+
+  markdown: {
+    config: (md) => {
+      // Wrap ```mermaid code blocks in a <div class="mermaid"> for client-side rendering
+      const defaultFence =
+        md.renderer.rules.fence ||
+        function (tokens, idx, options, _env, self) {
+          return self.renderToken(tokens, idx, options);
+        };
+
+      md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+        const token = tokens[idx];
+        if (token.info.trim() === 'mermaid') {
+          return `<pre class="mermaid">${token.content}</pre>`;
+        }
+        return defaultFence(tokens, idx, options, env, self);
+      };
+    },
+  },
+
+  themeConfig: {
+    logo: {
+      light: '/brand/original-full.svg',
+      dark: '/brand/white-full.svg',
+    },
+    siteTitle: false,
+
+    nav: [
+      { text: 'Guide', link: '/guide/why-ikary-manifest' },
+      { text: 'Reference', link: '/reference/entity-definition' },
+      { text: 'Packages', link: '/packages/overview' },
+      { text: 'Python', link: '/python/' },
+      {
+        text: 'ikary.co',
+        link: 'https://ikary.co',
+        target: '_blank',
+      },
+    ],
+
+    sidebar: {
+      '/guide/': [
+        {
+          text: 'Introduction',
+          items: [
+            {
+              text: 'Why IKARY Manifest',
+              link: '/guide/why-ikary-manifest',
+            },
+            { text: 'Getting Started', link: '/guide/getting-started' },
+          ],
+        },
+        {
+          text: 'Concepts',
+          items: [
+            { text: 'Architecture', link: '/guide/architecture' },
+            { text: 'Manifest Format', link: '/guide/manifest-format' },
+          ],
+        },
+      ],
+
+      '/reference/': [
+        {
+          text: 'Specifications',
+          items: [
+            {
+              text: 'Entity Definition',
+              link: '/reference/entity-definition',
+            },
+            {
+              text: 'Entity Governance',
+              link: '/reference/entity-governance',
+            },
+            { text: 'Entity Contract', link: '/reference/entity-contract' },
+            { text: 'API Conventions', link: '/reference/api-conventions' },
+            { text: 'YAML Schemas', link: '/reference/schemas' },
+          ],
+        },
+      ],
+
+      '/packages/': [
+        {
+          text: 'Node Packages',
+          items: [
+            { text: 'Overview', link: '/packages/overview' },
+            { text: '@ikary-manifest/loader', link: '/packages/loader' },
+            {
+              text: '@ikary-manifest/contract',
+              link: '/packages/contract',
+            },
+            { text: '@ikary-manifest/engine', link: '/packages/engine' },
+          ],
+        },
+      ],
+
+      '/python/': [
+        {
+          text: 'Python SDK',
+          items: [{ text: 'Overview', link: '/python/' }],
+        },
+      ],
+    },
+
+    socialLinks: [
+      {
+        icon: 'github',
+        link: 'https://github.com/ikary-platform/ikary-manifest',
+      },
+    ],
+
+    editLink: {
+      pattern:
+        'https://github.com/ikary-platform/ikary-manifest/edit/main/docs/:path',
+      text: 'Edit this page on GitHub',
+    },
+
+    search: {
+      provider: 'local',
+    },
+  },
+});

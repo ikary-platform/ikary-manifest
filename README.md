@@ -127,11 +127,18 @@ All packages are framework-agnostic at the schema level. The `runtime-ui`, `rend
 
 ## Documentation
 
-- [Entity Definition Standard](./docs/ENTITY-DEFINITION.md)
-- [Entity Governance](./docs/ENTITY-GOVERNANCE.md)
-- [Entity Contract](./docs/ENTITY-CONTRACT.md)
-- [API Conventions](./docs/API-CONVENTIONS.md)
-- [Architecture](./docs/ARCHITECTURE.md)
+Full documentation: **[ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest/)**
+
+- [Why Ikary Manifest](./docs/guide/why-ikary-manifest.md)
+- [Getting Started](./docs/guide/getting-started.md)
+- [Architecture](./docs/guide/architecture.md)
+- [Manifest Format](./docs/guide/manifest-format.md)
+- [Entity Definition](./docs/reference/entity-definition.md)
+- [Entity Governance](./docs/reference/entity-governance.md)
+
+```bash
+pnpm docs:dev   # Run docs locally at localhost:5173
+```
 
 ## License
 
