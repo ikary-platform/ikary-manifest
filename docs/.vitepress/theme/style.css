@@ -1,0 +1,513 @@
+/* ─── Ikary Brand Theme for VitePress ─────────────────────────────────────── */
+
+/* Fonts — Inter for body, JetBrains Mono for code */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ─── Base variables ─────────────────────────────────────────────────────── */
+
+:root {
+  --vp-font-family-base: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ─── Light theme ────────────────────────────────────────────────────────── */
+
+:root {
+  --vp-c-brand-1: #1d4ed8;
+  --vp-c-brand-2: #3361e0;
+  --vp-c-brand-3: #1d4ed8;
+  --vp-c-brand-soft: rgba(29, 78, 216, 0.12);
+
+  --vp-c-text-1: #071230;
+  --vp-c-text-2: #62708c;
+  --vp-c-text-3: #8a9aba;
+
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f8fafc;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: #f1f5f9;
+
+  --vp-c-border: rgba(136, 161, 204, 0.3);
+  --vp-c-divider: rgba(171, 193, 224, 0.3);
+  --vp-c-gutter: rgba(136, 161, 204, 0.15);
+
+  /* Hero name gradient */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #5c7cff 0%, #1f2a5a 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(92, 124, 255, 0.16), rgba(31, 42, 90, 0.08));
+  --vp-home-hero-image-filter: blur(56px);
+
+  /* Ikary icon accent (for feature icons) */
+  --ikary-icon-accent: #1d4ed8;
+  --ikary-icon-bg: rgba(29, 78, 216, 0.08);
+  --ikary-icon-border: rgba(29, 78, 216, 0.15);
+}
+
+/* ─── Dark theme ─────────────────────────────────────────────────────────── */
+
+.dark {
+  --vp-c-brand-1: #78afff;
+  --vp-c-brand-2: #63a0ff;
+  --vp-c-brand-3: #78afff;
+  --vp-c-brand-soft: rgba(120, 175, 255, 0.12);
+
+  --vp-c-text-1: #f8fafc;
+  --vp-c-text-2: #bcc8df;
+  --vp-c-text-3: #8a9aba;
+
+  --vp-c-bg: #0a1329;
+  --vp-c-bg-alt: #081022;
+  --vp-c-bg-elv: #111c34;
+  --vp-c-bg-soft: #182644;
+
+  --vp-c-border: rgba(136, 161, 204, 0.15);
+  --vp-c-divider: rgba(171, 193, 224, 0.1);
+  --vp-c-gutter: rgba(136, 161, 204, 0.08);
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #78afff 0%, #5c7cff 50%, #63a0ff 100%);
+  --vp-home-hero-image-background-image: linear-gradient(135deg, rgba(120, 175, 255, 0.2), rgba(92, 124, 255, 0.1));
+  --vp-home-hero-image-filter: blur(56px);
+
+  --vp-code-block-bg: #081022;
+  --vp-code-tab-active-bar-color: #78afff;
+
+  --ikary-icon-accent: #78afff;
+  --ikary-icon-bg: rgba(120, 175, 255, 0.08);
+  --ikary-icon-border: rgba(120, 175, 255, 0.15);
+}
+
+/* ─── Body background — Ikary shell gradient ─────────────────────────────── */
+
+.dark body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(78, 124, 224, 0.22) 0%, transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(120, 175, 255, 0.18) 0%, transparent 38%),
+    linear-gradient(180deg, rgb(6, 12, 26), rgb(13, 31, 60)) !important;
+  background-attachment: fixed !important;
+}
+
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(29, 78, 216, 0.06) 0%, transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(92, 124, 255, 0.05) 0%, transparent 38%),
+    linear-gradient(180deg, rgb(235, 242, 251), rgb(191, 213, 238)) !important;
+  background-attachment: fixed !important;
+}
+
+/* Make VitePress content areas transparent so body gradient shows through */
+.VPNav,
+.VPSidebar,
+.VPContent,
+.VPDoc,
+.VPHome {
+  background: transparent !important;
+}
+
+/* Nav — glass on home, opaque on doc pages to avoid gradient bleed */
+.VPNav .VPNavBar {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.VPNav .VPNavBar.has-sidebar {
+  background: rgb(248, 250, 252) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.dark .VPNav .VPNavBar {
+  background: rgba(10, 19, 41, 0.82) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dark .VPNav .VPNavBar.has-sidebar {
+  background: rgb(8, 16, 34) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Sidebar needs semi-transparent glass */
+.VPSidebar .curtain {
+  background: transparent !important;
+}
+
+.VPSidebar {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dark .VPSidebar {
+  background: rgba(10, 19, 41, 0.88) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Doc content area — subtle panel on dark */
+.dark .VPDoc .container .content {
+  background: rgba(17, 28, 52, 0.4);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+/* ─── Header logo sizing ─────────────────────────────────────────────────── */
+
+.VPNavBarTitle .logo {
+  height: 22px !important;
+  width: auto !important;
+}
+
+@media (min-width: 640px) {
+  .VPNavBarTitle .logo {
+    height: 26px !important;
+  }
+}
+
+/* ─── Buttons — Ikary wave style ─────────────────────────────────────────── */
+
+.VPButton.brand {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(235, 243, 251, 0.64) !important;
+  background: linear-gradient(135deg, rgba(217, 229, 242, 0.98), rgba(151, 186, 219, 0.98)) !important;
+  color: rgb(7, 18, 46) !important;
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  box-shadow:
+    0 24px 56px -30px rgba(137, 176, 214, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  transition: transform 200ms, background 200ms, box-shadow 200ms !important;
+}
+
+.VPButton.brand:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, rgba(226, 236, 246, 0.99), rgba(136, 174, 210, 0.99)) !important;
+  box-shadow:
+    0 28px 60px -28px rgba(137, 176, 214, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
+}
+
+.dark .VPButton.brand {
+  border-color: rgba(120, 175, 255, 0.25) !important;
+  background: linear-gradient(135deg, rgba(120, 175, 255, 0.15), rgba(92, 124, 255, 0.1)) !important;
+  color: #f8fafc !important;
+  box-shadow:
+    0 24px 56px -30px rgba(120, 175, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .VPButton.brand:hover {
+  background: linear-gradient(135deg, rgba(120, 175, 255, 0.22), rgba(92, 124, 255, 0.15)) !important;
+  border-color: rgba(120, 175, 255, 0.4) !important;
+  box-shadow:
+    0 28px 60px -28px rgba(120, 175, 255, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+.VPButton.alt {
+  border-radius: 0.75rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(136, 161, 204, 0.25) !important;
+  background: rgba(248, 250, 252, 0.06) !important;
+  transition: transform 200ms, border-color 200ms, background 200ms !important;
+}
+
+.VPButton.alt:hover {
+  transform: translateY(-1px);
+  border-color: rgba(136, 161, 204, 0.4) !important;
+  background: rgba(248, 250, 252, 0.1) !important;
+}
+
+/* ─── Feature cards — Ikary glass style with icon accent ─────────────────── */
+
+.VPFeature {
+  border-radius: 1rem !important;
+  transition: border-color 200ms, transform 200ms !important;
+}
+
+.VPFeature:hover {
+  transform: translateY(-2px);
+}
+
+.dark .VPFeature {
+  background: rgba(17, 28, 52, 0.5) !important;
+  border-color: rgba(136, 161, 204, 0.1) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.dark .VPFeature:hover {
+  border-color: rgba(120, 175, 255, 0.2) !important;
+}
+
+/* Feature icon — Lucide accent color matching Use Cases section */
+/* Icons are <img> tags so currentColor doesn't work; use filter for dark mode */
+.VPFeature .VPImage {
+  background: var(--ikary-icon-bg);
+  border: 1px solid var(--ikary-icon-border);
+  border-radius: 0.75rem;
+  padding: 8px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Dark mode: invert black icons to white, then shift to accent blue */
+.dark .VPFeature .VPImage {
+  filter: invert(1) sepia(1) saturate(3) hue-rotate(190deg) brightness(1.1);
+}
+
+/* ─── Hero section — centered layout ─────────────────────────────────────── */
+
+.VPHero .container {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.VPHero .main {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.VPHero .heading {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-items: center !important;
+}
+
+.VPHero .name {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+
+.VPHero .text {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+}
+
+.VPHero .tagline {
+  font-size: 1.2rem !important;
+  line-height: 1.6;
+  width: 100% !important;
+}
+
+.VPHero .actions {
+  justify-content: center !important;
+}
+
+/* ─── Content typography ──────────────────────────────────────────────────── */
+
+.vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.vp-doc h1 {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+}
+
+/* Code blocks — rounded like Ikary terminal */
+.vp-doc div[class*='language-'] {
+  border-radius: 0.75rem;
+}
+
+/* Tip blocks — accent tint */
+.dark .vp-doc .custom-block.tip {
+  border-color: rgba(120, 175, 255, 0.3);
+  background: rgba(120, 175, 255, 0.06);
+}
+
+/* ─── Ikary wave footer ──────────────────────────────────────────────────── */
+
+/* Hide the default VitePress footer */
+.VPFooter {
+  display: none !important;
+}
+
+/* Ensure all fixed sidebars/asides stay below the footer */
+.ikary-footer ~ *,
+.ikary-footer {
+  /* Footer must be above every fixed sidebar */
+}
+
+.aside-container {
+  z-index: 20 !important;
+}
+
+/* Hide the gradient curtain artifact at bottom of aside */
+.aside-curtain {
+  display: none !important;
+}
+
+.ikary-footer {
+  position: relative;
+  z-index: 30;
+  overflow: hidden;
+  border-top: 1px solid rgba(136, 161, 204, 0.15);
+}
+
+.dark .ikary-footer {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(120, 175, 255, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(6, 12, 26, 0.4), rgba(13, 31, 60, 0.22));
+}
+
+.ikary-footer {
+  background:
+    radial-gradient(circle at 16% 0%, rgba(29, 78, 216, 0.04), transparent 30%),
+    linear-gradient(180deg, rgba(235, 242, 251, 0.5), rgba(191, 213, 238, 0.3));
+}
+
+/* Wave container */
+.ikary-wave-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ikary-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  display: block;
+}
+
+.ikary-wave-slow {
+  height: 220px;
+  animation: ikary-wave-slow 62s linear -14s infinite;
+}
+
+.ikary-wave-mid {
+  height: 160px;
+  animation: ikary-wave-mid 37s linear -9s infinite;
+}
+
+.ikary-wave-fast {
+  height: 110px;
+  animation: ikary-wave-fast 19s linear -5s infinite;
+}
+
+/* Wave colors — dark */
+.dark .ikary-wave-slow path { fill: rgba(6, 12, 26, 0.92); }
+.dark .ikary-wave-mid path  { fill: rgba(9, 20, 46, 0.75); }
+.dark .ikary-wave-fast path { fill: rgba(29, 78, 216, 0.08); }
+
+/* Wave colors — light */
+.ikary-wave-slow path { fill: rgba(170, 205, 235, 0.88); }
+.ikary-wave-mid path  { fill: rgba(145, 185, 220, 0.68); }
+.ikary-wave-fast path { fill: rgba(29, 78, 216, 0.05); }
+
+@keyframes ikary-wave-slow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes ikary-wave-mid {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes ikary-wave-fast {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Footer inner content */
+.ikary-footer-inner {
+  position: relative;
+  z-index: 10;
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 2rem;
+}
+
+.ikary-footer-grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .ikary-footer-grid {
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  }
+}
+
+.ikary-footer-brand {
+  max-width: 280px;
+}
+
+.ikary-footer-logo {
+  height: 24px;
+  width: auto;
+}
+
+/* Logo theme switching */
+.logo-light { display: none; }
+.dark .logo-dark { display: none; }
+.dark .logo-light { display: inline; }
+
+.ikary-footer-tagline {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--vp-c-text-2);
+}
+
+.ikary-footer-heading {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--vp-c-text-3);
+}
+
+.ikary-footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ikary-footer-links a {
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+  text-decoration: none;
+  transition: color 200ms;
+}
+
+.ikary-footer-links a:hover {
+  color: var(--vp-c-brand-1);
+}
+
+.ikary-footer-bottom {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 0.8rem;
+  color: var(--vp-c-text-3);
+}
+
+/* ─── Scrollbar — Ikary style ────────────────────────────────────────────── */
+
+.dark ::-webkit-scrollbar { width: 6px; }
+.dark ::-webkit-scrollbar-track { background: transparent; }
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(136, 161, 204, 0.2);
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(136, 161, 204, 0.35);
+}

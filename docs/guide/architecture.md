@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Architecture
 
 ## Design Principles
@@ -9,24 +13,18 @@
 
 ## Processing Pipeline
 
-```
-                manifests/examples/*.yaml
-                        |
-                        v
-            @ikary-manifest/loader
-            (YAML parse -> JS object)
-                        |
-                        v
-            @ikary-manifest/contract
-            (Zod safeParse -> typed object)
-            (semantic validation -> business rules)
-                        |
-                        v
-            @ikary-manifest/engine
-            (normalize -> derive fields -> compile)
-                        |
-                        v
-              Runtime-ready CellManifestV1
+```mermaid
+flowchart TD
+    A[manifests/*.yaml] -->|load| B[loader]
+    B -->|parse| C[contract]
+    C -->|validate| D[engine]
+    D -->|compile| E[Runtime CellManifestV1]
+
+    style A fill:#0a1329,stroke:#78afff,color:#bcc8df
+    style B fill:#182644,stroke:#78afff,color:#f8fafc
+    style C fill:#182644,stroke:#78afff,color:#f8fafc
+    style D fill:#182644,stroke:#78afff,color:#f8fafc
+    style E fill:#1d4ed8,stroke:#78afff,color:#f8fafc
 ```
 
 ### Step by step
@@ -66,26 +64,26 @@ This gives Python full access to the manifest ecosystem without a Node.js build 
 
 ## Package Dependency Graph
 
-```
-contract (zod)
-  ^
-  |
-loader (yaml, contract)
-  ^
-  |
-engine (contract)
-  ^
-  |
-presentation (zod)
-  ^           ^
-  |           |
-runtime-ui (contract, presentation)
-  ^
-  |
-renderer (contract, presentation, engine, runtime-ui)
-  ^
-  |
-data-runtime (contract, presentation, runtime-ui)
+```mermaid
+graph BT
+    loader[loader] --> contract[contract]
+    engine[engine] --> contract
+    presentation[presentation] -.-> contract
+    runtimeui[runtime-ui] --> contract
+    runtimeui --> presentation
+    renderer[renderer] --> contract
+    renderer --> engine
+    renderer --> runtimeui
+    dataruntime[data-runtime] --> contract
+    dataruntime --> runtimeui
+
+    style contract fill:#1d4ed8,stroke:#78afff,color:#f8fafc
+    style loader fill:#182644,stroke:#78afff,color:#f8fafc
+    style engine fill:#182644,stroke:#78afff,color:#f8fafc
+    style presentation fill:#182644,stroke:#63a0ff,color:#f8fafc
+    style runtimeui fill:#182644,stroke:#63a0ff,color:#f8fafc
+    style renderer fill:#182644,stroke:#63a0ff,color:#f8fafc
+    style dataruntime fill:#182644,stroke:#63a0ff,color:#f8fafc
 ```
 
 ## JSON Schema Generation

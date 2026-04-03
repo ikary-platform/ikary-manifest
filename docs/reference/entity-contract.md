@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Entity Schema Normalization Contract
 
 Version: 1.2

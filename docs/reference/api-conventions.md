@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # API Conventions Contract
 
 Version: 1.2
