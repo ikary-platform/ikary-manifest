@@ -4,6 +4,7 @@ export default defineConfig({
   title: 'IKARY Manifest',
   description:
     'Open-source declarative cell contracts — AI should generate manifests, not code.',
+  base: '/ikary-manifest/',
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
