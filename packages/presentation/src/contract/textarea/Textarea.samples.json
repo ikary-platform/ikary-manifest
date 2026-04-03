@@ -1,0 +1,27 @@
+[
+  {
+    "value": "Initial note",
+    "rows": 4,
+    "name": "note"
+  },
+  {
+    "defaultValue": "Read only comment",
+    "readonly": true,
+    "rows": 6
+  },
+  {
+    "placeholder": "Write your comment",
+    "required": true,
+    "id": "comment-box"
+  },
+  {
+    "defaultValue": "Disabled value",
+    "disabled": true,
+    "loading": true
+  },
+  {
+    "value": "Needs review",
+    "invalid": true,
+    "rows": 3
+  }
+]

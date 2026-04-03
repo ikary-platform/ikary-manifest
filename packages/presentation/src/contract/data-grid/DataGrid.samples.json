@@ -1,0 +1,234 @@
+[
+  {
+    "type": "data-grid",
+    "columns": [
+      {
+        "key": "name",
+        "label": "Name",
+        "field": "name",
+        "type": "link",
+        "sortable": true,
+        "linkTarget": {
+          "type": "detail-page"
+        }
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "field": "status",
+        "type": "badge"
+      },
+      {
+        "key": "createdAt",
+        "label": "Created",
+        "field": "createdAt",
+        "type": "date",
+        "sortable": true
+      }
+    ],
+    "selection": {
+      "enabled": true,
+      "mode": "page"
+    },
+    "sorting": {
+      "enabled": true,
+      "mode": "single"
+    },
+    "pagination": {
+      "enabled": true,
+      "pageSizeOptions": [10, 25, 50],
+      "showTotalCount": true
+    },
+    "emptyState": {
+      "title": "No customers",
+      "description": "There are no records yet."
+    }
+  },
+  {
+    "type": "data-grid",
+    "columns": [
+      {
+        "key": "name",
+        "label": "Name",
+        "field": "name",
+        "type": "link",
+        "sortable": true,
+        "linkTarget": {
+          "type": "detail-page"
+        }
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "field": "status",
+        "type": "badge"
+      },
+      {
+        "key": "createdAt",
+        "label": "Created",
+        "field": "createdAt",
+        "type": "date",
+        "sortable": true
+      },
+      {
+        "key": "owner",
+        "label": "Owner",
+        "field": "owner",
+        "type": "text"
+      }
+    ],
+    "selection": {
+      "enabled": true,
+      "mode": "page"
+    },
+    "sorting": {
+      "enabled": true,
+      "mode": "single"
+    },
+    "pagination": {
+      "enabled": true,
+      "pageSizeOptions": [10, 25, 50],
+      "showTotalCount": true
+    },
+    "emptyState": {
+      "title": "No customers",
+      "description": "There are no records yet."
+    },
+    "dense": true,
+    "stickyHeader": true
+  },
+  {
+    "type": "data-grid",
+    "columns": [
+      {
+        "key": "name",
+        "label": "Name",
+        "field": "name",
+        "type": "link",
+        "sortable": true,
+        "linkTarget": {
+          "type": "detail-page"
+        }
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "field": "status",
+        "type": "badge"
+      },
+      {
+        "key": "createdAt",
+        "label": "Created",
+        "field": "createdAt",
+        "type": "date",
+        "sortable": true
+      },
+      {
+        "key": "actions",
+        "label": "Actions",
+        "type": "actions"
+      }
+    ],
+    "selection": {
+      "enabled": true,
+      "mode": "page"
+    },
+    "sorting": {
+      "enabled": true,
+      "mode": "single"
+    },
+    "pagination": {
+      "enabled": true,
+      "pageSizeOptions": [10, 25, 50],
+      "showTotalCount": true
+    },
+    "emptyState": {
+      "title": "No customers",
+      "description": "There are no records yet."
+    },
+    "rowActions": [
+      {
+        "key": "open",
+        "label": "Open",
+        "actionKey": "open-row"
+      },
+      {
+        "key": "archive",
+        "label": "Archive",
+        "actionKey": "archive-row",
+        "intent": "danger",
+        "requiresConfirmation": true
+      }
+    ]
+  },
+  {
+    "type": "data-grid",
+    "columns": [
+      {
+        "key": "invoiceNo",
+        "label": "Invoice",
+        "field": "invoiceNo",
+        "type": "link",
+        "linkTarget": {
+          "type": "detail-page"
+        }
+      },
+      {
+        "key": "total",
+        "label": "Total",
+        "field": "total",
+        "type": "currency",
+        "format": {
+          "currency": "EUR"
+        }
+      },
+      {
+        "key": "issuedAt",
+        "label": "Issued",
+        "field": "issuedAt",
+        "type": "datetime",
+        "format": {
+          "datetimeStyle": "short"
+        }
+      }
+    ],
+    "sorting": {
+      "enabled": true,
+      "mode": "single"
+    },
+    "selection": {
+      "enabled": false,
+      "mode": "page"
+    }
+  },
+  {
+    "type": "data-grid",
+    "columns": [
+      {
+        "key": "name",
+        "label": "Name",
+        "field": "name",
+        "type": "link",
+        "sortable": true,
+        "sortField": "name.keyword",
+        "linkTarget": {
+          "type": "detail-page"
+        },
+        "truncate": true,
+        "tooltip": "when-truncated"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "field": "status",
+        "type": "status"
+      }
+    ],
+    "pagination": {
+      "enabled": false
+    },
+    "emptyState": {
+      "title": "No data"
+    }
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "type": "page",
+    "key": "customersNav",
+    "pageKey": "customers",
+    "label": "Customers",
+    "order": 1
+  },
+  {
+    "type": "page",
+    "key": "invoicesNav",
+    "pageKey": "invoices",
+    "label": "Invoices",
+    "order": 2
+  },
+  {
+    "type": "group",
+    "key": "salesGroup",
+    "label": "Sales",
+    "children": [
+      {
+        "type": "page",
+        "key": "quotesNav",
+        "pageKey": "quotes",
+        "label": "Quotes"
+      },
+      {
+        "type": "page",
+        "key": "ordersNav",
+        "pageKey": "orders",
+        "label": "Orders"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "key": "adminGroup",
+    "label": "Admin",
+    "children": [
+      {
+        "type": "page",
+        "key": "usersNav",
+        "pageKey": "users",
+        "label": "Users"
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "key": "settingsGroup",
+    "label": "Settings",
+    "children": [
+      {
+        "type": "group",
+        "key": "settingsNested",
+        "label": "Advanced",
+        "children": [
+          {
+            "type": "page",
+            "key": "auditNav",
+            "pageKey": "audit",
+            "label": "Audit"
+          }
+        ]
+      }
+    ]
+  }
+]

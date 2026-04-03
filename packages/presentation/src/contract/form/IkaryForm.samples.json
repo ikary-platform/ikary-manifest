@@ -1,0 +1,269 @@
+[
+  {
+    "type": "form",
+    "key": "customer-form",
+    "title": "Edit customer",
+    "mode": "draft-and-commit",
+    "autosave": {
+      "enabled": true,
+      "debounceMs": 800,
+      "saveOnBlur": true
+    },
+    "sections": [
+      {
+        "type": "form-section",
+        "key": "general",
+        "title": "General",
+        "layout": "stack",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "name",
+            "variant": "standard",
+            "control": "text",
+            "label": "Name",
+            "required": true,
+            "helpText": "Customer display name"
+          },
+          {
+            "type": "form-field",
+            "key": "status",
+            "variant": "standard",
+            "control": "select",
+            "label": "Status",
+            "options": [
+              {
+                "key": "active",
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "key": "paused",
+                "label": "Paused",
+                "value": "paused"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "form",
+    "key": "invoice-form",
+    "title": "Invoice editor",
+    "mode": "draft-only",
+    "actionLabels": {
+      "saveDraft": "Save draft",
+      "discard": "Discard changes"
+    },
+    "sections": [
+      {
+        "type": "form-section",
+        "key": "general",
+        "title": "General",
+        "layout": "stack",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "name",
+            "variant": "standard",
+            "control": "text",
+            "label": "Name",
+            "required": true,
+            "helpText": "Customer display name"
+          },
+          {
+            "type": "form-field",
+            "key": "status",
+            "variant": "standard",
+            "control": "select",
+            "label": "Status",
+            "options": [
+              {
+                "key": "active",
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "key": "paused",
+                "label": "Paused",
+                "value": "paused"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "form-section",
+        "key": "billing",
+        "title": "Billing",
+        "layout": "two-column",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "currency",
+            "variant": "standard",
+            "control": "select",
+            "label": "Currency",
+            "options": [
+              {
+                "key": "eur",
+                "label": "EUR",
+                "value": "EUR"
+              }
+            ]
+          },
+          {
+            "type": "form-field",
+            "key": "amount",
+            "variant": "standard",
+            "control": "number",
+            "label": "Amount"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "form",
+    "key": "quick-edit",
+    "title": "Quick edit",
+    "mode": "commit-only",
+    "sections": [
+      {
+        "type": "form-section",
+        "key": "general",
+        "title": "General",
+        "layout": "stack",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "name",
+            "variant": "standard",
+            "control": "text",
+            "label": "Name",
+            "required": true,
+            "helpText": "Customer display name"
+          },
+          {
+            "type": "form-field",
+            "key": "status",
+            "variant": "standard",
+            "control": "select",
+            "label": "Status",
+            "options": [
+              {
+                "key": "active",
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "key": "paused",
+                "label": "Paused",
+                "value": "paused"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "readonly": false
+  },
+  {
+    "type": "form",
+    "key": "review-form",
+    "title": "Review and commit",
+    "description": "Requires final approval before commit.",
+    "reviewRequired": true,
+    "sections": [
+      {
+        "type": "form-section",
+        "key": "review",
+        "title": "General",
+        "layout": "stack",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "name",
+            "variant": "standard",
+            "control": "text",
+            "label": "Name",
+            "required": true,
+            "helpText": "Customer display name"
+          },
+          {
+            "type": "form-field",
+            "key": "status",
+            "variant": "standard",
+            "control": "select",
+            "label": "Status",
+            "options": [
+              {
+                "key": "active",
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "key": "paused",
+                "label": "Paused",
+                "value": "paused"
+              }
+            ]
+          }
+        ],
+        "status": "warning",
+        "collapsible": true,
+        "defaultExpanded": true
+      }
+    ]
+  },
+  {
+    "type": "form",
+    "key": "readonly-form",
+    "title": "Readonly snapshot",
+    "mode": "draft-and-commit",
+    "readonly": true,
+    "disabled": false,
+    "dense": true,
+    "sections": [
+      {
+        "type": "form-section",
+        "key": "readonly-section",
+        "title": "General",
+        "layout": "stack",
+        "fields": [
+          {
+            "type": "form-field",
+            "key": "name",
+            "variant": "standard",
+            "control": "text",
+            "label": "Name",
+            "required": true,
+            "helpText": "Customer display name"
+          },
+          {
+            "type": "form-field",
+            "key": "status",
+            "variant": "standard",
+            "control": "select",
+            "label": "Status",
+            "options": [
+              {
+                "key": "active",
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "key": "paused",
+                "label": "Paused",
+                "value": "paused"
+              }
+            ]
+          }
+        ],
+        "readonly": true
+      }
+    ]
+  }
+]

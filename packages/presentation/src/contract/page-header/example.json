@@ -1,0 +1,32 @@
+{
+  "type": "page-header",
+  "title": "Customers",
+  "description": "Manage customer records and account status.",
+  "eyebrow": "Workspace / CRM",
+  "breadcrumbs": [
+    { "key": "home", "label": "Home", "href": "/" },
+    { "key": "crm", "label": "CRM", "href": "/crm" },
+    { "key": "customers", "label": "Customers" }
+  ],
+  "meta": [
+    { "type": "badge", "key": "env", "label": "Production", "tone": "info" },
+    { "type": "text", "key": "count", "label": "1,248 records" }
+  ],
+  "primaryAction": {
+    "key": "create",
+    "label": "New customer",
+    "actionKey": "create-customer",
+    "intent": "default"
+  },
+  "secondaryActions": [
+    {
+      "key": "export",
+      "label": "Export",
+      "actionKey": "export-customers",
+      "intent": "neutral"
+    }
+  ],
+  "lowerSlot": {
+    "type": "tabs"
+  }
+}

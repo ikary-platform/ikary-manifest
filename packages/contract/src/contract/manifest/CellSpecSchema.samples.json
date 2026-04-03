@@ -1,0 +1,134 @@
+[
+  {
+    "mount": {
+      "title": "CRM",
+      "mountPath": "/crm",
+      "landingPage": "/crm/customers"
+    },
+    "entities": [
+      {
+        "key": "customer",
+        "name": "Customer",
+        "pluralName": "Customers",
+        "fields": [
+          {
+            "key": "name",
+            "type": "string",
+            "name": "Name"
+          }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "key": "customers",
+        "type": "entity-list",
+        "title": "Customers",
+        "path": "/customers",
+        "entity": "customer"
+      }
+    ]
+  },
+  {
+    "mount": {
+      "mountPath": "/finance",
+      "landingPage": "/finance/invoices"
+    },
+    "pages": [
+      {
+        "key": "dashboard",
+        "type": "dashboard",
+        "title": "Finance Dashboard",
+        "path": "/dashboard"
+      }
+    ],
+    "navigation": {
+      "items": [
+        {
+          "type": "page",
+          "key": "dashboardNav",
+          "pageKey": "dashboard",
+          "label": "Dashboard"
+        }
+      ]
+    }
+  },
+  {
+    "mount": {
+      "mountPath": "/support",
+      "landingPage": "/support/tickets"
+    },
+    "entities": [
+      {
+        "key": "ticket",
+        "name": "Ticket",
+        "pluralName": "Tickets",
+        "fields": [
+          {
+            "key": "subject",
+            "type": "string",
+            "name": "Subject"
+          }
+        ]
+      }
+    ],
+    "roles": [
+      {
+        "key": "agent",
+        "name": "Agent",
+        "scopes": ["ticket.view"]
+      }
+    ]
+  },
+  {
+    "mount": {
+      "mountPath": "/ops",
+      "landingPage": "/ops/overview"
+    },
+    "navigation": {
+      "items": [
+        {
+          "type": "group",
+          "key": "opsRoot",
+          "label": "Ops",
+          "children": [
+            {
+              "type": "page",
+              "key": "overviewNav",
+              "pageKey": "overview",
+              "label": "Overview"
+            }
+          ]
+        }
+      ]
+    },
+    "pages": [
+      {
+        "key": "overview",
+        "type": "custom",
+        "title": "Overview",
+        "path": "/overview"
+      }
+    ]
+  },
+  {
+    "mount": {
+      "mountPath": "/workspace",
+      "landingPage": "/workspace/home"
+    },
+    "pages": [
+      {
+        "key": "home",
+        "type": "dashboard",
+        "title": "Home",
+        "path": "/home"
+      },
+      {
+        "key": "settings",
+        "type": "custom",
+        "title": "Settings",
+        "path": "/settings"
+      }
+    ]
+  }
+]

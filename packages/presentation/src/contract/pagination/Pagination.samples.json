@@ -1,0 +1,83 @@
+[
+  {
+    "type": "pagination",
+    "visibility": {
+      "hideWhenSinglePage": true
+    },
+    "range": {
+      "visible": true,
+      "format": "start-end-of-total"
+    },
+    "pageSize": {
+      "visible": true,
+      "options": [10, 25, 50],
+      "label": "Rows"
+    },
+    "navigation": {
+      "showFirst": true,
+      "showLast": true,
+      "showPrevious": true,
+      "showNext": true,
+      "showPageList": true,
+      "pageListMode": "compact-ellipsis",
+      "maxVisiblePages": 7
+    },
+    "summary": {
+      "visible": true,
+      "format": "page-x-of-y"
+    },
+    "responsive": {
+      "collapsePageListBelow": "md",
+      "stackBelow": "sm"
+    }
+  },
+  {
+    "type": "pagination",
+    "visibility": {
+      "hideWhenSinglePage": false
+    },
+    "navigation": {
+      "showPageList": true,
+      "pageListMode": "compact-ellipsis",
+      "maxVisiblePages": 5
+    }
+  },
+  {
+    "type": "pagination",
+    "pageSize": {
+      "visible": true,
+      "options": [20, 40, 80],
+      "label": "Per page"
+    },
+    "summary": {
+      "visible": true,
+      "format": "page-x-of-y"
+    }
+  },
+  {
+    "type": "pagination",
+    "navigation": {
+      "showFirst": false,
+      "showLast": false,
+      "showPrevious": true,
+      "showNext": true,
+      "showPageList": false
+    },
+    "range": {
+      "visible": false
+    }
+  },
+  {
+    "type": "pagination",
+    "dense": true,
+    "responsive": {
+      "collapsePageListBelow": "lg",
+      "stackBelow": "md"
+    },
+    "navigation": {
+      "showPageList": true,
+      "maxVisiblePages": 9,
+      "pageListMode": "compact-ellipsis"
+    }
+  }
+]

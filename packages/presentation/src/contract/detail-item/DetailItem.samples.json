@@ -1,0 +1,50 @@
+[
+  {
+    "type": "detail-item",
+    "kind": "text",
+    "key": "customerName",
+    "label": "Customer",
+    "field": "customer.name"
+  },
+  {
+    "type": "detail-item",
+    "kind": "date",
+    "key": "createdAt",
+    "label": "Created",
+    "field": "createdAt",
+    "format": {
+      "dateStyle": "medium"
+    }
+  },
+  {
+    "type": "detail-item",
+    "kind": "boolean",
+    "key": "isVip",
+    "label": "VIP",
+    "field": "vip",
+    "labels": {
+      "trueLabel": "Yes",
+      "falseLabel": "No"
+    }
+  },
+  {
+    "type": "detail-item",
+    "kind": "link",
+    "key": "website",
+    "label": "Website",
+    "field": "website",
+    "link": {
+      "target": "external"
+    },
+    "truncate": true
+  },
+  {
+    "type": "detail-item",
+    "kind": "badge-list",
+    "key": "tags",
+    "label": "Tags",
+    "field": "tags",
+    "tone": "info",
+    "maxVisible": 3
+  }
+]

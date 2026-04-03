@@ -1,0 +1,82 @@
+[
+  {
+    "value": "medium",
+    "name": "priority",
+    "options": [
+      {
+        "value": "low",
+        "label": "Low"
+      },
+      {
+        "value": "medium",
+        "label": "Medium"
+      },
+      {
+        "value": "high",
+        "label": "High"
+      }
+    ]
+  },
+  {
+    "defaultValue": "monthly",
+    "direction": "horizontal",
+    "options": [
+      {
+        "value": "monthly",
+        "label": "Monthly"
+      },
+      {
+        "value": "yearly",
+        "label": "Yearly",
+        "description": "Save 15%"
+      }
+    ]
+  },
+  {
+    "value": "public",
+    "required": true,
+    "invalid": true,
+    "options": [
+      {
+        "value": "private",
+        "label": "Private"
+      },
+      {
+        "value": "shared",
+        "label": "Shared"
+      },
+      {
+        "value": "public",
+        "label": "Public",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "defaultValue": "sms",
+    "disabled": true,
+    "options": [
+      {
+        "value": "email",
+        "label": "Email"
+      },
+      {
+        "value": "sms",
+        "label": "SMS"
+      },
+      {
+        "value": "none",
+        "label": "None"
+      }
+    ]
+  },
+  {
+    "options": [
+      {
+        "value": "a",
+        "label": "Option A"
+      }
+    ],
+    "loading": true
+  }
+]

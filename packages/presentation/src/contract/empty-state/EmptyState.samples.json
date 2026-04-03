@@ -1,0 +1,42 @@
+[
+  {
+    "title": "No customers yet",
+    "description": "Create your first customer.",
+    "variant": "initial"
+  },
+  {
+    "title": "No search results",
+    "description": "Try another term.",
+    "variant": "search",
+    "density": "compact"
+  },
+  {
+    "title": "No matching filters",
+    "variant": "filter",
+    "primaryAction": {
+      "label": "Clear filters",
+      "actionKey": "clear-filters"
+    }
+  },
+  {
+    "title": "No related invoices",
+    "variant": "relation",
+    "secondaryAction": {
+      "label": "Open invoices",
+      "href": "/invoices"
+    }
+  },
+  {
+    "title": "No content in widget",
+    "description": "This widget has no data for the selected period.",
+    "variant": "widget",
+    "primaryAction": {
+      "label": "Refresh",
+      "actionKey": "refresh-widget"
+    },
+    "secondaryAction": {
+      "label": "Settings",
+      "href": "/settings/widgets"
+    }
+  }
+]

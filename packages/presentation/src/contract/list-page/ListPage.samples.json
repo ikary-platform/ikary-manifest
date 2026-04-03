@@ -1,0 +1,560 @@
+[
+  {
+    "type": "list-page",
+    "header": {
+      "type": "page-header",
+      "title": "Customers",
+      "description": "Operational customer view",
+      "eyebrow": "Workspace",
+      "breadcrumbs": [
+        {
+          "key": "home",
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "key": "customers",
+          "label": "Customers",
+          "href": "/customers"
+        }
+      ],
+      "meta": [
+        {
+          "type": "badge",
+          "key": "status",
+          "label": "Active",
+          "tone": "success"
+        },
+        {
+          "type": "text",
+          "key": "updated",
+          "label": "Updated 2m ago"
+        }
+      ],
+      "primaryAction": {
+        "key": "create",
+        "label": "Create",
+        "actionKey": "create-customer"
+      },
+      "secondaryActions": [
+        {
+          "key": "export",
+          "label": "Export",
+          "actionKey": "export-customers",
+          "intent": "neutral"
+        }
+      ]
+    },
+    "navigation": {
+      "type": "tabs",
+      "items": [
+        {
+          "key": "overview",
+          "label": "Overview",
+          "href": "/customers/overview"
+        },
+        {
+          "key": "history",
+          "label": "History",
+          "href": "/customers/history"
+        },
+        {
+          "key": "audit",
+          "label": "Audit",
+          "actionKey": "open-audit"
+        }
+      ],
+      "activeKey": "overview",
+      "overflow": {
+        "mode": "scroll",
+        "collapseBelow": "md"
+      }
+    },
+    "controls": {
+      "search": {
+        "visible": true,
+        "placeholder": "Search customers"
+      },
+      "filters": {
+        "visible": true,
+        "mode": "inline",
+        "items": [
+          {
+            "key": "status",
+            "label": "Status"
+          }
+        ]
+      },
+      "sorting": {
+        "visible": true,
+        "mode": "summary"
+      },
+      "bulkActions": {
+        "visibleWhenSelection": true
+      }
+    },
+    "renderer": {
+      "mode": "data-grid",
+      "presentation": {
+        "type": "data-grid",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Name",
+            "field": "name",
+            "type": "link",
+            "sortable": true,
+            "linkTarget": {
+              "type": "detail-page"
+            }
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "field": "status",
+            "type": "badge"
+          },
+          {
+            "key": "createdAt",
+            "label": "Created",
+            "field": "createdAt",
+            "type": "date",
+            "sortable": true
+          }
+        ],
+        "selection": {
+          "enabled": true,
+          "mode": "page"
+        },
+        "sorting": {
+          "enabled": true,
+          "mode": "single"
+        },
+        "pagination": {
+          "enabled": true,
+          "pageSizeOptions": [10, 25, 50],
+          "showTotalCount": true
+        },
+        "emptyState": {
+          "title": "No customers",
+          "description": "There are no records yet."
+        }
+      }
+    },
+    "pagination": {
+      "type": "pagination",
+      "visibility": {
+        "hideWhenSinglePage": true
+      },
+      "range": {
+        "visible": true,
+        "format": "start-end-of-total"
+      },
+      "pageSize": {
+        "visible": true,
+        "options": [10, 25, 50],
+        "label": "Rows"
+      },
+      "navigation": {
+        "showFirst": true,
+        "showLast": true,
+        "showPrevious": true,
+        "showNext": true,
+        "showPageList": true,
+        "pageListMode": "compact-ellipsis",
+        "maxVisiblePages": 7
+      },
+      "summary": {
+        "visible": true,
+        "format": "page-x-of-y"
+      },
+      "responsive": {
+        "collapsePageListBelow": "md",
+        "stackBelow": "sm"
+      }
+    },
+    "emptyState": {
+      "title": "No customers available"
+    }
+  },
+  {
+    "type": "list-page",
+    "header": {
+      "type": "page-header",
+      "title": "Invoices",
+      "description": "Operational customer view",
+      "eyebrow": "Workspace",
+      "breadcrumbs": [
+        {
+          "key": "home",
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "key": "customers",
+          "label": "Customers",
+          "href": "/customers"
+        }
+      ],
+      "meta": [
+        {
+          "type": "badge",
+          "key": "status",
+          "label": "Active",
+          "tone": "success"
+        },
+        {
+          "type": "text",
+          "key": "updated",
+          "label": "Updated 2m ago"
+        }
+      ],
+      "primaryAction": {
+        "key": "create",
+        "label": "Create",
+        "actionKey": "create-customer"
+      },
+      "secondaryActions": [
+        {
+          "key": "export",
+          "label": "Export",
+          "actionKey": "export-customers",
+          "intent": "neutral"
+        }
+      ]
+    },
+    "renderer": {
+      "mode": "card-list",
+      "presentation": {
+        "type": "card-list",
+        "layout": {
+          "columns": "2"
+        },
+        "card": {
+          "titleField": "name",
+          "subtitleField": "email",
+          "badge": {
+            "field": "status",
+            "tone": "info"
+          },
+          "fields": [
+            {
+              "key": "owner",
+              "label": "Owner",
+              "field": "owner",
+              "valueType": "text"
+            },
+            {
+              "key": "region",
+              "label": "Region",
+              "field": "region",
+              "valueType": "enum"
+            }
+          ],
+          "metrics": [
+            {
+              "key": "mrr",
+              "label": "MRR",
+              "field": "mrr",
+              "valueType": "currency"
+            }
+          ],
+          "actions": [
+            {
+              "key": "open",
+              "label": "Open",
+              "href": "/customers/{id}",
+              "intent": "default"
+            }
+          ]
+        },
+        "emptyState": {
+          "title": "No cards",
+          "description": "No card items match filters."
+        }
+      }
+    },
+    "pagination": {
+      "type": "pagination",
+      "visibility": {
+        "hideWhenSinglePage": true
+      },
+      "range": {
+        "visible": true,
+        "format": "start-end-of-total"
+      },
+      "pageSize": {
+        "visible": true,
+        "options": [10, 25, 50],
+        "label": "Rows"
+      },
+      "navigation": {
+        "showFirst": true,
+        "showLast": true,
+        "showPrevious": true,
+        "showNext": true,
+        "showPageList": true,
+        "pageListMode": "compact-ellipsis",
+        "maxVisiblePages": 7
+      },
+      "summary": {
+        "visible": true,
+        "format": "page-x-of-y"
+      },
+      "responsive": {
+        "collapsePageListBelow": "md",
+        "stackBelow": "sm"
+      },
+      "dense": true
+    }
+  },
+  {
+    "type": "list-page",
+    "controls": {
+      "search": {
+        "visible": true,
+        "placeholder": "Search projects"
+      }
+    },
+    "renderer": {
+      "mode": "data-grid",
+      "presentation": {
+        "type": "data-grid",
+        "columns": [
+          {
+            "key": "project",
+            "label": "Project",
+            "field": "project",
+            "type": "link",
+            "linkTarget": {
+              "type": "detail-page"
+            }
+          },
+          {
+            "key": "owner",
+            "label": "Owner",
+            "field": "owner",
+            "type": "text"
+          }
+        ],
+        "selection": {
+          "enabled": true,
+          "mode": "page"
+        },
+        "sorting": {
+          "enabled": true,
+          "mode": "single"
+        },
+        "pagination": {
+          "enabled": true,
+          "pageSizeOptions": [10, 25, 50],
+          "showTotalCount": true
+        },
+        "emptyState": {
+          "title": "No customers",
+          "description": "There are no records yet."
+        }
+      }
+    }
+  },
+  {
+    "type": "list-page",
+    "navigation": {
+      "type": "tabs",
+      "items": [
+        {
+          "key": "overview",
+          "label": "Overview",
+          "href": "/customers/overview"
+        },
+        {
+          "key": "history",
+          "label": "History",
+          "href": "/customers/history"
+        },
+        {
+          "key": "audit",
+          "label": "Audit",
+          "actionKey": "open-audit"
+        }
+      ],
+      "activeKey": "history",
+      "overflow": {
+        "mode": "scroll",
+        "collapseBelow": "md"
+      },
+      "dense": true
+    },
+    "renderer": {
+      "mode": "card-list",
+      "presentation": {
+        "type": "card-list",
+        "layout": {
+          "columns": "2"
+        },
+        "card": {
+          "titleField": "name",
+          "subtitleField": "email",
+          "badge": {
+            "field": "status",
+            "tone": "info"
+          },
+          "fields": [
+            {
+              "key": "owner",
+              "label": "Owner",
+              "field": "owner",
+              "valueType": "text"
+            },
+            {
+              "key": "region",
+              "label": "Region",
+              "field": "region",
+              "valueType": "enum"
+            }
+          ],
+          "metrics": [
+            {
+              "key": "mrr",
+              "label": "MRR",
+              "field": "mrr",
+              "valueType": "currency"
+            }
+          ],
+          "actions": [
+            {
+              "key": "open",
+              "label": "Open",
+              "href": "/customers/{id}",
+              "intent": "default"
+            }
+          ]
+        },
+        "emptyState": {
+          "title": "No cards",
+          "description": "No card items match filters."
+        },
+        "dense": true
+      }
+    },
+    "dense": true
+  },
+  {
+    "type": "list-page",
+    "header": {
+      "type": "page-header",
+      "title": "Assets",
+      "description": "Operational customer view",
+      "eyebrow": "Workspace",
+      "breadcrumbs": [
+        {
+          "key": "home",
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "key": "customers",
+          "label": "Customers",
+          "href": "/customers"
+        }
+      ],
+      "meta": [
+        {
+          "type": "badge",
+          "key": "status",
+          "label": "Active",
+          "tone": "success"
+        },
+        {
+          "type": "text",
+          "key": "updated",
+          "label": "Updated 2m ago"
+        }
+      ],
+      "primaryAction": {
+        "key": "create",
+        "label": "Create",
+        "actionKey": "create-customer"
+      },
+      "secondaryActions": [
+        {
+          "key": "export",
+          "label": "Export",
+          "actionKey": "export-customers",
+          "intent": "neutral"
+        }
+      ]
+    },
+    "controls": {
+      "filters": {
+        "visible": true,
+        "mode": "drawer",
+        "items": [
+          {
+            "key": "risk",
+            "label": "Risk"
+          },
+          {
+            "key": "owner",
+            "label": "Owner"
+          }
+        ]
+      }
+    },
+    "renderer": {
+      "mode": "data-grid",
+      "presentation": {
+        "type": "data-grid",
+        "columns": [
+          {
+            "key": "name",
+            "label": "Name",
+            "field": "name",
+            "type": "link",
+            "sortable": true,
+            "linkTarget": {
+              "type": "detail-page"
+            }
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "field": "status",
+            "type": "badge"
+          },
+          {
+            "key": "createdAt",
+            "label": "Created",
+            "field": "createdAt",
+            "type": "date",
+            "sortable": true
+          }
+        ],
+        "selection": {
+          "enabled": true,
+          "mode": "page"
+        },
+        "sorting": {
+          "enabled": true,
+          "mode": "single"
+        },
+        "pagination": {
+          "enabled": true,
+          "pageSizeOptions": [10, 25, 50],
+          "showTotalCount": true
+        },
+        "emptyState": {
+          "title": "No customers",
+          "description": "There are no records yet."
+        },
+        "rowActions": [
+          {
+            "key": "open",
+            "label": "Open",
+            "actionKey": "open-asset"
+          }
+        ]
+      }
+    }
+  }
+]

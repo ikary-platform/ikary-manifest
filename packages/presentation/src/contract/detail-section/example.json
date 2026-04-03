@@ -1,0 +1,41 @@
+{
+  "type": "detail-section",
+  "title": "General information",
+  "description": "Core customer information and account state.",
+  "actions": [
+    {
+      "key": "edit",
+      "label": "Edit",
+      "actionKey": "edit-customer",
+      "intent": "default"
+    }
+  ],
+  "content": {
+    "mode": "field-grid",
+    "columns": 2,
+    "items": [
+      {
+        "key": "name",
+        "label": "Name",
+        "field": "name",
+        "valueType": "text"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "field": "status",
+        "valueType": "badge"
+      },
+      {
+        "key": "createdAt",
+        "label": "Created",
+        "field": "createdAt",
+        "valueType": "date"
+      }
+    ],
+    "emptyState": {
+      "title": "No information available",
+      "description": "This section has no data yet."
+    }
+  }
+}

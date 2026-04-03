@@ -1,0 +1,21 @@
+[
+  {
+    "exclude": ["0_1"]
+  },
+  {
+    "names": {
+      "updated": "2026-01-02"
+    }
+  },
+  {
+    "exclude": ["0_3"]
+  },
+  {
+    "names": {
+      "created": "created_4"
+    }
+  },
+  {
+    "exclude": ["0_5"]
+  }
+]

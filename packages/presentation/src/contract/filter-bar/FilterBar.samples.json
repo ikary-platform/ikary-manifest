@@ -1,0 +1,146 @@
+[
+  {
+    "variant": "list",
+    "density": "comfortable",
+    "search": {
+      "placeholder": "Search customers",
+      "value": "acme"
+    },
+    "filters": [
+      {
+        "key": "status",
+        "label": "Status",
+        "type": "select",
+        "value": "active",
+        "options": [
+          {
+            "value": "active",
+            "label": "Active"
+          },
+          {
+            "value": "paused",
+            "label": "Paused"
+          }
+        ]
+      }
+    ],
+    "sort": {
+      "value": "updatedAt-desc",
+      "options": [
+        {
+          "value": "updatedAt-desc",
+          "label": "Last updated"
+        },
+        {
+          "value": "name-asc",
+          "label": "Name A-Z"
+        }
+      ]
+    },
+    "clearAction": {
+      "label": "Clear",
+      "actionKey": "clear-filters"
+    }
+  },
+  {
+    "variant": "section",
+    "density": "compact",
+    "filters": [
+      {
+        "key": "overdue",
+        "label": "Overdue only",
+        "type": "checkbox",
+        "value": true
+      },
+      {
+        "key": "risk",
+        "label": "Risk",
+        "type": "multi-select",
+        "value": ["high"],
+        "options": [
+          {
+            "value": "high",
+            "label": "High"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          }
+        ]
+      }
+    ],
+    "activeFilters": [
+      {
+        "key": "risk",
+        "label": "Risk",
+        "valueLabel": "High"
+      }
+    ]
+  },
+  {
+    "variant": "widget",
+    "search": {
+      "value": "",
+      "placeholder": "Filter queue",
+      "disabled": false
+    },
+    "filters": [
+      {
+        "key": "dateFrom",
+        "label": "From date",
+        "type": "date",
+        "value": "2026-03-01"
+      },
+      {
+        "key": "dateRange",
+        "label": "Period",
+        "type": "date-range",
+        "value": ["2026-03-01", "2026-03-31"]
+      }
+    ],
+    "advancedFilters": {
+      "enabled": true,
+      "open": false,
+      "label": "Advanced filters"
+    }
+  },
+  {
+    "search": {
+      "placeholder": "Search invoices"
+    },
+    "filters": [
+      {
+        "key": "amountMin",
+        "label": "Min amount",
+        "type": "number",
+        "value": 1000
+      },
+      {
+        "key": "autopay",
+        "label": "Autopay",
+        "type": "toggle",
+        "value": true
+      }
+    ],
+    "loading": true
+  },
+  {
+    "sort": {
+      "placeholder": "Sort by",
+      "options": [
+        {
+          "value": "priority-desc",
+          "label": "Priority"
+        },
+        {
+          "value": "createdAt-desc",
+          "label": "Newest"
+        }
+      ],
+      "disabled": true
+    },
+    "clearAction": {
+      "label": "Reset filters"
+    }
+  }
+]

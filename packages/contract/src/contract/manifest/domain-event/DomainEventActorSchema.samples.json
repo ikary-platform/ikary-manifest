@@ -1,0 +1,22 @@
+[
+  {
+    "type": "user",
+    "id": "id_1"
+  },
+  {
+    "type": "system",
+    "id": "id_2"
+  },
+  {
+    "type": "workflow",
+    "id": "id_3"
+  },
+  {
+    "type": "api",
+    "id": "id_4"
+  },
+  {
+    "type": "user",
+    "id": "id_5"
+  }
+]

@@ -1,0 +1,75 @@
+{
+  "type": "list-page",
+  "header": {
+    "type": "page-header",
+    "title": "Customers",
+    "description": "Manage customer records and account state.",
+    "primaryAction": {
+      "key": "create",
+      "label": "New customer",
+      "actionKey": "create-customer"
+    }
+  },
+  "navigation": {
+    "type": "tabs",
+    "activeKey": "all",
+    "items": [
+      { "key": "all", "label": "All", "href": "/customers" },
+      { "key": "active", "label": "Active", "href": "/customers/active", "count": 124 }
+    ]
+  },
+  "controls": {
+    "search": {
+      "visible": true,
+      "placeholder": "Search customers"
+    },
+    "filters": {
+      "visible": true,
+      "mode": "drawer",
+      "items": [
+        { "key": "status", "label": "Status" },
+        { "key": "owner", "label": "Owner" }
+      ]
+    },
+    "sorting": {
+      "visible": true,
+      "mode": "summary"
+    },
+    "bulkActions": {
+      "visibleWhenSelection": true
+    }
+  },
+  "renderer": {
+    "mode": "data-grid",
+    "presentation": {
+      "type": "data-grid",
+      "columns": [
+        {
+          "key": "name",
+          "field": "name",
+          "label": "Name",
+          "type": "link",
+          "linkTarget": { "type": "detail-page" }
+        },
+        {
+          "key": "status",
+          "field": "status",
+          "label": "Status",
+          "type": "badge"
+        }
+      ]
+    }
+  },
+  "pagination": {
+    "type": "pagination",
+    "pageSize": {
+      "visible": true,
+      "options": [10, 25, 50, 100],
+      "label": "Items per page"
+    }
+  },
+  "emptyState": {
+    "title": "No customers found",
+    "description": "Try changing your filters or create a new customer."
+  }
+}

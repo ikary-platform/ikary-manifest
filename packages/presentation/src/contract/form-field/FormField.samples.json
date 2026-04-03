@@ -1,0 +1,76 @@
+[
+  {
+    "type": "form-field",
+    "key": "name",
+    "variant": "standard",
+    "control": "text",
+    "label": "Name",
+    "required": true,
+    "helpText": "Customer display name"
+  },
+  {
+    "type": "form-field",
+    "key": "status",
+    "variant": "standard",
+    "control": "select",
+    "label": "Status",
+    "options": [
+      {
+        "key": "active",
+        "label": "Active",
+        "value": "active"
+      },
+      {
+        "key": "archived",
+        "label": "Archived",
+        "value": "archived",
+        "disabled": true
+      }
+    ],
+    "placeholder": "Choose status"
+  },
+  {
+    "type": "form-field",
+    "key": "consent",
+    "variant": "checkbox",
+    "label": "I confirm this operation",
+    "message": {
+      "tone": "warning",
+      "text": "Required for irreversible actions."
+    }
+  },
+  {
+    "type": "form-field",
+    "key": "priority",
+    "variant": "choice-group",
+    "legend": "Priority",
+    "options": [
+      {
+        "key": "p1",
+        "label": "Low",
+        "value": "low"
+      },
+      {
+        "key": "p2",
+        "label": "Medium",
+        "value": "medium"
+      },
+      {
+        "key": "p3",
+        "label": "High",
+        "value": "high"
+      }
+    ],
+    "required": true
+  },
+  {
+    "type": "form-field",
+    "key": "notes",
+    "variant": "standard",
+    "control": "textarea",
+    "label": "Notes",
+    "helpText": "Internal comments only.",
+    "smallTip": "Max 500 chars",
+    "loading": false
+  }
+]

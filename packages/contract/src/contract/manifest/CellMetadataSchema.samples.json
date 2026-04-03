@@ -1,0 +1,29 @@
+[
+  {
+    "key": "key_1",
+    "name": "name_1",
+    "version": "v1",
+    "description": "description_1"
+  },
+  {
+    "key": "key_2",
+    "name": "name_2",
+    "version": "v2"
+  },
+  {
+    "key": "key_3",
+    "name": "name_3",
+    "version": "v3"
+  },
+  {
+    "key": "key_4",
+    "name": "name_4",
+    "version": "v4"
+  },
+  {
+    "key": "key_5",
+    "name": "name_5",
+    "version": "v5",
+    "description": "description_5"
+  }
+]

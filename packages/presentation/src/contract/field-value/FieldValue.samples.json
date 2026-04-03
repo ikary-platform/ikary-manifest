@@ -1,0 +1,36 @@
+[
+  {
+    "type": "field-value",
+    "valueType": "text",
+    "truncate": true
+  },
+  {
+    "type": "field-value",
+    "valueType": "currency",
+    "format": {
+      "currency": "EUR"
+    },
+    "emptyLabel": "Not available"
+  },
+  {
+    "type": "field-value",
+    "valueType": "date",
+    "format": {
+      "dateStyle": "medium"
+    }
+  },
+  {
+    "type": "field-value",
+    "valueType": "status",
+    "tone": "warning",
+    "dense": true
+  },
+  {
+    "type": "field-value",
+    "valueType": "link",
+    "link": {
+      "target": "external"
+    },
+    "tooltip": true
+  }
+]

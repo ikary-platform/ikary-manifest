@@ -1,0 +1,6 @@
+{
+  "type": "field-value",
+  "valueType": "status",
+  "tone": "success",
+  "emptyLabel": "Not set"
+}

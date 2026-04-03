@@ -1,0 +1,23 @@
+{
+  "apiVersion": "ikary.io/v1alpha1",
+  "kind": "Cell",
+  "metadata": {
+    "key": "minimal",
+    "name": "Minimal Cell",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "mount": {
+      "mountPath": "/",
+      "landingPage": "dashboard"
+    },
+    "pages": [
+      {
+        "key": "dashboard",
+        "type": "dashboard",
+        "title": "Dashboard",
+        "path": "/dashboard"
+      }
+    ]
+  }
+}

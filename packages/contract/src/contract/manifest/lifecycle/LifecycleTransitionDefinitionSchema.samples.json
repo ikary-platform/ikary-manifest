@@ -1,0 +1,31 @@
+[
+  {
+    "key": "key_1",
+    "from": "from_1",
+    "to": "to_1"
+  },
+  {
+    "key": "key_2",
+    "from": "from_2",
+    "to": "to_2",
+    "guards": ["0_2", "1_3"],
+    "event": "event_2"
+  },
+  {
+    "key": "key_3",
+    "from": "from_3",
+    "to": "to_3"
+  },
+  {
+    "key": "key_4",
+    "from": "from_4",
+    "to": "to_4",
+    "label": "label_4",
+    "hooks": ["0_4", "1_5"]
+  },
+  {
+    "key": "key_5",
+    "from": "from_5",
+    "to": "to_5"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "ruleId": "ruleid_1",
+    "type": "entity_invariant",
+    "paths": ["0_1"],
+    "messageKey": "messagekey_1",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error",
+    "validatorRef": "validatorref_1"
+  },
+  {
+    "ruleId": "ruleid_2",
+    "type": "entity_invariant",
+    "paths": ["0_2", "1_3"],
+    "messageKey": "messagekey_2",
+    "clientSafe": false,
+    "blocking": false,
+    "severity": "warning",
+    "defaultMessage": "defaultmessage_2"
+  },
+  {
+    "ruleId": "ruleid_3",
+    "type": "entity_invariant",
+    "paths": ["0_3"],
+    "messageKey": "messagekey_3",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error"
+  },
+  {
+    "ruleId": "ruleid_4",
+    "type": "entity_invariant",
+    "paths": ["0_4", "1_5"],
+    "messageKey": "messagekey_4",
+    "clientSafe": false,
+    "blocking": false,
+    "severity": "warning"
+  },
+  {
+    "ruleId": "ruleid_5",
+    "type": "entity_invariant",
+    "paths": ["0_5"],
+    "messageKey": "messagekey_5",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error",
+    "validatorRef": "validatorref_5"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "type": "tabs",
+    "items": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/overview"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit",
+        "actionKey": "open-audit"
+      }
+    ],
+    "activeKey": "overview",
+    "overflow": {
+      "mode": "scroll",
+      "collapseBelow": "md"
+    }
+  },
+  {
+    "type": "tabs",
+    "items": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/overview",
+        "count": 12
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/history",
+        "count": 2
+      },
+      {
+        "key": "audit",
+        "label": "Audit",
+        "href": "/audit",
+        "disabled": true
+      }
+    ],
+    "activeKey": "history",
+    "overflow": {
+      "mode": "menu",
+      "collapseBelow": "sm"
+    }
+  },
+  {
+    "type": "tabs",
+    "items": [
+      {
+        "key": "all",
+        "label": "All",
+        "actionKey": "tab-all"
+      },
+      {
+        "key": "mine",
+        "label": "Mine",
+        "actionKey": "tab-mine"
+      }
+    ],
+    "activeKey": "all"
+  },
+  {
+    "type": "tabs",
+    "dense": true,
+    "items": [
+      {
+        "key": "open",
+        "label": "Open",
+        "href": "/open"
+      },
+      {
+        "key": "closed",
+        "label": "Closed",
+        "href": "/closed",
+        "hiddenWhenUnauthorized": true
+      }
+    ]
+  },
+  {
+    "type": "tabs",
+    "items": [
+      {
+        "key": "summary",
+        "label": "Summary",
+        "href": "/summary"
+      }
+    ]
+  }
+]

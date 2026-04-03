@@ -1,0 +1,109 @@
+[
+  {
+    "type": "detail-section",
+    "title": "General information",
+    "description": "Core business data",
+    "content": {
+      "mode": "field-list",
+      "items": [
+        {
+          "key": "name",
+          "label": "Name",
+          "field": "name",
+          "valueType": "text"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "field": "email",
+          "valueType": "link"
+        }
+      ]
+    }
+  },
+  {
+    "type": "detail-section",
+    "title": "Addresses",
+    "content": {
+      "mode": "field-grid",
+      "columns": 2,
+      "items": [
+        {
+          "key": "street",
+          "label": "Street",
+          "field": "address.street"
+        },
+        {
+          "key": "city",
+          "label": "City",
+          "field": "address.city"
+        },
+        {
+          "key": "zip",
+          "label": "ZIP",
+          "field": "address.zip"
+        }
+      ]
+    }
+  },
+  {
+    "type": "detail-section",
+    "title": "KPI snapshot",
+    "emphasis": "subtle",
+    "actions": [
+      {
+        "key": "open-report",
+        "label": "Open report",
+        "href": "/reports/customer-kpi"
+      }
+    ],
+    "content": {
+      "mode": "metric-list",
+      "items": [
+        {
+          "key": "mrr",
+          "label": "MRR",
+          "field": "metrics.mrr",
+          "valueType": "currency"
+        },
+        {
+          "key": "churn",
+          "label": "Churn",
+          "field": "metrics.churn",
+          "valueType": "text"
+        }
+      ]
+    }
+  },
+  {
+    "type": "detail-section",
+    "title": "Risk alert",
+    "emphasis": "strong",
+    "content": {
+      "mode": "callout",
+      "callout": {
+        "tone": "warning",
+        "title": "Review required",
+        "description": "Contract renewal expires in 7 days."
+      }
+    }
+  },
+  {
+    "type": "detail-section",
+    "title": "Related records",
+    "actions": [
+      {
+        "key": "open-related",
+        "label": "View all",
+        "actionKey": "open-related"
+      }
+    ],
+    "content": {
+      "mode": "custom-block",
+      "blockKey": "related-records-block",
+      "emptyState": {
+        "title": "No related records yet"
+      }
+    }
+  }
+]

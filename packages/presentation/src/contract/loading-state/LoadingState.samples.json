@@ -1,0 +1,36 @@
+[
+  {
+    "variant": "page",
+    "mode": "skeleton",
+    "label": "Loading dashboard"
+  },
+  {
+    "variant": "section",
+    "density": "compact",
+    "mode": "spinner",
+    "label": "Loading section"
+  },
+  {
+    "variant": "card",
+    "mode": "mixed",
+    "description": "Fetching metrics",
+    "skeleton": {
+      "lines": 3,
+      "blocks": 1,
+      "avatar": true
+    }
+  },
+  {
+    "variant": "inline",
+    "mode": "spinner"
+  },
+  {
+    "variant": "overlay",
+    "density": "comfortable",
+    "mode": "skeleton",
+    "skeleton": {
+      "lines": 4,
+      "blocks": 2
+    }
+  }
+]

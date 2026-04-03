@@ -1,0 +1,44 @@
+[
+  {
+    "label": "Open items",
+    "value": "128",
+    "tone": "info"
+  },
+  {
+    "variant": "compact",
+    "density": "compact",
+    "label": "Revenue",
+    "value": "€84,210",
+    "delta": "+12.4%",
+    "deltaDirection": "up",
+    "tone": "success"
+  },
+  {
+    "variant": "emphasis",
+    "label": "Risk events",
+    "value": "6",
+    "delta": "-2",
+    "deltaDirection": "down",
+    "tone": "warning",
+    "icon": "alert"
+  },
+  {
+    "label": "New customers",
+    "value": "24",
+    "action": {
+      "label": "Open report",
+      "href": "/reports/customers"
+    }
+  },
+  {
+    "label": "Sync health",
+    "value": "Unavailable",
+    "renderState": {
+      "kind": "error",
+      "state": {
+        "title": "Metric failed",
+        "variant": "inline"
+      }
+    }
+  }
+]

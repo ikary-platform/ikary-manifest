@@ -1,0 +1,27 @@
+[
+  {
+    "key": "key_1",
+    "type": "string",
+    "label": "label_1",
+    "defaultValue": "defaultvalue_1"
+  },
+  {
+    "key": "key_2",
+    "type": "text",
+    "required": false
+  },
+  {
+    "key": "key_3",
+    "type": "number"
+  },
+  {
+    "key": "key_4",
+    "type": "boolean"
+  },
+  {
+    "key": "key_5",
+    "type": "date",
+    "label": "label_5",
+    "defaultValue": "defaultvalue_5"
+  }
+]
