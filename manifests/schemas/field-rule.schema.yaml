@@ -1,0 +1,43 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: FieldRuleDefinition
+description: A single client- or server-side validation rule for a field.
+
+type: object
+required: [ruleId, type, field, messageKey, clientSafe, blocking, severity]
+additionalProperties: false
+
+properties:
+  ruleId:
+    type: string
+    minLength: 1
+  type:
+    type: string
+    enum:
+      - required
+      - min_length
+      - max_length
+      - regex
+      - enum
+      - number_min
+      - number_max
+      - date
+      - future_date
+      - email
+  field:
+    type: string
+    minLength: 1
+  messageKey:
+    type: string
+    minLength: 1
+  defaultMessage:
+    type: string
+  params:
+    type: object
+    additionalProperties: true
+  clientSafe:
+    type: boolean
+  blocking:
+    type: boolean
+  severity:
+    type: string
+    enum: [error, warning]

@@ -1,0 +1,126 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: AppShellDefinition
+description: Layout, branding, regions, and shell-level navigation.
+
+type: object
+required: [key, name, layout, regions, outlet]
+additionalProperties: false
+
+properties:
+  key: { type: string, minLength: 1 }
+  name: { type: string, minLength: 1 }
+
+  layout:
+    type: object
+    required: [mode]
+    additionalProperties: false
+    properties:
+      mode:
+        type: string
+        enum:
+          - sidebar-content
+          - topbar-content
+          - sidebar-topbar-content
+          - minimal
+      maxContentWidth:
+        oneOf:
+          - type: number
+            exclusiveMinimum: 0
+          - const: full
+      contentPadding:
+        type: string
+        enum: [none, sm, md, lg]
+
+  branding:
+    type: object
+    additionalProperties: false
+    properties:
+      logo: { type: string, minLength: 1 }
+      productName: { type: string, minLength: 1 }
+      showProductName: { type: boolean }
+
+  regions:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required: [key, enabled]
+      additionalProperties: false
+      properties:
+        key:
+          type: string
+          enum: [topbar, sidebar, main, aside, footer, commandBar, notifications]
+        enabled: { type: boolean }
+        collapsible: { type: boolean }
+        defaultCollapsed: { type: boolean }
+        resizable: { type: boolean }
+        sticky: { type: boolean }
+        width: { type: number, exclusiveMinimum: 0 }
+        minWidth: { type: number, exclusiveMinimum: 0 }
+        maxWidth: { type: number, exclusiveMinimum: 0 }
+        order: { type: integer }
+
+  navigation:
+    type: object
+    additionalProperties: false
+    properties:
+      primary:
+        type: array
+        items:
+          $ref: "#/$defs/ShellNavItem"
+      secondary:
+        type: array
+        items:
+          $ref: "#/$defs/ShellNavItem"
+      footer:
+        type: array
+        items:
+          $ref: "#/$defs/ShellNavItem"
+
+  capabilities:
+    type: object
+    additionalProperties: false
+    properties:
+      globalSearch: { type: boolean }
+      workspaceSwitcher: { type: boolean }
+      tenantSwitcher: { type: boolean }
+      commandPalette: { type: boolean }
+      notifications: { type: boolean }
+      breadcrumbs: { type: boolean }
+      userMenu: { type: boolean }
+      themeSwitcher: { type: boolean }
+
+  responsive:
+    type: object
+    additionalProperties: false
+    properties:
+      mobileBreakpoint: { type: number, exclusiveMinimum: 0 }
+      collapseSidebarBelow: { type: number, exclusiveMinimum: 0 }
+      collapseAsideBelow: { type: number, exclusiveMinimum: 0 }
+      hideLabelsBelow: { type: number, exclusiveMinimum: 0 }
+      overlaySidebarOnMobile: { type: boolean }
+
+  outlet:
+    type: object
+    required: [type, region]
+    additionalProperties: false
+    properties:
+      type: { const: page }
+      region: { const: main }
+
+$defs:
+  ShellNavItem:
+    type: object
+    required: [key, label]
+    additionalProperties: false
+    properties:
+      key: { type: string, minLength: 1 }
+      label: { type: string, minLength: 1 }
+      icon: { type: string, minLength: 1 }
+      href: { type: string, minLength: 1 }
+      capabilityKey: { type: string, minLength: 1 }
+      external: { type: boolean }
+      children:
+        type: array
+        items:
+          $ref: "#/$defs/ShellNavItem"

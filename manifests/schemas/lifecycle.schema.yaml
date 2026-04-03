@@ -1,0 +1,31 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: LifecycleDefinition
+description: |
+  State-machine definition for an entity. Declares allowed states and
+  transitions. The "field" property names the entity field that holds
+  the current state value.
+
+type: object
+required: [field, initial, states, transitions]
+additionalProperties: false
+
+properties:
+  field:
+    type: string
+    minLength: 1
+    description: Entity field that stores the lifecycle state.
+  initial:
+    type: string
+    minLength: 1
+    description: Must be one of the declared states.
+  states:
+    type: array
+    items: { type: string }
+    minItems: 1
+    uniqueItems: true
+  transitions:
+    type: array
+    minItems: 1
+    items:
+      $ref: "./lifecycle-transition.schema.yaml"
+

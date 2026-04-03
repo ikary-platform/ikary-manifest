@@ -1,4 +1,5 @@
 import { parseManifest, validateManifest } from '@ikary-manifest/contract';
+import { stripMeta } from './strip-meta';
 import type { LoadManifestResult, LoadManifestOptions } from './types';
 
 /**
@@ -24,7 +25,8 @@ export function loadManifestFromJson(
     };
   }
 
-  const result = options?.structuralOnly ? parseManifest(raw) : validateManifest(raw);
+  const cleaned = stripMeta(raw);
+  const result = options?.structuralOnly ? parseManifest(cleaned) : validateManifest(cleaned);
 
   return { ...result, raw };
 }

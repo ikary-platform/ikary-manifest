@@ -1,0 +1,28 @@
+$schema: "../schemas/entity-definition.schema.yaml"
+
+key: invoice
+name: Invoice
+pluralName: Invoices
+
+fields:
+  - key: number
+    type: string
+    name: Number
+  - key: customer_id
+    type: string
+    name: Customer Id
+  - key: amount
+    type: number
+    name: Amount
+  - key: status
+    type: enum
+    name: Status
+    enumValues:
+      - draft
+      - sent
+      - paid
+
+relations:
+  - key: customer_ref_id
+    relation: belongs_to
+    entity: customer

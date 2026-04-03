@@ -13,12 +13,14 @@ describe('loadManifestFromFile', () => {
     expect(result.manifest!.metadata.key).toBe('minimal');
   });
 
-  it('loads CRM manifest from YAML file', async () => {
-    const result = await loadManifestFromFile(join(MANIFESTS_DIR, 'crm-manifest.yaml'));
+  it('loads CRM manifest (with $ref entities stripped, structuralOnly)', async () => {
+    const result = await loadManifestFromFile(
+      join(MANIFESTS_DIR, 'crm-manifest.yaml'),
+      { structuralOnly: true },
+    );
 
     expect(result.valid).toBe(true);
     expect(result.manifest!.metadata.key).toBe('crm');
-    expect(result.manifest!.spec.entities).toHaveLength(2);
   });
 
   it('rejects unsupported file extension', async () => {

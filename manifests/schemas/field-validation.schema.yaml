@@ -1,0 +1,13 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: FieldValidation
+description: Validation rules attached to a single field.
+
+type: object
+additionalProperties: false
+
+properties:
+  fieldRules:
+    type: array
+    items:
+      $ref: "./field-rule.schema.yaml"
+
