@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Micro Entity Governance Spec
 
 Version: 1.1
