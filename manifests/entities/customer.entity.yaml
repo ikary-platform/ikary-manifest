@@ -1,0 +1,54 @@
+$schema: "../schemas/entity-definition.schema.yaml"
+
+key: customer
+name: Customer
+pluralName: Customers
+
+fields:
+  - key: name
+    type: string
+    name: Name
+  - key: email
+    type: string
+    name: Email
+  - key: status
+    type: enum
+    name: Status
+    enumValues:
+      - lead
+      - active
+      - inactive
+
+relations:
+  - key: invoices
+    relation: has_many
+    entity: invoice
+    foreignKey: customer_id
+
+computed:
+  - key: invoice_count
+    name: Invoice Count
+    type: number
+    formulaType: aggregation
+    relation: invoices
+    operation: count
+
+lifecycle:
+  field: status
+  initial: lead
+  states:
+    - lead
+    - active
+    - inactive
+  transitions:
+    - key: activate
+      from: lead
+      to: active
+    - key: deactivate
+      from: active
+      to: inactive
+
+capabilities:
+  - key: activate
+    type: transition
+    transition: activate

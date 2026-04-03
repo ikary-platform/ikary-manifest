@@ -1,0 +1,20 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: CellManifestV1
+description: |
+  Top-level Ikary Cell manifest.
+  Defines a complete cell application: its metadata, entities, pages,
+  navigation, roles, and shell configuration.
+
+type: object
+required: [apiVersion, kind, metadata, spec]
+additionalProperties: false
+
+properties:
+  apiVersion:
+    const: "ikary.co/v1alpha1"
+  kind:
+    const: Cell
+  metadata:
+    $ref: "./metadata.schema.yaml"
+  spec:
+    $ref: "./cell-spec.schema.yaml"

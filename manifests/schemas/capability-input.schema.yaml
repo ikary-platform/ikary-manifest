@@ -1,0 +1,32 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: CapabilityInputDefinition
+description: |
+  Input parameter for a capability. Discriminated on "type".
+
+type: object
+required: [key, type]
+additionalProperties: false
+
+properties:
+  key:
+    type: string
+    minLength: 1
+  type:
+    type: string
+    enum: [string, text, number, boolean, date, select, entity]
+  label:
+    type: string
+    minLength: 1
+  required:
+    type: boolean
+  defaultValue: {}
+  options:
+    type: array
+    items: { type: string }
+    minItems: 1
+    uniqueItems: true
+    description: Required when type is "select".
+  entity:
+    type: string
+    minLength: 1
+    description: Required when type is "entity".

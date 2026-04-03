@@ -1,0 +1,76 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: DisplayDefinition
+description: Controls how a field value is rendered in list and detail views.
+
+type: object
+additionalProperties: false
+
+properties:
+  type:
+    type: string
+    enum:
+      - text
+      - multiline-text
+      - number
+      - currency
+      - percentage
+      - date
+      - datetime
+      - boolean
+      - status
+      - badge
+      - email
+      - phone
+      - url
+      - entity-link
+      - user
+      - avatar-name
+      - tags
+      - progress
+      - json-preview
+      - actions
+      - custom
+  align:
+    type: string
+    enum: [left, center, right]
+  emptyLabel:
+    type: string
+  truncate:
+    type: boolean
+  tooltip:
+    type: boolean
+  currency:
+    type: string
+    minLength: 1
+    description: ISO currency code. Only valid when type is "currency".
+  precision:
+    type: integer
+    minimum: 0
+    maximum: 6
+    description: Decimal places. Only for number, currency, percentage, progress.
+  labelField:
+    type: string
+    minLength: 1
+  subtitleField:
+    type: string
+    minLength: 1
+  route:
+    type: string
+    minLength: 1
+  badgeToneMap:
+    type: object
+    additionalProperties:
+      type: string
+  statusMap:
+    type: object
+    additionalProperties:
+      type: string
+  maxItems:
+    type: integer
+    minimum: 1
+  showOverflowCount:
+    type: boolean
+  rendererKey:
+    type: string
+    minLength: 1
+    description: Required when type is "custom", forbidden otherwise.

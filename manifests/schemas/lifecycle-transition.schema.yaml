@@ -1,0 +1,34 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: LifecycleTransitionDefinition
+description: A single state transition within a lifecycle.
+
+type: object
+required: [key, from, to]
+additionalProperties: false
+
+properties:
+  key:
+    type: string
+    minLength: 1
+  from:
+    type: string
+    minLength: 1
+    description: Must reference a declared state.
+  to:
+    type: string
+    minLength: 1
+    description: Must reference a declared state.
+  label:
+    type: string
+    minLength: 1
+  guards:
+    type: array
+    items: { type: string }
+    uniqueItems: true
+  hooks:
+    type: array
+    items: { type: string }
+    uniqueItems: true
+  event:
+    type: string
+    minLength: 1
