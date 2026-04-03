@@ -1,0 +1,50 @@
+[
+  {
+    "key": "customers",
+    "type": "entity-list",
+    "title": "Customers",
+    "path": "/customers",
+    "entity": "customer"
+  },
+  {
+    "key": "customerDetail",
+    "type": "entity-detail",
+    "title": "Customer Detail",
+    "path": "/customers/:id",
+    "entity": "customer",
+    "menu": {
+      "label": "Customers",
+      "order": 1
+    }
+  },
+  {
+    "key": "invoiceCreate",
+    "type": "entity-create",
+    "title": "Create Invoice",
+    "path": "/invoices/new",
+    "entity": "invoice",
+    "options": {
+      "mode": "quick"
+    }
+  },
+  {
+    "key": "dashboard",
+    "type": "dashboard",
+    "title": "Workspace Dashboard",
+    "path": "/dashboard",
+    "menu": {
+      "label": "Dashboard",
+      "icon": "LayoutDashboard"
+    }
+  },
+  {
+    "key": "customReport",
+    "type": "custom",
+    "title": "Reports",
+    "path": "/reports",
+    "menu": {
+      "label": "Reports",
+      "order": 5
+    }
+  }
+]

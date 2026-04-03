@@ -1,0 +1,55 @@
+[
+  {
+    "ruleId": "ruleid_1",
+    "type": "cross_entity",
+    "validatorRef": "validatorref_1",
+    "messageKey": "messagekey_1",
+    "clientSafe": false,
+    "async": true,
+    "blocking": true,
+    "severity": "error",
+    "targetPaths": ["0_1"]
+  },
+  {
+    "ruleId": "ruleid_2",
+    "type": "lifecycle",
+    "validatorRef": "validatorref_2",
+    "messageKey": "messagekey_2",
+    "clientSafe": false,
+    "async": true,
+    "blocking": false,
+    "severity": "warning"
+  },
+  {
+    "ruleId": "ruleid_3",
+    "type": "persistence_preview",
+    "validatorRef": "validatorref_3",
+    "messageKey": "messagekey_3",
+    "clientSafe": false,
+    "async": true,
+    "blocking": true,
+    "severity": "error"
+  },
+  {
+    "ruleId": "ruleid_4",
+    "type": "cross_entity",
+    "validatorRef": "validatorref_4",
+    "messageKey": "messagekey_4",
+    "clientSafe": false,
+    "async": true,
+    "blocking": false,
+    "severity": "warning",
+    "defaultMessage": "defaultmessage_4"
+  },
+  {
+    "ruleId": "ruleid_5",
+    "type": "lifecycle",
+    "validatorRef": "validatorref_5",
+    "messageKey": "messagekey_5",
+    "clientSafe": false,
+    "async": true,
+    "blocking": true,
+    "severity": "error",
+    "targetPaths": ["0_5"]
+  }
+]

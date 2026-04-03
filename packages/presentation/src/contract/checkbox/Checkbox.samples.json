@@ -1,0 +1,28 @@
+[
+  {
+    "checked": true,
+    "label": "Accept terms",
+    "name": "terms"
+  },
+  {
+    "defaultChecked": false,
+    "required": true,
+    "id": "marketing-optin"
+  },
+  {
+    "checked": false,
+    "disabled": true,
+    "label": "Archived"
+  },
+  {
+    "defaultChecked": true,
+    "invalid": true,
+    "label": "I confirm this action"
+  },
+  {
+    "checked": true,
+    "loading": true,
+    "label": "Enable sync",
+    "name": "syncEnabled"
+  }
+]

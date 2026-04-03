@@ -1,0 +1,27 @@
+[
+  {
+    "checked": true,
+    "label": "Enable notifications",
+    "name": "notify"
+  },
+  {
+    "defaultChecked": false,
+    "label": "Allow guest checkout"
+  },
+  {
+    "checked": false,
+    "disabled": true,
+    "label": "Public mode"
+  },
+  {
+    "defaultChecked": true,
+    "invalid": true,
+    "label": "Strict validation"
+  },
+  {
+    "checked": true,
+    "loading": true,
+    "required": true,
+    "id": "auto-sync"
+  }
+]

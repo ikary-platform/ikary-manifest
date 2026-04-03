@@ -1,0 +1,46 @@
+[
+  {
+    "title": "Unable to load page",
+    "variant": "page",
+    "severity": "blocking",
+    "retryAction": {
+      "label": "Retry",
+      "actionKey": "retry"
+    }
+  },
+  {
+    "title": "Section failed",
+    "description": "Try again in a few minutes.",
+    "variant": "section",
+    "severity": "soft"
+  },
+  {
+    "title": "Network issue",
+    "variant": "network",
+    "retryAction": {
+      "label": "Retry"
+    },
+    "secondaryAction": {
+      "label": "Open status page",
+      "href": "/status"
+    }
+  },
+  {
+    "title": "Unexpected error",
+    "variant": "unexpected",
+    "technicalDetails": {
+      "code": "E_RUNTIME_103",
+      "correlationId": "corr-789",
+      "message": "Renderer contract mismatch"
+    }
+  },
+  {
+    "title": "Record not found",
+    "description": "The requested entity does not exist.",
+    "variant": "notFound",
+    "secondaryAction": {
+      "label": "Back to list",
+      "actionKey": "go-list"
+    }
+  }
+]

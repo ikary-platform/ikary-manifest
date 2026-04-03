@@ -1,0 +1,26 @@
+{
+  "name": "ikary-manifest",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Ikary Manifest — open-source declarative cell contracts, runtime engine, and React renderer",
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "vitest run --workspace vitest.workspace.ts",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "turbo": "^2.8.0",
+    "typescript": "^5.5.3",
+    "tsup": "^8.0.2",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.9"
+}

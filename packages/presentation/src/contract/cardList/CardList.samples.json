@@ -1,0 +1,195 @@
+[
+  {
+    "type": "card-list",
+    "layout": {
+      "columns": "2"
+    },
+    "card": {
+      "titleField": "name",
+      "subtitleField": "email",
+      "badge": {
+        "field": "status",
+        "tone": "info"
+      },
+      "fields": [
+        {
+          "key": "owner",
+          "label": "Owner",
+          "field": "owner",
+          "valueType": "text"
+        },
+        {
+          "key": "region",
+          "label": "Region",
+          "field": "region",
+          "valueType": "enum"
+        }
+      ],
+      "metrics": [
+        {
+          "key": "mrr",
+          "label": "MRR",
+          "field": "mrr",
+          "valueType": "currency"
+        }
+      ],
+      "actions": [
+        {
+          "key": "open",
+          "label": "Open",
+          "href": "/customers/{id}",
+          "intent": "default"
+        }
+      ]
+    },
+    "emptyState": {
+      "title": "No cards",
+      "description": "No card items match filters."
+    }
+  },
+  {
+    "type": "card-list",
+    "layout": {
+      "columns": "1"
+    },
+    "card": {
+      "titleField": "name",
+      "subtitleField": "email",
+      "badge": {
+        "field": "status",
+        "tone": "info"
+      },
+      "fields": [
+        {
+          "key": "owner",
+          "label": "Owner",
+          "field": "owner"
+        }
+      ],
+      "actions": [
+        {
+          "key": "open",
+          "label": "Open",
+          "actionKey": "open-card"
+        }
+      ]
+    },
+    "emptyState": {
+      "title": "No cards",
+      "description": "No card items match filters."
+    }
+  },
+  {
+    "type": "card-list",
+    "layout": {
+      "columns": "3"
+    },
+    "card": {
+      "titleField": "company",
+      "badge": {
+        "field": "risk",
+        "tone": "danger"
+      },
+      "metrics": [
+        {
+          "key": "arr",
+          "label": "ARR",
+          "field": "arr",
+          "valueType": "currency",
+          "supportingText": "Annualized"
+        },
+        {
+          "key": "users",
+          "label": "Users",
+          "field": "users",
+          "valueType": "number"
+        }
+      ],
+      "actions": [
+        {
+          "key": "view",
+          "label": "View",
+          "href": "/companies/{id}"
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "actionKey": "email-company",
+          "intent": "neutral"
+        }
+      ]
+    },
+    "emptyState": {
+      "title": "No cards",
+      "description": "No card items match filters."
+    }
+  },
+  {
+    "type": "card-list",
+    "layout": {
+      "columns": "2"
+    },
+    "card": {
+      "titleField": "ticket",
+      "fields": [
+        {
+          "key": "priority",
+          "label": "Priority",
+          "field": "priority",
+          "valueType": "status"
+        }
+      ]
+    },
+    "emptyState": {
+      "title": "No tickets"
+    }
+  },
+  {
+    "type": "card-list",
+    "layout": {
+      "columns": "2"
+    },
+    "card": {
+      "titleField": "name",
+      "badge": {
+        "field": "status",
+        "tone": "info"
+      },
+      "fields": [
+        {
+          "key": "owner",
+          "label": "Owner",
+          "field": "owner",
+          "emptyLabel": "Unassigned"
+        },
+        {
+          "key": "plan",
+          "label": "Plan",
+          "field": "plan",
+          "valueType": "enum"
+        }
+      ],
+      "metrics": [
+        {
+          "key": "mrr",
+          "label": "MRR",
+          "field": "mrr",
+          "valueType": "currency"
+        }
+      ],
+      "actions": [
+        {
+          "key": "open",
+          "label": "Open",
+          "href": "/customers/{id}",
+          "intent": "default"
+        }
+      ]
+    },
+    "emptyState": {
+      "title": "No cards",
+      "description": "No card items match filters."
+    },
+    "dense": true
+  }
+]

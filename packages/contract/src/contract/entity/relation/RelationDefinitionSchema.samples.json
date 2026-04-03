@@ -1,0 +1,33 @@
+[
+  {
+    "key": "key_1",
+    "relation": "belongs_to",
+    "entity": "entity_1"
+  },
+  {
+    "key": "key_2",
+    "relation": "has_many",
+    "entity": "entity_2",
+    "foreignKey": "foreignkey_2"
+  },
+  {
+    "key": "key_3",
+    "relation": "many_to_many",
+    "entity": "entity_3",
+    "through": "through_3",
+    "sourceKey": "sourcekey_3",
+    "targetKey": "targetkey_3",
+    "label": "label_3"
+  },
+  {
+    "key": "key_4",
+    "relation": "self",
+    "kind": "belongs_to"
+  },
+  {
+    "key": "key_5",
+    "relation": "polymorphic",
+    "typeField": "typefield_5",
+    "idField": "idfield_5"
+  }
+]

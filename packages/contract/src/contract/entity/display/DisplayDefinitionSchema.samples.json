@@ -1,0 +1,33 @@
+[
+  {
+    "type": "text",
+    "emptyLabel": "N/A",
+    "truncate": true,
+    "align": "left"
+  },
+  {
+    "type": "currency",
+    "currency": "EUR",
+    "precision": 2,
+    "align": "right"
+  },
+  {
+    "type": "status",
+    "statusMap": {
+      "active": "Active",
+      "paused": "Paused"
+    }
+  },
+  {
+    "type": "badge",
+    "badgeToneMap": {
+      "high": "danger",
+      "low": "info"
+    }
+  },
+  {
+    "type": "custom",
+    "rendererKey": "risk-score-renderer",
+    "tooltip": true
+  }
+]

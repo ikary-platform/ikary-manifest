@@ -1,0 +1,26 @@
+{
+  "type": "tabs",
+  "activeKey": "overview",
+  "items": [
+    {
+      "key": "overview",
+      "label": "Overview",
+      "href": "/customers/123"
+    },
+    {
+      "key": "activity",
+      "label": "Activity",
+      "href": "/customers/123/activity",
+      "count": 12
+    },
+    {
+      "key": "billing",
+      "label": "Billing",
+      "actionKey": "open-billing-tab"
+    }
+  ],
+  "overflow": {
+    "mode": "scroll",
+    "collapseBelow": "md"
+  }
+}

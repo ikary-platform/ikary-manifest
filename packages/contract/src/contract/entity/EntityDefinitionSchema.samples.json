@@ -1,0 +1,217 @@
+[
+  {
+    "key": "customer",
+    "name": "Customer",
+    "pluralName": "Customers",
+    "fields": [
+      {
+        "key": "name",
+        "type": "string",
+        "name": "Name"
+      },
+      {
+        "key": "email",
+        "type": "string",
+        "name": "Email",
+        "display": {
+          "type": "email"
+        }
+      }
+    ]
+  },
+  {
+    "key": "invoice",
+    "name": "Invoice",
+    "pluralName": "Invoices",
+    "fields": [
+      {
+        "key": "number",
+        "type": "string",
+        "name": "Number"
+      },
+      {
+        "key": "status",
+        "type": "enum",
+        "name": "Status",
+        "enumValues": ["draft", "sent", "paid"]
+      }
+    ],
+    "lifecycle": {
+      "field": "status",
+      "initial": "draft",
+      "states": ["draft", "sent", "paid"],
+      "transitions": [
+        {
+          "key": "send",
+          "from": "draft",
+          "to": "sent"
+        },
+        {
+          "key": "markPaid",
+          "from": "sent",
+          "to": "paid"
+        }
+      ]
+    },
+    "events": {
+      "names": {
+        "created": "invoice.created",
+        "updated": "invoice.updated"
+      }
+    }
+  },
+  {
+    "key": "ticket",
+    "name": "Ticket",
+    "pluralName": "Tickets",
+    "fields": [
+      {
+        "key": "subject",
+        "type": "string",
+        "name": "Subject"
+      },
+      {
+        "key": "priority",
+        "type": "enum",
+        "name": "Priority",
+        "enumValues": ["low", "medium", "high"],
+        "display": {
+          "type": "badge",
+          "badgeToneMap": {
+            "low": "info",
+            "medium": "warning",
+            "high": "danger"
+          }
+        }
+      }
+    ],
+    "computed": [
+      {
+        "key": "isHighPriority",
+        "name": "Is High Priority",
+        "type": "boolean",
+        "formulaType": "conditional",
+        "condition": "priority == 'high'",
+        "then": "true",
+        "else": "false"
+      }
+    ],
+    "validation": {
+      "entityRules": [
+        {
+          "ruleId": "ticket_subject_required",
+          "type": "entity_invariant",
+          "paths": ["subject"],
+          "messageKey": "validation.ticket.subject.required",
+          "clientSafe": true,
+          "blocking": true,
+          "severity": "error"
+        }
+      ]
+    }
+  },
+  {
+    "key": "project",
+    "name": "Project",
+    "pluralName": "Projects",
+    "fields": [
+      {
+        "key": "title",
+        "type": "string",
+        "name": "Title"
+      },
+      {
+        "key": "budget",
+        "type": "number",
+        "name": "Budget",
+        "display": {
+          "type": "currency",
+          "currency": "USD",
+          "precision": 0
+        }
+      }
+    ],
+    "relations": [
+      {
+        "key": "owner",
+        "relation": "belongs_to",
+        "entity": "user",
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "key": "archive",
+        "type": "workflow",
+        "workflow": "archiveProject",
+        "scope": "entity"
+      }
+    ],
+    "policies": {
+      "view": {
+        "scope": "workspace"
+      },
+      "update": {
+        "scope": "role",
+        "condition": "role == 'manager'"
+      }
+    },
+    "fieldPolicies": {
+      "budget": {
+        "view": {
+          "scope": "role",
+          "condition": "role == 'finance'"
+        },
+        "update": {
+          "scope": "role",
+          "condition": "role == 'finance'"
+        }
+      }
+    }
+  },
+  {
+    "key": "order",
+    "name": "Order",
+    "pluralName": "Orders",
+    "fields": [
+      {
+        "key": "status",
+        "type": "enum",
+        "name": "Status",
+        "enumValues": ["pending", "confirmed", "fulfilled"]
+      },
+      {
+        "key": "placedAt",
+        "type": "datetime",
+        "name": "Placed At",
+        "display": {
+          "type": "datetime"
+        }
+      }
+    ],
+    "computed": [
+      {
+        "key": "lineCount",
+        "name": "Line Count",
+        "type": "number",
+        "formulaType": "aggregation",
+        "relation": "lineItems",
+        "operation": "count"
+      }
+    ],
+    "validation": {
+      "serverValidators": [
+        {
+          "ruleId": "order_inventory_check",
+          "type": "cross_entity",
+          "validatorRef": "validators.order.inventory",
+          "messageKey": "validation.order.inventory",
+          "clientSafe": false,
+          "async": true,
+          "blocking": true,
+          "severity": "error"
+        }
+      ]
+    }
+  }
+]

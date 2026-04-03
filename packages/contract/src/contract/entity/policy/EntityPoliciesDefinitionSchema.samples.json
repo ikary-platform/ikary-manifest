@@ -1,0 +1,27 @@
+[
+  {
+    "view": {
+      "scope": "public"
+    }
+  },
+  {
+    "create": {
+      "scope": "tenant"
+    }
+  },
+  {
+    "update": {
+      "scope": "workspace"
+    }
+  },
+  {
+    "delete": {
+      "scope": "owner"
+    }
+  },
+  {
+    "view": {
+      "scope": "role"
+    }
+  }
+]

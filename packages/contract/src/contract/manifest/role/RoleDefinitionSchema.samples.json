@@ -1,0 +1,30 @@
+[
+  {
+    "key": "key_1",
+    "name": "name_1",
+    "scopes": ["0_1"],
+    "description": "description_1"
+  },
+  {
+    "key": "key_2",
+    "name": "name_2",
+    "scopes": ["0_2", "1_3"]
+  },
+  {
+    "key": "key_3",
+    "name": "name_3",
+    "scopes": ["0_3"]
+  },
+  {
+    "key": "key_4",
+    "name": "name_4",
+    "scopes": ["0_4", "1_5"],
+    "identityMappings": ["0_4", "1_5"]
+  },
+  {
+    "key": "key_5",
+    "name": "name_5",
+    "scopes": ["0_5"],
+    "description": "description_5"
+  }
+]

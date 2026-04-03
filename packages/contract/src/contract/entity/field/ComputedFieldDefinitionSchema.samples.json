@@ -1,0 +1,47 @@
+[
+  {
+    "key": "totalAmount",
+    "name": "Total Amount",
+    "type": "number",
+    "formulaType": "expression",
+    "expression": "lineItems.sum(amount)",
+    "dependencies": ["lineItems"]
+  },
+  {
+    "key": "isHighRisk",
+    "name": "Is High Risk",
+    "type": "boolean",
+    "formulaType": "conditional",
+    "condition": "score > 80",
+    "then": "true",
+    "else": "false",
+    "dependencies": ["score"]
+  },
+  {
+    "key": "lineCount",
+    "name": "Line Count",
+    "type": "number",
+    "formulaType": "aggregation",
+    "relation": "lineItems",
+    "operation": "count",
+    "filter": "status != 'deleted'"
+  },
+  {
+    "key": "maxDueDate",
+    "name": "Max Due Date",
+    "type": "date",
+    "formulaType": "aggregation",
+    "relation": "tasks",
+    "operation": "max",
+    "field": "dueDate"
+  },
+  {
+    "key": "avgScore",
+    "name": "Average Score",
+    "type": "number",
+    "formulaType": "aggregation",
+    "relation": "reviews",
+    "operation": "avg",
+    "field": "score"
+  }
+]

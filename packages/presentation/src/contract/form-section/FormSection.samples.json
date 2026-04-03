@@ -1,0 +1,182 @@
+[
+  {
+    "type": "form-section",
+    "key": "general",
+    "title": "General",
+    "layout": "stack",
+    "fields": [
+      {
+        "type": "form-field",
+        "key": "name",
+        "variant": "standard",
+        "control": "text",
+        "label": "Name",
+        "required": true,
+        "helpText": "Customer display name"
+      },
+      {
+        "type": "form-field",
+        "key": "status",
+        "variant": "standard",
+        "control": "select",
+        "label": "Status",
+        "options": [
+          {
+            "key": "active",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "key": "paused",
+            "label": "Paused",
+            "value": "paused"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "form-section",
+    "key": "paired-fields",
+    "title": "Paired fields",
+    "layout": "two-column",
+    "fields": [
+      {
+        "type": "form-field",
+        "key": "firstName",
+        "variant": "standard",
+        "control": "text",
+        "label": "First name"
+      },
+      {
+        "type": "form-field",
+        "key": "lastName",
+        "variant": "standard",
+        "control": "text",
+        "label": "Last name"
+      }
+    ]
+  },
+  {
+    "type": "form-section",
+    "key": "preferences",
+    "title": "Preferences",
+    "layout": "stack",
+    "fields": [
+      {
+        "type": "form-field",
+        "key": "name",
+        "variant": "standard",
+        "control": "text",
+        "label": "Name",
+        "required": true,
+        "helpText": "Customer display name"
+      },
+      {
+        "type": "form-field",
+        "key": "status",
+        "variant": "standard",
+        "control": "select",
+        "label": "Status",
+        "options": [
+          {
+            "key": "active",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "key": "paused",
+            "label": "Paused",
+            "value": "paused"
+          }
+        ]
+      }
+    ],
+    "collapsible": true,
+    "defaultExpanded": false,
+    "actions": [
+      {
+        "key": "reset-pref",
+        "label": "Reset",
+        "actionKey": "reset-preferences"
+      }
+    ]
+  },
+  {
+    "type": "form-section",
+    "key": "readonly-status",
+    "title": "Readonly section",
+    "layout": "stack",
+    "fields": [
+      {
+        "type": "form-field",
+        "key": "name",
+        "variant": "standard",
+        "control": "text",
+        "label": "Name",
+        "required": true,
+        "helpText": "Customer display name"
+      },
+      {
+        "type": "form-field",
+        "key": "status",
+        "variant": "standard",
+        "control": "select",
+        "label": "Status",
+        "options": [
+          {
+            "key": "active",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "key": "paused",
+            "label": "Paused",
+            "value": "paused"
+          }
+        ]
+      }
+    ],
+    "readonly": true,
+    "status": "readonly"
+  },
+  {
+    "type": "form-section",
+    "key": "validation-state",
+    "title": "Validation state",
+    "layout": "stack",
+    "fields": [
+      {
+        "type": "form-field",
+        "key": "name",
+        "variant": "standard",
+        "control": "text",
+        "label": "Name",
+        "required": true,
+        "helpText": "Customer display name"
+      },
+      {
+        "type": "form-field",
+        "key": "status",
+        "variant": "standard",
+        "control": "select",
+        "label": "Status",
+        "options": [
+          {
+            "key": "active",
+            "label": "Active",
+            "value": "active"
+          },
+          {
+            "key": "paused",
+            "label": "Paused",
+            "value": "paused"
+          }
+        ]
+      }
+    ],
+    "status": "error",
+    "disabled": false,
+    "dense": true
+  }
+]

@@ -1,0 +1,163 @@
+[
+  {
+    "variant": "workspace",
+    "density": "comfortable",
+    "title": "Workspace dashboard",
+    "subtitle": "Operational overview",
+    "actions": [
+      {
+        "key": "refresh",
+        "label": "Refresh",
+        "actionKey": "refresh"
+      }
+    ],
+    "kpis": [
+      {
+        "key": "k1",
+        "title": "Open items",
+        "renderer": {
+          "key": "open-items"
+        },
+        "size": "small"
+      },
+      {
+        "key": "k2",
+        "title": "At risk",
+        "renderer": {
+          "key": "at-risk"
+        },
+        "size": "small"
+      }
+    ],
+    "primaryWidgets": [
+      {
+        "key": "w1",
+        "title": "Recent activity",
+        "renderer": {
+          "key": "activity-feed"
+        },
+        "size": "large"
+      }
+    ],
+    "secondaryWidgets": [
+      {
+        "key": "w2",
+        "title": "Announcements",
+        "renderer": {
+          "key": "announcements"
+        },
+        "size": "medium"
+      }
+    ]
+  },
+  {
+    "variant": "cell",
+    "title": "Cell dashboard",
+    "actions": [
+      {
+        "key": "create",
+        "label": "Create work item",
+        "href": "/work-items/new",
+        "variant": "default"
+      },
+      {
+        "key": "config",
+        "label": "Configure",
+        "actionKey": "open-config",
+        "variant": "secondary"
+      }
+    ],
+    "kpis": [
+      {
+        "key": "kpi-a",
+        "title": "Throughput",
+        "subtitle": "7 days",
+        "renderer": {
+          "key": "throughput"
+        },
+        "size": "medium"
+      }
+    ]
+  },
+  {
+    "variant": "domain",
+    "density": "compact",
+    "title": "Finance dashboard",
+    "kpis": [
+      {
+        "key": "f-k1",
+        "title": "Revenue",
+        "renderer": {
+          "key": "revenue"
+        },
+        "renderState": {
+          "kind": "loading",
+          "state": {}
+        }
+      }
+    ],
+    "primaryWidgets": [
+      {
+        "key": "f-w1",
+        "title": "Invoices queue",
+        "renderer": {
+          "key": "invoice-queue"
+        },
+        "actions": [
+          {
+            "key": "open-queue",
+            "label": "Open queue",
+            "actionKey": "open-queue"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "variant": "entity-overview",
+    "title": "Customer overview dashboard",
+    "renderState": {
+      "kind": "loading",
+      "state": {
+        "label": "Loading dashboard",
+        "variant": "page"
+      }
+    }
+  },
+  {
+    "title": "Minimal dashboard",
+    "primaryWidgets": [
+      {
+        "key": "p1",
+        "title": "Health",
+        "renderer": {
+          "key": "health"
+        },
+        "renderState": {
+          "kind": "error",
+          "state": {
+            "title": "Widget failed",
+            "variant": "section",
+            "severity": "soft"
+          }
+        }
+      }
+    ],
+    "secondaryWidgets": [
+      {
+        "key": "s1",
+        "title": "Backlog",
+        "renderer": {
+          "key": "backlog"
+        },
+        "actions": [
+          {
+            "key": "open-backlog",
+            "label": "Open",
+            "href": "/backlog"
+          }
+        ]
+      }
+    ]
+  }
+]

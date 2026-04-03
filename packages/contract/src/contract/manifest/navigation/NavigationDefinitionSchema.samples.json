@@ -1,0 +1,110 @@
+[
+  {
+    "items": [
+      {
+        "type": "page",
+        "key": "homeNav",
+        "pageKey": "dashboard",
+        "label": "Home"
+      },
+      {
+        "type": "group",
+        "key": "salesGroup",
+        "label": "Sales",
+        "children": [
+          {
+            "type": "page",
+            "key": "customersNav",
+            "pageKey": "customers",
+            "label": "Customers"
+          },
+          {
+            "type": "page",
+            "key": "invoicesNav",
+            "pageKey": "invoices",
+            "label": "Invoices"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "items": [
+      {
+        "type": "page",
+        "key": "dashboardNav",
+        "pageKey": "dashboard",
+        "label": "Dashboard"
+      },
+      {
+        "type": "page",
+        "key": "reportsNav",
+        "pageKey": "reports",
+        "label": "Reports"
+      }
+    ]
+  },
+  {
+    "items": [
+      {
+        "type": "group",
+        "key": "opsGroup",
+        "label": "Operations",
+        "children": [
+          {
+            "type": "page",
+            "key": "ticketsNav",
+            "pageKey": "tickets",
+            "label": "Tickets"
+          },
+          {
+            "type": "page",
+            "key": "tasksNav",
+            "pageKey": "tasks",
+            "label": "Tasks"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "items": [
+      {
+        "type": "group",
+        "key": "adminRoot",
+        "label": "Admin",
+        "children": [
+          {
+            "type": "group",
+            "key": "securityGroup",
+            "label": "Security",
+            "children": [
+              {
+                "type": "page",
+                "key": "rolesNav",
+                "pageKey": "roles",
+                "label": "Roles"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "items": [
+      {
+        "type": "page",
+        "key": "settingsNav",
+        "pageKey": "settings",
+        "label": "Settings"
+      },
+      {
+        "type": "page",
+        "key": "auditNav",
+        "pageKey": "audit",
+        "label": "Audit Log"
+      }
+    ]
+  }
+]

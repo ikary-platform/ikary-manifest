@@ -1,0 +1,77 @@
+[
+  {
+    "value": "active",
+    "options": [
+      {
+        "value": "active",
+        "label": "Active"
+      },
+      {
+        "value": "paused",
+        "label": "Paused"
+      }
+    ]
+  },
+  {
+    "defaultValue": "eur",
+    "placeholder": "Choose currency",
+    "options": [
+      {
+        "value": "eur",
+        "label": "EUR",
+        "description": "Euro"
+      },
+      {
+        "value": "usd",
+        "label": "USD",
+        "icon": "usd"
+      }
+    ]
+  },
+  {
+    "required": true,
+    "invalid": true,
+    "loading": true,
+    "options": [
+      {
+        "value": "high",
+        "label": "High"
+      },
+      {
+        "value": "medium",
+        "label": "Medium"
+      },
+      {
+        "value": "low",
+        "label": "Low",
+        "disabled": true
+      }
+    ]
+  },
+  {
+    "name": "region",
+    "id": "region-select",
+    "emptyMessage": "No regions",
+    "leadingIcon": "map",
+    "options": [
+      {
+        "value": "eu",
+        "label": "Europe"
+      }
+    ]
+  },
+  {
+    "disabled": true,
+    "value": "internal",
+    "options": [
+      {
+        "value": "internal",
+        "label": "Internal"
+      },
+      {
+        "value": "external",
+        "label": "External"
+      }
+    ]
+  }
+]

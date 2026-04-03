@@ -1,0 +1,51 @@
+[
+  {
+    "key": "key_1",
+    "type": "transition",
+    "transition": "transition_1",
+    "visible": true
+  },
+  {
+    "key": "key_2",
+    "type": "mutation",
+    "updates": {
+      "keya_2": {
+        "value": "payload_2"
+      },
+      "keyb_2_b": {
+        "value": "payload_3"
+      }
+    },
+    "inputs": [
+      {
+        "key": "key_2",
+        "type": "text",
+        "defaultValue": "defaultvalue_2"
+      },
+      {
+        "key": "key_3",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "key": "key_3",
+    "type": "workflow",
+    "workflow": "workflow_3",
+    "description": "description_3",
+    "confirm": true,
+    "scope": "global"
+  },
+  {
+    "key": "key_4",
+    "type": "export",
+    "format": "json",
+    "icon": "icon_4"
+  },
+  {
+    "key": "key_5",
+    "type": "integration",
+    "provider": "provider_5",
+    "visible": true
+  }
+]

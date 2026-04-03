@@ -1,0 +1,103 @@
+[
+  {
+    "variant": "list",
+    "density": "comfortable",
+    "selectedCount": 3,
+    "scope": "page",
+    "actions": [
+      {
+        "key": "archive",
+        "label": "Archive",
+        "variant": "secondary"
+      },
+      {
+        "key": "delete",
+        "label": "Delete",
+        "variant": "destructive",
+        "confirm": {
+          "title": "Delete 3 items?"
+        }
+      }
+    ],
+    "clearSelectionAction": {
+      "label": "Clear",
+      "actionKey": "clear-selection"
+    }
+  },
+  {
+    "selectedCount": 27,
+    "scope": "all-results",
+    "summaryLabel": "27 selected across results",
+    "actions": [
+      {
+        "key": "assign",
+        "label": "Assign owner"
+      }
+    ],
+    "overflowActions": [
+      {
+        "key": "tag",
+        "label": "Add tag"
+      }
+    ],
+    "selectAllResultsAction": {
+      "label": "Select all results",
+      "actionKey": "select-all-results"
+    }
+  },
+  {
+    "variant": "section",
+    "density": "compact",
+    "selectedCount": 1,
+    "actions": [
+      {
+        "key": "mark-done",
+        "label": "Mark done",
+        "loading": true
+      }
+    ]
+  },
+  {
+    "selectedCount": 0,
+    "actions": [
+      {
+        "key": "export",
+        "label": "Export",
+        "disabled": true
+      }
+    ],
+    "clearSelectionAction": {
+      "label": "Reset"
+    }
+  },
+  {
+    "selectedCount": 12,
+    "actions": [
+      {
+        "key": "merge",
+        "label": "Merge",
+        "variant": "default"
+      },
+      {
+        "key": "close",
+        "label": "Close",
+        "variant": "secondary"
+      }
+    ],
+    "overflowActions": [
+      {
+        "key": "reopen",
+        "label": "Re-open",
+        "variant": "secondary"
+      },
+      {
+        "key": "hard-delete",
+        "label": "Hard delete",
+        "variant": "destructive",
+        "confirm": {
+          "confirmLabel": "Delete now"
+        }
+      }
+    ]
+  }
+]

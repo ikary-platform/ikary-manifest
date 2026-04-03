@@ -1,0 +1,53 @@
+[
+  {
+    "ruleId": "ruleid_1",
+    "type": "required",
+    "field": "field_1",
+    "messageKey": "messagekey_1",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error"
+  },
+  {
+    "ruleId": "ruleid_2",
+    "type": "min_length",
+    "field": "field_2",
+    "messageKey": "messagekey_2",
+    "clientSafe": false,
+    "blocking": false,
+    "severity": "warning"
+  },
+  {
+    "ruleId": "ruleid_3",
+    "type": "max_length",
+    "field": "field_3",
+    "messageKey": "messagekey_3",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error",
+    "defaultMessage": "defaultmessage_3",
+    "params": {
+      "keya_3": {
+        "value": "payload_3"
+      }
+    }
+  },
+  {
+    "ruleId": "ruleid_4",
+    "type": "regex",
+    "field": "field_4",
+    "messageKey": "messagekey_4",
+    "clientSafe": false,
+    "blocking": false,
+    "severity": "warning"
+  },
+  {
+    "ruleId": "ruleid_5",
+    "type": "enum",
+    "field": "field_5",
+    "messageKey": "messagekey_5",
+    "clientSafe": true,
+    "blocking": true,
+    "severity": "error"
+  }
+]

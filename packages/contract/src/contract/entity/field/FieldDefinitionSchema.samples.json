@@ -1,0 +1,74 @@
+[
+  {
+    "key": "name",
+    "type": "string",
+    "name": "Name",
+    "validation": {
+      "fieldRules": [
+        {
+          "ruleId": "name_required",
+          "type": "required",
+          "field": "name",
+          "messageKey": "validation.name.required",
+          "clientSafe": true,
+          "blocking": true,
+          "severity": "error"
+        }
+      ]
+    }
+  },
+  {
+    "key": "status",
+    "type": "enum",
+    "name": "Status",
+    "enumValues": ["draft", "active", "archived"],
+    "display": {
+      "type": "status",
+      "statusMap": {
+        "draft": "Draft",
+        "active": "Active",
+        "archived": "Archived"
+      }
+    }
+  },
+  {
+    "key": "amount",
+    "type": "number",
+    "name": "Amount",
+    "readonly": true,
+    "display": {
+      "type": "currency",
+      "currency": "EUR",
+      "precision": 2,
+      "align": "right"
+    }
+  },
+  {
+    "key": "address",
+    "type": "object",
+    "name": "Address",
+    "fields": [
+      {
+        "key": "street",
+        "type": "string",
+        "name": "Street"
+      },
+      {
+        "key": "city",
+        "type": "string",
+        "name": "City"
+      }
+    ]
+  },
+  {
+    "key": "owner",
+    "type": "string",
+    "name": "Owner",
+    "display": {
+      "type": "entity-link",
+      "labelField": "name",
+      "subtitleField": "email",
+      "route": "/users/:id"
+    }
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "type": "card-list",
+  "layout": {
+    "columns": "3"
+  },
+  "card": {
+    "titleField": "name",
+    "subtitleField": "owner.name",
+    "badge": {
+      "field": "status",
+      "tone": "success"
+    },
+    "fields": [
+      {
+        "key": "email",
+        "label": "Email",
+        "field": "email",
+        "valueType": "text"
+      },
+      {
+        "key": "createdAt",
+        "label": "Created",
+        "field": "createdAt",
+        "valueType": "date"
+      }
+    ],
+    "metrics": [
+      {
+        "key": "mrr",
+        "label": "MRR",
+        "field": "mrr",
+        "valueType": "currency"
+      }
+    ],
+    "actions": [
+      {
+        "key": "open",
+        "label": "Open",
+        "href": "/customers/:id"
+      }
+    ]
+  },
+  "emptyState": {
+    "title": "No customers found",
+    "description": "Try changing your filters or create a new customer."
+  }
+}

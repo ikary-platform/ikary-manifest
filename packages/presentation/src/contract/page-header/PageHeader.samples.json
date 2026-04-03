@@ -1,0 +1,133 @@
+[
+  {
+    "type": "page-header",
+    "title": "Customers",
+    "description": "Operational customer view",
+    "eyebrow": "Workspace",
+    "breadcrumbs": [
+      {
+        "key": "home",
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "key": "customers",
+        "label": "Customers",
+        "href": "/customers"
+      }
+    ],
+    "meta": [
+      {
+        "type": "badge",
+        "key": "status",
+        "label": "Active",
+        "tone": "success"
+      },
+      {
+        "type": "text",
+        "key": "updated",
+        "label": "Updated 2m ago"
+      }
+    ],
+    "primaryAction": {
+      "key": "create",
+      "label": "Create",
+      "actionKey": "create-customer"
+    },
+    "secondaryActions": [
+      {
+        "key": "export",
+        "label": "Export",
+        "actionKey": "export-customers",
+        "intent": "neutral"
+      }
+    ]
+  },
+  {
+    "type": "page-header",
+    "title": "Invoices",
+    "primaryAction": {
+      "key": "create",
+      "label": "Create invoice",
+      "href": "/invoices/new"
+    },
+    "secondaryActions": [
+      {
+        "key": "export",
+        "label": "Export",
+        "actionKey": "export-invoices"
+      },
+      {
+        "key": "import",
+        "label": "Import",
+        "actionKey": "import-invoices",
+        "intent": "neutral"
+      }
+    ]
+  },
+  {
+    "type": "page-header",
+    "title": "Projects",
+    "meta": [
+      {
+        "type": "text",
+        "key": "workspace",
+        "label": "Workspace A"
+      },
+      {
+        "type": "badge",
+        "key": "health",
+        "label": "Healthy",
+        "tone": "success"
+      }
+    ],
+    "lowerSlot": {
+      "type": "tabs"
+    }
+  },
+  {
+    "type": "page-header",
+    "title": "Audit events",
+    "description": "Governance view",
+    "breadcrumbs": [
+      {
+        "key": "audit",
+        "label": "Audit"
+      }
+    ],
+    "secondaryActions": [
+      {
+        "key": "refresh",
+        "label": "Refresh",
+        "actionKey": "refresh-audit"
+      }
+    ],
+    "dense": true
+  },
+  {
+    "type": "page-header",
+    "title": "Assets",
+    "eyebrow": "Operations",
+    "primaryAction": {
+      "key": "create-asset",
+      "label": "Create asset",
+      "actionKey": "create-asset",
+      "icon": "plus"
+    },
+    "secondaryActions": [
+      {
+        "key": "export-assets",
+        "label": "Export",
+        "actionKey": "export-assets",
+        "intent": "neutral"
+      },
+      {
+        "key": "archive-assets",
+        "label": "Archive selected",
+        "actionKey": "archive-assets",
+        "intent": "danger",
+        "disabled": true
+      }
+    ]
+  }
+]

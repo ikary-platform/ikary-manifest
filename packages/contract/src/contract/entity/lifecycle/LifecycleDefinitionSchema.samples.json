@@ -1,0 +1,91 @@
+[
+  {
+    "field": "status",
+    "initial": "draft",
+    "states": ["draft", "approved", "archived"],
+    "transitions": [
+      {
+        "key": "approve",
+        "from": "draft",
+        "to": "approved"
+      },
+      {
+        "key": "archive",
+        "from": "approved",
+        "to": "archived"
+      }
+    ]
+  },
+  {
+    "field": "status",
+    "initial": "new",
+    "states": ["new", "in_progress", "done"],
+    "transitions": [
+      {
+        "key": "start",
+        "from": "new",
+        "to": "in_progress",
+        "event": "task.started"
+      },
+      {
+        "key": "finish",
+        "from": "in_progress",
+        "to": "done",
+        "event": "task.finished"
+      }
+    ]
+  },
+  {
+    "field": "phase",
+    "initial": "planned",
+    "states": ["planned", "active", "closed"],
+    "transitions": [
+      {
+        "key": "activate",
+        "from": "planned",
+        "to": "active",
+        "guards": ["isOwner"]
+      },
+      {
+        "key": "close",
+        "from": "active",
+        "to": "closed",
+        "hooks": ["notifyClosed"]
+      }
+    ]
+  },
+  {
+    "field": "state",
+    "initial": "open",
+    "states": ["open", "blocked", "resolved"],
+    "transitions": [
+      {
+        "key": "block",
+        "from": "open",
+        "to": "blocked"
+      },
+      {
+        "key": "resolve",
+        "from": "blocked",
+        "to": "resolved"
+      }
+    ]
+  },
+  {
+    "field": "approval",
+    "initial": "pending",
+    "states": ["pending", "accepted", "rejected"],
+    "transitions": [
+      {
+        "key": "accept",
+        "from": "pending",
+        "to": "accepted"
+      },
+      {
+        "key": "reject",
+        "from": "pending",
+        "to": "rejected"
+      }
+    ]
+  }
+]

@@ -1,0 +1,112 @@
+[
+  {
+    "variant": "default",
+    "density": "comfortable",
+    "title": "Recent activity",
+    "items": [
+      {
+        "key": "a1",
+        "summary": "Invoice approved",
+        "actor": "Alice",
+        "timestamp": "2m ago",
+        "tone": "success"
+      },
+      {
+        "key": "a2",
+        "summary": "Customer synced",
+        "actor": "System",
+        "timestamp": "10m ago",
+        "tone": "info"
+      }
+    ]
+  },
+  {
+    "variant": "timeline",
+    "density": "compact",
+    "title": "Ops events",
+    "subtitle": "Last 24 hours",
+    "items": [
+      {
+        "key": "t1",
+        "summary": "Queue warning raised",
+        "tone": "warning",
+        "href": "/events/1"
+      },
+      {
+        "key": "t2",
+        "summary": "Queue recovered",
+        "tone": "success",
+        "actionKey": "open-event"
+      },
+      {
+        "key": "t3",
+        "summary": "Audit export generated",
+        "tone": "default"
+      }
+    ],
+    "action": {
+      "label": "View all",
+      "href": "/activity"
+    }
+  },
+  {
+    "variant": "compact",
+    "items": [
+      {
+        "key": "c1",
+        "summary": "Payment retry failed",
+        "tone": "danger",
+        "targetLabel": "Invoice INV-42"
+      }
+    ],
+    "limit": 10,
+    "renderState": {
+      "kind": "loading",
+      "state": {
+        "variant": "inline",
+        "mode": "spinner",
+        "label": "Refreshing feed"
+      }
+    }
+  },
+  {
+    "title": "Pipeline changes",
+    "items": [
+      {
+        "key": "p1",
+        "summary": "Contract renewed",
+        "actor": "Lucas",
+        "targetLabel": "ACME",
+        "href": "/contracts/1"
+      },
+      {
+        "key": "p2",
+        "summary": "Risk score updated",
+        "actor": "Risk Engine",
+        "tone": "info"
+      }
+    ],
+    "action": {
+      "label": "Open center",
+      "actionKey": "open-center"
+    }
+  },
+  {
+    "title": "Failed sync feed",
+    "items": [
+      {
+        "key": "e1",
+        "summary": "Retry scheduled",
+        "tone": "warning"
+      }
+    ],
+    "renderState": {
+      "kind": "error",
+      "state": {
+        "title": "Feed unavailable",
+        "variant": "section",
+        "severity": "soft"
+      }
+    }
+  }
+]

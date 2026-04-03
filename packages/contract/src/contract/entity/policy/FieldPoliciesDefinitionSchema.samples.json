@@ -1,0 +1,53 @@
+[
+  {
+    "keya_1": {
+      "view": {
+        "scope": "public",
+        "condition": "condition_1"
+      }
+    }
+  },
+  {
+    "keya_2": {
+      "update": {
+        "scope": "tenant"
+      }
+    },
+    "keyb_2_b": {
+      "view": {
+        "scope": "workspace",
+        "condition": "condition_3"
+      }
+    }
+  },
+  {
+    "keya_3": {
+      "view": {
+        "scope": "workspace",
+        "condition": "condition_3"
+      }
+    }
+  },
+  {
+    "keya_4": {
+      "update": {
+        "scope": "owner",
+        "condition": "condition_4"
+      }
+    },
+    "keyb_4_b": {
+      "view": {
+        "scope": "role",
+        "condition": "condition_5"
+      }
+    }
+  },
+  {
+    "keya_5": {
+      "view": {
+        "scope": "role",
+        "condition": "condition_5"
+      }
+    }
+  }
+]

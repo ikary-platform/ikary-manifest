@@ -1,0 +1,160 @@
+[
+  {
+    "key": "mainShell",
+    "name": "Main Shell",
+    "layout": {
+      "mode": "sidebar-content",
+      "contentPadding": "md"
+    },
+    "regions": [
+      {
+        "key": "main",
+        "enabled": true,
+        "order": 2
+      },
+      {
+        "key": "sidebar",
+        "enabled": true,
+        "collapsible": true,
+        "width": 280,
+        "order": 1
+      }
+    ],
+    "outlet": {
+      "type": "page",
+      "region": "main"
+    }
+  },
+  {
+    "key": "workspaceShell",
+    "name": "Workspace Shell",
+    "layout": {
+      "mode": "sidebar-topbar-content",
+      "maxContentWidth": "full",
+      "contentPadding": "sm"
+    },
+    "branding": {
+      "productName": "Ikary",
+      "showProductName": true
+    },
+    "regions": [
+      {
+        "key": "main",
+        "enabled": true,
+        "order": 3
+      },
+      {
+        "key": "topbar",
+        "enabled": true,
+        "sticky": true,
+        "order": 1
+      },
+      {
+        "key": "sidebar",
+        "enabled": true,
+        "collapsible": true,
+        "defaultCollapsed": false,
+        "order": 2
+      }
+    ],
+    "outlet": {
+      "type": "page",
+      "region": "main"
+    }
+  },
+  {
+    "key": "minimalShell",
+    "name": "Minimal Shell",
+    "layout": {
+      "mode": "minimal",
+      "contentPadding": "none"
+    },
+    "regions": [
+      {
+        "key": "main",
+        "enabled": true,
+        "order": 1
+      }
+    ],
+    "outlet": {
+      "type": "page",
+      "region": "main"
+    }
+  },
+  {
+    "key": "topbarShell",
+    "name": "Topbar Shell",
+    "layout": {
+      "mode": "topbar-content",
+      "maxContentWidth": 1280,
+      "contentPadding": "lg"
+    },
+    "regions": [
+      {
+        "key": "main",
+        "enabled": true,
+        "order": 2
+      },
+      {
+        "key": "topbar",
+        "enabled": true,
+        "sticky": true,
+        "order": 1
+      }
+    ],
+    "navigation": {
+      "primary": [
+        {
+          "key": "home",
+          "label": "Home",
+          "href": "/dashboard"
+        }
+      ]
+    },
+    "outlet": {
+      "type": "page",
+      "region": "main"
+    }
+  },
+  {
+    "key": "opsShell",
+    "name": "Ops Shell",
+    "layout": {
+      "mode": "sidebar-content",
+      "contentPadding": "md"
+    },
+    "regions": [
+      {
+        "key": "main",
+        "enabled": true,
+        "order": 2
+      },
+      {
+        "key": "sidebar",
+        "enabled": true,
+        "resizable": true,
+        "minWidth": 220,
+        "maxWidth": 420,
+        "order": 1
+      },
+      {
+        "key": "notifications",
+        "enabled": true,
+        "order": 3
+      }
+    ],
+    "capabilities": {
+      "globalSearch": true,
+      "notifications": true,
+      "breadcrumbs": true
+    },
+    "responsive": {
+      "mobileBreakpoint": 768,
+      "overlaySidebarOnMobile": true
+    },
+    "outlet": {
+      "type": "page",
+      "region": "main"
+    }
+  }
+]

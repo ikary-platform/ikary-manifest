@@ -1,0 +1,357 @@
+[
+  {
+    "title": "Customer ACME Corp",
+    "metadata": [
+      {
+        "key": "createdAt",
+        "label": "Created at",
+        "value": "2026-03-01T08:00:00Z"
+      },
+      {
+        "key": "createdBy",
+        "label": "Created by",
+        "value": "Alice Martin"
+      },
+      {
+        "key": "updatedAt",
+        "label": "Updated at",
+        "value": "2026-03-12T11:44:00Z"
+      },
+      {
+        "key": "updatedBy",
+        "label": "Updated by",
+        "value": "System"
+      },
+      {
+        "key": "version",
+        "label": "Version",
+        "value": "14"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Active"
+      }
+    ],
+    "actions": [
+      {
+        "key": "edit",
+        "label": "Edit",
+        "actionKey": "edit-entity"
+      }
+    ],
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/42/overview",
+        "kind": "overview"
+      },
+      {
+        "key": "billing",
+        "label": "Billing",
+        "href": "/customers/42/billing",
+        "kind": "domain"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/42/history",
+        "kind": "history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit Log",
+        "href": "/customers/42/audit",
+        "kind": "audit"
+      }
+    ],
+    "activeTabKey": "overview",
+    "overviewEditable": true,
+    "content": {
+      "key": "overview-content"
+    }
+  },
+  {
+    "title": "Invoice INV-2026-14",
+    "metadata": [
+      {
+        "key": "createdAt",
+        "label": "Created at",
+        "value": "2026-03-01T08:00:00Z"
+      },
+      {
+        "key": "createdBy",
+        "label": "Created by",
+        "value": "Alice Martin"
+      },
+      {
+        "key": "updatedAt",
+        "label": "Updated at",
+        "value": "2026-03-12T11:44:00Z"
+      },
+      {
+        "key": "updatedBy",
+        "label": "Updated by",
+        "value": "System"
+      },
+      {
+        "key": "version",
+        "label": "Version",
+        "value": "14"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Active"
+      }
+    ],
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/42/overview",
+        "kind": "overview"
+      },
+      {
+        "key": "billing",
+        "label": "Billing",
+        "href": "/customers/42/billing",
+        "kind": "domain"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/42/history",
+        "kind": "history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit Log",
+        "href": "/customers/42/audit",
+        "kind": "audit"
+      }
+    ],
+    "activeTabKey": "billing",
+    "content": {
+      "key": "billing-content"
+    }
+  },
+  {
+    "title": "Project Delta",
+    "metadata": [
+      {
+        "key": "createdAt",
+        "label": "Created at",
+        "value": "2026-03-01T08:00:00Z"
+      },
+      {
+        "key": "createdBy",
+        "label": "Created by",
+        "value": "Alice Martin"
+      },
+      {
+        "key": "updatedAt",
+        "label": "Updated at",
+        "value": "2026-03-12T11:44:00Z"
+      },
+      {
+        "key": "updatedBy",
+        "label": "Updated by",
+        "value": "System"
+      },
+      {
+        "key": "version",
+        "label": "Version",
+        "value": "14"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Active"
+      }
+    ],
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/42/overview",
+        "kind": "overview"
+      },
+      {
+        "key": "billing",
+        "label": "Billing",
+        "href": "/customers/42/billing",
+        "kind": "domain"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/42/history",
+        "kind": "history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit Log",
+        "href": "/customers/42/audit",
+        "kind": "audit"
+      }
+    ],
+    "activeTabKey": "overview",
+    "overviewEditable": true,
+    "isEditing": true,
+    "content": {
+      "key": "project-overview"
+    }
+  },
+  {
+    "title": "User Jane Doe",
+    "metadata": [
+      {
+        "key": "createdAt",
+        "label": "Created at",
+        "value": "2026-03-01T08:00:00Z"
+      },
+      {
+        "key": "createdBy",
+        "label": "Created by",
+        "value": "Alice Martin"
+      },
+      {
+        "key": "updatedAt",
+        "label": "Updated at",
+        "value": "2026-03-12T11:44:00Z"
+      },
+      {
+        "key": "updatedBy",
+        "label": "Updated by",
+        "value": "System"
+      },
+      {
+        "key": "version",
+        "label": "Version",
+        "value": "14"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Active"
+      }
+    ],
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/42/overview",
+        "kind": "overview"
+      },
+      {
+        "key": "billing",
+        "label": "Billing",
+        "href": "/customers/42/billing",
+        "kind": "domain"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/42/history",
+        "kind": "history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit Log",
+        "href": "/customers/42/audit",
+        "kind": "audit"
+      }
+    ],
+    "activeTabKey": "history",
+    "content": {
+      "key": "history-content"
+    },
+    "renderState": {
+      "kind": "loading",
+      "state": {
+        "label": "Loading user detail"
+      }
+    }
+  },
+  {
+    "title": "Asset AST-88",
+    "metadata": [
+      {
+        "key": "createdAt",
+        "label": "Created at",
+        "value": "2026-03-01T08:00:00Z"
+      },
+      {
+        "key": "createdBy",
+        "label": "Created by",
+        "value": "Alice Martin"
+      },
+      {
+        "key": "updatedAt",
+        "label": "Updated at",
+        "value": "2026-03-12T11:44:00Z"
+      },
+      {
+        "key": "updatedBy",
+        "label": "Updated by",
+        "value": "System"
+      },
+      {
+        "key": "version",
+        "label": "Version",
+        "value": "14"
+      },
+      {
+        "key": "status",
+        "label": "Status",
+        "value": "Active"
+      }
+    ],
+    "actions": [
+      {
+        "key": "archive",
+        "label": "Archive",
+        "href": "/assets/88/archive",
+        "variant": "destructive"
+      }
+    ],
+    "tabs": [
+      {
+        "key": "overview",
+        "label": "Overview",
+        "href": "/customers/42/overview",
+        "kind": "overview"
+      },
+      {
+        "key": "billing",
+        "label": "Billing",
+        "href": "/customers/42/billing",
+        "kind": "domain"
+      },
+      {
+        "key": "history",
+        "label": "History",
+        "href": "/customers/42/history",
+        "kind": "history"
+      },
+      {
+        "key": "audit",
+        "label": "Audit Log",
+        "href": "/customers/42/audit",
+        "kind": "audit"
+      }
+    ],
+    "activeTabKey": "audit",
+    "content": {
+      "key": "audit-content"
+    },
+    "renderState": {
+      "kind": "error",
+      "state": {
+        "title": "Failed to load detail"
+      }
+    }
+  }
+]

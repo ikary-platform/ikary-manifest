@@ -1,0 +1,25 @@
+[
+  {
+    "title": "CRM Cell",
+    "mountPath": "/crm",
+    "landingPage": "/crm/customers"
+  },
+  {
+    "mountPath": "/finance",
+    "landingPage": "/finance/invoices"
+  },
+  {
+    "title": "Support",
+    "mountPath": "/support",
+    "landingPage": "/support/tickets"
+  },
+  {
+    "title": "Ops",
+    "mountPath": "/ops",
+    "landingPage": "/ops/overview"
+  },
+  {
+    "mountPath": "/projects",
+    "landingPage": "/projects/dashboard"
+  }
+]
