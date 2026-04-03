@@ -18,7 +18,7 @@ Cross-references:
 
 ```json
 {
-  "$schema": "https://ikary.io/schemas/entity-definition/v1.json",
+  "$schema": "https://ikary.co/schemas/entity-definition/v1.json",
   "name": "PascalCaseEntityName",
   "key": "domain.snake_case_key",
   "version": "1.0.0",
@@ -218,7 +218,7 @@ Two distinct versioning concerns coexist:
 
 ```json
 {
-  "$schema": "https://ikary.io/schemas/entity-definition/v1.json",
+  "$schema": "https://ikary.co/schemas/entity-definition/v1.json",
   "name": "Invoice",
   "key": "crm.invoice",
   "version": "1.0.0",
