@@ -10,28 +10,28 @@ additionalProperties: false
 
 properties:
   mount:
-    $ref: "./mount.schema.yaml"
+    $ref: "./shared/mount.schema.yaml"
 
   appShell:
-    $ref: "./app-shell.schema.yaml"
+    $ref: "./app-shell/app-shell.schema.yaml"
 
   entities:
     type: array
     items:
-      $ref: "./entity-definition.schema.yaml"
+      $ref: "./entities/entity-definition.schema.yaml"
     description: |
       Inline entity definitions, or $ref pointers to standalone
-      entity YAML files under manifests/entities/.
+      entity YAML files under manifests/examples/entities/.
 
   pages:
     type: array
     items:
-      $ref: "./page-definition.schema.yaml"
+      $ref: "./pages/page-definition.schema.yaml"
 
   navigation:
-    $ref: "./navigation.schema.yaml"
+    $ref: "./navigation/navigation.schema.yaml"
 
   roles:
     type: array
     items:
-      $ref: "./role-definition.schema.yaml"
+      $ref: "./roles/role-definition.schema.yaml"

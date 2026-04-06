@@ -12,9 +12,9 @@ This document is the **canonical source of truth** for the IKARY Entity Definiti
 
 Cross-references:
 
-- `entity-governance.md` — governance contract (audit, versioning, rollback)
-- `system/backend/1-ENTITY-CONTRACT.MD` — server-side entity contract
-- `system/DOMAIN-MODEL.MD` — domain hierarchy
+- `entity-governance.md`: governance contract (audit, versioning, rollback)
+- `system/backend/1-ENTITY-CONTRACT.MD`: server-side entity contract
+- `system/DOMAIN-MODEL.MD`: domain hierarchy
 
 ---
 
@@ -186,7 +186,7 @@ The `data` block enables IKARY to auto-generate list views, filter bars, search 
 
 - Field names MUST use `snake_case` (consistent with entity field naming)
 - Allowed operators: `equals`, `in`, `contains`, `startsWith`, `before`, `after`, `between`, `gt`, `lt`
-- No SQL operators or query predicates — purely declarative
+- No SQL operators or query predicates; the block is purely declarative
 - `filtering.allowedFields` MUST be a subset of fields defined in the `fields` map
 - `sorting.allowedFields` MUST be a subset of fields defined in the `fields` map
 - `data` is optional; page-specific queries are handled via future `defineView()`
@@ -211,14 +211,14 @@ Two distinct versioning concerns coexist:
 
 | Concern            | Column/Field                                 | Type          | Semantics                               |
 | ------------------ | -------------------------------------------- | ------------- | --------------------------------------- |
-| Contract version   | `definition_version` (DB) / `version` (JSON) | semver string | `"1.0.0"` — multiple coexist            |
+| Contract version   | `definition_version` (DB) / `version` (JSON) | semver string | `"1.0.0"`; multiple versions may coexist |
 | Governance version | `version` (DB integer)                       | integer       | Optimistic concurrency; 409 on mismatch |
 
 **Do not confuse** the JSON `"version": "1.0.0"` (contract semver) with the DB `version` integer (optimistic concurrency counter). They serve different purposes.
 
 ---
 
-## 8. Example — Invoice Entity
+## 8. Example: Invoice Entity
 
 ```json
 {

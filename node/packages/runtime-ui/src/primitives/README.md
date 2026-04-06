@@ -385,7 +385,7 @@ The rule is: schema validates shape, semantic validator validates canonical mean
 
 ## 14. How to Create a New Primitive
 
-### Step 1 — Define the presentation contract
+### Step 1: Define the presentation contract
 
 In `cell-contract-presentation`: create the schema, infer the TypeScript type, add semantic validation if needed.
 
@@ -394,7 +394,7 @@ contract/list/data-grid/DataGridPresentationSchema.ts
 validation/semantic/validate-data-grid-presentation.ts
 ```
 
-### Step 2 — Create the runtime primitive folder
+### Step 2: Create the runtime primitive folder
 
 In `cell-runtime-ui`:
 
@@ -409,23 +409,23 @@ primitives/
     index.ts
 ```
 
-### Step 3 — Define runtime prop types
+### Step 3: Define runtime prop types
 
 In `<Primitive>.types.ts`, define the props the React component actually needs. These types should describe the final resolved props.
 
-### Step 4 — Build the adapter
+### Step 4: Build the adapter
 
 In `<Primitive>.adapter.ts`, map presentation contract and runtime values to final component props. Keep it deterministic and small.
 
-### Step 5 — Build the resolver
+### Step 5: Build the resolver
 
 In `<Primitive>.resolver.ts`, call the adapter. The resolver is usually a thin wrapper.
 
-### Step 6 — Implement the React component
+### Step 6: Implement the React component
 
 In `<Primitive>.tsx`, render the final resolved props. Avoid large contract interpretation logic unless there is a strong reason.
 
-### Step 7 — Register the primitive
+### Step 7: Register the primitive
 
 In `<Primitive>.register.ts`:
 
@@ -436,7 +436,7 @@ registerPrimitive('my-primitive', {
 });
 ```
 
-### Step 8 — Export cleanly
+### Step 8: Export cleanly
 
 In `index.ts`, export the public runtime API: component, types, adapter, resolver. Keep registration side effects outside `index.ts` if possible.
 

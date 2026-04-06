@@ -2,7 +2,7 @@
 
 Zod schemas, TypeScript types, and validation for IKARY cell manifests.
 
-This is the foundational package -- all other packages depend on it.
+This is the foundational package. All other packages depend on it.
 
 ## Install
 
@@ -86,4 +86,4 @@ import {
 
 ## Design principle
 
-Contract is **pure** -- no filesystem access, no YAML dependency, no React. It is a validation and type library. I/O belongs in the loader; rendering belongs in the runtime packages.
+Contract is **pure**: no filesystem access, no YAML dependency, no React. It is a validation and type library. I/O belongs in the loader; rendering belongs in the runtime packages.

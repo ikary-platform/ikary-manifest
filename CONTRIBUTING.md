@@ -21,17 +21,17 @@ Thank you for your interest in contributing to Ikary Manifest!
 
 Each package follows the same pattern:
 
-- `src/index.ts` — Public API exports
-- `tsup.config.ts` — Build configuration (ESM + CJS + DTS)
-- `vitest.config.ts` — Test configuration
-- `tsconfig.json` — TypeScript configuration
+- `src/index.ts`: Public API exports
+- `tsup.config.ts`: Build configuration (ESM + CJS + DTS)
+- `vitest.config.ts`: Test configuration
+- `tsconfig.json`: TypeScript configuration
 
 ## Guidelines
 
 - All schemas use [Zod](https://zod.dev) for runtime validation
-- TypeScript types are inferred from Zod schemas — don't duplicate types manually
+- TypeScript types are inferred from Zod schemas; do not duplicate types manually
 - UI packages use React 19+ with hooks
-- Keep packages focused — contracts should not import runtime code
+- Keep packages focused; contracts should not import runtime code
 - Write tests for all new schemas and validation logic
 
 ## Code of Conduct

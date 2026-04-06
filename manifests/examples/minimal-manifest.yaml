@@ -1,4 +1,4 @@
-$schema: "../schemas/cell-manifest.schema.yaml"
+$schema: "../cell-manifest.schema.yaml"
 
 apiVersion: ikary.co/v1alpha1
 kind: Cell
