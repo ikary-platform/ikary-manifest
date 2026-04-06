@@ -46,6 +46,7 @@ This architecture separates the declarative description (what to render) from th
 
 ## Related pages
 
-- [Packages Overview](/packages/overview): full package dependency graph and roles
+- [UI Rendering](/packages/ui-rendering): full package API reference
+- [Packages Overview](/packages/overview): dependency graph and directory structure
 - [Manifest Format](/guide/manifest-format): pages, entities, and navigation structure
 - [Architecture](/guide/architecture): how the contract, engine, and runtime layers relate
