@@ -2,27 +2,60 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) 20+
-- [pnpm](https://pnpm.io/) 9+
+::: code-group
+
+```bash [Node.js]
+# Node.js 20 or later
+# pnpm 9 or later
+node --version
+pnpm --version
+```
+
+```bash [Python]
+# Python 3.11 or later
+# pip (included with Python)
+python --version
+```
+
+:::
 
 ## Install
 
-```bash
+::: code-group
+
+```bash [Node.js]
 git clone https://github.com/ikary-platform/ikary-manifest.git
 cd ikary-manifest
 pnpm install
 ```
 
+```bash [Python]
+git clone https://github.com/ikary-platform/ikary-manifest.git
+cd ikary-manifest/python
+pip install -e ".[dev]"
+```
+
+:::
+
 ## Build and test
 
-```bash
+::: code-group
+
+```bash [Node.js]
 pnpm build    # Build all packages
 pnpm test     # Run all tests
 ```
 
+```bash [Python]
+cd python
+pytest
+```
+
+:::
+
 ## Your first manifest
 
-Create a file `my-app.yaml`:
+Create a file `my-app.yaml`. This file is language-neutral and works with both runtimes.
 
 ```yaml
 apiVersion: ikary.co/v1alpha1
@@ -71,7 +104,9 @@ spec:
 
 ## Load and validate
 
-```typescript
+::: code-group
+
+```typescript [Node.js]
 import { loadManifestFromFile } from '@ikary-manifest/loader';
 import { compileCellApp } from '@ikary-manifest/engine';
 
@@ -88,20 +123,29 @@ const compiled = compileCellApp(loaded.manifest!);
 console.log('Compiled manifest:', compiled);
 ```
 
+```python [Python]
+from ikary_manifest.loader import load_manifest_from_file
+
+# Load YAML
+manifest = load_manifest_from_file("my-app.yaml")
+print(manifest["metadata"]["key"])  # "my_app"
+```
+
+:::
+
 ## Project structure
 
 ```
 ikary-manifest/
   manifests/               # YAML source of truth
-    entities/              # Standalone entity files
+    entities/              # Domain entity schemas
     examples/              # Complete manifest examples
-    schemas/               # YAML schemas (JSON Schema in YAML)
   node/                    # TypeScript packages
     packages/
       contract/            # Zod schemas, types, validation
       loader/              # YAML/JSON loading
       engine/              # Compilation, normalization
-      presentation/        # UI component schemas
+      presentation/        # UI primitive contracts
       runtime-ui/          # React component library
       renderer/            # React renderer
       data-runtime/        # Data providers
@@ -111,6 +155,6 @@ ikary-manifest/
 
 ## Next steps
 
-- [Architecture](/guide/architecture): understand the processing pipeline
-- [Manifest Format](/guide/manifest-format): YAML structure, `$ref`, schemas
-- [Entity Definition](/reference/entity-definition): full entity specification
+- [Architecture](/guide/architecture): the three-layer model (schema, contract, runtime)
+- [Manifest Format](/guide/manifest-format): Cell Manifest structure and spec sections
+- [Contract](/guide/contract): loading, structural validation, and semantic validation

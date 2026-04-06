@@ -21,15 +21,17 @@ pnpm test
 
 ```
 ikary-manifest/
-  manifests/           # YAML source of truth (schemas, entities, examples)
-  node/packages/       # TypeScript packages
-  python/              # Python SDK
-  docs/                # Documentation (VitePress)
+  manifests/       # YAML source of truth (schemas, entities, examples)
+  contracts/       # Schema, types, parsing, validation (Node.js + Python)
+  runtime-api/     # Server-side REST API generation (NestJS + FastAPI)
+  ui/              # Client-side React rendering
+  apps/            # Standalone executables (CLI)
+  docs/            # Documentation (VitePress)
 ```
 
 ## Packages
 
-All TypeScript packages live under `node/packages/`. They use:
+All TypeScript packages use:
 
 - **pnpm** workspaces for dependency management
 - **Turbo** for build orchestration
