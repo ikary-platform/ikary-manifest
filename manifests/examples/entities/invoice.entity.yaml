@@ -1,4 +1,4 @@
-$schema: "../schemas/entity-definition.schema.yaml"
+$schema: "../../entities/entity-definition.schema.yaml"
 
 key: invoice
 name: Invoice

@@ -39,10 +39,10 @@ All TypeScript packages live under `node/packages/`. They use:
 
 ## Guidelines
 
-- Keep manifests as YAML -- no JSON for authored content
+- Keep manifests as YAML; do not use JSON for authored content
 - Entity keys, field keys, and relation keys must be `snake_case`
 - All TypeScript types are derived from Zod schemas (`z.infer`)
-- Contract package stays pure -- no I/O, no framework dependencies
+- Contract package stays pure: no I/O, no framework dependencies
 - Tests are required for new validation rules and loader features
 
 ## Documentation
@@ -52,7 +52,7 @@ pnpm docs:dev     # Start local dev server
 pnpm docs:build   # Build static site
 ```
 
-Docs are markdown files in `docs/`. Edit them directly -- VitePress handles the rest.
+Docs are markdown files in `docs/`. Edit them directly; VitePress handles the rest.
 
 ## License
 

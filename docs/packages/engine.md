@@ -60,4 +60,4 @@ buildEntityDetailPath(manifest, 'customer', '123');  // "/crm/customers/123"
 
 ## Design principle
 
-Engine is **stateless and pure** -- no I/O, no YAML dependency, no React. It accepts a manifest object and returns a transformed manifest object. Consumers compose loader + engine as needed.
+Engine is **stateless and pure**: no I/O, no YAML dependency, no React. It accepts a manifest object and returns a transformed manifest object. Consumers compose loader + engine as needed.

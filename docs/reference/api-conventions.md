@@ -72,10 +72,10 @@ Pre-GA namespace exception:
 
 **Rules:**
 
-- `PUT` is not used — partial updates via `PATCH` only
-- `DELETE` is always a soft-delete (`deletedAt` timestamp) — never hard-delete unless a compaction strategy is documented
+- `PUT` is not used; partial updates use `PATCH` only
+- `DELETE` is always a soft-delete (`deletedAt` timestamp); never hard-delete unless a compaction strategy is documented
 - `POST /:id/rollback` accepts a `targetVersion` body field specifying which version to restore; the result is a new version (not a rewrite)
-- Bulk mutations are not supported in V1 — each entity requires its own request
+- Bulk mutations are not supported in V1; each entity requires its own request
 
 ---
 
@@ -91,7 +91,7 @@ X-Correlation-ID: <uuid>         (optional; server generates one if absent)
 
 ## POST (create)
 
-Body must NOT include: `id`, `version`, `createdAt`, `updatedAt`, `deletedAt` — these are server-assigned.
+Body must NOT include: `id`, `version`, `createdAt`, `updatedAt`, `deletedAt`. These are server-assigned.
 
 ```json
 {

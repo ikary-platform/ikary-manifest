@@ -17,7 +17,7 @@ features:
   - icon:
       src: /icons/crosshair.svg
     title: Deterministic
-    details: The same manifest always produces the same application. No hallucinated logic, no subtle runtime bugs. The runtime is tested once — every manifest benefits.
+    details: The same manifest always produces the same application. The runtime is tested once; every manifest benefits from that work.
   - icon:
       src: /icons/globe.svg
     title: Language-Neutral
@@ -25,7 +25,7 @@ features:
   - icon:
       src: /icons/refresh-cw.svg
     title: Multi-Runtime
-    details: One manifest, multiple runtimes. React today, mobile tomorrow, FastAPI next week. Code generation locks you to one framework — manifests don't.
+    details: One manifest, multiple runtimes. React today, mobile tomorrow, FastAPI next week. Code generation ties you to one framework; manifests remain framework-neutral.
   - icon:
       src: /icons/sparkles.svg
     title: AI-Native
