@@ -1,10 +1,10 @@
 # Manifest Format
 
-YAML is the authoring format for all IKARY cell definitions. This page explains the structure, conventions, and composition patterns.
+A manifest is a YAML file that describes a complete application. This page explains the top-level structure, the Cell Manifest kind, and the purpose of each `spec` section.
 
-## Top-level structure
+## Cell Manifest
 
-Every manifest has four required fields:
+Every manifest has a `kind` field that identifies its type. The current kind is `Cell`.
 
 ```yaml
 apiVersion: ikary.co/v1alpha1
@@ -21,12 +21,133 @@ spec:
   roles: [ ... ]
 ```
 
-| Field | Description |
-|-------|-------------|
-| `apiVersion` | Always `ikary.co/v1alpha1` |
-| `kind` | Always `Cell` |
-| `metadata` | Key, name, version |
-| `spec` | The application definition |
+`kind: Cell` targets web application generation. It is the first root manifest kind. As IKARY Manifest expands to other surfaces (reporting, dashboards, voice, machine-to-machine), new kinds will be introduced. A single project may eventually support multiple kinds in parallel. Cell is the starting point.
+
+## Metadata
+
+The `metadata` block identifies the manifest.
+
+| Field | Purpose |
+|-------|---------|
+| `key` | Snake-case identifier used internally. Must be unique per deployment. |
+| `name` | Human-readable display name. |
+| `version` | Semantic version string. Always quote it (see conventions below). |
+
+## Spec sections
+
+The `spec` block is the application definition. Each section drives a different aspect of generation at runtime.
+
+### `entities`
+
+Entities are the data model. Each entity you define drives:
+
+- CRUD API routes (list, detail, create, update, delete)
+- List views in the UI
+- Detail views in the UI
+- Create and edit forms
+
+An entity defines fields, relations to other entities, computed values, lifecycle states, and access policies. Entities are the central building block. Everything else in the spec references them by key.
+
+```yaml
+entities:
+  - key: customer
+    name: Customer
+    pluralName: Customers
+    fields:
+      - key: name
+        type: string
+        name: Full Name
+      - key: email
+        type: string
+        name: Email
+```
+
+See [Entity Definition](/reference/entity-definition) for the full field and relation specification.
+
+### `pages`
+
+Pages are explicit view definitions. Each page binds to an entity, a custom layout, or a dashboard widget set. Pages define what appears in the application navigation and which path serves each view.
+
+```yaml
+pages:
+  - key: customer-list
+    type: entity-list
+    title: Customers
+    path: /customers
+    entity: customer
+  - key: dashboard
+    type: dashboard
+    title: Dashboard
+    path: /dashboard
+```
+
+### `roles`
+
+Roles define access control groups. They control which entities and pages are accessible to which users at runtime. Each role specifies a set of permission scopes tied to entity resources.
+
+```yaml
+roles:
+  - key: admin
+    name: Administrator
+    scopes:
+      - resource: customer
+        actions: [read, create, update, delete]
+  - key: viewer
+    name: Viewer
+    scopes:
+      - resource: customer
+        actions: [read]
+```
+
+### `navigation`
+
+Navigation defines the application menu. It references page keys and supports nested groups for organizing related views.
+
+```yaml
+navigation:
+  items:
+    - type: page
+      key: dashboard
+      pageKey: dashboard
+    - type: group
+      key: data
+      label: Data
+      children:
+        - type: page
+          key: customer-list
+          pageKey: customer-list
+```
+
+### `mount`
+
+Mount sets the routing entry point. It specifies the base path for the application and the default landing page.
+
+```yaml
+mount:
+  mountPath: /
+  landingPage: dashboard
+```
+
+## Entity composition with `$ref`
+
+Entities can be defined inline or referenced from standalone files using the standard `$ref` keyword:
+
+```yaml
+# Inline: works for simple cases
+spec:
+  entities:
+    - key: task
+      name: Task
+      fields: [ ... ]
+
+# Referenced from files: recommended for larger projects
+spec:
+  entities:
+    - $ref: "./entities/customer.entity.yaml"
+    - $ref: "./entities/invoice.entity.yaml"
+```
+
+Standalone entity files live in `manifests/examples/entities/`. They are independently reviewable and reusable across multiple manifests. The `$schema` property in each file enables IDE validation without requiring the full manifest to be present.
 
 ## Schema declaration
 
@@ -37,88 +158,19 @@ $schema: "../cell-manifest.schema.yaml"
 
 apiVersion: ikary.co/v1alpha1
 kind: Cell
-# ...
 ```
 
-Entity files declare their own schema:
-
-```yaml
-$schema: "../../entities/entity-definition.schema.yaml"
-
-key: customer
-name: Customer
-# ...
-```
-
-The `$schema` property is stripped by the loader before validation. It is an authoring hint for IDE support and documentation.
-
-## Entity composition with `$ref`
-
-Entities can be defined inline or referenced from standalone files using the standard `$ref` keyword:
-
-```yaml
-# Inline (simple cases)
-spec:
-  entities:
-    - key: task
-      name: Task
-      fields: [ ... ]
-
-# Composed from files (recommended for real projects)
-spec:
-  entities:
-    - $ref: "./entities/customer.entity.yaml"
-    - $ref: "./entities/invoice.entity.yaml"
-```
-
-Standalone entity files live in `manifests/examples/entities/` and are valid on their own:
-
-```yaml
-# manifests/examples/entities/customer.entity.yaml
-$schema: "../../entities/entity-definition.schema.yaml"
-
-key: customer
-name: Customer
-pluralName: Customers
-fields:
-  - key: name
-    type: string
-    name: Name
-  - key: email
-    type: string
-    name: Email
-```
-
-This keeps entities reusable, diffable, and independently reviewable.
-
-## Schema cross-references
-
-The YAML schemas under `manifests/` reference each other using `$ref`:
-
-```yaml
-# entity-definition.schema.yaml
-properties:
-  fields:
-    type: array
-    items:
-      $ref: "./field-definition.schema.yaml"
-  relations:
-    type: array
-    items:
-      $ref: "./relation-definition.schema.yaml"
-```
-
-See [YAML Schemas](/reference/schemas) for the full schema map.
+The `$schema` property is stripped by the loader before validation. It is an authoring hint for IDE support, not a runtime requirement.
 
 ## Key conventions
 
 ### Snake-case identifiers
 
-Entity keys, field keys, and relation keys must be snake_case:
+Entity keys, field keys, and role keys must be snake_case:
 
 ```yaml
 key: customer_order   # valid
-key: customerOrder    # invalid - rejected by validation
+key: customerOrder    # invalid, rejected at validation
 ```
 
 Pattern: `^[a-z][a-z0-9_]*$`
@@ -128,8 +180,8 @@ Pattern: `^[a-z][a-z0-9_]*$`
 YAML parses `1.0.0` as a number. Always quote version strings:
 
 ```yaml
-version: "1.0.0"   # correct - string
-version: 1.0.0     # wrong - parsed as float
+version: "1.0.0"   # correct: parsed as a string
+version: 1.0.0     # wrong: parsed as a float
 ```
 
 ### Path prefixes
@@ -143,26 +195,3 @@ pages:
   - path: /customers
   - path: /customers/:id
 ```
-
-## Field types
-
-| Type | Description |
-|------|-------------|
-| `string` | Short text |
-| `text` | Long text / multiline |
-| `number` | Numeric value |
-| `boolean` | True / false |
-| `date` | Date only |
-| `datetime` | Date and time |
-| `enum` | Constrained set of values (requires `enumValues`) |
-| `object` | Nested structure (recursive `fields`) |
-
-## Processing pipeline
-
-When a manifest is loaded, it goes through:
-
-1. **YAML parse**: raw text to JS object (`@ikary-manifest/loader`)
-2. **Meta stripping**: `$schema` and unresolved `$ref` removed
-3. **Structural validation**: Zod schema checks types, required fields, patterns
-4. **Semantic validation**: business rules: unique keys, valid references, lifecycle consistency
-5. **Compilation**: normalization, field derivation, scope registry (`@ikary-manifest/engine`)

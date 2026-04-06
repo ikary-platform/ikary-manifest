@@ -33,17 +33,17 @@ importers:
         specifier: ^3.24.0
         version: 3.25.2(zod@3.25.76)
 
-  node/packages/cli:
+  apps/cli:
     dependencies:
       '@ikary-manifest/contract':
         specifier: workspace:*
-        version: link:../contract
+        version: link:../../contracts/node/contract
       '@ikary-manifest/engine':
         specifier: workspace:*
-        version: link:../engine
+        version: link:../../contracts/node/engine
       '@ikary-manifest/loader':
         specifier: workspace:*
-        version: link:../loader
+        version: link:../../contracts/node/loader
     devDependencies:
       tsup:
         specifier: ^8.0.2
@@ -52,7 +52,7 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  node/packages/contract:
+  contracts/node/contract:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -68,38 +68,7 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(tsx@4.21.0)(yaml@2.8.3)
 
-  node/packages/data-runtime:
-    dependencies:
-      '@ikary-manifest/contract':
-        specifier: workspace:*
-        version: link:../contract
-      '@ikary-manifest/presentation':
-        specifier: workspace:*
-        version: link:../presentation
-      '@ikary-manifest/runtime-ui':
-        specifier: workspace:*
-        version: link:../runtime-ui
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-    devDependencies:
-      '@tanstack/react-query':
-        specifier: ^5.0.0
-        version: 5.96.1(react@19.2.4)
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      react-router-dom:
-        specifier: ^6.30.1
-        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
-  node/packages/engine:
+  contracts/node/engine:
     dependencies:
       '@ikary-manifest/contract':
         specifier: workspace:*
@@ -115,23 +84,7 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(tsx@4.21.0)(yaml@2.8.3)
 
-  node/packages/generator-nest:
-    dependencies:
-      '@ikary-manifest/contract':
-        specifier: workspace:*
-        version: link:../contract
-      '@ikary-manifest/engine':
-        specifier: workspace:*
-        version: link:../engine
-    devDependencies:
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
-  node/packages/loader:
+  contracts/node/loader:
     dependencies:
       '@ikary-manifest/contract':
         specifier: workspace:*
@@ -153,7 +106,54 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(tsx@4.21.0)(yaml@2.8.3)
 
-  node/packages/presentation:
+  runtime-api/node/generator-nest:
+    dependencies:
+      '@ikary-manifest/contract':
+        specifier: workspace:*
+        version: link:../../../contracts/node/contract
+      '@ikary-manifest/engine':
+        specifier: workspace:*
+        version: link:../../../contracts/node/engine
+    devDependencies:
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  ui/data:
+    dependencies:
+      '@ikary-manifest/contract':
+        specifier: workspace:*
+        version: link:../../contracts/node/contract
+      '@ikary-manifest/presentation':
+        specifier: workspace:*
+        version: link:../presentation
+      '@ikary-manifest/primitives':
+        specifier: workspace:*
+        version: link:../primitives
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.96.1(react@19.2.4)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      react-router-dom:
+        specifier: ^6.30.1
+        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  ui/presentation:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -166,23 +166,57 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  node/packages/renderer:
+  ui/primitives:
+    dependencies:
+      '@ikary-manifest/contract':
+        specifier: workspace:*
+        version: link:../../contracts/node/contract
+      '@ikary-manifest/presentation':
+        specifier: workspace:*
+        version: link:../presentation
+      lucide-react:
+        specifier: ^0.400.0
+        version: 0.400.0(react@19.2.4)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.96.1(react@19.2.4)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      react-router-dom:
+        specifier: ^6.30.1
+        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  ui/renderer:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
       '@ikary-manifest/contract':
         specifier: workspace:*
-        version: link:../contract
+        version: link:../../contracts/node/contract
       '@ikary-manifest/engine':
         specifier: workspace:*
-        version: link:../engine
+        version: link:../../contracts/node/engine
       '@ikary-manifest/presentation':
         specifier: workspace:*
         version: link:../presentation
-      '@ikary-manifest/runtime-ui':
+      '@ikary-manifest/primitives':
         specifier: workspace:*
-        version: link:../runtime-ui
+        version: link:../primitives
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.96.1(react@19.2.4)
@@ -217,40 +251,6 @@ importers:
       vitest:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(tsx@4.21.0)(yaml@2.8.3)
-
-  node/packages/runtime-ui:
-    dependencies:
-      '@ikary-manifest/contract':
-        specifier: workspace:*
-        version: link:../contract
-      '@ikary-manifest/presentation':
-        specifier: workspace:*
-        version: link:../presentation
-      lucide-react:
-        specifier: ^0.400.0
-        version: 0.400.0(react@19.2.4)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-    devDependencies:
-      '@tanstack/react-query':
-        specifier: ^5.0.0
-        version: 5.96.1(react@19.2.4)
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      react-router-dom:
-        specifier: ^6.30.1
-        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
 
 packages:
 
