@@ -79,6 +79,10 @@ export default defineConfig({
           items: [
             { text: 'Architecture', link: '/guide/architecture' },
             { text: 'Manifest Format', link: '/guide/manifest-format' },
+            { text: 'Schema', link: '/guide/schema' },
+            { text: 'Contract', link: '/guide/contract' },
+            { text: 'Runtime API', link: '/guide/runtime-api' },
+            { text: 'Runtime UI', link: '/guide/runtime-ui' },
           ],
         },
       ],

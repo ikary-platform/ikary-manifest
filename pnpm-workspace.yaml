@@ -1,2 +1,5 @@
 packages:
-  - 'node/packages/*'
+  - 'contracts/node/*'
+  - 'runtime-api/node/*'
+  - 'ui/*'
+  - 'apps/*'
