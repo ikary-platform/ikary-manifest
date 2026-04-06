@@ -1,4 +1,18 @@
 import { defineConfig } from 'vitepress';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const MIME: Record<string, string> = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+};
 
 export default defineConfig({
   title: 'IKARY Manifest',
@@ -41,6 +55,38 @@ export default defineConfig({
         return defaultFence(tokens, idx, options, env, self);
       };
     },
+  },
+
+  vite: {
+    plugins: [
+      {
+        name: 'serve-playground',
+        enforce: 'pre',
+        configureServer(server) {
+          const playgroundDir = path.join(__dirname, '../public/playground');
+          server.middlewares.use('/ikary-manifest/playground', (req, res, next) => {
+            const url = req.url ?? '/';
+            const rel = url === '' ? 'index.html' : url.replace(/^\//, '');
+            const filePath = path.join(playgroundDir, rel || 'index.html');
+
+            if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+              const ext = path.extname(filePath);
+              res.setHeader('Content-Type', MIME[ext] ?? 'application/octet-stream');
+              res.end(fs.readFileSync(filePath));
+            } else {
+              // SPA fallback — let the React app handle the route
+              const indexPath = path.join(playgroundDir, 'index.html');
+              if (fs.existsSync(indexPath)) {
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                res.end(fs.readFileSync(indexPath));
+              } else {
+                next();
+              }
+            }
+          });
+        },
+      },
+    ],
   },
 
   themeConfig: {
