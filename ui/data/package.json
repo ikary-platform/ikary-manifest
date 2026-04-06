@@ -17,6 +17,7 @@
     "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary-manifest/contract --external @ikary-manifest/presentation --external @ikary-manifest/primitives --external @tanstack/react-query",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint src"
   },
   "dependencies": {

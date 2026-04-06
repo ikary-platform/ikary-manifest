@@ -152,6 +152,44 @@ describe('getManifestNavigation', () => {
     expect(items[0].label).toBe('cust-list');
   });
 
+  it('falls back to pageKey as label when label and page title are both absent', () => {
+    const manifest = makeManifest({
+      pages: [{ key: 'cust-list', path: '/customers', type: 'entity-list', entity: 'customer' } as unknown as PageDefinition],
+      navigation: {
+        items: [{ type: 'page', key: 'nav-cust', pageKey: 'cust-list', order: 0 }],
+      },
+    });
+    const items = getManifestNavigation(manifest);
+    expect(items[0].label).toBe('cust-list');
+  });
+
+  it('uses item index as order when order is absent on page item', () => {
+    const manifest = makeManifest({
+      pages: [makePage('cust-list', '/customers')],
+      navigation: {
+        items: [{ type: 'page', key: 'nav-cust', pageKey: 'cust-list', label: 'Customers' }],
+      },
+    });
+    const items = getManifestNavigation(manifest);
+    expect(items[0].order).toBe(0);
+  });
+
+  it('uses item index as order when order is absent on group item', () => {
+    const manifest = makeManifest({
+      pages: [],
+      navigation: {
+        items: [{ type: 'group', key: 'g', label: 'Group', children: [] }],
+      },
+    });
+    const items = getManifestNavigation(manifest);
+    expect(items[0].order).toBe(0);
+  });
+
+  it('returns [] when navigation is absent from spec', () => {
+    const manifest = makeManifest({ navigation: undefined as never });
+    expect(getManifestNavigation(manifest)).toEqual([]);
+  });
+
   it('sorts by order', () => {
     const manifest = makeManifest({
       pages: [],
@@ -179,6 +217,11 @@ describe('findManifestEntity', () => {
     const manifest = makeManifest({ entities: [] });
     expect(findManifestEntity(manifest, 'missing')).toBeUndefined();
   });
+
+  it('returns undefined when entities is absent from spec', () => {
+    const manifest = makeManifest({ entities: undefined as never });
+    expect(findManifestEntity(manifest, 'customer')).toBeUndefined();
+  });
 });
 
 describe('resolveManifestEntityFromDefinition', () => {
@@ -199,6 +242,28 @@ describe('resolveManifestEntityFromDefinition', () => {
     const entity = makeEntity('customer', []);
     const resolved = resolveManifestEntityFromDefinition(entity);
     expect(resolved.editFields).toBeDefined();
+  });
+
+  it('defaults relations/computed/capabilities to [] when absent', () => {
+    const entity = { key: 'order', label: 'Order', fields: [] } as unknown as EntityDefinition;
+    const resolved = resolveManifestEntityFromDefinition(entity);
+    expect(resolved.relations).toEqual([]);
+    expect(resolved.computed).toEqual([]);
+    expect(resolved.capabilities).toEqual([]);
+  });
+
+  it('excludes fields with form.visible === false from formFields', () => {
+    const entity = {
+      key: 'customer',
+      label: 'Customer',
+      fields: [
+        { key: 'name', type: 'string', label: 'Name' },
+        { key: 'hidden', type: 'string', label: 'Hidden', form: { visible: false } },
+      ],
+    } as unknown as EntityDefinition;
+    const resolved = resolveManifestEntityFromDefinition(entity);
+    expect(resolved.formFields.some((f) => f.key === 'hidden')).toBe(false);
+    expect(resolved.formFields.some((f) => f.key === 'name')).toBe(true);
   });
 });
 
@@ -223,6 +288,11 @@ describe('resolveManifestEntities', () => {
 
   it('returns [] for manifest with no entities', () => {
     const manifest = makeManifest({ entities: [] });
+    expect(resolveManifestEntities(manifest)).toEqual([]);
+  });
+
+  it('returns [] when entities is absent from spec', () => {
+    const manifest = makeManifest({ entities: undefined as never });
     expect(resolveManifestEntities(manifest)).toEqual([]);
   });
 });

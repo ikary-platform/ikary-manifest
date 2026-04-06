@@ -110,6 +110,7 @@ export const DataGridPresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- sorting.mode is z.enum(['single']), so the != branch is structurally unreachable */
     if (value.sorting?.mode && value.sorting.mode !== 'single') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -118,6 +119,7 @@ export const DataGridPresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- selection.mode is z.enum(['page']), so the != branch is structurally unreachable */
     if (value.selection?.mode && value.selection.mode !== 'page') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

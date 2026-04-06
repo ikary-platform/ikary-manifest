@@ -51,6 +51,7 @@ export function validatePresentation(input: unknown): ValidatePresentationResult
       }
 
       const semanticErrors = validateDataGridPresentation(parsed.data);
+      /* v8 ignore next 6 -- DataGridPresentationSchema.superRefine duplicates all semantic checks, so this path is unreachable */
       if (semanticErrors.length > 0) {
         return {
           ok: false,

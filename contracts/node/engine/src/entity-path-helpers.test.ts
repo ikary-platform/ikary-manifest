@@ -81,3 +81,14 @@ describe('buildEntityListPath', () => {
     expect(buildEntityListPath(manifest, 'customer')).toBeNull();
   });
 });
+
+describe('findEntityPage — spec.pages ?? [] branch', () => {
+  it('handles manifest with undefined spec.pages', () => {
+    const manifest = {
+      version: '1.0',
+      cellKey: 'test',
+      spec: { entities: [], pages: undefined as never, navigation: { items: [] } },
+    } as unknown as import('@ikary-manifest/contract').CellManifestV1;
+    expect(buildEntityListPath(manifest, 'customer')).toBeNull();
+  });
+});

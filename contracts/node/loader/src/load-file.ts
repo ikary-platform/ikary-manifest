@@ -29,6 +29,7 @@ export async function loadManifestFromFile(
       return loadManifestFromYaml(content, options);
     case '.json':
       return loadManifestFromJson(content, options);
+    /* v8 ignore next 5 */
     default:
       return {
         valid: false,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CellManifestV1, EntityDefinition } from '../shared/types';
-import { validateEntityRules } from './entity-rules';
+import { validateEntityRules, validateSingleEntitySemantics } from './entity-rules';
 
 function makeManifest(entities: EntityDefinition[]): CellManifestV1 {
   return {
@@ -320,5 +320,35 @@ describe('validateEntityRules', () => {
     };
 
     expect(validateEntityRules(makeManifest([validEntity]))).toEqual([]);
+  });
+});
+
+describe('validateSingleEntitySemantics', () => {
+  it('returns no errors for a valid standalone entity', () => {
+    const entity: EntityDefinition = {
+      key: 'product',
+      name: 'Product',
+      pluralName: 'Products',
+      fields: [
+        { key: 'name', type: 'string', name: 'Name' },
+        { key: 'price', type: 'number', name: 'Price' },
+      ],
+    };
+    const errors = validateSingleEntitySemantics(entity);
+    expect(errors).toEqual([]);
+  });
+
+  it('returns errors when a field key conflicts with a base entity reserved key', () => {
+    const entity: EntityDefinition = {
+      key: 'product',
+      name: 'Product',
+      pluralName: 'Products',
+      fields: [
+        { key: 'id', type: 'string', name: 'ID' },  // 'id' is a reserved base entity field
+      ],
+    };
+    const errors = validateSingleEntitySemantics(entity);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].message).toContain('reserved');
   });
 });

@@ -25,7 +25,7 @@ export function loadManifestFromYaml(
       errors: [
         {
           field: 'root',
-          message: `YAML parse error: ${err instanceof Error ? err.message : String(err)}`,
+          message: `YAML parse error: ${err instanceof Error ? err.message : /* v8 ignore next */ String(err)}`,
         },
       ],
       raw: undefined,

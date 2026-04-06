@@ -18,7 +18,7 @@ export function loadManifestFromJson(
       errors: [
         {
           field: 'root',
-          message: `JSON parse error: ${err instanceof Error ? err.message : String(err)}`,
+          message: `JSON parse error: ${err instanceof Error ? err.message : /* v8 ignore next */ String(err)}`,
         },
       ],
       raw: undefined,

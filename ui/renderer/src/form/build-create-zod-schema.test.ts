@@ -160,6 +160,20 @@ describe('buildCreateZodSchema', () => {
       expect(schema.safeParse({ metadata: { nested: 'val' } }).success).toBe(true);
       expect(schema.safeParse({}).success).toBe(true);
     });
+
+    it('object field with no children defaults to empty schema', () => {
+      const objField = field('metadata', 'object', [], { children: undefined as never });
+      const schema = buildCreateZodSchema([objField]);
+      expect(schema.safeParse({}).success).toBe(true);
+    });
+  });
+
+  describe('enum fields', () => {
+    it('enum field with no enumValues defaults to empty tuple', () => {
+      // enumValues undefined → ?? [] → z.enum([]) which accepts nothing
+      const schema = buildCreateZodSchema([field('status', 'enum', [], { enumValues: undefined })]);
+      expect(schema.safeParse({}).success).toBe(true);
+    });
   });
 
   describe('date fields with future_date rule', () => {
@@ -178,6 +192,28 @@ describe('buildCreateZodSchema', () => {
       const futureDate = new Date(today.getTime() + 86400000 * 30); // 30 days from now
       const dateStr = futureDate.toISOString().split('T')[0];
       expect(schema.safeParse({ startDate: dateStr }).success).toBe(true);
+    });
+
+    it('uses default message when future_date rule has no defaultMessage', () => {
+      const schema = buildCreateZodSchema([
+        field('startDate', 'date', [rule('required'), rule('future_date')]),
+      ]);
+      const result = schema.safeParse({ startDate: '2000-01-01' });
+      expect(result.success).toBe(false);
+    });
+
+    it('optional future_date field passes when empty', () => {
+      const schema = buildCreateZodSchema([
+        field('startDate', 'date', [rule('future_date')]),
+      ]);
+      expect(schema.safeParse({}).success).toBe(true);
+    });
+
+    it('optional future_date field rejects past date', () => {
+      const schema = buildCreateZodSchema([
+        field('startDate', 'date', [rule('future_date')]),
+      ]);
+      expect(schema.safeParse({ startDate: '2000-01-01' }).success).toBe(false);
     });
   });
 

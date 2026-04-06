@@ -111,6 +111,80 @@ describe('useSecondaryProviders', () => {
     expect(result.current.mergedData).toEqual({ invoices });
   });
 
+  it('single provider with no idFrom is disabled (query never fires)', () => {
+    const provider: DataProviderDefinition = {
+      key: 'company',
+      entityKey: 'company',
+      mode: 'single',
+      // no idFrom → id = undefined → query disabled
+    };
+
+    const { result } = renderHook(
+      () => useSecondaryProviders([provider], { id: 'c1' }, ROUTE),
+      { wrapper: makeWrapper() },
+    );
+
+    expect(result.current.isLoading).toBe(false);
+    expect(mockCellApiFetch).not.toHaveBeenCalled();
+  });
+
+  it('single provider with null primaryRecord is disabled (no fetch)', () => {
+    const provider: DataProviderDefinition = {
+      key: 'company',
+      entityKey: 'company',
+      mode: 'single',
+      idFrom: 'companyId',
+    };
+
+    // primaryRecord is null → resolveIdFrom({}, 'companyId') → undefined → query disabled
+    const { result } = renderHook(() => useSecondaryProviders([provider], null, ROUTE), {
+      wrapper: makeWrapper(),
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(mockCellApiFetch).not.toHaveBeenCalled();
+    expect(result.current.mergedData).toEqual({});
+  });
+
+  it('list provider without filterBy fetches all records', async () => {
+    const items = [{ id: 'tag-1' }];
+    mockCellApiFetch.mockResolvedValueOnce({ data: items, total: 1, page: 1, pageSize: 20, hasMore: false });
+
+    const provider: DataProviderDefinition = {
+      key: 'tags',
+      entityKey: 'tag',
+      mode: 'list',
+      // no filterBy → filterValue = undefined (line 45 : undefined branch)
+    };
+
+    const { result } = renderHook(() => useSecondaryProviders([provider], null, ROUTE), {
+      wrapper: makeWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.mergedData).toHaveProperty('tags'));
+    expect(result.current.mergedData).toEqual({ tags: items });
+  });
+
+  it('list provider with filterBy and null primaryRecord sends query without filter', async () => {
+    const invoices = [{ id: 'inv-1' }];
+    mockCellApiFetch.mockResolvedValueOnce({ data: invoices, total: 1, page: 1, pageSize: 20, hasMore: false });
+
+    const provider: DataProviderDefinition = {
+      key: 'invoices',
+      entityKey: 'invoice',
+      mode: 'list',
+      filterBy: { field: 'customerId', valueFrom: 'customerId' },
+    };
+
+    // primaryRecord is null → resolveIdFrom({}, 'customerId') → undefined → filter = undefined
+    const { result } = renderHook(() => useSecondaryProviders([provider], null, ROUTE), {
+      wrapper: makeWrapper(),
+    });
+
+    await waitFor(() => expect(result.current.mergedData).toHaveProperty('invoices'));
+    expect(result.current.mergedData).toEqual({ invoices });
+  });
+
   it('runs multiple providers in parallel', async () => {
     mockCellApiFetch
       .mockResolvedValueOnce({ data: { id: 'cmp-1', name: 'Acme' } })
