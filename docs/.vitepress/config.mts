@@ -54,6 +54,7 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/why-ikary-manifest' },
       { text: 'Reference', link: '/reference/entity-definition' },
       { text: 'Packages', link: '/packages/overview' },
+      { text: 'Playground', link: '/playground/' },
       {
         text: 'ikary.co',
         link: 'https://ikary.co',

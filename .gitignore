@@ -3,3 +3,4 @@ dist/
 .turbo/
 docs/.vitepress/cache/
 docs/.vitepress/dist/
+docs/public/playground/
