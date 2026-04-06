@@ -4,46 +4,66 @@ outline: deep
 
 # YAML Schemas
 
-Language-neutral schemas for IKARY cell manifests, written as [JSON Schema](https://json-schema.org/) in YAML. Located in `manifests/schemas/`.
+Language-neutral schemas for IKARY cell manifests, written as [JSON Schema](https://json-schema.org/) in YAML. Organised by domain under `manifests/`.
 
 ## Schema map
 
-### Manifest level
+### Root (entry points)
 
-| Schema | Describes |
-|--------|-----------|
+| Path | Describes |
+|------|-----------|
 | `cell-manifest.schema.yaml` | Top-level manifest (apiVersion, kind, metadata, spec) |
 | `metadata.schema.yaml` | Manifest metadata (key, name, version) |
 | `cell-spec.schema.yaml` | Spec body (mount, entities, pages, navigation, roles) |
-| `mount.schema.yaml` | Mount point (path, landing page) |
 
-### Entity level
+### `shared/`
 
-| Schema | Describes |
-|--------|-----------|
-| `entity-definition.schema.yaml` | Full entity (fields, relations, lifecycle, capabilities...) |
-| `field-definition.schema.yaml` | Field types, nested objects (recursive) |
-| `field-validation.schema.yaml` | Field-level validation rules container |
-| `field-rule.schema.yaml` | Single validation rule |
-| `display.schema.yaml` | Field display configuration |
-| `relation-definition.schema.yaml` | Relation types (belongs_to, has_many, many_to_many, self, polymorphic) |
-| `computed-field.schema.yaml` | Computed fields (expression, conditional, aggregation) |
-| `lifecycle.schema.yaml` | State machine definition |
-| `lifecycle-transition.schema.yaml` | Single state transition |
-| `capability-definition.schema.yaml` | Capabilities (transition, mutation, workflow, export, integration) |
-| `capability-input.schema.yaml` | Capability input parameters |
-| `event.schema.yaml` | Audit event configuration |
-| `policy.schema.yaml` | Entity and field access policies |
-| `entity-validation.schema.yaml` | Entity-level rules and cross-entity validators |
+| Path | Describes |
+|------|-----------|
+| `shared/mount.schema.yaml` | Mount point (path, landing page) |
 
-### UI level
+### `entities/`
 
-| Schema | Describes |
-|--------|-----------|
-| `page-definition.schema.yaml` | Page types and data bindings |
-| `navigation.schema.yaml` | Navigation menu (recursive groups) |
-| `role-definition.schema.yaml` | Roles and permission scopes |
-| `app-shell.schema.yaml` | Shell layout, branding, regions |
+| Path | Describes |
+|------|-----------|
+| `entities/entity-definition.schema.yaml` | Full entity (fields, relations, lifecycle, capabilities...) |
+| `entities/field-definition.schema.yaml` | Field types, nested objects (recursive) |
+| `entities/field-validation.schema.yaml` | Field-level validation rules container |
+| `entities/field-rule.schema.yaml` | Single validation rule |
+| `entities/display.schema.yaml` | Field display configuration |
+| `entities/relation-definition.schema.yaml` | Relation types (belongs_to, has_many, many_to_many, self, polymorphic) |
+| `entities/computed-field.schema.yaml` | Computed fields (expression, conditional, aggregation) |
+| `entities/lifecycle.schema.yaml` | State machine definition |
+| `entities/lifecycle-transition.schema.yaml` | Single state transition |
+| `entities/capability-definition.schema.yaml` | Capabilities (transition, mutation, workflow, export, integration) |
+| `entities/capability-input.schema.yaml` | Capability input parameters |
+| `entities/event.schema.yaml` | Audit event configuration |
+| `entities/policy.schema.yaml` | Entity and field access policies |
+| `entities/entity-validation.schema.yaml` | Entity-level rules and cross-entity validators |
+
+### `pages/`
+
+| Path | Describes |
+|------|-----------|
+| `pages/page-definition.schema.yaml` | Page types and data bindings |
+
+### `navigation/`
+
+| Path | Describes |
+|------|-----------|
+| `navigation/navigation.schema.yaml` | Navigation menu (recursive groups) |
+
+### `roles/`
+
+| Path | Describes |
+|------|-----------|
+| `roles/role-definition.schema.yaml` | Roles and permission scopes |
+
+### `app-shell/`
+
+| Path | Describes |
+|------|-----------|
+| `app-shell/app-shell.schema.yaml` | Shell layout, branding, regions |
 
 ## Cross-references
 

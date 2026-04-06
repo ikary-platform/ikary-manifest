@@ -78,7 +78,7 @@ interface LoadManifestResult {
 
 The loader strips YAML/JSON Schema meta-properties before Zod validation:
 
-- **`$schema`** -- authoring hint, removed from root and nested objects
-- **`$ref`** -- unresolved file references in entity arrays are filtered out
+- **`$schema`**: authoring hint, removed from root and nested objects
+- **`$ref`**: unresolved file references in entity arrays are filtered out
 
 This allows manifests to use standard `$schema` declarations and `$ref` composition without breaking Zod's strict-mode validation.

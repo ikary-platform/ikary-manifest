@@ -1,4 +1,4 @@
-$schema: "../schemas/cell-manifest.schema.yaml"
+$schema: "../cell-manifest.schema.yaml"
 
 apiVersion: ikary.co/v1alpha1
 kind: Cell
@@ -22,8 +22,8 @@ spec:
         - crm.customer.view
 
   entities:
-    - $ref: "../entities/customer.entity.yaml"
-    - $ref: "../entities/invoice.entity.yaml"
+    - $ref: "./entities/customer.entity.yaml"
+    - $ref: "./entities/invoice.entity.yaml"
 
   pages:
     - key: dashboard

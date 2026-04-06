@@ -111,6 +111,6 @@ ikary-manifest/
 
 ## Next steps
 
-- [Architecture](/guide/architecture) -- understand the processing pipeline
-- [Manifest Format](/guide/manifest-format) -- YAML structure, `$ref`, schemas
-- [Entity Definition](/reference/entity-definition) -- full entity specification
+- [Architecture](/guide/architecture): understand the processing pipeline
+- [Manifest Format](/guide/manifest-format): YAML structure, `$ref`, schemas
+- [Entity Definition](/reference/entity-definition): full entity specification

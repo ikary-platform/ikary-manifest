@@ -4,8 +4,8 @@
  * Output goes to node/dist/schemas/ as a build artifact for tooling that
  * requires single-file JSON Schema (e.g. Python's jsonschema library).
  *
- * The human-readable YAML schemas live in manifests/schemas/ and are
- * hand-authored with $ref cross-references.
+ * The human-readable YAML schemas live under manifests/ (organised by domain)
+ * and are hand-authored with $ref cross-references.
  *
  * Usage: tsx node/scripts/generate-json-schema.ts
  */

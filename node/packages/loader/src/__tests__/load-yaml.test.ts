@@ -5,7 +5,7 @@ import { loadManifestFromYaml } from '../load-yaml';
 import { loadManifestFromJson } from '../load-json';
 
 const MANIFESTS_DIR = join(__dirname, '..', '..', '..', '..', '..', 'manifests', 'examples');
-const ENTITIES_DIR = join(__dirname, '..', '..', '..', '..', '..', 'manifests', 'entities');
+const ENTITIES_DIR = join(__dirname, '..', '..', '..', '..', '..', 'manifests', 'examples', 'entities');
 
 describe('loadManifestFromYaml', () => {
   it('parses minimal manifest YAML successfully', () => {
@@ -120,7 +120,7 @@ describe('standalone entity files', () => {
     expect(entity.name).toBe('Customer');
     expect(entity.fields).toHaveLength(3);
     expect(entity.lifecycle.initial).toBe('lead');
-    expect(entity.$schema).toBe('../schemas/entity-definition.schema.yaml');
+    expect(entity.$schema).toBe('../../entities/entity-definition.schema.yaml');
   });
 });
 
