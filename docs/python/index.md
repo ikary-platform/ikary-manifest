@@ -25,8 +25,8 @@ Python consumes the same YAML manifests as the TypeScript runtime. Shared artifa
 | Artifact | Location | Python tool |
 |----------|----------|-------------|
 | YAML manifests | `manifests/examples/` | PyYAML |
-| YAML schemas | `manifests/schemas/` | jsonschema |
-| Entity files | `manifests/entities/` | PyYAML |
+| YAML schemas | `manifests/` (domain folders) | jsonschema |
+| Entity files | `manifests/examples/entities/` | PyYAML |
 
 Python never depends on TypeScript files.
 
@@ -90,6 +90,6 @@ pytest
 
 The Python SDK currently provides YAML/JSON loading. Planned features:
 
-- JSON Schema structural validation using `manifests/schemas/`
+- JSON Schema structural validation using `manifests/` schemas
 - Native semantic validation rules
 - FastAPI code generation from manifests

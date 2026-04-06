@@ -23,16 +23,16 @@ def test_load_crm_yaml():
     assert result["apiVersion"] == "ikary.co/v1alpha1"
     assert result["metadata"]["key"] == "crm"
     # CRM manifest uses $ref for entities — raw parse gives $ref objects
-    assert result["spec"]["entities"][0]["$ref"] == "../entities/customer.entity.yaml"
+    assert result["spec"]["entities"][0]["$ref"] == "./entities/customer.entity.yaml"
 
 
 def test_load_entity_yaml():
-    entities_dir = Path(__file__).parent.parent.parent / "manifests" / "entities"
+    entities_dir = MANIFESTS_DIR / "entities"
     result = load_manifest_from_file(entities_dir / "customer.entity.yaml")
     assert result["key"] == "customer"
     assert result["name"] == "Customer"
     assert len(result["fields"]) == 3
-    assert result["$schema"] == "../schemas/entity-definition.schema.yaml"
+    assert result["$schema"] == "../../entities/entity-definition.schema.yaml"
 
 
 def test_load_from_yaml_string():

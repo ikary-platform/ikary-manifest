@@ -1,4 +1,4 @@
-# Ikary Manifest -- Python SDK
+# Ikary Manifest: Python SDK
 
 Python SDK for loading and validating Ikary cell manifests.
 
@@ -21,9 +21,9 @@ print(manifest["metadata"]["key"])  # "crm"
 
 Python consumes the same YAML manifests as the TypeScript runtime. Shared artifacts:
 
-- **YAML manifests** in `manifests/examples/` -- parsed with PyYAML
-- **JSON Schema** in `manifests/schemas/` -- structural validation with `jsonschema`
-- **Semantic validation** -- to be implemented natively in Python
+- **YAML manifests** in `manifests/examples/`: parsed with PyYAML
+- **JSON Schema** in `manifests/` (domain folders): structural validation with `jsonschema`
+- **Semantic validation**: to be implemented natively in Python
 
 Python never depends on TypeScript files.
 

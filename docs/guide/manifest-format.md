@@ -33,7 +33,7 @@ spec:
 Manifests declare which schema they conform to:
 
 ```yaml
-$schema: "../schemas/cell-manifest.schema.yaml"
+$schema: "../cell-manifest.schema.yaml"
 
 apiVersion: ikary.co/v1alpha1
 kind: Cell
@@ -43,14 +43,14 @@ kind: Cell
 Entity files declare their own schema:
 
 ```yaml
-$schema: "../schemas/entity-definition.schema.yaml"
+$schema: "../../entities/entity-definition.schema.yaml"
 
 key: customer
 name: Customer
 # ...
 ```
 
-The `$schema` property is stripped by the loader before validation -- it's an authoring hint for IDE support and documentation.
+The `$schema` property is stripped by the loader before validation. It is an authoring hint for IDE support and documentation.
 
 ## Entity composition with `$ref`
 
@@ -67,15 +67,15 @@ spec:
 # Composed from files (recommended for real projects)
 spec:
   entities:
-    - $ref: "../entities/customer.entity.yaml"
-    - $ref: "../entities/invoice.entity.yaml"
+    - $ref: "./entities/customer.entity.yaml"
+    - $ref: "./entities/invoice.entity.yaml"
 ```
 
-Standalone entity files live in `manifests/entities/` and are valid on their own:
+Standalone entity files live in `manifests/examples/entities/` and are valid on their own:
 
 ```yaml
-# manifests/entities/customer.entity.yaml
-$schema: "../schemas/entity-definition.schema.yaml"
+# manifests/examples/entities/customer.entity.yaml
+$schema: "../../entities/entity-definition.schema.yaml"
 
 key: customer
 name: Customer
@@ -93,7 +93,7 @@ This keeps entities reusable, diffable, and independently reviewable.
 
 ## Schema cross-references
 
-The YAML schemas in `manifests/schemas/` reference each other using `$ref`:
+The YAML schemas under `manifests/` reference each other using `$ref`:
 
 ```yaml
 # entity-definition.schema.yaml
@@ -161,8 +161,8 @@ pages:
 
 When a manifest is loaded, it goes through:
 
-1. **YAML parse** -- raw text to JS object (`@ikary-manifest/loader`)
-2. **Meta stripping** -- `$schema` and unresolved `$ref` removed
-3. **Structural validation** -- Zod schema checks types, required fields, patterns
-4. **Semantic validation** -- business rules: unique keys, valid references, lifecycle consistency
-5. **Compilation** -- normalization, field derivation, scope registry (`@ikary-manifest/engine`)
+1. **YAML parse**: raw text to JS object (`@ikary-manifest/loader`)
+2. **Meta stripping**: `$schema` and unresolved `$ref` removed
+3. **Structural validation**: Zod schema checks types, required fields, patterns
+4. **Semantic validation**: business rules: unique keys, valid references, lifecycle consistency
+5. **Compilation**: normalization, field derivation, scope registry (`@ikary-manifest/engine`)

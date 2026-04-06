@@ -6,10 +6,10 @@ outline: deep
 
 ## Design Principles
 
-1. **YAML is the source of truth** -- Manifests are authored in YAML under `manifests/`. TypeScript and Python runtimes consume these files.
-2. **Language-neutral contracts** -- JSON Schema files in `manifests/schemas/` enable validation in any language without depending on TypeScript.
-3. **Strong typing where it matters** -- TypeScript types are inferred from Zod schemas (`z.infer<typeof Schema>`), giving compile-time safety on the Node side without duplicating definitions.
-4. **Separation of concerns** -- Loading (I/O), structural validation (Zod), semantic validation (business rules), and compilation (normalization + derivation) are distinct steps in distinct packages.
+1. **YAML is the source of truth**: Manifests are authored in YAML under `manifests/`. TypeScript and Python runtimes consume these files.
+2. **Language-neutral contracts**: JSON Schema files under `manifests/` enable validation in any language without depending on TypeScript.
+3. **Strong typing where it matters**: TypeScript types are inferred from Zod schemas (`z.infer<typeof Schema>`), giving compile-time safety on the Node side without duplicating definitions.
+4. **Separation of concerns**: Loading (I/O), structural validation (Zod), semantic validation (business rules), and compilation (normalization + derivation) are distinct steps in distinct packages.
 
 ## Processing Pipeline
 
@@ -36,9 +36,9 @@ flowchart TD
 
 ### Why separate loader from contract?
 
-- **Contract stays pure** -- no filesystem access, no YAML dependency. It's a validation library.
-- **Loader owns I/O** -- file reading, YAML/JSON parsing, format detection.
-- **Consumers compose** -- a CLI loads from files; a web API validates in-memory objects. Both use contract, but only the CLI needs loader.
+- **Contract stays pure**: no filesystem access, no YAML dependency. It is a validation library.
+- **Loader owns I/O**: file reading, YAML/JSON parsing, format detection.
+- **Consumers compose**: a CLI loads from files; a web API validates in-memory objects. Both use contract, but only the CLI needs loader.
 
 ## Compile-time vs Runtime
 
@@ -48,7 +48,7 @@ flowchart TD
 | Zod structural validation | Runtime | `CellManifestV1Schema.safeParse()` |
 | Semantic business rules | Runtime | `validateManifestSemantics()` |
 | Field derivation | Runtime | `deriveCreateFields()`, `deriveEditFields()` |
-| JSON Schema validation | Runtime | Any language using `manifests/schemas/` |
+| JSON Schema validation | Runtime | Any language using `manifests/` schemas |
 
 YAML files cannot create compile-time TypeScript types. The types are defined by Zod schemas in the contract package. YAML manifests are validated against those schemas at runtime.
 
@@ -56,9 +56,9 @@ YAML files cannot create compile-time TypeScript types. The types are defined by
 
 Python does not and should not depend on TypeScript files. Instead:
 
-- **YAML manifests** -- same files, parsed with PyYAML
-- **JSON Schema** -- generated from Zod schemas via `pnpm -w run generate:schema`, used with `jsonschema` for structural validation
-- **Semantic rules** -- will be implemented natively in Python when needed
+- **YAML manifests**: same files, parsed with PyYAML
+- **JSON Schema**: generated from Zod schemas via `pnpm -w run generate:schema`, used with `jsonschema` for structural validation
+- **Semantic rules**: will be implemented natively in Python when needed
 
 This gives Python full access to the manifest ecosystem without a Node.js build step at runtime.
 
@@ -94,9 +94,9 @@ JSON Schemas are generated from Zod schemas, not hand-written:
 pnpm -w run generate:schema
 ```
 
-This produces `manifests/schemas/CellManifestV1.schema.json` and `manifests/schemas/EntityDefinition.schema.json`.
+This produces `node/dist/schemas/CellManifestV1.schema.json` and `node/dist/schemas/EntityDefinition.schema.json`.
 
 Limitations:
 - Recursive types (nested navigation items, nested fields) default to `any` in JSON Schema
-- `superRefine` validators (uniqueness checks, cross-entity references) don't translate -- these are semantic rules
+- `superRefine` validators (uniqueness checks, cross-entity references) don't translate; these are semantic rules
 - The JSON Schema covers structural validation only
