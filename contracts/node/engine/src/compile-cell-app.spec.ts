@@ -92,6 +92,35 @@ describe('compileCellApp', () => {
     expect(scopes).toContain('ticket.close');
   });
 
+  it('handles entity with no lifecycle (lifecycle?.transitions ?? [] branch)', () => {
+    const entity = { key: 'simple', name: 'Simple', pluralName: 'Simples', fields: [] };
+    const scopes = deriveEntityScopeRegistry(entity as never);
+    expect(scopes).toContain('simple.view');
+    expect(scopes).not.toContain('simple.');
+  });
+
+  it('handles entity with no capabilities (capabilities ?? [] branch)', () => {
+    const entity = { key: 'simple', name: 'Simple', pluralName: 'Simples', fields: [], lifecycle: { field: 'status', initial: 'active', states: ['active'], transitions: [] } };
+    const scopes = deriveEntityScopeRegistry(entity as never);
+    expect(scopes).toContain('simple.view');
+  });
+
+  it('handles manifest with no entities (entities ?? [] branch)', () => {
+    const manifest = { ...validManifest, spec: { ...validManifest.spec, entities: undefined as never } };
+    const scopes = deriveManifestScopeRegistry(manifest);
+    expect(scopes).toHaveLength(0);
+  });
+
+  it('uses explicit capability.scope when provided', () => {
+    const entity = {
+      ...validManifest.spec.entities![0],
+      capabilities: [{ key: 'assign', type: 'workflow' as const, workflow: 'assign-ticket', scope: 'global.assign' }],
+    };
+    const scopes = deriveEntityScopeRegistry(entity);
+    expect(scopes).toContain('global.assign');
+    expect(scopes).not.toContain('ticket.assign');
+  });
+
   it('builds entity paths from manifest pages', () => {
     const listPath = buildEntityListPath(validManifest, 'ticket');
     const detailPath = buildEntityDetailPath(validManifest, 'ticket', '123');

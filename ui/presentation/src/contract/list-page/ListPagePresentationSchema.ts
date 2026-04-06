@@ -99,6 +99,7 @@ export const ListPagePresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- discriminated union ensures mode and presentation.type always agree */
     if (value.renderer.mode === 'data-grid' && value.renderer.presentation.type !== 'data-grid') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -107,6 +108,7 @@ export const ListPagePresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- discriminated union ensures mode and presentation.type always agree */
     if (value.renderer.mode === 'card-list' && value.renderer.presentation.type !== 'card-list') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -115,6 +117,7 @@ export const ListPagePresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- PageHeaderPresentationSchema enforces type:'page-header' before superRefine runs */
     if (value.header && value.header.type !== 'page-header') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -123,6 +126,7 @@ export const ListPagePresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- TabsPresentationSchema enforces type:'tabs' before superRefine runs */
     if (value.navigation && value.navigation.type !== 'tabs') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -131,6 +135,7 @@ export const ListPagePresentationSchema = z
       });
     }
 
+    /* v8 ignore next 7 -- PaginationPresentationSchema enforces type:'pagination' before superRefine runs */
     if (value.pagination && value.pagination.type !== 'pagination') {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

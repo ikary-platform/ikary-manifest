@@ -70,4 +70,9 @@ describe('derivePageDataContext', () => {
     const ctx = derivePageDataContext(page);
     expect(ctx).toEqual({ entityKey: 'summary', mode: 'single', idParam: 'id' });
   });
+
+  it('unknown page type → null (default branch)', () => {
+    const ctx = derivePageDataContext(makePage({ type: 'unknown-future-type' as never }));
+    expect(ctx).toBeNull();
+  });
 });

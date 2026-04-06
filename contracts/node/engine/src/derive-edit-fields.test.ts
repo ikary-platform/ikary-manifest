@@ -119,6 +119,12 @@ describe('deriveEditFields', () => {
       const [r] = deriveEditFields([objectField]);
       expect((r as never as { children: unknown[] }).children).toHaveLength(2);
     });
+
+    it('handles object type with no fields defined (fields ?? [] branch)', () => {
+      const objectField = field('metadata', { type: 'object' });
+      const [r] = deriveEditFields([objectField]);
+      expect((r as never as { children: unknown[] }).children).toHaveLength(0);
+    });
   });
 
   describe('effectiveReadonly', () => {

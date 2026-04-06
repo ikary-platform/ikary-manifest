@@ -1,6 +1,9 @@
 """Smoke tests for manifest loader."""
 
+import json
 from pathlib import Path
+
+import pytest
 
 from ikary_manifest.loader import load_manifest_from_file, load_manifest_from_yaml
 
@@ -56,3 +59,19 @@ spec:
     result = load_manifest_from_yaml(yaml_content)
     assert result["kind"] == "Cell"
     assert result["metadata"]["key"] == "test"
+
+
+def test_load_json_file(tmp_path):
+    manifest = {"apiVersion": "ikary.co/v1alpha1", "kind": "Cell", "metadata": {"key": "test"}}
+    json_file = tmp_path / "manifest.json"
+    json_file.write_text(json.dumps(manifest))
+    result = load_manifest_from_file(json_file)
+    assert result["kind"] == "Cell"
+    assert result["apiVersion"] == "ikary.co/v1alpha1"
+
+
+def test_load_unsupported_extension(tmp_path):
+    toml_file = tmp_path / "manifest.toml"
+    toml_file.write_text("[manifest]\n")
+    with pytest.raises(ValueError, match="Unsupported file extension"):
+        load_manifest_from_file(toml_file)
