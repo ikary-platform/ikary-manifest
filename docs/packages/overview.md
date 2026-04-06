@@ -8,10 +8,12 @@ Everything related to "what is a valid manifest?". Node.js and Python implementa
 
 | Package | Role |
 |---------|------|
-| [`@ikary-manifest/contract`](/packages/contract) | Zod schemas, TypeScript types, structural + semantic validation |
-| [`@ikary-manifest/loader`](/packages/loader) | YAML/JSON parsing, meta-property stripping, validation pipeline |
-| [`@ikary-manifest/engine`](/packages/engine) | Compilation, normalization, field derivation, path builders |
+| `@ikary-manifest/contract` | Zod schemas, TypeScript types, structural + semantic validation |
+| `@ikary-manifest/loader` | YAML/JSON parsing, meta-property stripping, validation pipeline |
+| `@ikary-manifest/engine` | Compilation, normalization, field derivation, path builders |
 | `ikary-manifest` (Python) | Python manifest loader |
+
+See [Loading & Validation](/packages/loading) for the full API reference covering all three Node.js packages and the Python SDK.
 
 ## runtime-api/
 
@@ -81,7 +83,9 @@ flowchart TD
     style E fill:#1d4ed8,stroke:#78afff,color:#f8fafc
 ```
 
-```typescript
+::: code-group
+
+```typescript [Node.js]
 import { loadManifestFromFile } from '@ikary-manifest/loader';
 import { compileCellApp } from '@ikary-manifest/engine';
 
@@ -90,6 +94,14 @@ if (loaded.valid) {
   const compiled = compileCellApp(loaded.manifest!);
 }
 ```
+
+```python [Python]
+from ikary_manifest.loader import load_manifest_from_file
+
+manifest = load_manifest_from_file("manifest.yaml")
+```
+
+:::
 
 ## Building
 

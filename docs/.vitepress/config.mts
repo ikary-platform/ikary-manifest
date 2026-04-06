@@ -54,7 +54,6 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/why-ikary-manifest' },
       { text: 'Reference', link: '/reference/entity-definition' },
       { text: 'Packages', link: '/packages/overview' },
-      { text: 'Python', link: '/python/' },
       {
         text: 'ikary.co',
         link: 'https://ikary.co',
@@ -108,23 +107,14 @@ export default defineConfig({
 
       '/packages/': [
         {
-          text: 'Node Packages',
+          text: 'Packages',
           items: [
             { text: 'Overview', link: '/packages/overview' },
-            { text: '@ikary-manifest/loader', link: '/packages/loader' },
-            {
-              text: '@ikary-manifest/contract',
-              link: '/packages/contract',
-            },
-            { text: '@ikary-manifest/engine', link: '/packages/engine' },
+            { text: 'Loading & Validation', link: '/packages/loading' },
+            { text: 'Compilation', link: '/packages/engine' },
+            { text: 'API Generation', link: '/packages/api-generation' },
+            { text: 'UI Rendering', link: '/packages/ui-rendering' },
           ],
-        },
-      ],
-
-      '/python/': [
-        {
-          text: 'Python SDK',
-          items: [{ text: 'Overview', link: '/python/' }],
         },
       ],
     },

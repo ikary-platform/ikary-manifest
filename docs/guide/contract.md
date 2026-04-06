@@ -70,6 +70,5 @@ print(manifest["metadata"]["key"])
 
 ## Related pages
 
-- [@ikary-manifest/contract](/packages/contract): TypeScript API reference
-- [@ikary-manifest/loader](/packages/loader): loader API reference
-- [Python SDK](/python/): current Python SDK status and API
+- [Loading & Validation](/packages/loading): full API reference for loader, contract, and Python SDK
+- [Compilation](/packages/engine): engine API reference
