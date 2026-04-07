@@ -52,7 +52,7 @@ export function buildCardListViewModel<TRecord extends CardRecord = CardRecord>(
   input: BuildCardListViewModelInput<TRecord>,
 ): CardListViewProps<TRecord> {
   return {
-    items: input.records.map((record, index) => resolveCard(record, index, input)),
+    items: (input.records ?? []).map((record, index) => resolveCard(record, index, input)),
     columns: input.presentation.layout?.columns,
     emptyState: input.presentation.emptyState,
     dense: input.presentation.dense ?? false,
