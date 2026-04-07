@@ -1,3 +1,6 @@
+/* IKARY brand font — mirrors VitePress docs */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,4 +15,36 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+/* ── Body gradient — mirrors VitePress docs body background ─────────────── */
+
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(29, 78, 216, 0.06) 0%, transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(92, 124, 255, 0.05) 0%, transparent 38%),
+    linear-gradient(180deg, rgb(235, 242, 251), rgb(191, 213, 238));
+  background-attachment: fixed;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(78, 124, 224, 0.22) 0%, transparent 34%),
+    radial-gradient(circle at 82% 14%, rgba(120, 175, 255, 0.18) 0%, transparent 38%),
+    linear-gradient(180deg, rgb(6, 12, 26), rgb(13, 31, 60));
+  background-attachment: fixed;
+}
+
+/* ── Nav bar — glassmorphism matching VitePress VPNavBar ────────────────── */
+
+.ikary-nav {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(171, 193, 224, 0.3);
+}
+
+.dark .ikary-nav {
+  background: rgba(10, 19, 41, 0.82);
+  border-bottom: 1px solid rgba(171, 193, 224, 0.1);
 }
