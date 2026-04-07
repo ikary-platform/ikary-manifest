@@ -79,7 +79,7 @@ export function App() {
             </nav>
 
             {/* External nav links — same style as VitePress external nav items */}
-            <div className="flex items-center h-full ml-2 border-l border-[rgba(171,193,224,0.3)] dark:border-[rgba(171,193,224,0.1)] pl-3 gap-0">
+            <div className="flex items-center h-full ml-2 gap-0">
               <a
                 href="https://ikary-platform.github.io/ikary-manifest/"
                 target="_blank"
