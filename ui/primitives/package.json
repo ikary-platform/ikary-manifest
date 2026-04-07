@@ -1,6 +1,6 @@
 {
   "name": "@ikary/primitives",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -43,5 +43,10 @@
     "@tanstack/react-query": "^5.0.0",
     "react-router-dom": "^6.30.1"
   },
-  "files": ["dist", "src", "README.md", "LICENSE"]
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ]
 }
