@@ -1,4 +1,4 @@
-import type { ListPagePresentation } from '@ikary-manifest/presentation';
+import type { ListPagePresentation } from '@ikary/presentation';
 import { buildPageHeaderViewModel, type BuildPageHeaderViewModelInput } from '../page-header';
 import { buildTabsViewModel, type BuildTabsViewModelInput } from '../tabs';
 import { buildDataGridViewModel, type BuildDataGridViewModelInput } from '../data-grid';

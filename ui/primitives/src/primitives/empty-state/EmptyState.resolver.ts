@@ -1,4 +1,4 @@
-import { validateRuntimeEmptyStatePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeEmptyStatePresentation } from '@ikary/presentation';
 import { buildEmptyStateViewModel, type BuildEmptyStateViewModelInput } from './EmptyState.adapter';
 import type { EmptyStateViewProps } from './EmptyState.types';
 

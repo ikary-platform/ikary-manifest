@@ -1,4 +1,4 @@
-import { validateRuntimeDashboardPagePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeDashboardPagePresentation } from '@ikary/presentation';
 import { buildDashboardPageViewModel, type BuildDashboardPageViewModelInput } from './DashboardPage.adapter';
 import type { DashboardPageViewProps } from './DashboardPage.types';
 

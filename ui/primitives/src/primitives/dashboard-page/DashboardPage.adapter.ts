@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { DashboardPagePresentation } from '@ikary-manifest/presentation';
+import type { DashboardPagePresentation } from '@ikary/presentation';
 import type { RenderState } from '../../runtime/render-state.types';
 import type {
   DashboardWidgetContent,

@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/primitives",
+  "name": "@ikary/primitives",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
@@ -19,15 +19,15 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts src/registry.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary-manifest/contract --external @ikary-manifest/presentation --external lucide-react --external @tanstack/react-query",
+    "build": "tsup src/index.ts src/registry.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external lucide-react --external @tanstack/react-query",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src"
   },
   "dependencies": {
-    "@ikary-manifest/contract": "workspace:*",
-    "@ikary-manifest/presentation": "workspace:*",
+    "@ikary/contract": "workspace:*",
+    "@ikary/presentation": "workspace:*",
     "lucide-react": "^0.400.0"
   },
   "peerDependencies": {

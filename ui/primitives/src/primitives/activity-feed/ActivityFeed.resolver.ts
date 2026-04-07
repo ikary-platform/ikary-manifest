@@ -1,4 +1,4 @@
-import { validateRuntimeActivityFeedPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeActivityFeedPresentation } from '@ikary/presentation';
 import { buildActivityFeedViewModel, type BuildActivityFeedViewModelInput } from './ActivityFeed.adapter';
 import type { ActivityFeedViewProps } from './ActivityFeed.types';
 

@@ -43,7 +43,7 @@ The API runtime generates routes under `/customers`. The list endpoint returns a
 ::: code-group
 
 ```bash [Node.js]
-# @ikary-manifest/generator-nest
+# @ikary/generator-nest
 # Generates NestJS modules from a compiled manifest
 # Status: in progress
 ```

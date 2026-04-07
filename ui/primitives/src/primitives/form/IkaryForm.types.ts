@@ -1,4 +1,4 @@
-import type { IkaryFormPresentation, FormSectionPresentation } from '@ikary-manifest/presentation';
+import type { IkaryFormPresentation, FormSectionPresentation } from '@ikary/presentation';
 import type { FormSectionViewProps } from '../form-section/FormSection.types';
 
 export type IkaryFormValues = Record<string, unknown>;

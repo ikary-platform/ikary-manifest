@@ -9,7 +9,7 @@ import type {
   UseIkaryFormResult,
 } from '../Form.types';
 import { buildFormSectionViewModel } from '../../form-section/FormSection.adapter';
-import type { FormFieldPresentation, FormSectionPresentation } from '@ikary-manifest/presentation';
+import type { FormFieldPresentation, FormSectionPresentation } from '@ikary/presentation';
 
 const STATUS_FLASH_MS = 1200;
 

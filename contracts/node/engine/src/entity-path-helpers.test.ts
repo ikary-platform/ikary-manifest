@@ -5,7 +5,7 @@ import {
   buildEntityEditPath,
   buildEntityListPath,
 } from './entity-path-helpers';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 
 function makeManifest(pages: Array<{ entity: string; type: string; path: string }>): CellManifestV1 {
   return {
@@ -88,7 +88,7 @@ describe('findEntityPage — spec.pages ?? [] branch', () => {
       version: '1.0',
       cellKey: 'test',
       spec: { entities: [], pages: undefined as never, navigation: { items: [] } },
-    } as unknown as import('@ikary-manifest/contract').CellManifestV1;
+    } as unknown as import('@ikary/contract').CellManifestV1;
     expect(buildEntityListPath(manifest, 'customer')).toBeNull();
   });
 });

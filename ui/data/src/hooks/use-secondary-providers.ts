@@ -3,9 +3,9 @@ import type {
   EntityRouteParams,
   EntityItemResponse,
   EntityListResponse,
-} from '@ikary-manifest/contract';
-import { entityItemUrl, entityBaseUrl } from '@ikary-manifest/contract';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
+} from '@ikary/contract';
+import { entityItemUrl, entityBaseUrl } from '@ikary/contract';
+import type { DataProviderDefinition } from '@ikary/contract';
 import { useDataHooks } from '../data-hooks';
 import { resolveIdFrom } from '../resolve-id-from';
 

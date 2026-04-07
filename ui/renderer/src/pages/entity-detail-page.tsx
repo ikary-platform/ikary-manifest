@@ -1,6 +1,6 @@
 import { useParams, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
-import { buildEntityListPath } from '@ikary-manifest/engine';
+import { buildEntityListPath } from '@ikary/engine';
 import { useCellRuntime } from '../context/cell-runtime-context';
 import { useCellManifest } from '../context/cell-runtime-context';
 import { DetailHeader } from '../detail/detail-header';

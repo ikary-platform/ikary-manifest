@@ -2,7 +2,7 @@ import { useMemo, type BaseSyntheticEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { buildEntityDetailPath, buildEntityListPath } from '@ikary-manifest/engine';
+import { buildEntityDetailPath, buildEntityListPath } from '@ikary/engine';
 import { useUIComponents } from '../../../UIComponentsProvider';
 import { buildCreateZodSchema } from '../../../form/schema/build-create-zod-schema';
 import { useCellManifest, useCellRuntime } from '../../../context/cell-runtime-context';

@@ -1,5 +1,5 @@
 import type { CellDataHooks } from './data-hooks';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
+import type { EntityRouteParams } from '@ikary/contract';
 
 /**
  * No-op implementation of `CellDataHooks`.

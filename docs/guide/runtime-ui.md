@@ -26,7 +26,7 @@ The runtime handles routing, data fetching, form generation, and navigation stat
 
 Each UI element in the runtime is a primitive. Every primitive has four parts:
 
-- **Contract**: a Zod schema that describes what the primitive expects to render. Stored in `@ikary-manifest/presentation`.
+- **Contract**: a Zod schema that describes what the primitive expects to render. Stored in `@ikary/presentation`.
 - **Adapter**: maps the contract and live runtime state to final component props.
 - **Component**: the React element that renders those props.
 - **Resolver**: the runtime entry point that calls the adapter and returns the rendered component.
@@ -39,10 +39,10 @@ This architecture separates the declarative description (what to render) from th
 
 | Package | Role |
 |---------|------|
-| `@ikary-manifest/presentation` | Zod schemas for 40+ UI primitive contracts |
-| `@ikary-manifest/runtime-ui` | React components, resolvers, adapters, and registry |
-| `@ikary-manifest/renderer` | Top-level `CellAppRenderer` component |
-| `@ikary-manifest/data-runtime` | Data providers that implement the `EntityClient` interface |
+| `@ikary/presentation` | Zod schemas for 40+ UI primitive contracts |
+| `@ikary/runtime-ui` | React components, resolvers, adapters, and registry |
+| `@ikary/renderer` | Top-level `CellAppRenderer` component |
+| `@ikary/data-runtime` | Data providers that implement the `EntityClient` interface |
 
 ## Related pages
 

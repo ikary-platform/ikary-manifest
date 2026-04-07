@@ -1,4 +1,4 @@
-import type { ActivityFeedPresentation } from '@ikary-manifest/presentation';
+import type { ActivityFeedPresentation } from '@ikary/presentation';
 import type { RenderState } from '../../runtime/render-state.types';
 import type { ActivityFeedResolvedAction, ActivityFeedResolvedItem, ActivityFeedViewProps } from './ActivityFeed.types';
 

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { compileCellApp, isValidationResult } from './compile-cell-app';
 import { deriveEntityScopeRegistry, deriveManifestScopeRegistry } from './derive-scope-registry';
 import { buildEntityDetailPath, buildEntityListPath } from './entity-path-helpers';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 
 const validManifest: CellManifestV1 = {
   apiVersion: 'ikary.co/v1alpha1',

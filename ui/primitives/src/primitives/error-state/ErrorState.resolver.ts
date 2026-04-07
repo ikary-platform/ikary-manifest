@@ -1,4 +1,4 @@
-import { validateRuntimeErrorStatePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeErrorStatePresentation } from '@ikary/presentation';
 import { buildErrorStateViewModel, type BuildErrorStateViewModelInput } from './ErrorState.adapter';
 import type { ErrorStateViewProps } from './ErrorState.types';
 

@@ -15,7 +15,7 @@
     "coverage:ui": "vitest run --coverage --root ui/presentation && vitest run --coverage --root ui/primitives && vitest run --coverage --root ui/data && vitest run --coverage --root ui/renderer",
     "coverage:python": "cd contracts/python && python3 -m pytest --cov=ikary_manifest --cov-report=term-missing --cov-fail-under=100 tests/",
     "generate:schema": "tsx contracts/node/scripts/generate-json-schema.ts",
-    "playground:build": "pnpm --filter @ikary-manifest/playground run build",
+    "playground:build": "pnpm --filter @ikary/playground run build",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",

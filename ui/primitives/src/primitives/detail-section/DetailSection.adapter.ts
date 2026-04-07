@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import type { DetailSectionPresentation, FieldValuePresentation } from '@ikary-manifest/presentation';
+import type { DetailSectionPresentation, FieldValuePresentation } from '@ikary/presentation';
 import { buildFieldValueViewModel } from '../field-value/FieldValue.adapter';
 import { FieldValue } from '../field-value/FieldValue';
 import type {

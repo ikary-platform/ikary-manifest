@@ -1,4 +1,4 @@
-import type { PageDefinition } from '@ikary-manifest/contract';
+import type { PageDefinition } from '@ikary/contract';
 
 export interface PrimaryDataContext {
   entityKey: string;

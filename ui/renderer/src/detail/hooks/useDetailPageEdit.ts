@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
+import type { ResolvedCreateField } from '@ikary/engine';
 import { buildCreateZodSchema } from '../../form/schema/build-create-zod-schema';
 import { useDetailPageMode, type DetailPageMode } from './use-detail-page-mode';
 

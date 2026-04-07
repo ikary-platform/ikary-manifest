@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
-import type { EntityRouteParams, EntityItemResponse, EntityListResponse } from '@ikary-manifest/contract';
-import type { FilterGroup } from '@ikary-manifest/contract';
+import type { EntityRouteParams, EntityItemResponse, EntityListResponse } from '@ikary/contract';
+import type { FilterGroup } from '@ikary/contract';
 
 // ── Query types ───────────────────────────────────────────────────────────────
 

@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
-import { CellManifestV1Schema } from '@ikary-manifest/contract';
-import { compileCellApp, isValidationResult } from '@ikary-manifest/engine';
+import { CellManifestV1Schema } from '@ikary/contract';
+import { compileCellApp, isValidationResult } from '@ikary/engine';
 
 export interface LoadResult {
   valid: boolean;

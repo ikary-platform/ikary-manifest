@@ -1,4 +1,4 @@
-import type { SelectPresentation } from '@ikary-manifest/presentation';
+import type { SelectPresentation } from '@ikary/presentation';
 import type { SelectOptionView, SelectViewProps } from './Select.types';
 
 export type BuildSelectViewModelInput = {

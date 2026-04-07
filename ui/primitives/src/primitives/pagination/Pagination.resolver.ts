@@ -1,4 +1,4 @@
-import type { PaginationPresentation } from '@ikary-manifest/presentation';
+import type { PaginationPresentation } from '@ikary/presentation';
 import { buildPaginationViewModel, type BuildPaginationViewModelInput } from './Pagination.adapter';
 
 export type PaginationResolverRuntime = Omit<BuildPaginationViewModelInput, 'presentation'>;

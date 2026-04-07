@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/generator-nest",
+  "name": "@ikary/generator-nest",
   "version": "0.0.1",
   "license": "MIT",
   "type": "module",
@@ -19,8 +19,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ikary-manifest/contract": "workspace:*",
-    "@ikary-manifest/engine": "workspace:*"
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.5.3",

@@ -1,4 +1,4 @@
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition } from '@ikary/contract';
 
 export const SAMPLE_ENTITY: EntityDefinition = {
   key: 'customer',

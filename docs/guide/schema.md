@@ -33,7 +33,7 @@ Any runtime that can parse YAML and validate against JSON Schema can consume IKA
 
 ## JSON Schema bridge
 
-The TypeScript side of the project generates JSON Schema files from the Zod schemas in `@ikary-manifest/contract`:
+The TypeScript side of the project generates JSON Schema files from the Zod schemas in `@ikary/contract`:
 
 ```bash
 pnpm -w run generate:schema

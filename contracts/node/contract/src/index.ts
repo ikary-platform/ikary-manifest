@@ -1,5 +1,5 @@
 /**
- * @ikary-manifest/contract — public entry point
+ * @ikary/contract — public entry point
  *
  * Re-exports every public symbol in two logical groups:
  *

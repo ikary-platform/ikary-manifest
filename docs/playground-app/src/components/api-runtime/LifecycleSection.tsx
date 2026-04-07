@@ -1,4 +1,4 @@
-import type { LifecycleDefinition } from '@ikary-manifest/contract';
+import type { LifecycleDefinition } from '@ikary/contract';
 
 export function LifecycleSection({ lifecycle }: { lifecycle: LifecycleDefinition }) {
   if (!lifecycle) return null;

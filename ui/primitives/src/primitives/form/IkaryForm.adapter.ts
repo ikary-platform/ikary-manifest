@@ -1,4 +1,4 @@
-import type { IkaryFormPresentation } from '@ikary-manifest/presentation';
+import type { IkaryFormPresentation } from '@ikary/presentation';
 import type {
   IkaryFormActionLabels,
   IkaryFormAutosaveConfig,

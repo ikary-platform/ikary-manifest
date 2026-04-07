@@ -1,4 +1,4 @@
-import type { RelationDefinition } from '@ikary-manifest/contract';
+import type { RelationDefinition } from '@ikary/contract';
 
 const RELATION_COLORS: Record<string, string> = {
   belongs_to: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',

@@ -1,4 +1,4 @@
-import type { CheckboxPresentation } from '@ikary-manifest/presentation';
+import type { CheckboxPresentation } from '@ikary/presentation';
 import type { CheckboxViewProps } from './Checkbox.types';
 
 export type BuildCheckboxViewModelInput = {

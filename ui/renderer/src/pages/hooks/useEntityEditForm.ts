@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
 import type { NavigateFunction } from 'react-router-dom';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
-import { buildEntityDetailPath, buildEntityListPath } from '@ikary-manifest/engine';
+import type { CellManifestV1 } from '@ikary/contract';
+import { buildEntityDetailPath, buildEntityListPath } from '@ikary/engine';
 import type { CellDataStore } from '../../store/cell-data-store';
 
 interface UseEntityEditFormOptions {

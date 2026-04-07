@@ -1,4 +1,4 @@
-import type { CellManifestV1, EntityDefinition } from '@ikary-manifest/contract';
+import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
 
 export function deriveEntityScopeRegistry(entity: EntityDefinition): string[] {
   const key = entity.key;

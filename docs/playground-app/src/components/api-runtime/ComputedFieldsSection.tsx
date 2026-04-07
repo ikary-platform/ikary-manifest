@@ -1,4 +1,4 @@
-import type { ComputedFieldDefinition } from '@ikary-manifest/contract';
+import type { ComputedFieldDefinition } from '@ikary/contract';
 
 const FORMULA_COLORS: Record<string, string> = {
   expression: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',

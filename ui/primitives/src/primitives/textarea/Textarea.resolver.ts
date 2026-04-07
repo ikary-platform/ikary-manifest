@@ -1,4 +1,4 @@
-import { validateRuntimeTextareaPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeTextareaPresentation } from '@ikary/presentation';
 import { buildTextareaViewModel, type BuildTextareaViewModelInput } from './Textarea.adapter';
 import type { TextareaViewProps } from './Textarea.types';
 

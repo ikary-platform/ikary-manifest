@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PrimitiveRenderer, RuntimeContextProvider } from '@ikary-manifest/primitives';
-import { validatePresentation } from '@ikary-manifest/presentation';
+import { PrimitiveRenderer, RuntimeContextProvider } from '@ikary/primitives';
+import { validatePresentation } from '@ikary/presentation';
 import { JsonEditor } from '../components/JsonEditor';
 import { PRIMITIVES, PRIMITIVE_SAMPLES } from '../data/primitive-samples';
 import { PRIMITIVE_TREES } from '../data/primitive-trees';

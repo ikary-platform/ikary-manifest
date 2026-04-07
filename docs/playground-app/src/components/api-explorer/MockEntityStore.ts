@@ -1,4 +1,4 @@
-import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition, FieldDefinition } from '@ikary/contract';
 import type { MockResponse } from './types';
 import { generateSeedRecords } from './SeedDataGenerator';
 

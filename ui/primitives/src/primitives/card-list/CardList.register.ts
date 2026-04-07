@@ -1,4 +1,4 @@
-import type { CardListPresentation } from '@ikary-manifest/presentation';
+import type { CardListPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import type { PrimitiveResolver } from '../../types/PrimitiveTypes';
 import { CardList } from './CardList';

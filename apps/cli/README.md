@@ -1,4 +1,4 @@
-# @ikary-manifest/cli
+# @ikary/cli
 
 CLI for generating, validating, compiling, and previewing IKARY Cell manifests.
 
@@ -11,7 +11,7 @@ npx ikary init
 Or install globally:
 
 ```bash
-npm install -g @ikary-manifest/cli
+npm install -g @ikary/cli
 ikary --help
 ```
 

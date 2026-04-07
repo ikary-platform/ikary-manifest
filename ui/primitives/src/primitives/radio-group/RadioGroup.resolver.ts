@@ -1,4 +1,4 @@
-import { validateRuntimeRadioGroupPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeRadioGroupPresentation } from '@ikary/presentation';
 import { buildRadioGroupViewModel, type BuildRadioGroupViewModelInput } from './RadioGroup.adapter';
 import type { RadioGroupViewProps } from './RadioGroup.types';
 

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { deriveOpenAPISpec } from '@ikary-manifest/engine';
-import type { OpenAPISpec } from '@ikary-manifest/engine';
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import { deriveOpenAPISpec } from '@ikary/engine';
+import type { OpenAPISpec } from '@ikary/engine';
+import type { EntityDefinition } from '@ikary/contract';
 import { EndpointCard } from './EndpointCard';
 
 interface ApiPreviewTabProps {

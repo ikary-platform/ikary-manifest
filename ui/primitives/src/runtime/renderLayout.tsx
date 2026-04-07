@@ -9,7 +9,7 @@ import type { QueryDefinition } from '../query/queryEngine';
 import { resolveBinding } from '../resolver/resolveValue';
 import { RuntimeContextProvider } from '../context/RuntimeContextProvider';
 import { useQuerySingle } from '../query/useQuerySingle';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
+import type { DataProviderDefinition } from '@ikary/contract';
 
 export interface LayoutBlock {
   id?: string;

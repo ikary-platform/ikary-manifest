@@ -1,4 +1,4 @@
-import type { FormFieldRelationPresentation } from '@ikary-manifest/presentation';
+import type { FormFieldRelationPresentation } from '@ikary/presentation';
 import type { FormFieldViewProps } from '../form-field/FormField.types';
 import type { RelationFieldOption, RelationFieldViewProps } from './RelationField.types';
 

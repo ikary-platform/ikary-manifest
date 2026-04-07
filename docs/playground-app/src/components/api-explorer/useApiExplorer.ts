@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react';
-import type { EntityDefinition } from '@ikary-manifest/contract';
-import { deriveOpenAPISpec } from '@ikary-manifest/engine';
-import type { OpenAPISpec } from '@ikary-manifest/engine';
+import type { EntityDefinition } from '@ikary/contract';
+import { deriveOpenAPISpec } from '@ikary/engine';
+import type { OpenAPISpec } from '@ikary/engine';
 import { MockEntityStore } from './MockEntityStore';
 import { MockApiRouter } from './MockApiRouter';
 import type { MockRequest, ExecutionResult } from './types';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { EntityDefinition, EntityVersion } from '@ikary-manifest/contract';
+import type { EntityDefinition, EntityVersion } from '@ikary/contract';
 import { useCellRuntime } from '../context/cell-runtime-context';
 import { DiffViewer } from './diff-viewer';
 

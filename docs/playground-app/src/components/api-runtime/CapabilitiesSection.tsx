@@ -1,4 +1,4 @@
-import type { CapabilityDefinition } from '@ikary-manifest/contract';
+import type { CapabilityDefinition } from '@ikary/contract';
 
 const TYPE_COLORS: Record<string, string> = {
   transition: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',

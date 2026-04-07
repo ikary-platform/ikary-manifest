@@ -1,4 +1,4 @@
-import { validateRuntimeBulkCommandBarPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeBulkCommandBarPresentation } from '@ikary/presentation';
 import { buildBulkCommandBarViewModel, type BuildBulkCommandBarViewModelInput } from './BulkCommandBar.adapter';
 import type { BulkCommandBarViewProps } from './BulkCommandBar.types';
 
