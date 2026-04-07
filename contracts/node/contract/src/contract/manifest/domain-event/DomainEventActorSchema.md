@@ -1,37 +1,49 @@
-# DomainEventActorSchema Contract
+# DomainEventActorSchema
 
 ## Purpose
 
-DomainEventActorSchema is the canonical contract schema for this unit inside `cell-contract-core`. It defines the structural payload expected by runtime composition and validation layers. The schema is the source of truth for shape, required fields, enum bounds, and strict-mode behavior.
+Identifies who or what triggered a domain event.
 
 ## Responsibilities
 
-- Define deterministic payload validation with Zod.
-- Enforce required and optional fields exactly as declared in `DomainEventActorSchema.ts`.
-- Capture nested contract composition through imported schemas.
-- Provide a stable contract surface for manifest/entity orchestration.
+- Validate the actor's identity fields (`id`, `type`) as required.
+- Accept optional display fields (`name`, `email`) and an open metadata bag (`meta`).
+- Delegate actor type validation to `DomainEventActorTypeSchema`.
 
 ## Non-Goals
 
-- No UI rendering concerns.
-- No backend execution logic or side effects.
-- No transport/client orchestration.
-- No business process implementation beyond schema constraints.
+- Does not authenticate the actor.
+- Does not resolve actor details from an external directory or user store.
 
 ## Contract Surface
 
-- Primary schema file: `libs/cell-contract-core/src/contract/manifest/domain-event/DomainEventActorSchema.ts`.
-- Companion LLM brief: `DomainEventActorSchema.llm.md`.
-- Runtime samples: `DomainEventActorSchema.samples.json`.
-- Imported schema dependencies: `DomainEventActorTypeSchema`.
+- **Schema file:** `contracts/node/contract/src/contract/manifest/domain-event/DomainEventActorSchema.ts`
+- **Schema type:** Zod object (TypeScript only, no YAML counterpart)
+- **Imported dependencies:** `DomainEventActorTypeSchema`
+
+| Field   | Type                           | Required | Constraint              |
+|---------|--------------------------------|----------|-------------------------|
+| `id`    | `z.string()`                   | yes      | `.min(1)`               |
+| `type`  | `DomainEventActorTypeSchema`   | yes      | enum                    |
+| `name`  | `z.string()`                   | no       |                         |
+| `email` | `z.string()`                   | no       | `.email()`              |
+| `meta`  | `z.record(z.unknown())`        | no       | open key-value bag      |
 
 ## Validation Notes
 
-- Use strict payload parsing where defined by the schema.
-- Keep enum and discriminated-union values canonical.
-- Preserve existing refine/superRefine constraints when extending fields.
-- Treat unknown keys as invalid when strict mode is enabled.
+- `id` must be a non-empty string.
+- `email`, when present, must pass Zod's built-in email format check.
+- `meta` accepts any JSON-serializable values. Consumers should not rely on specific keys.
 
-## Samples
+## Example
 
-Use `DomainEventActorSchema.samples.json` as deterministic examples for tests, prompt context, and schema regression checks. All samples in that file MUST parse successfully against `DomainEventActorSchema`.
+```ts
+import { DomainEventActorSchema } from './DomainEventActorSchema';
+
+const actor = DomainEventActorSchema.parse({
+  id: 'usr_abc123',
+  type: 'user',
+  name: 'Alice',
+  email: 'alice@example.com',
+});
+```

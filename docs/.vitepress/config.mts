@@ -60,6 +60,27 @@ export default defineConfig({
   vite: {
     plugins: [
       {
+        name: 'serve-repo-root',
+        enforce: 'pre',
+        configureServer(server) {
+          const repoRoot = path.resolve(__dirname, '../..');
+          server.middlewares.use('/ikary-manifest/repo', (req, res, next) => {
+            const rel = decodeURIComponent((req.url ?? '/').replace(/^\//, ''));
+            const filePath = path.join(repoRoot, rel);
+            if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+              const ext = path.extname(filePath);
+              res.setHeader(
+                'Content-Type',
+                MIME[ext] ?? 'text/plain; charset=utf-8',
+              );
+              res.end(fs.readFileSync(filePath));
+            } else {
+              next();
+            }
+          });
+        },
+      },
+      {
         name: 'serve-playground',
         enforce: 'pre',
         configureServer(server) {
