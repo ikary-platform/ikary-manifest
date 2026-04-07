@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ContractsSection } from './sections/ContractsSection';
 import { ApiRuntimeSection } from './sections/ApiRuntimeSection';
@@ -6,8 +7,11 @@ import { UIRuntimeSection } from './sections/UIRuntimeSection';
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-const TABS = ['Contracts', 'API Runtime', 'UI Runtime'] as const;
-type Tab = (typeof TABS)[number];
+const TABS = [
+  { label: 'Contracts', path: '/contracts' },
+  { label: 'API Runtime', path: '/api-runtime' },
+  { label: 'UI Runtime', path: '/ui-runtime' },
+] as const;
 
 // Read initial state from the class already applied by the inline <script> in
 // index.html — avoids a flash of wrong theme on first render.
@@ -25,8 +29,9 @@ function useDarkMode() {
 }
 
 export function App() {
-  const [tab, setTab] = useState<Tab>('Contracts');
   const { dark, toggle } = useDarkMode();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <QueryClientProvider client={qc}>
@@ -64,16 +69,16 @@ export function App() {
             <nav className="flex items-center h-full" aria-label="Playground sections">
               {TABS.map((t) => (
                 <button
-                  key={t}
-                  onClick={() => setTab(t)}
+                  key={t.path}
+                  onClick={() => navigate(t.path)}
                   className={[
                     'px-3 h-full flex items-center text-sm font-medium transition-colors outline-none',
-                    tab === t
+                    location.pathname.startsWith(t.path)
                       ? 'text-[#1d4ed8] dark:text-[#78afff]'
                       : 'text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff]',
                   ].join(' ')}
                 >
-                  {t}
+                  {t.label}
                 </button>
               ))}
             </nav>
@@ -125,9 +130,12 @@ export function App() {
 
         {/* ── Content ── */}
         <main className="flex-1 overflow-hidden">
-          {tab === 'Contracts' && <ContractsSection />}
-          {tab === 'API Runtime' && <ApiRuntimeSection />}
-          {tab === 'UI Runtime' && <UIRuntimeSection />}
+          <Routes>
+            <Route path="/contracts" element={<ContractsSection />} />
+            <Route path="/api-runtime" element={<ApiRuntimeSection />} />
+            <Route path="/ui-runtime" element={<UIRuntimeSection />} />
+            <Route path="*" element={<Navigate to="/contracts" replace />} />
+          </Routes>
         </main>
       </div>
     </QueryClientProvider>
