@@ -1,5 +1,11 @@
 # @ikary/ikary
 
+## 0.1.2
+
+### Patch Changes
+
+- 8b77a0a: Rename wrapper package from `ikary` to `@ikary/ikary` to avoid npm name conflict with existing `vary` package
+
 ## 0.1.1
 
 ### Patch Changes
