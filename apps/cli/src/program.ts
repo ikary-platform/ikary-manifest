@@ -13,7 +13,7 @@ export function createProgram(): Command {
   program
     .name('ikary')
     .description('IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests')
-    .version('0.0.1');
+    .version(process.env.CLI_VERSION ?? '0.0.0');
 
   program
     .command('init [project-name]')
