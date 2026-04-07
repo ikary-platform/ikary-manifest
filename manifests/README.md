@@ -71,8 +71,8 @@ fields:
 ## How it works
 
 1. Authors write YAML manifests and entity files in `examples/`
-2. The TypeScript runtime (`@ikary-manifest/loader`) parses YAML, strips meta-properties, validates via Zod
-3. The engine (`@ikary-manifest/engine`) compiles validated manifests into runtime-ready structures
+2. The TypeScript runtime (`@ikary/loader`) parses YAML, strips meta-properties, validates via Zod
+3. The engine (`@ikary/engine`) compiles validated manifests into runtime-ready structures
 4. Python consumers use the YAML schemas for structural validation
 
 ## Shared artifacts

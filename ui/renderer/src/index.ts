@@ -11,7 +11,7 @@ export type {
 export { createMockDataProvider } from './providers/mock-data-provider';
 export type { MockDataProvider } from './providers/mock-data-provider';
 export { CellRuntimeContext, useCellRuntime, useCellManifest } from './context/cell-runtime-context';
-export type { FieldDiff, EntityVersion, AuditEvent } from '@ikary-manifest/contract';
+export type { FieldDiff, EntityVersion, AuditEvent } from '@ikary/contract';
 export type { CellDataStore } from './store/cell-data-store';
 export { useCreateCellDataStore } from './store/use-cell-data-store';
 export { useCreateApiDataStore } from './store/use-api-data-store';

@@ -1,4 +1,4 @@
-import type { TogglePresentation } from '@ikary-manifest/presentation';
+import type { TogglePresentation } from '@ikary/presentation';
 import type { ToggleViewProps } from './Toggle.types';
 
 export type BuildToggleViewModelInput = {

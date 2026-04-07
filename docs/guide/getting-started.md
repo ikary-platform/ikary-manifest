@@ -107,8 +107,8 @@ spec:
 ::: code-group
 
 ```typescript [Node.js]
-import { loadManifestFromFile } from '@ikary-manifest/loader';
-import { compileCellApp } from '@ikary-manifest/engine';
+import { loadManifestFromFile } from '@ikary/loader';
+import { compileCellApp } from '@ikary/engine';
 
 // Load YAML and validate
 const loaded = await loadManifestFromFile('my-app.yaml');

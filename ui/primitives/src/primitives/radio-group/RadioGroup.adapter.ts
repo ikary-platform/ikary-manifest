@@ -1,4 +1,4 @@
-import type { RadioGroupPresentation } from '@ikary-manifest/presentation';
+import type { RadioGroupPresentation } from '@ikary/presentation';
 import type { RadioGroupOptionView, RadioGroupViewProps } from './RadioGroup.types';
 
 export type BuildRadioGroupViewModelInput = {

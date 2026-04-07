@@ -1,4 +1,4 @@
-import type { CardListPresentation } from '@ikary-manifest/presentation';
+import type { CardListPresentation } from '@ikary/presentation';
 import { buildCardListViewModel, type BuildCardListViewModelInput } from './CardList.adapter';
 
 export type CardListResolverRuntime<TRecord extends Record<string, unknown> = Record<string, unknown>> = Omit<

@@ -1,4 +1,4 @@
-import { validateRuntimeMetricCardPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeMetricCardPresentation } from '@ikary/presentation';
 import { buildMetricCardViewModel, type BuildMetricCardViewModelInput } from './MetricCard.adapter';
 import type { MetricCardViewProps } from './MetricCard.types';
 

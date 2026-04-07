@@ -1,4 +1,4 @@
-import type { PageHeaderPresentation } from '@ikary-manifest/presentation';
+import type { PageHeaderPresentation } from '@ikary/presentation';
 import { buildPageHeaderViewModel, type BuildPageHeaderViewModelInput } from './PageHeader.adapter';
 
 export type PageHeaderResolverRuntime = Omit<BuildPageHeaderViewModelInput, 'presentation'>;

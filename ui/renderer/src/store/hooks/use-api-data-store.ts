@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, startTransition } from 'react';
-import type { CellManifestV1, AuditEvent, EntityVersion, FieldDiff } from '@ikary-manifest/contract';
+import type { CellManifestV1, AuditEvent, EntityVersion, FieldDiff } from '@ikary/contract';
 import type { CellDataStore } from '../cell-data-store';
 import type { EntityApiAdapter, AuditLogEntry } from '../entity-api-adapter';
 

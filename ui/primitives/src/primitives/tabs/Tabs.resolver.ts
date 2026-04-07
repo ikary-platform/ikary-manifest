@@ -1,4 +1,4 @@
-import type { TabsPresentation } from '@ikary-manifest/presentation';
+import type { TabsPresentation } from '@ikary/presentation';
 import { buildTabsViewModel, type BuildTabsViewModelInput } from './Tabs.adapter';
 
 export type TabsResolverRuntime = Omit<BuildTabsViewModelInput, 'presentation'>;

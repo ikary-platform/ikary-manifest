@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import { RuntimeContextProvider, useRuntimeContextOptional } from '@ikary-manifest/primitives';
-import type { RuntimeContext } from '@ikary-manifest/primitives';
+import type { DataProviderDefinition } from '@ikary/contract';
+import type { EntityRouteParams } from '@ikary/contract';
+import { RuntimeContextProvider, useRuntimeContextOptional } from '@ikary/primitives';
+import type { RuntimeContext } from '@ikary/primitives';
 import { useSingleProvider } from './use-single-provider';
 import { useListProvider } from './use-list-provider';
 

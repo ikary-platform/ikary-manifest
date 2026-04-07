@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { EntityDefinition, PageDefinition, PageType } from '@ikary-manifest/contract';
+import type { EntityDefinition, PageDefinition, PageType } from '@ikary/contract';
 
 export interface CellPageRendererProps {
   page: PageDefinition;

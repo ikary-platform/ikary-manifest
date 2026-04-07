@@ -1,4 +1,4 @@
-import type { InputPresentation } from '@ikary-manifest/presentation';
+import type { InputPresentation } from '@ikary/presentation';
 import type { InputViewProps } from './Input.types';
 
 export type BuildInputViewModelInput = {

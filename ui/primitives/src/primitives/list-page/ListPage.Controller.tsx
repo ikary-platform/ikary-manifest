@@ -1,4 +1,4 @@
-import type { ListPagePresentation } from '@ikary-manifest/presentation';
+import type { ListPagePresentation } from '@ikary/presentation';
 import { ListPage } from './ListPage';
 import { useListPageRuntime, type UseListPageRuntimeInput } from './useListPageControllerRuntime';
 import { resolveListPage } from './ListPage.resolver';

@@ -1,4 +1,4 @@
-import { validateRuntimeSelectPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeSelectPresentation } from '@ikary/presentation';
 import { buildSelectViewModel, type BuildSelectViewModelInput } from './Select.adapter';
 import type { SelectViewProps } from './Select.types';
 

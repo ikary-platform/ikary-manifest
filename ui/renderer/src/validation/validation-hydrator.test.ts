@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { hydrateValidationIssues } from './validation-hydrator';
-import type { ValidationIssue } from '@ikary-manifest/contract';
+import type { ValidationIssue } from '@ikary/contract';
 
 function issue(
   ruleId: string,

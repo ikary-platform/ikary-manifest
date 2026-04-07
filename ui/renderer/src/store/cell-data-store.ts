@@ -1,6 +1,6 @@
-import type { AuditEvent, EntityVersion } from '@ikary-manifest/contract';
+import type { AuditEvent, EntityVersion } from '@ikary/contract';
 
-export type { AuditEvent, EntityVersion, FieldDiff } from '@ikary-manifest/contract';
+export type { AuditEvent, EntityVersion, FieldDiff } from '@ikary/contract';
 
 export interface CellDataStore {
   /** All rows for an entity. Reactive — re-renders when data changes. */

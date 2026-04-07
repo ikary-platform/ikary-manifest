@@ -2,13 +2,13 @@ import type {
   FormFieldPresentation,
   FormFieldRelationPresentation,
   IkaryFormPresentation,
-} from '@ikary-manifest/presentation';
-import type { BelongsToRelation, EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+} from '@ikary/presentation';
+import type { BelongsToRelation, EntityDefinition, FieldDefinition } from '@ikary/contract';
 
 /**
  * Derives which fields from an entity definition are visible on create forms,
  * sorted by effective create order. Mirrors the logic of deriveCreateFields
- * in @ikary-manifest/engine without adding that dependency.
+ * in @ikary/engine without adding that dependency.
  */
 function getCreateFields(fields: readonly FieldDefinition[]): FieldDefinition[] {
   return (fields as FieldDefinition[])

@@ -1,4 +1,4 @@
-import type { DateInputPresentation } from '@ikary-manifest/presentation';
+import type { DateInputPresentation } from '@ikary/presentation';
 import type { DateInputViewProps } from './DateInput.types';
 
 export type BuildDateInputViewModelInput = {

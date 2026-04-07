@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { OpenAPIOperation, OpenAPISchema } from '@ikary-manifest/engine';
+import type { OpenAPIOperation, OpenAPISchema } from '@ikary/engine';
 
 // ── Method badge colors ─────────────────────────────────────────────────────
 

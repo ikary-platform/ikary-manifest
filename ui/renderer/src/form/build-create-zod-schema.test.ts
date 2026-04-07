@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildCreateZodSchema } from './build-create-zod-schema';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
-import type { FieldRuleDefinition } from '@ikary-manifest/contract';
+import type { ResolvedCreateField } from '@ikary/engine';
+import type { FieldRuleDefinition } from '@ikary/contract';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

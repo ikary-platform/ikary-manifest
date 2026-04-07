@@ -88,9 +88,9 @@ These schemas cover **structural** validation: types, required fields, enum valu
 
 **Semantic** rules (unique entity keys, valid lifecycle transitions, relation consistency) are enforced at runtime by each language's validator:
 
-- **TypeScript**: `@ikary-manifest/contract` via Zod + custom validators
+- **TypeScript**: `@ikary/contract` via Zod + custom validators
 - **Python**: to be implemented natively
 
 ## Relationship to Zod schemas
 
-The TypeScript Zod schemas in `@ikary-manifest/contract` are the runtime validation authority. These YAML schemas are the human-readable, language-neutral reference that mirrors the Zod definitions. When in doubt, the Zod schemas are canonical.
+The TypeScript Zod schemas in `@ikary/contract` are the runtime validation authority. These YAML schemas are the human-readable, language-neutral reference that mirrors the Zod definitions. When in doubt, the Zod schemas are canonical.

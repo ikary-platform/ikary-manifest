@@ -1,5 +1,5 @@
 import type { UseFormRegister, FieldError } from 'react-hook-form';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
+import type { ResolvedCreateField } from '@ikary/engine';
 import { useUIComponents } from '../UIComponentsProvider';
 import { FormField } from './form-field';
 import { TextInput, NumberInput, DateInput, DateTimeInput, TextareaInput, SelectInput } from './input-controls';

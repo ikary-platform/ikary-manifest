@@ -1,4 +1,4 @@
-import type { LoadingStatePresentation } from '@ikary-manifest/presentation';
+import type { LoadingStatePresentation } from '@ikary/presentation';
 import type { LoadingStateMode, LoadingStateSkeletonView, LoadingStateViewProps } from './LoadingState.types';
 
 export type BuildLoadingStateViewModelInput = {

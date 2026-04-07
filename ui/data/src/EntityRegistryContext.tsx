@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import type { CellManifestV1, EntityDefinition } from '@ikary-manifest/contract';
+import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
 
 export interface EntityRegistry {
   entities: EntityDefinition[];

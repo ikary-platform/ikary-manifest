@@ -1,5 +1,5 @@
-import type { FieldDefinition } from '@ikary-manifest/contract';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
+import type { FieldDefinition } from '@ikary/contract';
+import type { ResolvedCreateField } from '@ikary/engine';
 
 // ── Type badge color map ────────────────────────────────────────────────────
 

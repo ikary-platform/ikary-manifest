@@ -1,5 +1,5 @@
-import { CellManifestV1Schema, validateBusinessRules } from '@ikary-manifest/contract';
-import type { CellManifestV1, ValidationResult } from '@ikary-manifest/contract';
+import { CellManifestV1Schema, validateBusinessRules } from '@ikary/contract';
+import type { CellManifestV1, ValidationResult } from '@ikary/contract';
 import { normalizeManifest } from './normalize-manifest';
 
 export function compileCellApp(manifest: CellManifestV1): CellManifestV1 | ValidationResult {

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import type { DataGridColumn } from '@ikary-manifest/presentation';
+import type { DataGridColumn } from '@ikary/presentation';
 import type { ColumnDef, UIComponents } from '../ui-components';
 import { useUIComponents } from '../UIComponentsProvider';
 

@@ -1,4 +1,4 @@
-import type { FilterBarPresentation } from '@ikary-manifest/presentation';
+import type { FilterBarPresentation } from '@ikary/presentation';
 import type {
   FilterBarActiveFilterView,
   FilterBarClearActionView,

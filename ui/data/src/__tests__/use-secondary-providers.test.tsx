@@ -2,8 +2,8 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
+import type { DataProviderDefinition } from '@ikary/contract';
+import type { EntityRouteParams } from '@ikary/contract';
 
 // Mock useDataHooks so we can control cellApiFetch directly.
 const mockCellApiFetch = vi.fn();

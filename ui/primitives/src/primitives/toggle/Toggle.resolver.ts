@@ -1,4 +1,4 @@
-import { validateRuntimeTogglePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeTogglePresentation } from '@ikary/presentation';
 import { buildToggleViewModel, type BuildToggleViewModelInput } from './Toggle.adapter';
 import type { ToggleViewProps } from './Toggle.types';
 

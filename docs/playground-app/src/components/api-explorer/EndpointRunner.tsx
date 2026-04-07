@@ -3,7 +3,7 @@ import type {
   OpenAPIOperation,
   OpenAPISchema,
   OpenAPISpec,
-} from '@ikary-manifest/engine';
+} from '@ikary/engine';
 import type { MockRequest, ExecutionResult } from './types';
 
 // ── Props ───────────────────────────────────────────────────────────────────

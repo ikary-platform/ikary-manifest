@@ -1,4 +1,4 @@
-import type { FormFieldPresentation } from '@ikary-manifest/presentation';
+import type { FormFieldPresentation } from '@ikary/presentation';
 import type { FormFieldOptionView, FormFieldViewProps } from './FormField.types';
 
 export type BuildFormFieldViewModelInput = {

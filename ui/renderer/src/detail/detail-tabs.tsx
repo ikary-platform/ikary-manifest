@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { DetailPageTab as DetailPageTabPresentation } from '@ikary-manifest/presentation';
+import type { DetailPageTab as DetailPageTabPresentation } from '@ikary/presentation';
 
 type DetailTabKind = NonNullable<DetailPageTabPresentation['kind']>;
 

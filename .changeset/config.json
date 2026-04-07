@@ -4,8 +4,8 @@
   "commit": false,
   "fixed": [],
   "linked": [
-    ["@ikary-manifest/contract", "@ikary-manifest/engine", "@ikary-manifest/loader"],
-    ["@ikary-manifest/cli", "ikary"]
+    ["@ikary/contract", "@ikary/engine", "@ikary/loader"],
+    ["@ikary/cli", "ikary"]
   ],
   "access": "public",
   "baseBranch": "main",

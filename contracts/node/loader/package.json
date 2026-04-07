@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/loader",
+  "name": "@ikary/loader",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
@@ -21,7 +21,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
-    "@ikary-manifest/contract": "workspace:*",
+    "@ikary/contract": "workspace:*",
     "yaml": "^2.7.0"
   },
   "devDependencies": {

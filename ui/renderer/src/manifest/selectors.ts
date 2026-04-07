@@ -1,13 +1,13 @@
-import { BASE_ENTITY_FIELDS } from '@ikary-manifest/contract';
+import { BASE_ENTITY_FIELDS } from '@ikary/contract';
 import type {
   CellManifestV1,
   EntityDefinition,
   FieldDefinition,
   NavigationItem,
   PageDefinition,
-} from '@ikary-manifest/contract';
-import { deriveCreateFields, deriveEditFields } from '@ikary-manifest/engine';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
+} from '@ikary/contract';
+import { deriveCreateFields, deriveEditFields } from '@ikary/engine';
+import type { ResolvedCreateField } from '@ikary/engine';
 
 export interface ManifestRoute {
   path: string;

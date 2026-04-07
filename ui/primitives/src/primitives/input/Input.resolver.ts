@@ -1,4 +1,4 @@
-import { validateRuntimeInputPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeInputPresentation } from '@ikary/presentation';
 import { buildInputViewModel, type BuildInputViewModelInput } from './Input.adapter';
 import type { InputViewProps } from './Input.types';
 

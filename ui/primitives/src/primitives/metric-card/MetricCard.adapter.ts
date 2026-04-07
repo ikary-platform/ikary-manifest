@@ -1,4 +1,4 @@
-import type { MetricCardPresentation } from '@ikary-manifest/presentation';
+import type { MetricCardPresentation } from '@ikary/presentation';
 import type { RenderState } from '../../runtime/render-state.types';
 import type { MetricCardResolvedAction, MetricCardViewProps } from './MetricCard.types';
 

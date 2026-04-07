@@ -1,4 +1,4 @@
-import type { TextareaPresentation } from '@ikary-manifest/presentation';
+import type { TextareaPresentation } from '@ikary/presentation';
 import type { TextareaViewProps } from './Textarea.types';
 
 export type BuildTextareaViewModelInput = {
