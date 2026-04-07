@@ -1,0 +1,37 @@
+{
+  "name": "ikary",
+  "version": "0.0.1",
+  "description": "IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "ikary": "./bin.mjs"
+  },
+  "files": [
+    "bin.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@ikary-manifest/cli": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ikary-platform/ikary-manifest.git",
+    "directory": "apps/ikary"
+  },
+  "homepage": "https://github.com/ikary-platform/ikary-manifest#readme",
+  "bugs": "https://github.com/ikary-platform/ikary-manifest/issues",
+  "keywords": [
+    "ikary",
+    "manifest",
+    "cell",
+    "cli"
+  ]
+}
