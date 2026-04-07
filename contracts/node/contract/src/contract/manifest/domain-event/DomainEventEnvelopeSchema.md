@@ -1,37 +1,68 @@
-# DomainEventEnvelopeSchema Contract
+# DomainEventEnvelopeSchema
 
 ## Purpose
 
-DomainEventEnvelopeSchema is the canonical contract schema for this unit inside `cell-contract-core`. It defines the structural payload expected by runtime composition and validation layers. The schema is the source of truth for shape, required fields, enum bounds, and strict-mode behavior.
+Defines the transport envelope for domain events. Audit logs and timeline surfaces consume this shape.
 
 ## Responsibilities
 
-- Define deterministic payload validation with Zod.
-- Enforce required and optional fields exactly as declared in `DomainEventEnvelopeSchema.ts`.
-- Capture nested contract composition through imported schemas.
-- Provide a stable contract surface for manifest/entity orchestration.
+- Validate the core event identity (`eventId`, `eventType`, `timestamp`).
+- Embed a validated `actor` and `entity` reference via composed schemas.
+- Accept optional tenant, workspace, and correlation identifiers for multi-tenant routing.
+- Carry an open `payload` and `meta` bag for event-specific data.
 
 ## Non-Goals
 
-- No UI rendering concerns.
-- No backend execution logic or side effects.
-- No transport/client orchestration.
-- No business process implementation beyond schema constraints.
+- Does not define event-specific payload schemas. Each event type owns its own payload shape.
+- Does not handle event dispatch, ordering, or delivery guarantees.
 
 ## Contract Surface
 
-- Primary schema file: `libs/cell-contract-core/src/contract/manifest/domain-event/DomainEventEnvelopeSchema.ts`.
-- Companion LLM brief: `DomainEventEnvelopeSchema.llm.md`.
-- Runtime samples: `DomainEventEnvelopeSchema.samples.json`.
-- Imported schema dependencies: `DomainEventActorSchema`, `DomainEventEntityRefSchema`.
+- **Schema file:** `contracts/node/contract/src/contract/manifest/domain-event/DomainEventEnvelopeSchema.ts`
+- **Schema type:** Zod object (TypeScript only, no YAML counterpart)
+- **Imported dependencies:** `DomainEventActorSchema`, `DomainEventEntityRefSchema`
+
+| Field           | Type                             | Required | Constraint          |
+|-----------------|----------------------------------|----------|---------------------|
+| `eventId`       | `z.string()`                     | yes      | `.uuid()`           |
+| `eventType`     | `z.string()`                     | yes      | `.min(1)`           |
+| `timestamp`     | `z.string()`                     | yes      | `.datetime()`       |
+| `actor`         | `DomainEventActorSchema`         | yes      | composed object     |
+| `entity`        | `DomainEventEntityRefSchema`     | yes      | composed object     |
+| `tenantId`      | `z.string()`                     | no       |                     |
+| `workspaceId`   | `z.string()`                     | no       |                     |
+| `correlationId` | `z.string()`                     | no       |                     |
+| `payload`       | `z.record(z.unknown())`          | no       | open key-value bag  |
+| `meta`          | `z.record(z.unknown())`          | no       | open key-value bag  |
 
 ## Validation Notes
 
-- Use strict payload parsing where defined by the schema.
-- Keep enum and discriminated-union values canonical.
-- Preserve existing refine/superRefine constraints when extending fields.
-- Treat unknown keys as invalid when strict mode is enabled.
+- `eventId` must be a valid UUID (v4 or any version accepted by Zod's `.uuid()`).
+- `timestamp` must be an ISO 8601 datetime string.
+- `actor` and `entity` are validated recursively through their own schemas.
+- `payload` and `meta` accept any JSON-serializable values.
 
-## Samples
+## Example
 
-Use `DomainEventEnvelopeSchema.samples.json` as deterministic examples for tests, prompt context, and schema regression checks. All samples in that file MUST parse successfully against `DomainEventEnvelopeSchema`.
+```ts
+import { DomainEventEnvelopeSchema } from './DomainEventEnvelopeSchema';
+
+const envelope = DomainEventEnvelopeSchema.parse({
+  eventId: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  eventType: 'invoice.created',
+  timestamp: '2026-04-07T12:00:00Z',
+  actor: {
+    id: 'usr_abc123',
+    type: 'user',
+  },
+  entity: {
+    entityType: 'Invoice',
+    entityId: 'inv_00042',
+  },
+  tenantId: 'tenant_01',
+  payload: {
+    amount: 250,
+    currency: 'USD',
+  },
+});
+```

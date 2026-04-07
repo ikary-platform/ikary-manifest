@@ -48,3 +48,13 @@ body {
   background: rgba(10, 19, 41, 0.82);
   border-bottom: 1px solid rgba(171, 193, 224, 0.1);
 }
+
+/* ── Prose code blocks in dark mode ───────────────────────────────────── */
+
+.dark .prose pre {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .prose code {
+  color: #e2e8f0;
+}

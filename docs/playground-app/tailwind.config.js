@@ -1,3 +1,5 @@
+import typography from '@tailwindcss/typography';
+
 export default {
   darkMode: 'class',
   content: [
@@ -6,5 +8,5 @@ export default {
     '../../ui/presentation/src/**/*.{ts,tsx}',
   ],
   theme: { extend: {} },
-  plugins: [],
+  plugins: [typography],
 };

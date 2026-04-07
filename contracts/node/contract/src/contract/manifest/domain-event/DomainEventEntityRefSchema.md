@@ -1,37 +1,42 @@
-# DomainEventEntityRefSchema Contract
+# DomainEventEntityRefSchema
 
 ## Purpose
 
-DomainEventEntityRefSchema is the canonical contract schema for this unit inside `cell-contract-core`. It defines the structural payload expected by runtime composition and validation layers. The schema is the source of truth for shape, required fields, enum bounds, and strict-mode behavior.
+Provides a normalized reference to an entity type and identifier inside event payloads.
 
 ## Responsibilities
 
-- Define deterministic payload validation with Zod.
-- Enforce required and optional fields exactly as declared in `DomainEventEntityRefSchema.ts`.
-- Capture nested contract composition through imported schemas.
-- Provide a stable contract surface for manifest/entity orchestration.
+- Validate that both `entityType` and `entityId` are present and non-empty.
+- Give event consumers a consistent way to locate the affected entity.
 
 ## Non-Goals
 
-- No UI rendering concerns.
-- No backend execution logic or side effects.
-- No transport/client orchestration.
-- No business process implementation beyond schema constraints.
+- Does not verify that the referenced entity exists.
+- Does not carry the entity's data. The envelope's `payload` field holds that.
 
 ## Contract Surface
 
-- Primary schema file: `libs/cell-contract-core/src/contract/manifest/domain-event/DomainEventEntityRefSchema.ts`.
-- Companion LLM brief: `DomainEventEntityRefSchema.llm.md`.
-- Runtime samples: `DomainEventEntityRefSchema.samples.json`.
-- Imported schema dependencies: none.
+- **Schema file:** `contracts/node/contract/src/contract/manifest/domain-event/DomainEventEntityRefSchema.ts`
+- **Schema type:** Zod object (TypeScript only, no YAML counterpart)
+- **Imported dependencies:** none
+
+| Field        | Type          | Required | Constraint |
+|--------------|---------------|----------|------------|
+| `entityType` | `z.string()`  | yes      | `.min(1)`  |
+| `entityId`   | `z.string()`  | yes      | `.min(1)`  |
 
 ## Validation Notes
 
-- Use strict payload parsing where defined by the schema.
-- Keep enum and discriminated-union values canonical.
-- Preserve existing refine/superRefine constraints when extending fields.
-- Treat unknown keys as invalid when strict mode is enabled.
+- Both fields reject empty strings.
+- No format constraint is applied to `entityId`. UUIDs, slugs, and numeric strings are all valid.
 
-## Samples
+## Example
 
-Use `DomainEventEntityRefSchema.samples.json` as deterministic examples for tests, prompt context, and schema regression checks. All samples in that file MUST parse successfully against `DomainEventEntityRefSchema`.
+```ts
+import { DomainEventEntityRefSchema } from './DomainEventEntityRefSchema';
+
+const ref = DomainEventEntityRefSchema.parse({
+  entityType: 'Invoice',
+  entityId: 'inv_00042',
+});
+```
