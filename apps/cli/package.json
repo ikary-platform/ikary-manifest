@@ -1,6 +1,7 @@
 {
   "name": "@ikary-manifest/cli",
   "version": "0.0.1",
+  "description": "IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests",
   "license": "MIT",
   "type": "module",
   "private": true,
@@ -18,16 +19,25 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "typecheck": "tsc --noEmit"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx src/bin/cli.ts"
   },
   "dependencies": {
     "@ikary-manifest/contract": "workspace:*",
     "@ikary-manifest/loader": "workspace:*",
-    "@ikary-manifest/engine": "workspace:*"
+    "@ikary-manifest/engine": "workspace:*",
+    "commander": "^13.0.0",
+    "prompts": "^2.4.2",
+    "chalk": "^5.4.1",
+    "ora": "^8.2.0",
+    "log-symbols": "^7.0.0",
+    "boxen": "^8.0.1"
   },
   "devDependencies": {
+    "@types/prompts": "^2.4.9",
     "typescript": "^5.5.3",
-    "tsup": "^8.0.2"
+    "tsup": "^8.0.2",
+    "tsx": "^4.19.0"
   }
 }

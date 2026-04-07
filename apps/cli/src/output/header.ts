@@ -1,0 +1,19 @@
+import { theme } from './theme.js';
+
+const WORDMARK = [
+  '██╗██╗  ██╗ █████╗ ██████╗ ██╗   ██╗',
+  '██║██║ ██╔╝██╔══██╗██╔══██╗╚██╗ ██╔╝',
+  '██║█████╔╝ ███████║██████╔╝ ╚████╔╝',
+  '██║██╔═██╗ ██╔══██║██╔══██╗  ╚██╔╝',
+  '██║██║  ██╗██║  ██║██║  ██║   ██║',
+  '╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝',
+];
+
+export function printHeader(): void {
+  console.log('');
+  for (const line of WORDMARK) {
+    console.log(theme.header(line));
+  }
+  console.log(theme.muted('  Manifest CLI'));
+  console.log('');
+}
