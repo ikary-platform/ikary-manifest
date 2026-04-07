@@ -1,37 +1,57 @@
-# EntityRuleDefinitionSchema Contract
+# EntityRuleDefinitionSchema
 
 ## Purpose
 
-EntityRuleDefinitionSchema is the canonical contract schema for this unit inside `cell-contract-core`. It defines the structural payload expected by runtime composition and validation layers. The schema is the source of truth for shape, required fields, enum bounds, and strict-mode behavior.
+Declares a cross-field invariant rule within a single entity. The runtime uses these rules for client-safe, multi-field validation.
 
 ## Responsibilities
 
-- Define deterministic payload validation with Zod.
-- Enforce required and optional fields exactly as declared in `EntityRuleDefinitionSchema.ts`.
-- Capture nested contract composition through imported schemas.
-- Provide a stable contract surface for manifest/entity orchestration.
+- Identify the rule (`ruleId`) and fix its type to `'entity_invariant'`.
+- List the field paths involved so the UI can highlight affected inputs.
+- Carry a translatable `messageKey` with an optional `defaultMessage` fallback.
+- Mark whether the rule is `clientSafe`, `blocking`, and its severity level.
 
 ## Non-Goals
 
-- No UI rendering concerns.
-- No backend execution logic or side effects.
-- No transport/client orchestration.
-- No business process implementation beyond schema constraints.
+- Does not execute validation logic. The runtime reads these declarations and runs the checks.
+- Does not handle cross-entity rules. See `CrossEntityValidatorRefSchema` for that.
 
 ## Contract Surface
 
-- Primary schema file: `libs/cell-contract-core/src/contract/entity/EntityRuleDefinitionSchema.ts`.
-- Companion LLM brief: `EntityRuleDefinitionSchema.llm.md`.
-- Runtime samples: `EntityRuleDefinitionSchema.samples.json`.
-- Imported schema dependencies: `ValidationSeveritySchema`.
+- **Schema file:** `contracts/node/contract/src/contract/entity/EntityRuleDefinitionSchema.ts`
+- **Schema type:** Zod object (TypeScript only, no YAML counterpart)
+- **Imported dependencies:** `ValidationSeveritySchema`
+
+| Field            | Type                          | Required | Constraint                   |
+|------------------|-------------------------------|----------|------------------------------|
+| `ruleId`         | `z.string()`                  | yes      |                              |
+| `type`           | `z.literal('entity_invariant')` | yes   | fixed value                  |
+| `paths`          | `z.array(z.string())`         | yes      | field paths involved         |
+| `messageKey`     | `z.string()`                  | yes      | i18n key                     |
+| `defaultMessage` | `z.string()`                  | no       | fallback display text        |
+| `clientSafe`     | `z.boolean()`                 | yes      |                              |
+| `blocking`       | `z.boolean()`                 | yes      |                              |
+| `severity`       | `ValidationSeveritySchema`    | yes      | `'error'` or `'warning'`    |
 
 ## Validation Notes
 
-- Use strict payload parsing where defined by the schema.
-- Keep enum and discriminated-union values canonical.
-- Preserve existing refine/superRefine constraints when extending fields.
-- Treat unknown keys as invalid when strict mode is enabled.
+- `type` is locked to the literal `'entity_invariant'`. Any other value fails.
+- `paths` must be an array of strings. An empty array is structurally valid but semantically meaningless.
+- `severity` delegates to `ValidationSeveritySchema`, which allows `'error'` or `'warning'`.
 
-## Samples
+## Example
 
-Use `EntityRuleDefinitionSchema.samples.json` as deterministic examples for tests, prompt context, and schema regression checks. All samples in that file MUST parse successfully against `EntityRuleDefinitionSchema`.
+```ts
+import { EntityRuleDefinitionSchema } from './EntityRuleDefinitionSchema';
+
+const rule = EntityRuleDefinitionSchema.parse({
+  ruleId: 'end-after-start',
+  type: 'entity_invariant',
+  paths: ['startDate', 'endDate'],
+  messageKey: 'validation.endDateBeforeStart',
+  defaultMessage: 'End date must be after start date.',
+  clientSafe: true,
+  blocking: true,
+  severity: 'error',
+});
+```

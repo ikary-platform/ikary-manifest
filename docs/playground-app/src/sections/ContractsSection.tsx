@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { CELL_SCHEMA_CATALOG } from '@ikary-manifest/contract';
 import type { SchemaCategory, SchemaCatalogEntry } from '@ikary-manifest/contract';
 
 const GITHUB_BLOB = 'https://github.com/ikary-platform/ikary-manifest/blob/main';
-const RAW_BASE = 'https://raw.githubusercontent.com/ikary-platform/ikary-manifest/main';
+const RAW_BASE =
+  typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? '/ikary-manifest/repo'
+    : 'https://raw.githubusercontent.com/ikary-platform/ikary-manifest/main';
 
 const CATEGORIES: Array<SchemaCategory | 'all'> = [
   'all',
@@ -26,10 +31,23 @@ const CATEGORY_COLORS: Record<SchemaCategory | 'all', string> = {
   validation_issue: 'bg-orange-100 text-orange-700',
 };
 
+const CATEGORY_DESCRIPTIONS: Record<SchemaCategory | 'all', string> = {
+  all: 'Show all contract categories',
+  entity: 'Core business object schemas: fields, relations, computed values, lifecycle, and events',
+  manifest: 'Top-level manifest schemas: cell envelope, spec, app shell, mount, capabilities, navigation, and pages',
+  policy: 'Access control schemas: scopes, action policies, entity policies, field policies, and roles',
+  presentation: 'Display and rendering schemas for field presentation configuration',
+  validation: 'Validation rule schemas declared in manifests: field rules, entity invariants, and server validators',
+  validation_issue: 'Validation output schemas produced at runtime: issue shape, scope, severity, and API error envelopes',
+};
+
+type DetailTab = 'documentation' | 'metadata';
+
 export function ContractsSection() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<SchemaCategory | 'all'>('all');
   const [selected, setSelected] = useState<SchemaCatalogEntry>(CELL_SCHEMA_CATALOG[0]);
+  const [detailTab, setDetailTab] = useState<DetailTab>('documentation');
 
   const { data: yamlContent, isLoading: yamlLoading, isError: yamlError } = useQuery({
     queryKey: ['yaml', selected.yamlPath],
@@ -39,6 +57,17 @@ export function ContractsSection() {
       return res.text();
     },
     enabled: !!selected.yamlPath,
+    staleTime: Infinity,
+  });
+
+  const { data: docContent, isLoading: docLoading, isError: docError } = useQuery({
+    queryKey: ['doc', selected.docPath],
+    queryFn: async () => {
+      const res = await fetch(`${RAW_BASE}/${selected.docPath}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    },
+    enabled: !!selected.docPath,
     staleTime: Infinity,
   });
 
@@ -67,6 +96,7 @@ export function ContractsSection() {
             <button
               key={c}
               onClick={() => setCategory(c)}
+              title={CATEGORY_DESCRIPTIONS[c]}
               className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
                 category === c
                   ? 'bg-blue-600 text-white'
@@ -110,87 +140,140 @@ export function ContractsSection() {
       </aside>
 
       {/* Detail panel */}
-      <article className="flex-1 p-6 overflow-y-auto">
-        <div className="max-w-2xl">
-          <div className="flex items-start gap-3">
-            <h2 className="text-xl font-semibold text-gray-900 flex-1">{selected.name}</h2>
-            <span
-              className={`shrink-0 mt-0.5 inline-block px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide ${
-                CATEGORY_COLORS[selected.category]
-              }`}
-            >
-              {selected.category}
-            </span>
+      <article className="flex-1 flex flex-col overflow-hidden">
+        {/* Header — always visible */}
+        <div className="shrink-0 px-6 pt-6 pb-4">
+          <div className="max-w-2xl">
+            <div className="flex items-start gap-3">
+              <h2 className="text-xl font-semibold text-gray-900 flex-1">{selected.name}</h2>
+              <span
+                title={CATEGORY_DESCRIPTIONS[selected.category]}
+                className={`shrink-0 mt-0.5 inline-block px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide cursor-help ${
+                  CATEGORY_COLORS[selected.category]
+                }`}
+              >
+                {selected.category}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-gray-700 leading-relaxed">{selected.summary}</p>
           </div>
 
-          <p className="mt-4 text-sm text-gray-700 leading-relaxed">{selected.summary}</p>
-
-          <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Purpose
-          </h3>
-          <p className="text-sm text-gray-700 leading-relaxed">{selected.purpose}</p>
-
-          {selected.references.length > 0 && (
-            <>
-              <h3 className="mt-6 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                References
-              </h3>
-              <ul className="space-y-1">
-                {selected.references.map((r) => (
-                  <li key={r}>
-                    <button
-                      onClick={() => {
-                        const found = CELL_SCHEMA_CATALOG.find((e) => e.name === r);
-                        if (found) setSelected(found);
-                      }}
-                      className="text-sm text-blue-600 font-mono hover:underline text-left"
-                    >
-                      {r}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
-          <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            TypeScript Source
-          </h3>
-          <a
-            href={`${GITHUB_BLOB}/contracts/node/contract/${selected.sourcePath}`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs text-blue-600 font-mono hover:underline break-all"
-          >
-            {selected.sourcePath}
-          </a>
-
-          {selected.yamlPath && (
-            <>
-              <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                YAML Schema
-              </h3>
-              <a
-                href={`${GITHUB_BLOB}/${selected.yamlPath}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-blue-600 font-mono hover:underline break-all"
+          {/* Tab bar */}
+          <div className="mt-4 flex gap-4 border-b border-gray-200">
+            {(['documentation', 'metadata'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setDetailTab(t)}
+                className={`pb-2 text-sm font-medium capitalize transition-colors ${
+                  detailTab === t
+                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    : 'text-gray-400 hover:text-gray-600'
+                }`}
               >
-                {selected.yamlPath}
-              </a>
-              <div className="mt-2 rounded border border-gray-200 bg-gray-50 overflow-auto max-h-96">
-                {yamlLoading && (
-                  <p className="p-3 text-xs text-gray-400">Loading…</p>
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab content — scrollable */}
+        <div className="flex-1 overflow-y-auto px-6 pb-6">
+          <div className="max-w-2xl">
+            {detailTab === 'documentation' && (
+              <>
+                {selected.docPath ? (
+                  <div className="rounded border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900 overflow-y-auto">
+                    {docLoading && (
+                      <p className="p-3 text-xs text-gray-400">Loading...</p>
+                    )}
+                    {docError && (
+                      <p className="p-3 text-xs text-red-500">Failed to load documentation.</p>
+                    )}
+                    {docContent && (
+                      <div className="p-6 prose prose-sm dark:prose-invert max-w-none">
+                        <Markdown remarkPlugins={[remarkGfm]}>{docContent}</Markdown>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-4 text-sm text-gray-400">
+                    No documentation available for this contract.
+                  </p>
                 )}
-                {yamlError && (
-                  <p className="p-3 text-xs text-red-500">Failed to load YAML.</p>
+              </>
+            )}
+
+            {detailTab === 'metadata' && (
+              <>
+                <h3 className="mt-4 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  Purpose
+                </h3>
+                <p className="text-sm text-gray-700 leading-relaxed">{selected.purpose}</p>
+
+                {selected.references.length > 0 && (
+                  <>
+                    <h3 className="mt-6 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      References
+                    </h3>
+                    <ul className="space-y-1">
+                      {selected.references.map((r) => (
+                        <li key={r}>
+                          <button
+                            onClick={() => {
+                              const found = CELL_SCHEMA_CATALOG.find((e) => e.name === r);
+                              if (found) setSelected(found);
+                            }}
+                            className="text-sm text-blue-600 font-mono hover:underline text-left"
+                          >
+                            {r}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
-                {yamlContent && (
-                  <pre className="p-3 text-xs font-mono text-gray-700 whitespace-pre">{yamlContent}</pre>
+
+                <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  TypeScript Source
+                </h3>
+                <a
+                  href={`${GITHUB_BLOB}/contracts/node/contract/${selected.sourcePath}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-blue-600 font-mono hover:underline break-all"
+                >
+                  {selected.sourcePath}
+                </a>
+
+                {selected.yamlPath && (
+                  <>
+                    <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                      YAML Schema
+                    </h3>
+                    <a
+                      href={`${GITHUB_BLOB}/${selected.yamlPath}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-blue-600 font-mono hover:underline break-all"
+                    >
+                      {selected.yamlPath}
+                    </a>
+                    <div className="mt-2 rounded border border-gray-200 bg-gray-50 overflow-auto max-h-96">
+                      {yamlLoading && (
+                        <p className="p-3 text-xs text-gray-400">Loading…</p>
+                      )}
+                      {yamlError && (
+                        <p className="p-3 text-xs text-red-500">Failed to load YAML.</p>
+                      )}
+                      {yamlContent && (
+                        <pre className="p-3 text-xs font-mono text-gray-700 whitespace-pre">{yamlContent}</pre>
+                      )}
+                    </div>
+                  </>
                 )}
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
       </article>
     </div>
