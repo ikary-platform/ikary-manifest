@@ -1,5 +1,5 @@
 {
-  "name": "ikary",
+  "name": "@ikary/ikary",
   "version": "0.1.1",
   "description": "IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests",
   "license": "MIT",
