@@ -59,7 +59,7 @@ export function buildDataGridViewModel<T>(input: BuildDataGridViewModelInput<T>)
   const columns: DataGridViewColumn<T>[] = input.presentation.columns.map((column) => buildViewColumn(column, input));
 
   return {
-    rows: input.rows,
+    rows: input.rows ?? [],
     columns,
     getRowId: input.getRowId,
     loading: input.loading,

@@ -38,7 +38,7 @@ function renderSortIndicator(active: boolean, direction?: DataGridViewSortDirect
 }
 
 export function DataGrid<T>({
-  rows,
+  rows = [] as unknown as T[],
   columns,
   getRowId,
   loading = false,
