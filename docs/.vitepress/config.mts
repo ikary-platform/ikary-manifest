@@ -139,6 +139,7 @@ export default defineConfig({
               link: '/guide/why-ikary-manifest',
             },
             { text: 'Getting Started', link: '/guide/getting-started' },
+            { text: 'CLI', link: '/guide/cli' },
           ],
         },
         {
