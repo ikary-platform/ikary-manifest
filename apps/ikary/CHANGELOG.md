@@ -1,4 +1,4 @@
-# ikary
+# @ikary/ikary
 
 ## 0.1.1
 
