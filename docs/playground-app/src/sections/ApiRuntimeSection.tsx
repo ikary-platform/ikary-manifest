@@ -4,18 +4,23 @@ import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract
 import { JsonEditor } from '../components/JsonEditor';
 import { SAMPLE_ENTITY_JSON } from '../data/api-sample-entity';
 import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';
+import { ApiExplorerPanel } from '../components/api-explorer/ApiExplorerPanel';
 import { CreateFieldsTab } from '../components/api-runtime/CreateFieldsTab';
 import { EditFieldsTab } from '../components/api-runtime/EditFieldsTab';
 import { ScopeRegistryTab } from '../components/api-runtime/ScopeRegistryTab';
-import { ApiPreviewTab } from '../components/api-runtime/ApiPreviewTab';
 
-type OutputTab = 'overview' | 'create-fields' | 'edit-fields' | 'scope-registry' | 'api-preview';
+type OutputTab = 'overview' | 'api-explorer' | 'create-fields' | 'edit-fields' | 'scope-registry';
 
 const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }> = [
   {
     key: 'overview',
     label: 'Entity Overview',
     description: 'Visual representation of the entity: fields, relations, lifecycle, capabilities, policies, and validation.',
+  },
+  {
+    key: 'api-explorer',
+    label: 'API Explorer',
+    description: 'Interactive mock API runner. Execute requests against an in-memory store derived from the entity definition.',
   },
   {
     key: 'create-fields',
@@ -32,11 +37,6 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
     label: 'Scope Registry',
     description:
       'Permission scopes derived from the entity: standard CRUD scopes, lifecycle transitions, and capability scopes.',
-  },
-  {
-    key: 'api-preview',
-    label: 'API Preview',
-    description: 'Generated OpenAPI 3.0 specification for the REST API this entity would produce.',
   },
 ];
 
@@ -113,10 +113,10 @@ export function ApiRuntimeSection() {
         ) : entity && derived ? (
           <div className="flex-1 overflow-y-auto p-4">
             {outputTab === 'overview' && <EntityOverviewTab entity={entity} />}
+            {outputTab === 'api-explorer' && <ApiExplorerPanel entity={entity} />}
             {outputTab === 'create-fields' && <CreateFieldsTab fields={derived.createFields} />}
             {outputTab === 'edit-fields' && <EditFieldsTab fields={derived.editFields} />}
             {outputTab === 'scope-registry' && <ScopeRegistryTab scopes={derived.scopes} />}
-            {outputTab === 'api-preview' && <ApiPreviewTab entity={entity} />}
           </div>
         ) : null}
       </div>
