@@ -1,4 +1,4 @@
-import type { EmptyStatePresentation } from '@ikary-manifest/presentation';
+import type { EmptyStatePresentation } from '@ikary/presentation';
 import type { EmptyStateResolvedAction, EmptyStateViewProps } from './EmptyState.types';
 
 export type BuildEmptyStateViewModelInput = {

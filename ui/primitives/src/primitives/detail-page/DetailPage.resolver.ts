@@ -1,4 +1,4 @@
-import { validateRuntimeDetailPagePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeDetailPagePresentation } from '@ikary/presentation';
 import { buildDetailPageViewModel, type BuildDetailPageViewModelInput } from './DetailPage.adapter';
 import type { DetailPageViewProps } from './DetailPage.types';
 

@@ -1,4 +1,4 @@
-import { validateRuntimeFilterBarPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeFilterBarPresentation } from '@ikary/presentation';
 import { buildFilterBarViewModel, type BuildFilterBarViewModelInput } from './FilterBar.adapter';
 import type { FilterBarViewProps } from './FilterBar.types';
 

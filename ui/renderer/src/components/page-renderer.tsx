@@ -1,4 +1,4 @@
-import type { PageDefinition } from '@ikary-manifest/contract';
+import type { PageDefinition } from '@ikary/contract';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
 import { findManifestEntity } from '../manifest/selectors';
 

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import type { RuntimeContext } from '@ikary-manifest/primitives';
-import { RuntimeContextProvider, useRuntimeContext } from '@ikary-manifest/primitives';
+import type { DataProviderDefinition } from '@ikary/contract';
+import type { EntityRouteParams } from '@ikary/contract';
+import type { RuntimeContext } from '@ikary/primitives';
+import { RuntimeContextProvider, useRuntimeContext } from '@ikary/primitives';
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
 

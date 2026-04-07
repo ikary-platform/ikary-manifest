@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/presentation",
+  "name": "@ikary/presentation",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",

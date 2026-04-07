@@ -1,5 +1,5 @@
-import type { CellManifestV1 } from '@ikary-manifest/contract';
-import type { PageDefinition, PageType } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
+import type { PageDefinition, PageType } from '@ikary/contract';
 
 function fillPathId(pathTemplate: string, recordId: string): string {
   return pathTemplate.replace(/:id\b/, encodeURIComponent(recordId));

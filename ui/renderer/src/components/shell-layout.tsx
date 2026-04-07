@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 import { ShellHeader } from './shell-header';
 import { SidebarNav } from './sidebar-nav';
 import { getManifestNavigation } from '../manifest/selectors';

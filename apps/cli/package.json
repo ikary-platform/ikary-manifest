@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/cli",
+  "name": "@ikary/cli",
   "version": "0.1.0",
   "description": "IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests",
   "license": "MIT",
@@ -59,9 +59,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ikary-manifest/contract": "workspace:*",
-    "@ikary-manifest/engine": "workspace:*",
-    "@ikary-manifest/loader": "workspace:*",
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/loader": "workspace:*",
     "@types/prompts": "^2.4.9",
     "tsup": "^8.0.2",
     "tsx": "^4.19.0",

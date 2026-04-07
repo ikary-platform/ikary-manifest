@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react';
-import type { DataGridPresentation, FieldValuePresentation } from '@ikary-manifest/presentation';
+import type { DataGridPresentation, FieldValuePresentation } from '@ikary/presentation';
 import { buildFieldValueViewModel } from '../field-value/FieldValue.adapter';
 import { FieldValue } from '../field-value/FieldValue';
 

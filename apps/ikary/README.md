@@ -2,7 +2,7 @@
 
 CLI for generating, validating, compiling, and previewing IKARY Cell manifests.
 
-This package is a thin wrapper around [`@ikary-manifest/cli`](https://www.npmjs.com/package/@ikary-manifest/cli). It exists so you can run `npx ikary` instead of `npx @ikary-manifest/cli`.
+This package is a thin wrapper around [`@ikary/cli`](https://www.npmjs.com/package/@ikary/cli). It exists so you can run `npx ikary` instead of `npx @ikary/cli`.
 
 ## Install
 

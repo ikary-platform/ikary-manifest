@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { normalizeManifest } from './normalize-manifest';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 
 function baseManifest(spec: Partial<CellManifestV1['spec']> = {}): CellManifestV1 {
   return {

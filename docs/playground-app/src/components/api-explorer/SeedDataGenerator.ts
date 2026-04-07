@@ -1,4 +1,4 @@
-import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition, FieldDefinition } from '@ikary/contract';
 
 const FIRST_NAMES = [
   'James', 'Maria', 'David', 'Sarah', 'Michael',

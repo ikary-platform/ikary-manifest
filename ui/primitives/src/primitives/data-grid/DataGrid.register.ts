@@ -1,4 +1,4 @@
-import type { DataGridPresentation } from '@ikary-manifest/presentation';
+import type { DataGridPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import { DataGrid } from './DataGrid';
 import { resolveDataGrid } from './DataGrid.resolver';

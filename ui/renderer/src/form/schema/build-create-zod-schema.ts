@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
-import type { FieldRuleDefinition, FieldRuleType } from '@ikary-manifest/contract';
+import type { ResolvedCreateField } from '@ikary/engine';
+import type { FieldRuleDefinition, FieldRuleType } from '@ikary/contract';
 
 export type CreateFormValues = Record<string, unknown>;
 

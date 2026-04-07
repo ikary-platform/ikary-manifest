@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { EntityDefinition } from '@ikary-manifest/contract';
-import { buildEntityListPath } from '@ikary-manifest/engine';
+import type { EntityDefinition } from '@ikary/contract';
+import { buildEntityListPath } from '@ikary/engine';
 import { useUIComponents } from '../UIComponentsProvider';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
 import { PromotedMetadataRow } from './promoted-metadata-row';

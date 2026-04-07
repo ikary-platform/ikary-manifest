@@ -1,4 +1,4 @@
-import type { FieldValuePresentation } from '@ikary-manifest/presentation';
+import type { FieldValuePresentation } from '@ikary/presentation';
 import { buildFieldValueViewModel, type BuildFieldValueViewModelInput } from './FieldValue.adapter';
 
 export type FieldValueResolverRuntime = Omit<BuildFieldValueViewModelInput, 'presentation'>;

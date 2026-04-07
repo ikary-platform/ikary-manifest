@@ -1,12 +1,12 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { buildEntityDetailPath } from '@ikary-manifest/engine';
-import type { DataGridColumn } from '@ikary-manifest/presentation';
+import { buildEntityDetailPath } from '@ikary/engine';
+import type { DataGridColumn } from '@ikary/presentation';
 import { EntityCreateSheet } from '../sheets/EntityCreateSheet';
 import { CellDataGrid } from '../components/cell-data-grid';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
 import type { CellPageRendererProps } from '../registry/cell-component-registry';
-import type { FieldDefinition } from '@ikary-manifest/contract';
+import type { FieldDefinition } from '@ikary/contract';
 import { resolveManifestEntity } from '../manifest/selectors';
 import { useUIComponents } from '../UIComponentsProvider';
 

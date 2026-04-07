@@ -1,4 +1,4 @@
-import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition, FieldDefinition } from '@ikary/contract';
 import { deriveCreateFields } from './derive-create-fields';
 import { deriveEditFields } from './derive-edit-fields';
 

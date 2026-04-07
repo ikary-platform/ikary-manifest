@@ -1,4 +1,4 @@
-import { validateRuntimeLoadingStatePresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeLoadingStatePresentation } from '@ikary/presentation';
 import { buildLoadingStateViewModel, type BuildLoadingStateViewModelInput } from './LoadingState.adapter';
 import type { LoadingStateViewProps } from './LoadingState.types';
 

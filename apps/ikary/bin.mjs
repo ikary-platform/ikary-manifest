@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-import '@ikary-manifest/cli/dist/cli.js';
+import '@ikary/cli/dist/cli.js';

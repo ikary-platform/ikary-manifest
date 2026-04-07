@@ -1,6 +1,6 @@
 import type { BaseSyntheticEvent } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition } from '@ikary/contract';
 import type { ToastAPI } from '../../ui-components';
 import type { DetailPageMode } from './use-detail-page-mode';
 import type { CellDataStore } from '../../store/cell-data-store';

@@ -1,4 +1,4 @@
-import type { DetailItem as DetailItemPresentation, FieldValuePresentation } from '@ikary-manifest/presentation';
+import type { DetailItem as DetailItemPresentation, FieldValuePresentation } from '@ikary/presentation';
 import { buildFieldValueViewModel } from '../field-value/FieldValue.adapter';
 import type {
   DetailItemBadgeListViewProps,

@@ -2,7 +2,7 @@ import type {
   FormFieldPresentation,
   FormFieldRelationPresentation,
   FormSectionPresentation,
-} from '@ikary-manifest/presentation';
+} from '@ikary/presentation';
 import { buildFormFieldViewModel } from '../form-field/FormField.adapter';
 import type { FormFieldViewProps } from '../form-field/FormField.types';
 import { buildRelationFieldViewModel } from '../relation-field/RelationField.adapter';

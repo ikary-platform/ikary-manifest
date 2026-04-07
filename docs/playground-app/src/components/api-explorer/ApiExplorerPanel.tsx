@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import type { EntityDefinition } from '@ikary-manifest/contract';
-import type { OpenAPIOperation } from '@ikary-manifest/engine';
+import type { EntityDefinition } from '@ikary/contract';
+import type { OpenAPIOperation } from '@ikary/engine';
 import { useApiExplorer } from './useApiExplorer';
 import { EndpointRunner } from './EndpointRunner';
 

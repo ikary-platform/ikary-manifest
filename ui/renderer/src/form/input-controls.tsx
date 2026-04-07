@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { SelectOptionPresentation } from '@ikary-manifest/presentation';
+import type { SelectOptionPresentation } from '@ikary/presentation';
 import { useUIComponents } from '../UIComponentsProvider';
 
 export function TextInput(props: React.InputHTMLAttributes<HTMLInputElement> & { ref?: React.Ref<HTMLInputElement> }) {

@@ -1,5 +1,5 @@
 import { parse as parseYaml } from 'yaml';
-import { parseManifest, validateManifest } from '@ikary-manifest/contract';
+import { parseManifest, validateManifest } from '@ikary/contract';
 import { stripMeta } from './strip-meta';
 import type { LoadManifestResult, LoadManifestOptions } from './types';
 

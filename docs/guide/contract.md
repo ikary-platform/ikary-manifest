@@ -33,13 +33,13 @@ Examples:
 - A page references an entity key that does not exist in the manifest
 - A navigation item references a page key that does not exist in the manifest
 
-## TypeScript: `@ikary-manifest/contract`
+## TypeScript: `@ikary/contract`
 
 The TypeScript implementation uses Zod. All types are inferred from Zod schemas, so there is no manual type duplication.
 
 ```typescript
-import { loadManifestFromFile } from '@ikary-manifest/loader';
-import { validateManifestSemantics } from '@ikary-manifest/contract';
+import { loadManifestFromFile } from '@ikary/loader';
+import { validateManifestSemantics } from '@ikary/contract';
 
 const result = await loadManifestFromFile('app.yaml');
 

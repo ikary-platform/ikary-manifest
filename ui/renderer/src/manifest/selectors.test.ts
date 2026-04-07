@@ -10,7 +10,7 @@ import {
   resolveManifestEntity,
   resolveManifestEntities,
 } from './selectors';
-import type { CellManifestV1, EntityDefinition, PageDefinition } from '@ikary-manifest/contract';
+import type { CellManifestV1, EntityDefinition, PageDefinition } from '@ikary/contract';
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 

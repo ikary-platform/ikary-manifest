@@ -1,4 +1,4 @@
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition } from '@ikary/contract';
 import { FieldsTable } from './FieldsTable';
 import { RelationsSection } from './RelationsSection';
 import { ComputedFieldsSection } from './ComputedFieldsSection';

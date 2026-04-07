@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/playground",
+  "name": "@ikary/playground",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -8,10 +8,10 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ikary-manifest/contract": "workspace:*",
-    "@ikary-manifest/engine": "workspace:*",
-    "@ikary-manifest/presentation": "workspace:*",
-    "@ikary-manifest/primitives": "workspace:*",
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/presentation": "workspace:*",
+    "@ikary/primitives": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

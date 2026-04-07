@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { DataGridPresentation } from '@ikary-manifest/presentation';
+import type { DataGridPresentation } from '@ikary/presentation';
 import type { DataGridViewColumn, DataGridViewProps, DataGridViewSort } from './DataGrid.types';
 import {
   buildEmptyState,

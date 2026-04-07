@@ -1,4 +1,4 @@
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition } from '@ikary/contract';
 import type { FieldError, UseFormReturn } from 'react-hook-form';
 import { FieldControl } from '../form/field-control';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';

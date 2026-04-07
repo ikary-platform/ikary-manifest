@@ -1,4 +1,4 @@
-import type { DetailSectionPresentation } from '@ikary-manifest/presentation';
+import type { DetailSectionPresentation } from '@ikary/presentation';
 import { buildDetailSectionViewModel, type BuildDetailSectionViewModelInput } from './DetailSection.adapter';
 
 export type DetailSectionResolverRuntime = Omit<BuildDetailSectionViewModelInput, 'presentation'>;

@@ -1,4 +1,4 @@
-import type { EntityDefinition, FieldDiff } from '@ikary-manifest/contract';
+import type { EntityDefinition, FieldDiff } from '@ikary/contract';
 
 interface DiffViewerProps {
   diffs: FieldDiff[];

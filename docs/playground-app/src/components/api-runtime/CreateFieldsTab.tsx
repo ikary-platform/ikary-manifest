@@ -1,4 +1,4 @@
-import type { ResolvedCreateField } from '@ikary-manifest/engine';
+import type { ResolvedCreateField } from '@ikary/engine';
 import { FieldsTable } from './FieldsTable';
 
 interface CreateFieldsTabProps {

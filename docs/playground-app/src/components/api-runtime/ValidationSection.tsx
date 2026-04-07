@@ -1,4 +1,4 @@
-import type { EntityValidationBlock } from '@ikary-manifest/contract';
+import type { EntityValidationBlock } from '@ikary/contract';
 
 type EntityValidation = EntityValidationBlock;
 

@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary-manifest/engine';
-import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary/engine';
+import type { EntityDefinition, FieldDefinition } from '@ikary/contract';
 import { JsonEditor } from '../components/JsonEditor';
 import { SAMPLE_ENTITY_JSON } from '../data/api-sample-entity';
 import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';

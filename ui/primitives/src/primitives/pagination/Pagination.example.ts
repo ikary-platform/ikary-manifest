@@ -1,4 +1,4 @@
-import { PaginationPresentationSchema, type PaginationPresentation } from '@ikary-manifest/presentation';
+import { PaginationPresentationSchema, type PaginationPresentation } from '@ikary/presentation';
 
 export const PAGINATION_PRESENTATION_EXAMPLE: PaginationPresentation = PaginationPresentationSchema.parse({
   type: 'pagination',

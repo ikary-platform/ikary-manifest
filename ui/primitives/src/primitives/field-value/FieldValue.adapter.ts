@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { FieldValuePresentation } from '@ikary-manifest/presentation';
+import type { FieldValuePresentation } from '@ikary/presentation';
 import type {
   FieldValueDateStyle,
   FieldValueLinkTarget,

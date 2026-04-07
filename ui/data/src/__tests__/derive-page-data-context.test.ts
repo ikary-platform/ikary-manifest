@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { derivePageDataContext } from '../derive-page-data-context';
-import type { PageDefinition } from '@ikary-manifest/contract';
+import type { PageDefinition } from '@ikary/contract';
 
 function makePage(overrides: Partial<PageDefinition>): PageDefinition {
   return {

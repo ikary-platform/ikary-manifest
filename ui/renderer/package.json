@@ -1,5 +1,5 @@
 {
-  "name": "@ikary-manifest/renderer",
+  "name": "@ikary/renderer",
   "version": "0.1.0",
   "license": "MIT",
   "type": "module",
@@ -14,17 +14,17 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary-manifest/contract --external @ikary-manifest/presentation --external @ikary-manifest/engine --external @ikary-manifest/primitives --external @tanstack/react-query --external react-hook-form --external @hookform/resolvers --external zod",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external @ikary/engine --external @ikary/primitives --external @tanstack/react-query --external react-hook-form --external @hookform/resolvers --external zod",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src"
   },
   "dependencies": {
-    "@ikary-manifest/contract": "workspace:*",
-    "@ikary-manifest/presentation": "workspace:*",
-    "@ikary-manifest/engine": "workspace:*",
-    "@ikary-manifest/primitives": "workspace:*",
+    "@ikary/contract": "workspace:*",
+    "@ikary/presentation": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/primitives": "workspace:*",
     "react-hook-form": "^7.53.0",
     "@hookform/resolvers": "^3.9.0",
     "zod": "^3.23.8"

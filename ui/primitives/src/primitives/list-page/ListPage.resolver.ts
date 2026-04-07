@@ -1,4 +1,4 @@
-import { ListPagePresentationSchema } from '@ikary-manifest/presentation';
+import { ListPagePresentationSchema } from '@ikary/presentation';
 import { buildListPageViewModel, type BuildListPageViewModelInput } from './ListPage.adapter';
 import type { ListPageViewProps } from './ListPage.types';
 
