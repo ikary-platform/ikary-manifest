@@ -1,5 +1,19 @@
 # Getting Started
 
+## Quick start with the CLI
+
+The fastest way to create a new manifest project:
+
+```bash
+npx @ikary/cli init my-app
+```
+
+This scaffolds a complete project with a starter manifest, AI context files, and slash commands. See the [CLI guide](/guide/cli) for all available commands.
+
+## Contributing to the repo
+
+The sections below are for contributors who want to work on the monorepo itself.
+
 ## Prerequisites
 
 ::: code-group
