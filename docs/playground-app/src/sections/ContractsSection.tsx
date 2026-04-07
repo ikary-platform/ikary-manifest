@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CELL_SCHEMA_CATALOG } from '@ikary-manifest/contract';
 import type { SchemaCategory, SchemaCatalogEntry } from '@ikary-manifest/contract';
+
+const GITHUB_BLOB = 'https://github.com/ikary-platform/ikary-manifest/blob/main';
+const RAW_BASE = 'https://raw.githubusercontent.com/ikary-platform/ikary-manifest/main';
 
 const CATEGORIES: Array<SchemaCategory | 'all'> = [
   'all',
@@ -26,6 +30,17 @@ export function ContractsSection() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<SchemaCategory | 'all'>('all');
   const [selected, setSelected] = useState<SchemaCatalogEntry>(CELL_SCHEMA_CATALOG[0]);
+
+  const { data: yamlContent, isLoading: yamlLoading, isError: yamlError } = useQuery({
+    queryKey: ['yaml', selected.yamlPath],
+    queryFn: async () => {
+      const res = await fetch(`${RAW_BASE}/${selected.yamlPath}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    },
+    enabled: !!selected.yamlPath,
+    staleTime: Infinity,
+  });
 
   const filtered = CELL_SCHEMA_CATALOG.filter(
     (e) =>
@@ -139,9 +154,43 @@ export function ContractsSection() {
           )}
 
           <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Source
+            TypeScript Source
           </h3>
-          <code className="text-xs text-gray-500 font-mono break-all">{selected.sourcePath}</code>
+          <a
+            href={`${GITHUB_BLOB}/contracts/node/contract/${selected.sourcePath}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs text-blue-600 font-mono hover:underline break-all"
+          >
+            {selected.sourcePath}
+          </a>
+
+          {selected.yamlPath && (
+            <>
+              <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                YAML Schema
+              </h3>
+              <a
+                href={`${GITHUB_BLOB}/${selected.yamlPath}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-blue-600 font-mono hover:underline break-all"
+              >
+                {selected.yamlPath}
+              </a>
+              <div className="mt-2 rounded border border-gray-200 bg-gray-50 overflow-auto max-h-96">
+                {yamlLoading && (
+                  <p className="p-3 text-xs text-gray-400">Loading…</p>
+                )}
+                {yamlError && (
+                  <p className="p-3 text-xs text-red-500">Failed to load YAML.</p>
+                )}
+                {yamlContent && (
+                  <pre className="p-3 text-xs font-mono text-gray-700 whitespace-pre">{yamlContent}</pre>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </article>
     </div>
