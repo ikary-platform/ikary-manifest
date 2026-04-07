@@ -5,7 +5,7 @@
   "fixed": [],
   "linked": [
     ["@ikary/contract", "@ikary/engine", "@ikary/loader"],
-    ["@ikary/cli", "ikary"]
+    ["@ikary/cli", "@ikary/ikary"]
   ],
   "access": "public",
   "baseBranch": "main",
