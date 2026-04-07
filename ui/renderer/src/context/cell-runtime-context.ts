@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 import type { CellComponentRegistry } from '../registry/cell-component-registry';
 import type { MockDataProvider } from '../providers/mock-data-provider';
 import type { CellDataStore } from '../store/cell-data-store';

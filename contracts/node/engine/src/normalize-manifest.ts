@@ -1,4 +1,4 @@
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 
 export function normalizeManifest(manifest: CellManifestV1): CellManifestV1 {
   return {

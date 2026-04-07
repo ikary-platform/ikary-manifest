@@ -1,4 +1,4 @@
-import type { RuntimeContext } from '@ikary-manifest/primitives';
+import type { RuntimeContext } from '@ikary/primitives';
 
 export const MOCK_RUNTIME: RuntimeContext = {
   entity: {

@@ -1,4 +1,4 @@
-import type { TabsPresentation } from '@ikary-manifest/presentation';
+import type { TabsPresentation } from '@ikary/presentation';
 import type { TabsResolvedItem, TabsViewProps } from './Tabs.types';
 
 export type BuildTabsViewModelInput = {

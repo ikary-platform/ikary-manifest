@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import React from 'react';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import { useRuntimeContext, type RuntimeContext } from '@ikary-manifest/primitives';
+import type { CellManifestV1 } from '@ikary/contract';
+import type { EntityRouteParams } from '@ikary/contract';
+import { useRuntimeContext, type RuntimeContext } from '@ikary/primitives';
 
 // ── Module mocks ──────────────────────────────────────────────────────────────
 

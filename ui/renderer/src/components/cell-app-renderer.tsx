@@ -9,7 +9,7 @@ import {
   UNSAFE_NavigationContext,
   UNSAFE_RouteContext,
 } from 'react-router-dom';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import type { CellManifestV1 } from '@ikary/contract';
 import { ShellLayout } from './shell-layout';
 import { PageRenderer } from './page-renderer';
 import { CellRuntimeContext } from '../context/cell-runtime-context';

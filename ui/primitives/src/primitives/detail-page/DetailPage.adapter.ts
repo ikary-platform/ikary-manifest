@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { DetailPagePresentation } from '@ikary-manifest/presentation';
+import type { DetailPagePresentation } from '@ikary/presentation';
 import type { DetailPagePageRenderState, DetailPageResolvedAction, DetailPageViewProps } from './DetailPage.types';
 
 const DEFAULT_ACTION_VARIANT: DetailPageResolvedAction['variant'] = 'default';

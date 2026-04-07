@@ -1,9 +1,9 @@
 import { useState, useRef, useMemo, useCallback } from 'react';
-import type { EntityDefinition, FieldDefinition, RelationCreatePolicy } from '@ikary-manifest/contract';
-import type { FormFieldPresentation } from '@ikary-manifest/presentation';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import type { FormFieldViewProps, RelationFieldOption, RelationFieldRuntime } from '@ikary-manifest/primitives';
-import { buildFormFieldViewModel } from '@ikary-manifest/primitives';
+import type { EntityDefinition, FieldDefinition, RelationCreatePolicy } from '@ikary/contract';
+import type { FormFieldPresentation } from '@ikary/presentation';
+import type { EntityRouteParams } from '@ikary/contract';
+import type { FormFieldViewProps, RelationFieldOption, RelationFieldRuntime } from '@ikary/primitives';
+import { buildFormFieldViewModel } from '@ikary/primitives';
 import { useDataHooks } from '../data-hooks';
 import { useEntityRegistryOptional } from '../EntityRegistryContext';
 

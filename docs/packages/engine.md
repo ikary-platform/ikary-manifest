@@ -7,7 +7,7 @@ Compilation takes a validated manifest and produces a normalized, runtime-ready 
 ::: code-group
 
 ```text [Node.js]
-@ikary-manifest/engine   (contracts/node/engine/)
+@ikary/engine   (contracts/node/engine/)
 ```
 
 ```text [Python]
@@ -21,7 +21,7 @@ Compilation takes a validated manifest and produces a normalized, runtime-ready 
 ::: code-group
 
 ```bash [Node.js]
-pnpm add @ikary-manifest/engine
+pnpm add @ikary/engine
 ```
 
 <LangComingSoon />
@@ -35,8 +35,8 @@ The main entry point. Takes a validated `CellManifestV1`, runs schema validation
 ::: code-group
 
 ```typescript [Node.js]
-import { compileCellApp, isValidationResult } from '@ikary-manifest/engine';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
+import { compileCellApp, isValidationResult } from '@ikary/engine';
+import type { CellManifestV1 } from '@ikary/contract';
 
 const result = compileCellApp(manifest);
 
@@ -59,7 +59,7 @@ Ensures all optional arrays exist (entities, pages, navigation items). Prevents 
 ::: code-group
 
 ```typescript [Node.js]
-import { normalizeManifest } from '@ikary-manifest/engine';
+import { normalizeManifest } from '@ikary/engine';
 
 const normalized = normalizeManifest(manifest);
 ```
@@ -73,7 +73,7 @@ const normalized = normalizeManifest(manifest);
 ::: code-group
 
 ```typescript [Node.js]
-import { deriveCreateFields, deriveEditFields } from '@ikary-manifest/engine';
+import { deriveCreateFields, deriveEditFields } from '@ikary/engine';
 
 // Derive fields for a create form (filtered, sorted, with effective properties)
 const createFields = deriveCreateFields(entity.fields);
@@ -96,7 +96,7 @@ import {
   buildEntityDetailPath,
   buildEntityCreatePath,
   buildEntityEditPath,
-} from '@ikary-manifest/engine';
+} from '@ikary/engine';
 
 buildEntityListPath(manifest, 'customer');           // "/crm/customers"
 buildEntityDetailPath(manifest, 'customer', '123'); // "/crm/customers/123"

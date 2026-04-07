@@ -1,4 +1,4 @@
-import type { FieldType } from '@ikary-manifest/contract';
+import type { FieldType } from '@ikary/contract';
 import type { ManifestRuntimeEntity } from '../manifest/selectors';
 
 export interface MockDataProvider {

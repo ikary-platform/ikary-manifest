@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { PageHeaderPresentation } from '@ikary-manifest/presentation';
+import type { PageHeaderPresentation } from '@ikary/presentation';
 import type { PageHeaderLowerSlotType, PageHeaderResolvedAction, PageHeaderViewProps } from './PageHeader.types';
 
 export type BuildPageHeaderViewModelInput = {

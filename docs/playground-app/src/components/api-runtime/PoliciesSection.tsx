@@ -1,4 +1,4 @@
-import type { EntityPoliciesDefinition, FieldPoliciesDefinition } from '@ikary-manifest/contract';
+import type { EntityPoliciesDefinition, FieldPoliciesDefinition } from '@ikary/contract';
 
 const SCOPE_COLORS: Record<string, string> = {
   public: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',

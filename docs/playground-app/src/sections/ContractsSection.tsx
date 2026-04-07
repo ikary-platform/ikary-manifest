@@ -3,8 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { CELL_SCHEMA_CATALOG } from '@ikary-manifest/contract';
-import type { SchemaCategory, SchemaCatalogEntry } from '@ikary-manifest/contract';
+import { CELL_SCHEMA_CATALOG } from '@ikary/contract';
+import type { SchemaCategory, SchemaCatalogEntry } from '@ikary/contract';
 
 const GITHUB_BLOB = 'https://github.com/ikary-platform/ikary-manifest/blob/main';
 const RAW_BASE =

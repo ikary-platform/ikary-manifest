@@ -1,4 +1,4 @@
-import type { ValidationIssue } from '@ikary-manifest/contract';
+import type { ValidationIssue } from '@ikary/contract';
 
 export interface HydratedValidation {
   fieldErrors: Record<string, { message: string; ruleId: string }>;

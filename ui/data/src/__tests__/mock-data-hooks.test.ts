@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockDataHooks } from '../mock-data-hooks';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
+import type { EntityRouteParams } from '@ikary/contract';
 
 const ROUTE: EntityRouteParams = {
   tenantId: '00000000-0000-0000-0000-000000000001',

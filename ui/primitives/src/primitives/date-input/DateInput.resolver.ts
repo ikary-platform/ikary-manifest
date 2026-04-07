@@ -1,4 +1,4 @@
-import { validateRuntimeDateInputPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeDateInputPresentation } from '@ikary/presentation';
 import { buildDateInputViewModel, type BuildDateInputViewModelInput } from './DateInput.adapter';
 import type { DateInputViewProps } from './DateInput.types';
 

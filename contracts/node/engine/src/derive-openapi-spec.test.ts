@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition, FieldDefinition } from '@ikary/contract';
 import { deriveOpenAPISpec } from './derive-openapi-spec';
 
 const minimalEntity = {

@@ -10,9 +10,9 @@ export default defineConfig([
     clean: true,
     banner: { js: '#!/usr/bin/env node' },
     noExternal: [
-      '@ikary-manifest/contract',
-      '@ikary-manifest/engine',
-      '@ikary-manifest/loader',
+      '@ikary/contract',
+      '@ikary/engine',
+      '@ikary/loader',
     ],
     define: {
       'process.env.CLI_VERSION': JSON.stringify(pkg.version),
@@ -23,9 +23,9 @@ export default defineConfig([
     format: ['esm', 'cjs'],
     dts: true,
     noExternal: [
-      '@ikary-manifest/contract',
-      '@ikary-manifest/engine',
-      '@ikary-manifest/loader',
+      '@ikary/contract',
+      '@ikary/engine',
+      '@ikary/loader',
     ],
   },
 ]);

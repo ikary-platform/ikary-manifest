@@ -1,4 +1,4 @@
-import type { BulkCommandBarPresentation } from '@ikary-manifest/presentation';
+import type { BulkCommandBarPresentation } from '@ikary/presentation';
 import type {
   BulkCommandBarResolvedAction,
   BulkCommandBarResolvedUtilityAction,

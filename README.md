@@ -63,13 +63,13 @@ ikary-manifest/
 
 | Package | Description |
 |---|---|
-| [`@ikary-manifest/contract`](./node/packages/contract/) | Zod schemas, TypeScript types, and validation for cell manifests |
-| [`@ikary-manifest/loader`](./node/packages/loader/) | YAML/JSON manifest loading, parsing, and validation pipeline |
-| [`@ikary-manifest/engine`](./node/packages/engine/) | Manifest compilation, field derivation, scope registry, route builders |
-| [`@ikary-manifest/presentation`](./node/packages/presentation/) | Presentation-layer schemas for 40+ UI primitives |
-| [`@ikary-manifest/runtime-ui`](./node/packages/runtime-ui/) | Declarative UI engine: primitive registry, resolver, actions, EntityClient |
-| [`@ikary-manifest/renderer`](./node/packages/renderer/) | Manifest-driven React renderer: CellAppRenderer, data grids, forms, sheets |
-| [`@ikary-manifest/data-runtime`](./node/packages/data-runtime/) | Data-binding glue: wires entity data to the UI runtime context |
+| [`@ikary/contract`](./node/packages/contract/) | Zod schemas, TypeScript types, and validation for cell manifests |
+| [`@ikary/loader`](./node/packages/loader/) | YAML/JSON manifest loading, parsing, and validation pipeline |
+| [`@ikary/engine`](./node/packages/engine/) | Manifest compilation, field derivation, scope registry, route builders |
+| [`@ikary/presentation`](./node/packages/presentation/) | Presentation-layer schemas for 40+ UI primitives |
+| [`@ikary/runtime-ui`](./node/packages/runtime-ui/) | Declarative UI engine: primitive registry, resolver, actions, EntityClient |
+| [`@ikary/renderer`](./node/packages/renderer/) | Manifest-driven React renderer: CellAppRenderer, data grids, forms, sheets |
+| [`@ikary/data-runtime`](./node/packages/data-runtime/) | Data-binding glue: wires entity data to the UI runtime context |
 
 ## Quick Start
 
@@ -87,13 +87,13 @@ YAML is the authoring format. The processing pipeline:
 YAML manifest (manifests/)
     |
     v
-@ikary-manifest/loader     # Parse YAML -> JSON object
+@ikary/loader     # Parse YAML -> JSON object
     |
     v
-@ikary-manifest/contract   # Zod structural validation + semantic rules
+@ikary/contract   # Zod structural validation + semantic rules
     |
     v
-@ikary-manifest/engine     # Normalization + compilation -> runtime manifest
+@ikary/engine     # Normalization + compilation -> runtime manifest
 ```
 
 Python consumers use the same YAML manifests with generated JSON Schema for structural validation.

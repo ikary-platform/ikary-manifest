@@ -1,4 +1,4 @@
-import { validateRuntimeCheckboxPresentation } from '@ikary-manifest/presentation';
+import { validateRuntimeCheckboxPresentation } from '@ikary/presentation';
 import { buildCheckboxViewModel, type BuildCheckboxViewModelInput } from './Checkbox.adapter';
 import type { CheckboxViewProps } from './Checkbox.types';
 

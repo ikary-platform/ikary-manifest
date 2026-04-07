@@ -1,4 +1,4 @@
-import type { IkaryFormPresentation } from '@ikary-manifest/presentation';
+import type { IkaryFormPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import type { PrimitiveResolver } from '../../types/PrimitiveTypes';
 import { buildIkaryFormViewModel, type BuildIkaryFormViewModelInput } from './IkaryForm.adapter';

@@ -1,6 +1,6 @@
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
-import type { CardListPresentation } from '@ikary-manifest/presentation';
+import type { CardListPresentation } from '@ikary/presentation';
 import { FieldValue, buildFieldValueViewModel } from '../field-value';
 import type {
   CardListResolvedAction,

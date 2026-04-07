@@ -1,4 +1,4 @@
-import type { EntityDefinition, DataProviderDefinition, BelongsToRelation } from '@ikary-manifest/contract';
+import type { EntityDefinition, DataProviderDefinition, BelongsToRelation } from '@ikary/contract';
 
 /**
  * Derives DataProviderDefinitions from an entity's belongs_to relations.

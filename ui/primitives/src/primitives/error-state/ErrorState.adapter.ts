@@ -1,4 +1,4 @@
-import type { ErrorStatePresentation } from '@ikary-manifest/presentation';
+import type { ErrorStatePresentation } from '@ikary/presentation';
 import type { ErrorStateResolvedAction, ErrorStateTechnicalDetailsView, ErrorStateViewProps } from './ErrorState.types';
 
 export type BuildErrorStateViewModelInput = {

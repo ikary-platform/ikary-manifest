@@ -7,7 +7,7 @@ API generation reads a compiled manifest and produces REST API endpoints. Each e
 ::: code-group
 
 ```text [Node.js]
-@ikary-manifest/generator-nest : NestJS module, controller, and service generator (in progress)
+@ikary/generator-nest : NestJS module, controller, and service generator (in progress)
 ```
 
 ```text [Python]
@@ -37,7 +37,7 @@ Routes follow the [API Conventions](/reference/api-conventions).
 ::: code-group
 
 ```bash [Node.js]
-pnpm add @ikary-manifest/generator-nest
+pnpm add @ikary/generator-nest
 ```
 
 <LangComingSoon />
@@ -50,7 +50,7 @@ The NestJS generator reads a compiled manifest and produces NestJS modules, cont
 
 ```typescript
 // Usage will be documented as the package stabilises.
-import { generateNestApp } from '@ikary-manifest/generator-nest';
+import { generateNestApp } from '@ikary/generator-nest';
 ```
 
 ## Python: FastAPI generator

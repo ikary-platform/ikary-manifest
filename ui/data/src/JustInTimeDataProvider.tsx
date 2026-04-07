@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import type { BelongsToRelation } from '@ikary-manifest/contract';
-import { RuntimeContextProvider, useRuntimeContextOptional } from '@ikary-manifest/primitives';
-import type { RuntimeContext } from '@ikary-manifest/primitives';
+import type { EntityRouteParams } from '@ikary/contract';
+import type { BelongsToRelation } from '@ikary/contract';
+import { RuntimeContextProvider, useRuntimeContextOptional } from '@ikary/primitives';
+import type { RuntimeContext } from '@ikary/primitives';
 import { useSingleProvider } from './use-single-provider';
 import { useEntityRegistryOptional } from './EntityRegistryContext';
 

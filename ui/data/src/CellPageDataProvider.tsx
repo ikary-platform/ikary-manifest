@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
-import type { CellManifestV1 } from '@ikary-manifest/contract';
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import { RuntimeContextProvider } from '@ikary-manifest/primitives';
-import type { RuntimeContext } from '@ikary-manifest/primitives';
+import type { CellManifestV1 } from '@ikary/contract';
+import type { EntityRouteParams } from '@ikary/contract';
+import { RuntimeContextProvider } from '@ikary/primitives';
+import type { RuntimeContext } from '@ikary/primitives';
 import { useDataHooks } from './data-hooks';
 import { derivePageDataContext } from './derive-page-data-context';
 import { useSecondaryProviders } from './use-secondary-providers';

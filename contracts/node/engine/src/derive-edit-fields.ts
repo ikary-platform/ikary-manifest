@@ -1,4 +1,4 @@
-import type { FieldDefinition } from '@ikary-manifest/contract';
+import type { FieldDefinition } from '@ikary/contract';
 import type { ResolvedCreateField } from './shared/derived-field-types';
 import { deriveCreateFields } from './derive-create-fields';
 

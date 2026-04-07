@@ -16,7 +16,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@ikary-manifest/cli": "workspace:*"
+    "@ikary/cli": "workspace:*"
   },
   "engines": {
     "node": ">=20"

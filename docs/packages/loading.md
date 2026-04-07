@@ -7,8 +7,8 @@ Loading a manifest means reading it from YAML or JSON, validating its structure 
 ::: code-group
 
 ```text [Node.js]
-@ikary-manifest/loader   : file and string I/O, YAML/JSON parsing, meta-property stripping
-@ikary-manifest/contract : Zod schemas, TypeScript types, structural and semantic validation
+@ikary/loader   : file and string I/O, YAML/JSON parsing, meta-property stripping
+@ikary/contract : Zod schemas, TypeScript types, structural and semantic validation
 ```
 
 ```text [Python]
@@ -22,7 +22,7 @@ ikary-manifest           : YAML/JSON loading; validation in active development
 ::: code-group
 
 ```bash [Node.js]
-pnpm add @ikary-manifest/loader @ikary-manifest/contract
+pnpm add @ikary/loader @ikary/contract
 ```
 
 ```bash [Python]
@@ -37,7 +37,7 @@ pip install -e ".[dev]"
 ::: code-group
 
 ```typescript [Node.js]
-import { loadManifestFromFile } from '@ikary-manifest/loader';
+import { loadManifestFromFile } from '@ikary/loader';
 
 const result = await loadManifestFromFile('my-app.yaml');
 
@@ -62,7 +62,7 @@ print(manifest["metadata"]["key"])
 ::: code-group
 
 ```typescript [Node.js]
-import { loadManifestFromYaml } from '@ikary-manifest/loader';
+import { loadManifestFromYaml } from '@ikary/loader';
 
 const result = loadManifestFromYaml(`
 apiVersion: ikary.co/v1alpha1
@@ -125,7 +125,7 @@ const result = await loadManifestFromFile('app.yaml', {
 });
 
 // Run validation directly on an already-parsed object:
-import { validateManifest } from '@ikary-manifest/contract';
+import { validateManifest } from '@ikary/contract';
 
 const result = validateManifest(unknownObject);
 // result.valid, result.errors, result.manifest
@@ -184,12 +184,12 @@ import type {
   RoleDefinition,
   ValidationError,
   ValidationResult,
-} from '@ikary-manifest/contract';
+} from '@ikary/contract';
 ```
 
 ## API contracts
 
-`@ikary-manifest/contract` also exports HTTP route parameter types, query shapes, and response shapes for use in API handlers:
+`@ikary/contract` also exports HTTP route parameter types, query shapes, and response shapes for use in API handlers:
 
 ```typescript
 import {
@@ -197,11 +197,11 @@ import {
   EntityListQuery,
   PaginatedResponse,
   SingleResponse,
-} from '@ikary-manifest/contract';
+} from '@ikary/contract';
 ```
 
 ## Design
 
-`@ikary-manifest/contract` is pure: no filesystem access, no YAML dependency, no React. It is a validation and type library. File I/O belongs in the loader; rendering belongs in the UI packages.
+`@ikary/contract` is pure: no filesystem access, no YAML dependency, no React. It is a validation and type library. File I/O belongs in the loader; rendering belongs in the UI packages.
 
 The Python SDK returns plain dicts today. Full typed results with validation errors are planned.

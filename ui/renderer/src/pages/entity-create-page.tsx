@@ -1,4 +1,4 @@
-import type { FieldDefinition } from '@ikary-manifest/contract';
+import type { FieldDefinition } from '@ikary/contract';
 import { useCellManifest } from '../context/cell-runtime-context';
 import type { CellPageRendererProps } from '../registry/cell-component-registry';
 import { resolveManifestEntity } from '../manifest/selectors';

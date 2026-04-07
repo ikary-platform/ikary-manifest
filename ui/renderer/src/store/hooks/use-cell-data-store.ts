@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from 'react';
-import type { AuditEvent, CellManifestV1, EntityVersion, FieldDiff } from '@ikary-manifest/contract';
+import type { AuditEvent, CellManifestV1, EntityVersion, FieldDiff } from '@ikary/contract';
 import { generateMockRows } from '../../providers/mock-data-provider';
 import { resolveManifestEntities } from '../../manifest/selectors';
 import type { CellDataStore } from '../cell-data-store';

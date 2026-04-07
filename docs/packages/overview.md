@@ -8,9 +8,9 @@ Everything related to "what is a valid manifest?". Node.js and Python implementa
 
 | Package | Role |
 |---------|------|
-| `@ikary-manifest/contract` | Zod schemas, TypeScript types, structural + semantic validation |
-| `@ikary-manifest/loader` | YAML/JSON parsing, meta-property stripping, validation pipeline |
-| `@ikary-manifest/engine` | Compilation, normalization, field derivation, path builders |
+| `@ikary/contract` | Zod schemas, TypeScript types, structural + semantic validation |
+| `@ikary/loader` | YAML/JSON parsing, meta-property stripping, validation pipeline |
+| `@ikary/engine` | Compilation, normalization, field derivation, path builders |
 | `ikary-manifest` (Python) | Python manifest loader |
 
 See [Loading & Validation](/packages/loading) for the full API reference covering all three Node.js packages and the Python SDK.
@@ -21,7 +21,7 @@ Everything related to "how do I serve a REST API from a manifest?".
 
 | Package | Role |
 |---------|------|
-| `@ikary-manifest/generator-nest` | NestJS module/controller/service generator _(placeholder)_ |
+| `@ikary/generator-nest` | NestJS module/controller/service generator _(placeholder)_ |
 | `ikary-manifest-fastapi` (Python) | FastAPI route generator _(placeholder)_ |
 
 ## ui/
@@ -30,10 +30,10 @@ Client-side rendering. All packages target the browser, not Node.js.
 
 | Package | Role |
 |---------|------|
-| `@ikary-manifest/presentation` | Zod schemas for 40+ UI primitive presentations |
-| `@ikary-manifest/primitives` | React component library: primitives, registries, query engine |
-| `@ikary-manifest/data` | Data-binding providers for entity pages |
-| `@ikary-manifest/renderer` | Manifest-driven React app shell and page renderer |
+| `@ikary/presentation` | Zod schemas for 40+ UI primitive presentations |
+| `@ikary/primitives` | React component library: primitives, registries, query engine |
+| `@ikary/data` | Data-binding providers for entity pages |
+| `@ikary/renderer` | Manifest-driven React app shell and page renderer |
 
 ## apps/
 
@@ -41,7 +41,7 @@ Standalone executables.
 
 | App | Role |
 |-----|------|
-| `@ikary-manifest/cli` | `ikary` CLI: validate, compile, generate _(placeholder)_ |
+| `@ikary/cli` | `ikary` CLI: validate, compile, generate _(placeholder)_ |
 
 ## Dependency graph
 
@@ -86,8 +86,8 @@ flowchart TD
 ::: code-group
 
 ```typescript [Node.js]
-import { loadManifestFromFile } from '@ikary-manifest/loader';
-import { compileCellApp } from '@ikary-manifest/engine';
+import { loadManifestFromFile } from '@ikary/loader';
+import { compileCellApp } from '@ikary/engine';
 
 const loaded = await loadManifestFromFile('manifest.yaml');
 if (loaded.valid) {

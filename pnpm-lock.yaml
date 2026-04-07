@@ -75,13 +75,13 @@ importers:
         specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../contracts/node/contract
-      '@ikary-manifest/engine':
+      '@ikary/engine':
         specifier: workspace:*
         version: link:../../contracts/node/engine
-      '@ikary-manifest/loader':
+      '@ikary/loader':
         specifier: workspace:*
         version: link:../../contracts/node/loader
       '@types/prompts':
@@ -99,7 +99,7 @@ importers:
 
   apps/ikary:
     dependencies:
-      '@ikary-manifest/cli':
+      '@ikary/cli':
         specifier: workspace:*
         version: link:../cli
 
@@ -121,7 +121,7 @@ importers:
 
   contracts/node/engine:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../contract
     devDependencies:
@@ -137,7 +137,7 @@ importers:
 
   contracts/node/loader:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../contract
       yaml:
@@ -159,16 +159,16 @@ importers:
 
   docs/playground-app:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../contracts/node/contract
-      '@ikary-manifest/engine':
+      '@ikary/engine':
         specifier: workspace:*
         version: link:../../contracts/node/engine
-      '@ikary-manifest/presentation':
+      '@ikary/presentation':
         specifier: workspace:*
         version: link:../../ui/presentation
-      '@ikary-manifest/primitives':
+      '@ikary/primitives':
         specifier: workspace:*
         version: link:../../ui/primitives
       '@tanstack/react-query':
@@ -220,10 +220,10 @@ importers:
 
   runtime-api/node/generator-nest:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../../contracts/node/contract
-      '@ikary-manifest/engine':
+      '@ikary/engine':
         specifier: workspace:*
         version: link:../../../contracts/node/engine
     devDependencies:
@@ -236,13 +236,13 @@ importers:
 
   ui/data:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../contracts/node/contract
-      '@ikary-manifest/presentation':
+      '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
-      '@ikary-manifest/primitives':
+      '@ikary/primitives':
         specifier: workspace:*
         version: link:../primitives
       react:
@@ -280,10 +280,10 @@ importers:
 
   ui/primitives:
     dependencies:
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../contracts/node/contract
-      '@ikary-manifest/presentation':
+      '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
       lucide-react:
@@ -317,16 +317,16 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
-      '@ikary-manifest/contract':
+      '@ikary/contract':
         specifier: workspace:*
         version: link:../../contracts/node/contract
-      '@ikary-manifest/engine':
+      '@ikary/engine':
         specifier: workspace:*
         version: link:../../contracts/node/engine
-      '@ikary-manifest/presentation':
+      '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
-      '@ikary-manifest/primitives':
+      '@ikary/primitives':
         specifier: workspace:*
         version: link:../primitives
       '@tanstack/react-query':

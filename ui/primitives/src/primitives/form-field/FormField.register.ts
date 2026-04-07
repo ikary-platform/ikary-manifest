@@ -1,4 +1,4 @@
-import type { FormFieldPresentation } from '@ikary-manifest/presentation';
+import type { FormFieldPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import type { PrimitiveResolver } from '../../types/PrimitiveTypes';
 import { buildFormFieldViewModel, type BuildFormFieldViewModelInput } from './FormField.adapter';

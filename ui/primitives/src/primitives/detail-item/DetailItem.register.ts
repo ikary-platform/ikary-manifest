@@ -1,4 +1,4 @@
-import type { DetailItem as DetailItemPresentation } from '@ikary-manifest/presentation';
+import type { DetailItem as DetailItemPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import type { PrimitiveResolver } from '../../types/PrimitiveTypes';
 import { buildDetailItemViewModel, type BuildDetailItemViewModelInput } from './DetailItem.adapter';

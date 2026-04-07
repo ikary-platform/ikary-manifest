@@ -6,7 +6,7 @@ import { useEntityList } from '../../../query/hooks/useEntityList';
 import type { ListParams } from '../../../query/shared/list';
 import type { ActionDefinition, RenderedAction } from '../../../types/ActionTypes';
 import type { DataGridViewSort } from '../../data-grid';
-import type { ListPagePresentation } from '@ikary-manifest/presentation';
+import type { ListPagePresentation } from '@ikary/presentation';
 import type { ListPageResolverRuntime } from '../ListPage.resolver';
 // import type { ListPageBulkAction } from './ListPage.types'
 

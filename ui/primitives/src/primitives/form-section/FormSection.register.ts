@@ -1,4 +1,4 @@
-import type { FormSectionPresentation } from '@ikary-manifest/presentation';
+import type { FormSectionPresentation } from '@ikary/presentation';
 import { registerPrimitive } from '../../registry/primitiveRegistry';
 import type { PrimitiveResolver } from '../../types/PrimitiveTypes';
 import { buildFormSectionViewModel, type BuildFormSectionViewModelInput } from './FormSection.adapter';

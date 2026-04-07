@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { deriveEditFields } from './derive-edit-fields';
-import type { FieldDefinition } from '@ikary-manifest/contract';
+import type { FieldDefinition } from '@ikary/contract';
 
 function field(key: string, overrides: Partial<FieldDefinition> = {}): FieldDefinition {
   return { key, type: 'string', label: key, ...overrides } as FieldDefinition;

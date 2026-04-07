@@ -1,4 +1,4 @@
-import { DataGridPresentationSchema, type DataGridPresentation } from '@ikary-manifest/presentation';
+import { DataGridPresentationSchema, type DataGridPresentation } from '@ikary/presentation';
 
 export const DATA_GRID_PRESENTATION_EXAMPLE: DataGridPresentation = DataGridPresentationSchema.parse({
   type: 'data-grid',

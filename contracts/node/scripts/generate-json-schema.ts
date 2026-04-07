@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 import {
   CellManifestV1Schema,
   EntityDefinitionSchema,
-} from '@ikary-manifest/contract';
+} from '@ikary/contract';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(__dirname, '..', 'dist', 'schemas');

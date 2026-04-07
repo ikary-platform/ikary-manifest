@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { deriveRelationProviders } from '../derive-relation-providers';
-import type { EntityDefinition } from '@ikary-manifest/contract';
+import type { EntityDefinition } from '@ikary/contract';
 
 function makeEntity(relations: unknown[] = []): EntityDefinition {
   return { key: 'customer', label: 'Customer', fields: [], relations } as unknown as EntityDefinition;

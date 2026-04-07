@@ -1,4 +1,4 @@
-import type { CellManifestV1, ValidationError } from '@ikary-manifest/contract';
+import type { CellManifestV1, ValidationError } from '@ikary/contract';
 
 export interface LoadManifestOptions {
   /** When true, skip semantic validation (only structural parse). Default: false */

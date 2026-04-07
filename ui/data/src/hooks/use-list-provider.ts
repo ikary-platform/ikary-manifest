@@ -1,5 +1,5 @@
-import type { EntityRouteParams } from '@ikary-manifest/contract';
-import type { DataProviderDefinition } from '@ikary-manifest/contract';
+import type { EntityRouteParams } from '@ikary/contract';
+import type { DataProviderDefinition } from '@ikary/contract';
 import { useDataHooks } from '../data-hooks';
 import { resolveIdFrom } from '../resolve-id-from';
 
