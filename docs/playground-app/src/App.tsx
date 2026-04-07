@@ -78,8 +78,30 @@ export function App() {
               ))}
             </nav>
 
+            {/* External nav links — same style as VitePress external nav items */}
+            <div className="flex items-center h-full ml-2 border-l border-[rgba(171,193,224,0.3)] dark:border-[rgba(171,193,224,0.1)] pl-3 gap-0">
+              <a
+                href="https://ikary-platform.github.io/ikary-manifest/"
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
+              >
+                Documentation
+                <ExternalLinkIcon />
+              </a>
+              <a
+                href="https://ikary.co"
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
+              >
+                ikary.co
+                <ExternalLinkIcon />
+              </a>
+            </div>
+
             {/* Theme toggle + GitHub — mirroring VitePress nav social / appearance area */}
-            <div className="flex items-center gap-1 ml-3">
+            <div className="flex items-center gap-1 ml-1">
               <button
                 onClick={toggle}
                 aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -113,6 +135,16 @@ export function App() {
 }
 
 /* ── Icons — inline SVG so no extra dependency ── */
+
+// Exact same icon VitePress uses for external nav links (Material Design "call_made")
+function ExternalLinkIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="inline-block opacity-70">
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M9 5v2h6.59L4 18.59 5.41 20 17 8.41V15h2V5H9z" />
+    </svg>
+  );
+}
 
 function SunIcon() {
   return (
