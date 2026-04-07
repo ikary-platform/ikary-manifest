@@ -256,13 +256,13 @@ export const PRIMITIVE_SAMPLES: Record<string, unknown> = {
     type: 'card-list',
     layout: { columns: '3' },
     card: {
-      title: { field: 'name' },
-      subtitle: { field: 'email' },
+      titleField: 'name',
+      subtitleField: 'email',
       fields: [
         { key: 'status', label: 'Status', field: 'status', valueType: 'badge' },
         { key: 'revenue', label: 'Revenue', field: 'revenue', valueType: 'currency' },
       ],
-      primaryAction: { label: 'Open', actionKey: 'open' },
+      badge: { field: 'status' },
     },
     emptyState: { title: 'No records', description: 'Create the first one.' },
   },
@@ -322,11 +322,10 @@ export const PRIMITIVE_SAMPLES: Record<string, unknown> = {
 
   'detail-item': {
     type: 'detail-item',
-    kind: 'field-value',
+    kind: 'link',
     key: 'email',
     label: 'Email Address',
     field: 'email',
-    valueType: 'link',
   },
 
   'detail-section': {
