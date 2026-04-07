@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import type { TabsResolvedItem, TabsViewProps } from './Tabs.types';
 
-export function Tabs({ items, activeKey, overflowMode = 'scroll', collapseBelow, dense = false }: TabsViewProps) {
+export function Tabs({ items = [], activeKey, overflowMode = 'scroll', collapseBelow, dense = false }: TabsViewProps) {
   const navigate = useNavigate();
   const visibleItems = items.filter((item) => !item.hidden);
 

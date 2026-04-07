@@ -14,7 +14,8 @@
     "@ikary-manifest/primitives": "workspace:*",
     "@tanstack/react-query": "^5.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.30.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

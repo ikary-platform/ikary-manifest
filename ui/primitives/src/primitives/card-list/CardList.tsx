@@ -12,7 +12,7 @@ import type {
 } from './CardList.types';
 
 export function CardList<TRecord = Record<string, unknown>>({
-  items,
+  items = [] as CardListResolvedCard<TRecord>[],
   columns = '3',
   emptyState,
   dense = false,
