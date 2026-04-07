@@ -1,3 +1,4 @@
+import type { BaseSyntheticEvent } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import type { EntityDefinition } from '@ikary-manifest/contract';
 import type { ToastAPI } from '../../ui-components';
@@ -26,7 +27,7 @@ export function useOverviewTabForm({
   dataMode,
   toast,
 }: UseOverviewTabFormOptions) {
-  const submitForm = form.handleSubmit(async (data: Record<string, unknown>) => {
+  const submitForm: (e?: BaseSyntheticEvent) => Promise<void> = form.handleSubmit(async (data: Record<string, unknown>) => {
     mode.beginSave();
     try {
       const version = Number(record['_version'] ?? record['version'] ?? 1);

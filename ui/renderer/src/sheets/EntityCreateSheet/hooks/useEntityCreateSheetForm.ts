@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type BaseSyntheticEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ export function useEntityCreateSheetForm({ entity, onOpenChange }: UseEntityCrea
     defaultValues,
   });
 
-  const submitForm = handleSubmit(async (data: Record<string, unknown>) => {
+  const submitForm: (e?: BaseSyntheticEvent) => Promise<void> = handleSubmit(async (data: Record<string, unknown>) => {
     try {
       const created = await dataStore.create(entity.key, data);
       const id = String(created['id']);
