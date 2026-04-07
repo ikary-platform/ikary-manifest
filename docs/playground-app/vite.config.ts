@@ -1,12 +1,32 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, '../..');
+
+/** Serve repo-root files (manifests/, contracts/) during local dev. */
+function serveRepoRoot() {
+  return {
+    name: 'serve-repo-root',
+    configureServer(server) {
+      server.middlewares.use('/repo', (req, res, next) => {
+        const filePath = path.join(repoRoot, decodeURIComponent(req.url || ''));
+        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+          res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+          fs.createReadStream(filePath).pipe(res);
+        } else {
+          next();
+        }
+      });
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), serveRepoRoot()],
   base: '/ikary-manifest/playground/',
   resolve: {
     alias: {
