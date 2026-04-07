@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary-manifest/engine';
 import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
 import { JsonEditor } from '../components/JsonEditor';
@@ -42,7 +43,11 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
 
 export function ApiRuntimeSection() {
   const [json, setJson] = useState(SAMPLE_ENTITY_JSON);
-  const [outputTab, setOutputTab] = useState<OutputTab>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const tabParam = searchParams.get('tab') as OutputTab | null;
+  const outputTab: OutputTab = tabParam && OUTPUT_TABS.some((t) => t.key === tabParam) ? tabParam : 'overview';
+  const setOutputTab = (t: OutputTab) => setSearchParams(t === 'overview' ? {} : { tab: t }, { replace: true });
 
   const { entity, parseError } = useMemo(() => {
     try {

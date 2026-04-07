@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -44,10 +45,32 @@ const CATEGORY_DESCRIPTIONS: Record<SchemaCategory | 'all', string> = {
 type DetailTab = 'documentation' | 'metadata';
 
 export function ContractsSection() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<SchemaCategory | 'all'>('all');
-  const [selected, setSelected] = useState<SchemaCatalogEntry>(CELL_SCHEMA_CATALOG[0]);
-  const [detailTab, setDetailTab] = useState<DetailTab>('documentation');
+
+  const categoryParam = searchParams.get('category') as SchemaCategory | 'all' | null;
+  const category: SchemaCategory | 'all' = categoryParam && CATEGORIES.includes(categoryParam) ? categoryParam : 'all';
+
+  const schemaParam = searchParams.get('schema');
+  const selected: SchemaCatalogEntry = (schemaParam && CELL_SCHEMA_CATALOG.find((e) => e.name === schemaParam)) || CELL_SCHEMA_CATALOG[0];
+
+  const tabParam = searchParams.get('tab') as DetailTab | null;
+  const detailTab: DetailTab = tabParam === 'metadata' ? 'metadata' : 'documentation';
+
+  const updateParams = useCallback((updates: Record<string, string | null>) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      for (const [k, v] of Object.entries(updates)) {
+        if (v === null || v === undefined) next.delete(k);
+        else next.set(k, v);
+      }
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
+
+  const setCategory = (c: SchemaCategory | 'all') => updateParams({ category: c === 'all' ? null : c });
+  const setSelected = (e: SchemaCatalogEntry) => updateParams({ schema: e.name });
+  const setDetailTab = (t: DetailTab) => updateParams({ tab: t === 'documentation' ? null : t });
 
   const { data: yamlContent, isLoading: yamlLoading, isError: yamlError } = useQuery({
     queryKey: ['yaml', selected.yamlPath],

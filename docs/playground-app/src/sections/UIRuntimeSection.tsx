@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { PrimitiveRenderer, RuntimeContextProvider } from '@ikary-manifest/primitives';
 import { validatePresentation } from '@ikary-manifest/presentation';
 import { JsonEditor } from '../components/JsonEditor';
@@ -16,16 +16,35 @@ const RIGHT_TABS: Array<{ key: RightTab; label: string }> = [
 ];
 
 export function UIRuntimeSection() {
-  const [primitive, setPrimitive] = useState<string>(PRIMITIVES[0]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const primitiveParam = searchParams.get('primitive');
+  const primitive: string = primitiveParam && (PRIMITIVES as readonly string[]).includes(primitiveParam) ? primitiveParam : PRIMITIVES[0];
+
+  const tabParam = searchParams.get('tab') as RightTab | null;
+  const rightTab: RightTab = tabParam && RIGHT_TABS.some((t) => t.key === tabParam) ? tabParam : 'preview';
+
   const [json, setJson] = useState(() =>
-    JSON.stringify(PRIMITIVE_SAMPLES[PRIMITIVES[0]], null, 2),
+    JSON.stringify(PRIMITIVE_SAMPLES[primitive], null, 2),
   );
-  const [rightTab, setRightTab] = useState<RightTab>('preview');
 
   const handlePrimitiveChange = useCallback((p: string) => {
-    setPrimitive(p);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('primitive', p);
+      return next;
+    }, { replace: true });
     setJson(JSON.stringify(PRIMITIVE_SAMPLES[p] ?? {}, null, 2));
-  }, []);
+  }, [setSearchParams]);
+
+  const setRightTab = (t: RightTab) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (t === 'preview') next.delete('tab');
+      else next.set('tab', t);
+      return next;
+    }, { replace: true });
+  };
 
   const { props, parseError } = useMemo(() => {
     try {
@@ -125,11 +144,9 @@ function PreviewTab({
 
   return (
     <div className="p-4 min-h-full">
-      <MemoryRouter>
-        <RuntimeContextProvider context={MOCK_RUNTIME}>
-          <PrimitiveRenderer primitive={primitive} props={props} runtime={MOCK_RUNTIME} />
-        </RuntimeContextProvider>
-      </MemoryRouter>
+      <RuntimeContextProvider context={MOCK_RUNTIME}>
+        <PrimitiveRenderer primitive={primitive} props={props} runtime={MOCK_RUNTIME} />
+      </RuntimeContextProvider>
     </div>
   );
 }
