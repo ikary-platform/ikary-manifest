@@ -3,10 +3,20 @@ import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from 
 import type { EntityDefinition, FieldDefinition } from '@ikary-manifest/contract';
 import { JsonEditor } from '../components/JsonEditor';
 import { SAMPLE_ENTITY_JSON } from '../data/api-sample-entity';
+import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';
+import { CreateFieldsTab } from '../components/api-runtime/CreateFieldsTab';
+import { EditFieldsTab } from '../components/api-runtime/EditFieldsTab';
+import { ScopeRegistryTab } from '../components/api-runtime/ScopeRegistryTab';
+import { ApiPreviewTab } from '../components/api-runtime/ApiPreviewTab';
 
-type OutputTab = 'create-fields' | 'edit-fields' | 'scope-registry';
+type OutputTab = 'overview' | 'create-fields' | 'edit-fields' | 'scope-registry' | 'api-preview';
 
 const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }> = [
+  {
+    key: 'overview',
+    label: 'Entity Overview',
+    description: 'Visual representation of the entity: fields, relations, lifecycle, capabilities, policies, and validation.',
+  },
   {
     key: 'create-fields',
     label: 'Create Fields',
@@ -23,11 +33,16 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
     description:
       'Permission scopes derived from the entity: standard CRUD scopes, lifecycle transitions, and capability scopes.',
   },
+  {
+    key: 'api-preview',
+    label: 'API Preview',
+    description: 'Generated OpenAPI 3.0 specification for the REST API this entity would produce.',
+  },
 ];
 
 export function ApiRuntimeSection() {
   const [json, setJson] = useState(SAMPLE_ENTITY_JSON);
-  const [outputTab, setOutputTab] = useState<OutputTab>('create-fields');
+  const [outputTab, setOutputTab] = useState<OutputTab>('overview');
 
   const { entity, parseError } = useMemo(() => {
     try {
@@ -37,21 +52,19 @@ export function ApiRuntimeSection() {
     }
   }, [json]);
 
-  const output = useMemo(() => {
+  const derived = useMemo(() => {
     if (!entity) return null;
     try {
-      switch (outputTab) {
-        case 'create-fields':
-          return deriveCreateFields((entity.fields ?? []) as FieldDefinition[]);
-        case 'edit-fields':
-          return deriveEditFields((entity.fields ?? []) as FieldDefinition[]);
-        case 'scope-registry':
-          return deriveEntityScopeRegistry(entity);
-      }
+      const fields = (entity.fields ?? []) as FieldDefinition[];
+      return {
+        createFields: deriveCreateFields(fields),
+        editFields: deriveEditFields(fields),
+        scopes: deriveEntityScopeRegistry(entity),
+      };
     } catch (e) {
-      return { error: String(e) };
+      return null;
     }
-  }, [entity, outputTab]);
+  }, [entity]);
 
   const currentTab = OUTPUT_TABS.find((t) => t.key === outputTab)!;
 
@@ -68,15 +81,15 @@ export function ApiRuntimeSection() {
         <JsonEditor value={json} onChange={setJson} error={parseError} />
       </div>
 
-      {/* Right: derived output */}
+      {/* Right: visual output */}
       <div className="w-1/2 flex flex-col">
         {/* Tab bar */}
-        <div className="shrink-0 flex border-b border-gray-200 px-2 pt-1 gap-0.5">
+        <div className="shrink-0 flex border-b border-gray-200 px-2 pt-1 gap-0.5 overflow-x-auto">
           {OUTPUT_TABS.map((t) => (
             <button
               key={t.key}
               onClick={() => setOutputTab(t.key)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-t border-b-2 transition-colors ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-t border-b-2 transition-colors whitespace-nowrap ${
                 outputTab === t.key
                   ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -97,11 +110,15 @@ export function ApiRuntimeSection() {
           <div className="flex-1 flex items-center justify-center p-6">
             <p className="text-sm text-red-500">Fix the JSON error to see derived output.</p>
           </div>
-        ) : (
-          <pre className="flex-1 overflow-auto p-4 text-xs font-mono text-gray-800 bg-white leading-relaxed">
-            {JSON.stringify(output, null, 2)}
-          </pre>
-        )}
+        ) : entity && derived ? (
+          <div className="flex-1 overflow-y-auto p-4">
+            {outputTab === 'overview' && <EntityOverviewTab entity={entity} />}
+            {outputTab === 'create-fields' && <CreateFieldsTab fields={derived.createFields} />}
+            {outputTab === 'edit-fields' && <EditFieldsTab fields={derived.editFields} />}
+            {outputTab === 'scope-registry' && <ScopeRegistryTab scopes={derived.scopes} />}
+            {outputTab === 'api-preview' && <ApiPreviewTab entity={entity} />}
+          </div>
+        ) : null}
       </div>
     </div>
   );
