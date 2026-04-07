@@ -1,3 +1,4 @@
+import type { BaseSyntheticEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -37,7 +38,7 @@ export function useEntityEditForm({
   const detailPath = buildEntityDetailPath(manifest, entityKey, recordId);
   const listPath = buildEntityListPath(manifest, entityKey);
 
-  const submitForm = handleSubmit(async (data: Record<string, unknown>) => {
+  const submitForm: (e?: BaseSyntheticEvent) => Promise<void> = handleSubmit(async (data: Record<string, unknown>) => {
     await dataStore.update(entityKey, recordId, data);
     if (detailPath) {
       navigate(detailPath);
