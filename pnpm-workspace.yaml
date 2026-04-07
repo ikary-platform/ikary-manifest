@@ -3,3 +3,4 @@ packages:
   - 'runtime-api/node/*'
   - 'ui/*'
   - 'apps/*'
+  - 'docs/playground-app'

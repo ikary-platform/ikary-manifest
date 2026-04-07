@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: Getting Started
       link: /guide/getting-started
+    - theme: alt
+      text: Open Playground
+      link: /playground
 
 features:
   - icon:

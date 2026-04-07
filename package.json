@@ -15,8 +15,9 @@
     "coverage:ui": "vitest run --coverage --root ui/presentation && vitest run --coverage --root ui/primitives && vitest run --coverage --root ui/data && vitest run --coverage --root ui/renderer",
     "coverage:python": "cd contracts/python && python3 -m pytest --cov=ikary_manifest --cov-report=term-missing --cov-fail-under=100 tests/",
     "generate:schema": "tsx contracts/node/scripts/generate-json-schema.ts",
+    "playground:build": "pnpm --filter @ikary-manifest/playground run build",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "pnpm playground:build && vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
