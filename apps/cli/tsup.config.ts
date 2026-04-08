@@ -1,7 +1,22 @@
-import { readFileSync } from 'fs';
+import { readFileSync, copyFileSync, mkdirSync, existsSync } from 'fs';
+import { join } from 'path';
 import { defineConfig } from 'tsup';
 
 const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+
+/** Copy the standalone renderer bundle into dist/assets/ after the CLI builds. */
+function copyRendererBundle(): void {
+  const src = join(__dirname, '..', '..', 'libs', 'renderer', 'dist', 'standalone', 'renderer.iife.js');
+  const destDir = join(__dirname, 'dist', 'assets');
+  const dest = join(destDir, 'renderer.iife.js');
+  if (existsSync(src)) {
+    mkdirSync(destDir, { recursive: true });
+    copyFileSync(src, dest);
+    console.log('[cli] Copied renderer.iife.js →', dest);
+  } else {
+    console.warn('[cli] renderer.iife.js not found — run pnpm --filter @ikary/renderer build:standalone first');
+  }
+}
 
 export default defineConfig([
   {
@@ -17,6 +32,7 @@ export default defineConfig([
     define: {
       'process.env.CLI_VERSION': JSON.stringify(pkg.version),
     },
+    onSuccess: copyRendererBundle,
   },
   {
     entry: ['src/index.ts'],
