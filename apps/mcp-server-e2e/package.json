@@ -1,0 +1,21 @@
+{
+  "name": "@ikary/mcp-server-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "description": "End-to-end tests for the IKARY MCP server and REST API",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
