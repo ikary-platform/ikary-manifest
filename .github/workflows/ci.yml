@@ -58,3 +58,39 @@ jobs:
 
       - run: python3 -m pytest --cov=ikary_manifest --cov-report=term-missing --cov-fail-under=100 tests/
         working-directory: contracts/python
+
+  e2e:
+    name: E2E — MCP Server & API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - name: Start MCP server
+        run: pnpm --filter @ikary/mcp-server start &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3100/api/schemas/manifest --timeout 30000
+
+      - name: Run E2E tests
+        run: pnpm --filter @ikary/mcp-server-e2e test
+        env:
+          IKARY_API_URL: http://localhost:3100
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: apps/mcp-server-e2e/test-results/junit.xml
+          retention-days: 30

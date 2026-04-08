@@ -13,7 +13,13 @@ export function createProgram(): Command {
   program
     .name('ikary')
     .description('IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests')
-    .version(process.env.CLI_VERSION ?? '0.0.0');
+    .version(process.env.CLI_VERSION ?? '0.0.0')
+    .option('--offline', 'Skip API calls and use local validation only')
+    .hook('preAction', () => {
+      if (program.opts().offline) {
+        process.env.IKARY_OFFLINE = '1';
+      }
+    });
 
   program
     .command('init [project-name]')
@@ -23,6 +29,7 @@ export function createProgram(): Command {
   program
     .command('validate <path>')
     .description('Validate a Cell manifest JSON file')
+    .option('--explain', 'Explain validation errors with fix suggestions')
     .action(validateCommand);
 
   program

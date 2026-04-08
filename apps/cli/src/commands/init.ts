@@ -10,7 +10,10 @@ import {
   generateClaudeMd,
   generateAddEntityCommand,
   generateValidateCommand,
+  generateRecommendCommand,
+  generateBrowsePrimitivesCommand,
   generateClaudeSettings,
+  generateMcpConfig,
 } from '../init/templates.js';
 
 export async function initCommand(projectName?: string): Promise<void> {
@@ -48,9 +51,16 @@ export async function initCommand(projectName?: string): Promise<void> {
     // Write Claude Code slash commands
     await writeFile(join(projectDir, '.claude', 'commands', 'add-entity.md'), generateAddEntityCommand(), 'utf-8');
     await writeFile(join(projectDir, '.claude', 'commands', 'validate.md'), generateValidateCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'recommend.md'), generateRecommendCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'browse-primitives.md'), generateBrowsePrimitivesCommand(), 'utf-8');
 
     // Write Claude Code settings
     await writeFile(join(projectDir, '.claude', 'settings.json'), generateClaudeSettings(), 'utf-8');
+
+    // Write MCP config for Claude Code
+    if (options.aiTool === 'claude-code') {
+      await writeFile(join(projectDir, '.mcp.json'), generateMcpConfig(), 'utf-8');
+    }
 
     spinner.succeed(theme.success('Project created'));
 
@@ -58,8 +68,11 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.body('Created:');
     fmt.body(`  ${theme.accent('manifest.json')}          Cell Manifest`);
     fmt.body(`  ${theme.accent('CLAUDE.md')}              AI context for Claude Code`);
-    fmt.body(`  ${theme.accent('.claude/commands/')}       Slash commands (/add-entity, /validate)`);
+    fmt.body(`  ${theme.accent('.claude/commands/')}       Slash commands (/add-entity, /validate, /recommend, /browse-primitives)`);
     fmt.body(`  ${theme.accent('.claude/settings.json')}   Permissions for ikary CLI`);
+    if (options.aiTool === 'claude-code') {
+      fmt.body(`  ${theme.accent('.mcp.json')}              MCP server config (ikary-manifest)`);
+    }
 
     fmt.section('Install');
     fmt.newline();
@@ -74,7 +87,9 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.body(`  ${theme.accent('cd ' + options.name)}`);
     if (options.aiTool === 'claude-code') {
       fmt.body(`  ${theme.accent('claude')}                   Open Claude Code`);
-      fmt.body(`  ${theme.accent('/add-entity')}              Use the slash command to add entities`);
+      fmt.body(`  ${theme.accent('/recommend')}               Scaffold entities from your app description`);
+      fmt.body(`  ${theme.accent('/add-entity')}              Add entities one at a time`);
+      fmt.body(`  ${theme.accent('/browse-primitives')}       Explore available UI components`);
     } else {
       fmt.body(`  Edit ${theme.accent('manifest.json')} to add entities`);
     }

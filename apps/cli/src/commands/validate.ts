@@ -2,8 +2,9 @@ import { resolve } from 'node:path';
 import * as fmt from '../output/format.js';
 import { loadManifestJson } from '../utils/manifest-loader.js';
 import { theme } from '../output/theme.js';
+import { api } from '../api/index.js';
 
-export async function validateCommand(path: string): Promise<void> {
+export async function validateCommand(path: string, options: { explain?: boolean }): Promise<void> {
   const filePath = resolve(path);
   fmt.section('Validating manifest');
   fmt.muted(filePath);
@@ -33,6 +34,23 @@ export async function validateCommand(path: string): Promise<void> {
         const location = err.path || 'root';
         fmt.error(`${theme.muted(location)} ${err.message}`);
       }
+
+      if (options.explain && result.errors.length > 0) {
+        fmt.newline();
+        const apiErrors = result.errors.map((e) => ({ field: e.path, message: e.message }));
+        const explained = await api.explainErrors(apiErrors);
+        if (explained.ok && explained.data.length > 0) {
+          fmt.section('Explanations');
+          fmt.newline();
+          for (const ex of explained.data) {
+            fmt.body(`  ${theme.accent(ex.path)}`);
+            fmt.body(`  Problem: ${ex.problem}`);
+            fmt.body(`  Fix:     ${ex.fix}`);
+            fmt.newline();
+          }
+        }
+      }
+
       fmt.newline();
       process.exitCode = 1;
     }
