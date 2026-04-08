@@ -1,0 +1,17 @@
+node_modules
+**/node_modules
+**/dist
+**/.turbo
+.git
+.github
+docs
+ui
+runtime-api
+contracts/python
+contracts/node/contract/coverage
+contracts/node/engine/coverage
+contracts/node/loader/coverage
+apps/cli
+apps/ikary
+*.md
+!manifests/**
