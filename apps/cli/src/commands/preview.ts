@@ -1,13 +1,42 @@
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
+import { writeFileSync, copyFileSync, mkdirSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import * as fmt from '../output/format.js';
 import { compileManifestJson } from '../utils/manifest-loader.js';
+import { generatePreviewHtml } from '../utils/generate-preview-html.js';
+import { openBrowser } from '../utils/open-browser.js';
 import { theme } from '../output/theme.js';
+
+/** Absolute path to the bundled renderer IIFE shipped with the CLI. */
+function getRendererBundlePath(): string | null {
+  try {
+    const __dirname = fileURLToPath(new URL('.', import.meta.url));
+    const bundlePath = join(__dirname, 'assets', 'renderer.iife.js');
+    return existsSync(bundlePath) ? bundlePath : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function previewCommand(path: string, _options: { port?: string }): Promise<void> {
   const filePath = resolve(path);
   fmt.section('Preview manifest');
   fmt.muted(filePath);
   fmt.newline();
+
+  const bundlePath = getRendererBundlePath();
+  if (!bundlePath) {
+    // Fallback: direct to the online playground
+    fmt.body('No local renderer bundle found. Open the IKARY Playground:');
+    fmt.newline();
+    fmt.body(`  ${theme.accent('https://documentation.ikary.co/playground/app-runtime')}`);
+    fmt.newline();
+    fmt.body(`  Run ${theme.accent('ikary compile ' + path + ' --stdout')} and paste the output there.`);
+    fmt.newline();
+    return;
+  }
 
   const spinner = fmt.createSpinner('Compiling manifest...');
   spinner.start();
@@ -25,19 +54,25 @@ export async function previewCommand(path: string, _options: { port?: string }):
       return;
     }
 
-    spinner.succeed(theme.success('Manifest compiled'));
+    spinner.text = 'Generating preview...';
+
+    // Use a stable temp directory keyed by manifest path so re-runs reuse it
+    const hash = createHash('sha1').update(filePath).digest('hex').slice(0, 8);
+    const previewDir = join(tmpdir(), `ikary-preview-${hash}`);
+    mkdirSync(previewDir, { recursive: true });
+
+    const htmlPath = join(previewDir, 'index.html');
+    writeFileSync(htmlPath, generatePreviewHtml(result.manifest));
+    copyFileSync(bundlePath, join(previewDir, 'renderer.iife.js'));
+
+    spinner.succeed(theme.success('Preview ready'));
     fmt.newline();
-    fmt.body('To preview your manifest:');
+    fmt.body(`Opening preview in your browser…`);
     fmt.newline();
-    fmt.body(`  1. Open the IKARY Playground:`);
-    fmt.body(`     ${theme.accent('https://documentation.ikary.co/playground/app-runtime')}`);
+    fmt.muted(htmlPath);
     fmt.newline();
-    fmt.body(`  2. Paste the full Cell Manifest JSON into the left panel`);
-    fmt.newline();
-    fmt.body(`  3. Or run ${theme.accent('ikary compile ' + path + ' --stdout')} and copy the output`);
-    fmt.newline();
-    fmt.muted('Tip: A local preview server is coming in a future release.');
-    fmt.newline();
+
+    await openBrowser(htmlPath);
   } catch (err) {
     spinner.fail(theme.error('Preview failed'));
     fmt.newline();
