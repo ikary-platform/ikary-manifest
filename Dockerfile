@@ -18,7 +18,7 @@ COPY contracts/node/engine/ contracts/node/engine/
 COPY contracts/node/loader/ contracts/node/loader/
 COPY apps/mcp-server/ apps/mcp-server/
 COPY manifests/ manifests/
-RUN pnpm --filter @ikary/mcp-server build
+RUN pnpm --filter @ikary/contract build && pnpm --filter @ikary/engine build && pnpm --filter @ikary/loader build && pnpm --filter @ikary/mcp-server build
 
 # ── Production image ──
 FROM base AS production
