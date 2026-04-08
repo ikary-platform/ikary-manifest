@@ -4,10 +4,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ContractsSection } from './sections/ContractsSection';
 import { ApiRuntimeSection } from './sections/ApiRuntimeSection';
 import { UIRuntimeSection } from './sections/UIRuntimeSection';
+import { AppRuntimeSection } from './sections/AppRuntimeSection';
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const TABS = [
+  { label: 'App Runtime', path: '/app-runtime' },
   { label: 'Contracts', path: '/contracts' },
   { label: 'API Runtime', path: '/api-runtime' },
   { label: 'UI Runtime', path: '/ui-runtime' },
@@ -131,10 +133,11 @@ export function App() {
         {/* ── Content ── */}
         <main className="flex-1 overflow-hidden">
           <Routes>
+            <Route path="/app-runtime" element={<AppRuntimeSection />} />
             <Route path="/contracts" element={<ContractsSection />} />
             <Route path="/api-runtime" element={<ApiRuntimeSection />} />
             <Route path="/ui-runtime" element={<UIRuntimeSection />} />
-            <Route path="*" element={<Navigate to="/contracts" replace />} />
+            <Route path="*" element={<Navigate to="/app-runtime" replace />} />
           </Routes>
         </main>
       </div>

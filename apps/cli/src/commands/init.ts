@@ -60,7 +60,14 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.body(`  ${theme.accent('CLAUDE.md')}              AI context for Claude Code`);
     fmt.body(`  ${theme.accent('.claude/commands/')}       Slash commands (/add-entity, /validate)`);
     fmt.body(`  ${theme.accent('.claude/settings.json')}   Permissions for ikary CLI`);
+
+    fmt.section('Install');
     fmt.newline();
+    fmt.body(`  ${theme.accent('npm install -g @ikary/cli')}`);
+    fmt.newline();
+    fmt.muted('  This registers the ikary command globally.');
+    fmt.muted('  Alternatively, prefix commands with npx:');
+    fmt.muted(`  npx @ikary/cli validate manifest.json`);
 
     fmt.section('Next steps');
     fmt.newline();
