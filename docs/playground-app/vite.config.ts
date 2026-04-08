@@ -27,7 +27,7 @@ function serveRepoRoot() {
 
 export default defineConfig({
   plugins: [react(), serveRepoRoot()],
-  base: '/ikary-manifest/playground/',
+  base: '/playground/',
   resolve: {
     alias: {
       '@ikary/contract': path.resolve(__dirname, '../../contracts/node/contract/src/index.ts'),

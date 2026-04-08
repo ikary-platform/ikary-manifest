@@ -18,7 +18,7 @@ export default defineConfig({
   title: 'IKARY Manifest',
   description:
     'Open-source declarative cell contracts — AI should generate manifests, not code.',
-  base: '/ikary-manifest/',
+  base: '/',
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
@@ -64,7 +64,7 @@ export default defineConfig({
         enforce: 'pre',
         configureServer(server) {
           const repoRoot = path.resolve(__dirname, '../..');
-          server.middlewares.use('/ikary-manifest/repo', (req, res, next) => {
+          server.middlewares.use('/repo', (req, res, next) => {
             const rel = decodeURIComponent((req.url ?? '/').replace(/^\//, ''));
             const filePath = path.join(repoRoot, rel);
             if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
@@ -85,7 +85,7 @@ export default defineConfig({
         enforce: 'pre',
         configureServer(server) {
           const playgroundDir = path.join(__dirname, '../public/playground');
-          server.middlewares.use('/ikary-manifest/playground', (req, res, next) => {
+          server.middlewares.use('/playground', (req, res, next) => {
             const url = req.url ?? '/';
             const rel = url === '' ? 'index.html' : url.replace(/^\//, '');
             const filePath = path.join(playgroundDir, rel || 'index.html');
