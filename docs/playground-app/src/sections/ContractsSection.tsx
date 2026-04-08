@@ -9,7 +9,7 @@ import type { SchemaCategory, SchemaCatalogEntry } from '@ikary/contract';
 const GITHUB_BLOB = 'https://github.com/ikary-platform/ikary-manifest/blob/main';
 const RAW_BASE =
   typeof window !== 'undefined' && window.location.hostname === 'localhost'
-    ? '/ikary-manifest/repo'
+    ? '/repo'
     : 'https://raw.githubusercontent.com/ikary-platform/ikary-manifest/main';
 
 const CATEGORIES: Array<SchemaCategory | 'all'> = [

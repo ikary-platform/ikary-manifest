@@ -47,18 +47,18 @@ export function App() {
 
             {/* Logo — light / dark variants, height mirrors .VPNavBarTitle .logo */}
             <a
-              href="https://ikary-platform.github.io/ikary-manifest/"
+              href="https://documentation.ikary.co/"
               target="_blank"
               rel="noreferrer"
               className="flex items-center shrink-0 mr-4"
             >
               <img
-                src="/ikary-manifest/brand/original-full.svg"
+                src="/brand/original-full.svg"
                 alt="IKARY Manifest"
                 className="h-[22px] sm:h-[26px] w-auto block dark:hidden"
               />
               <img
-                src="/ikary-manifest/brand/white-full.svg"
+                src="/brand/white-full.svg"
                 alt="IKARY Manifest"
                 className="h-[22px] sm:h-[26px] w-auto hidden dark:block"
               />
@@ -88,7 +88,7 @@ export function App() {
             {/* External nav links — same style as VitePress external nav items */}
             <div className="flex items-center h-full ml-2 gap-0">
               <a
-                href="https://ikary-platform.github.io/ikary-manifest/"
+                href="https://documentation.ikary.co/"
                 target="_blank"
                 rel="noreferrer"
                 className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
