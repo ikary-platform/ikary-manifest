@@ -7,7 +7,7 @@ import { App } from './App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename="/ikary-manifest/playground">
+    <BrowserRouter basename="/playground">
       <App />
     </BrowserRouter>
   </React.StrictMode>,
