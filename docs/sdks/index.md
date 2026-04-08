@@ -42,5 +42,3 @@ The same schema discovery, validation, and guidance capabilities are available o
 ## Where to go next
 
 - [Node SDK](/sdks/node) for the current reference implementation
-- [Python SDK](/sdks/python) for the current Python consumer and roadmap
-- [Manifest Model](/manifest/) for the YAML-first authority model that both SDKs follow
