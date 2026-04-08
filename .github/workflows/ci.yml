@@ -86,3 +86,11 @@ jobs:
         run: pnpm --filter @ikary/mcp-server-e2e test
         env:
           IKARY_API_URL: http://localhost:3100
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: apps/mcp-server-e2e/test-results/junit.xml
+          retention-days: 30
