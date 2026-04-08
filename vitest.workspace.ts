@@ -1,5 +1,4 @@
 export default [
-  'contracts/node/*/vitest.config.ts',
-  'ui/*/vitest.config.ts',
+  'libs/*/vitest.config.ts',
   'apps/*/vitest.config.ts',
 ];

@@ -196,8 +196,8 @@ access (curl, fetch, CLI).
 Contract definitions and example manifests live in the public repository:
 https://github.com/ikary-platform/ikary-manifest
 
-- Schema contracts: \`contracts/node/contract/src/\`
-- Compilation engine: \`contracts/node/engine/src/\`
+- Schema contracts: \`libs/contract/src/\`
+- Compilation engine: \`libs/engine/src/\`
 - Example manifests: \`manifests/examples/\`
 `;
 }
