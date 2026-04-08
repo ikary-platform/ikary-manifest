@@ -80,13 +80,13 @@ importers:
     devDependencies:
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../../libs/contract
       '@ikary/engine':
         specifier: workspace:*
-        version: link:../../contracts/node/engine
+        version: link:../../libs/engine
       '@ikary/loader':
         specifier: workspace:*
-        version: link:../../contracts/node/loader
+        version: link:../../libs/loader
       '@types/prompts':
         specifier: ^2.4.9
         version: 2.4.9
@@ -138,13 +138,13 @@ importers:
     devDependencies:
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../../libs/contract
       '@ikary/engine':
         specifier: workspace:*
-        version: link:../../contracts/node/engine
+        version: link:../../libs/engine
       '@ikary/loader':
         specifier: workspace:*
-        version: link:../../contracts/node/loader
+        version: link:../../libs/loader
       '@swc/core':
         specifier: ^1.15.24
         version: 1.15.24
@@ -176,74 +176,20 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  contracts/node/contract:
-    dependencies:
-      zod:
-        specifier: ^3.23.8
-        version: 3.25.76
-    devDependencies:
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
-
-  contracts/node/engine:
-    dependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../contract
-    devDependencies:
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
-
-  contracts/node/loader:
-    dependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../contract
-      yaml:
-        specifier: ^2.7.0
-        version: 2.8.3
-    devDependencies:
-      '@types/node':
-        specifier: ^22.0.0
-        version: 22.19.16
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
-
   docs/playground-app:
     dependencies:
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../../libs/contract
       '@ikary/engine':
         specifier: workspace:*
-        version: link:../../contracts/node/engine
+        version: link:../../libs/engine
       '@ikary/presentation':
         specifier: workspace:*
-        version: link:../../ui/presentation
+        version: link:../../libs/presentation
       '@ikary/primitives':
         specifier: workspace:*
-        version: link:../../ui/primitives
+        version: link:../../libs/primitives
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.96.1(react@19.2.4)
@@ -291,14 +237,11 @@ importers:
         specifier: ^6.0.0
         version: 6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3)
 
-  runtime-api/node/generator-nest:
+  libs/contract:
     dependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../../contracts/node/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../../contracts/node/engine
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
     devDependencies:
       tsup:
         specifier: ^8.0.2
@@ -306,12 +249,15 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  ui/data:
+  libs/data:
     dependencies:
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../contract
       '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
@@ -338,7 +284,45 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  ui/presentation:
+  libs/engine:
+    dependencies:
+      '@ikary/contract':
+        specifier: workspace:*
+        version: link:../contract
+    devDependencies:
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  libs/loader:
+    dependencies:
+      '@ikary/contract':
+        specifier: workspace:*
+        version: link:../contract
+      yaml:
+        specifier: ^2.7.0
+        version: 2.8.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.16
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  libs/presentation:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -351,11 +335,11 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  ui/primitives:
+  libs/primitives:
     dependencies:
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../contract
       '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
@@ -385,17 +369,17 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  ui/renderer:
+  libs/renderer:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
       '@ikary/contract':
         specifier: workspace:*
-        version: link:../../contracts/node/contract
+        version: link:../contract
       '@ikary/engine':
         specifier: workspace:*
-        version: link:../../contracts/node/engine
+        version: link:../engine
       '@ikary/presentation':
         specifier: workspace:*
         version: link:../presentation
@@ -436,6 +420,22 @@ importers:
       vitest:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  runtime-api/node/generator-nest:
+    dependencies:
+      '@ikary/contract':
+        specifier: workspace:*
+        version: link:../../../libs/contract
+      '@ikary/engine':
+        specifier: workspace:*
+        version: link:../../../libs/engine
+    devDependencies:
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
 
 packages:
 

@@ -1,6 +1,5 @@
 packages:
-  - 'contracts/node/*'
+  - 'libs/*'
   - 'runtime-api/node/*'
-  - 'ui/*'
   - 'apps/*'
   - 'docs/playground-app'

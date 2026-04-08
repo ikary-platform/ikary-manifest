@@ -5,17 +5,17 @@ WORKDIR /app
 # ── Install dependencies ──
 FROM base AS deps
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
-COPY contracts/node/contract/package.json contracts/node/contract/package.json
-COPY contracts/node/engine/package.json contracts/node/engine/package.json
-COPY contracts/node/loader/package.json contracts/node/loader/package.json
+COPY libs/contract/package.json libs/contract/package.json
+COPY libs/engine/package.json libs/engine/package.json
+COPY libs/loader/package.json libs/loader/package.json
 COPY apps/mcp-server/package.json apps/mcp-server/package.json
 RUN pnpm install --frozen-lockfile --filter @ikary/mcp-server...
 
 # ── Build ──
 FROM deps AS build
-COPY contracts/node/contract/ contracts/node/contract/
-COPY contracts/node/engine/ contracts/node/engine/
-COPY contracts/node/loader/ contracts/node/loader/
+COPY libs/contract/ libs/contract/
+COPY libs/engine/ libs/engine/
+COPY libs/loader/ libs/loader/
 COPY apps/mcp-server/ apps/mcp-server/
 COPY manifests/ manifests/
 RUN pnpm --filter @ikary/contract build && pnpm --filter @ikary/engine build && pnpm --filter @ikary/loader build && pnpm --filter @ikary/mcp-server build
