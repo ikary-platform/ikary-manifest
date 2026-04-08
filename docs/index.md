@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: Open Playground
       link: /playground
+    - theme: alt
+      text: API Reference
+      link: /api/
 
 features:
   - icon:
