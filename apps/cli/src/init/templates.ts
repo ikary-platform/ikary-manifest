@@ -181,15 +181,33 @@ It exposes 16 tools across four categories:
 Use MCP tools for interactive guidance. Use the REST API for programmatic
 access (curl, fetch, CLI).
 
+## Local stack
+
+Run \`ikary local start manifest.json\` to boot the full local stack:
+
+| Service | URL |
+|---------|-----|
+| Preview | http://localhost:3000 |
+| Data API | http://localhost:4000 |
+| MCP Server | http://localhost:3100/mcp |
+
+The preview server hot-reloads when \`manifest.json\` changes.
+The data API persists records in a local SQLite database.
+Run \`ikary local stop\` to shut down. \`ikary local reset-data\` wipes the SQLite data.
+
+Quick preview (no Docker): \`ikary preview manifest.json\` opens a self-contained HTML file
+in the browser with mock data — no server needed.
+
 ## Recommended workflow
 
-1. Run \`recommend_manifest_structure\` with the application goal to scaffold
+1. Run \`ikary local start manifest.json\` to boot the local stack.
+2. Run \`recommend_manifest_structure\` with the application goal to scaffold
    entities, relations, pages, and navigation.
-2. Edit \`manifest.json\` with the generated structure.
-3. Validate with \`ikary validate manifest.json\` or the \`validate_manifest\` MCP tool.
-4. If errors occur, run \`explain_validation_errors\` or use \`ikary validate manifest.json --explain\`.
-5. Compile with \`ikary compile manifest.json\` or \`normalize_manifest\`.
-6. Use \`list_primitives\` to find the right UI components for page layouts.
+3. Edit \`manifest.json\` with the generated structure — preview hot-reloads at http://localhost:3000.
+4. Validate with \`ikary validate manifest.json\` or the \`validate_manifest\` MCP tool.
+5. If errors occur, run \`explain_validation_errors\` or use \`ikary validate manifest.json --explain\`.
+6. Compile with \`ikary compile manifest.json\` or \`normalize_manifest\`.
+7. Use \`list_primitives\` to find the right UI components for page layouts.
 
 ## Source reference
 
@@ -204,11 +222,11 @@ https://github.com/ikary-platform/ikary-manifest
 
 // ── MCP configuration ─────────────────────────────────────────────────
 
-export function generateMcpConfig(): string {
+export function generateMcpConfig(useLocal = false): string {
   return JSON.stringify({
     mcpServers: {
       'ikary-manifest': {
-        url: 'https://public.ikary.co/mcp',
+        url: useLocal ? 'http://localhost:3100/mcp' : 'https://public.ikary.co/mcp',
       },
     },
   }, null, 2);
@@ -300,7 +318,12 @@ export function generateClaudeSettings(): string {
       allow: [
         "Bash(ikary validate *)",
         "Bash(ikary compile *)",
-        "Bash(ikary preview *)"
+        "Bash(ikary preview *)",
+        "Bash(ikary local start *)",
+        "Bash(ikary local stop)",
+        "Bash(ikary local status)",
+        "Bash(ikary local logs *)",
+        "Bash(ikary local reset-data)"
       ]
     }
   }, null, 2);

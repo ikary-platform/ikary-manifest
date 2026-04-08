@@ -4,6 +4,13 @@ import { initCommand } from './commands/init.js';
 import { validateCommand } from './commands/validate.js';
 import { compileCommand } from './commands/compile.js';
 import { previewCommand } from './commands/preview.js';
+import {
+  localStartCommand,
+  localStopCommand,
+  localStatusCommand,
+  localLogsCommand,
+  localResetDataCommand,
+} from './commands/local.js';
 
 export function createProgram(): Command {
   configureTheme();
@@ -44,6 +51,36 @@ export function createProgram(): Command {
     .description('Preview a Cell manifest in the playground')
     .option('-p, --port <port>', 'Dev server port', '3000')
     .action(previewCommand);
+
+  const local = program
+    .command('local')
+    .description('Manage the local IKARY stack (preview server + data API + MCP server)');
+
+  local
+    .command('start <manifest>')
+    .description('Start the local stack for a manifest file')
+    .action(localStartCommand);
+
+  local
+    .command('stop')
+    .description('Stop the local stack')
+    .action(localStopCommand);
+
+  local
+    .command('status')
+    .description('Show the status of the local stack')
+    .action(localStatusCommand);
+
+  local
+    .command('logs [service]')
+    .description('Show logs from the local stack')
+    .option('-f, --follow', 'Follow log output')
+    .action(localLogsCommand);
+
+  local
+    .command('reset-data')
+    .description('Delete the local SQLite data volume (stops the stack first)')
+    .action(localResetDataCommand);
 
   return program;
 }
