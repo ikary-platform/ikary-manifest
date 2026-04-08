@@ -17,11 +17,18 @@ export { useCreateCellDataStore } from './store/use-cell-data-store';
 export { useCreateApiDataStore } from './store/use-api-data-store';
 export type { ApiDataStoreConfig } from './store/use-api-data-store';
 export type { CellDataMode, CellApiConfig, CellApiProviderComponent } from './components/cell-app-renderer';
+export type {
+  EntityApiAdapter,
+  EntityListResponse,
+  EntityItemResponse,
+  AuditLogPage,
+  AuditLogEntry,
+  UpdateVars,
+  RollbackVars,
+} from './store/entity-api-adapter';
 export { hydrateValidationIssues } from './validation';
 export type { HydratedValidation } from './validation';
 // UI injection
 export { UIComponentsProvider, useUIComponents } from './UIComponentsProvider';
 export type { UIComponents } from './ui-components';
 export { defaultUIComponents } from './default-ui-components';
-// API adapter abstraction
-export type { EntityApiAdapter } from './store/entity-api-adapter';

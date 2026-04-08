@@ -1,0 +1,35 @@
+{
+  "name": "@ikary/preview-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "IKARY local preview server — Vite+React hot-reload renderer for local development",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "node server.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/presentation": "workspace:*",
+    "@ikary/primitives": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/loader": "workspace:*",
+    "@ikary/renderer": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "express": "^5.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.3",
+    "vite": "^6.0.0"
+  }
+}
