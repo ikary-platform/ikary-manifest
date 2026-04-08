@@ -6,7 +6,12 @@ export default defineConfig({
     include: ['src/**/*.test.ts'],
     testTimeout: 15_000,
     hookTimeout: 15_000,
-    reporter: ['verbose'],
+    reporters: process.env.CI
+      ? ['verbose', 'junit', 'github-actions']
+      : ['verbose'],
+    outputFile: {
+      junit: './test-results/junit.xml',
+    },
     sequence: { shuffle: false },
   },
 });
