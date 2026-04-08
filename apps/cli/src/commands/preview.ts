@@ -30,11 +30,11 @@ export async function previewCommand(path: string, _options: { port?: string }):
     fmt.body('To preview your manifest:');
     fmt.newline();
     fmt.body(`  1. Open the IKARY Playground:`);
-    fmt.body(`     ${theme.accent('https://ikary-platform.github.io/ikary-manifest/playground/api-runtime')}`);
+    fmt.body(`     ${theme.accent('https://ikary-platform.github.io/ikary-manifest/playground/app-runtime')}`);
     fmt.newline();
-    fmt.body(`  2. Paste your entity JSON into the left panel`);
+    fmt.body(`  2. Paste the full Cell Manifest JSON into the left panel`);
     fmt.newline();
-    fmt.body(`  3. Or run ${theme.accent('ikary compile ' + path + ' --stdout')} and pipe the output`);
+    fmt.body(`  3. Or run ${theme.accent('ikary compile ' + path + ' --stdout')} and copy the output`);
     fmt.newline();
     fmt.muted('Tip: A local preview server is coming in a future release.');
     fmt.newline();
