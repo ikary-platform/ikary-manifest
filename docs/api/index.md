@@ -122,4 +122,4 @@ Error responses follow a consistent shape. See [Error Handling](./errors) for th
 
 ## Interactive documentation
 
-Swagger UI is available at [`/api/docs`](https://ikary-manifest-api-vvufnuiv5q-uc.a.run.app/api/docs) for interactive exploration.
+Swagger UI is available at [`/api/docs`](https://public.ikary.co/api/docs) for interactive exploration.
