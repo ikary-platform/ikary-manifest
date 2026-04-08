@@ -11,7 +11,7 @@ hero:
       link: /guide/why-ikary-manifest
     - theme: alt
       text: Getting Started
-      link: /guide/getting-started
+      link: /guide/cli
     - theme: alt
       text: Open Playground
       link: /playground
