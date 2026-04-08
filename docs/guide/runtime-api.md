@@ -1,5 +1,9 @@
 # Runtime API
 
+::: tip Looking for the public API?
+This page covers the generated CRUD API that the runtime creates from manifests. For the public contract intelligence API (schema discovery, validation, guidance), see [Contract Intelligence API](/api/).
+:::
+
 The API runtime reads entities from a compiled manifest and generates REST API endpoints. Each entity in the manifest becomes a set of CRUD routes.
 
 ## What it generates

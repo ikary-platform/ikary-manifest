@@ -120,6 +120,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/why-ikary-manifest' },
       { text: 'Reference', link: '/reference/entity-definition' },
+      { text: 'API', link: '/api/' },
       { text: 'Packages', link: '/packages/overview' },
       { text: 'Playground', link: '/playground' },
       {
@@ -169,6 +170,22 @@ export default defineConfig({
             { text: 'Entity Contract', link: '/reference/entity-contract' },
             { text: 'API Conventions', link: '/reference/api-conventions' },
             { text: 'YAML Schemas', link: '/reference/schemas' },
+          ],
+        },
+      ],
+
+      '/api/': [
+        {
+          text: 'Contract Intelligence API',
+          items: [
+            { text: 'Overview', link: '/api/' },
+            { text: 'Schema Discovery', link: '/api/schemas' },
+            { text: 'UI Primitives', link: '/api/primitives' },
+            { text: 'Example Manifests', link: '/api/examples' },
+            { text: 'Guidance', link: '/api/guidance' },
+            { text: 'Validation', link: '/api/validation' },
+            { text: 'MCP Endpoint', link: '/api/mcp' },
+            { text: 'Error Handling', link: '/api/errors' },
           ],
         },
       ],
