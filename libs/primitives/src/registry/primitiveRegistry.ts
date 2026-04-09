@@ -10,15 +10,17 @@ const latestPointers = new Map<string, string>();
 export function registerPrimitive<ContractProps = unknown, ResolvedProps = unknown, Context = unknown>(
   name: string,
   primitive: RegisterablePrimitive<ContractProps, ResolvedProps, Context>,
-  options?: { isController?: boolean; source?: 'core' | 'custom' },
+  options?: { isController?: boolean; source?: 'core' | 'custom'; label?: string; category?: string },
 ): void {
-  const normalized = normalizeRegisterablePrimitive(primitive);
+  const { component, resolver, meta } = normalizeRegisterablePrimitive(primitive);
   const definition: UIPrimitiveDefinition<ContractProps, ResolvedProps, Context> = {
     name,
-    component: normalized.component as PrimitiveComponent,
-    resolver: normalized.resolver as UIPrimitiveDefinition<any, any, any>['resolver'],
+    component: component as PrimitiveComponent,
+    resolver: resolver as UIPrimitiveDefinition<any, any, any>['resolver'],
     isController: options?.isController,
-    source: options?.source ?? 'core',
+    source: options?.source ?? meta.source ?? 'core',
+    label: options?.label ?? meta.label,
+    category: options?.category ?? meta.category,
   };
 
   _storeDefinition(name, 'latest', definition);
@@ -33,16 +35,18 @@ export function registerPrimitiveVersion<
   name: string,
   version: string,
   primitive: RegisterablePrimitive<ContractProps, ResolvedProps, Context>,
-  options?: { isController?: boolean; source?: 'core' | 'custom'; setLatest?: boolean },
+  options?: { isController?: boolean; source?: 'core' | 'custom'; setLatest?: boolean; label?: string; category?: string },
 ): void {
-  const normalized = normalizeRegisterablePrimitive(primitive);
+  const { component, resolver, meta } = normalizeRegisterablePrimitive(primitive);
   const definition: UIPrimitiveDefinition<ContractProps, ResolvedProps, Context> = {
     name,
-    component: normalized.component as PrimitiveComponent,
-    resolver: normalized.resolver as UIPrimitiveDefinition<any, any, any>['resolver'],
+    component: component as PrimitiveComponent,
+    resolver: resolver as UIPrimitiveDefinition<any, any, any>['resolver'],
     isController: options?.isController,
     version,
-    source: options?.source ?? 'core',
+    source: options?.source ?? meta.source ?? 'core',
+    label: options?.label ?? meta.label,
+    category: options?.category ?? meta.category,
   };
 
   _storeDefinition(name, version, definition);
@@ -132,13 +136,23 @@ function normalizeRegisterablePrimitive<ContractProps = unknown, ResolvedProps =
 ): {
   component: PrimitiveComponent<ResolvedProps>;
   resolver?: UIPrimitiveDefinition<ContractProps, ResolvedProps, Context>['resolver'];
+  /** Metadata fields passed directly on the primitive object (backwards-compat with old scaffold format). */
+  meta: { source?: 'core' | 'custom'; label?: string; category?: string };
 } {
   if (typeof primitive === 'function') {
-    return { component: primitive as PrimitiveComponent<ResolvedProps> };
+    return { component: primitive as PrimitiveComponent<ResolvedProps>, meta: {} };
   }
 
+  // Cast to any to read extra fields that old scaffold templates placed on the primitive object
+  // instead of the options argument. Options always take precedence over these.
+  const p = primitive as any;
   return {
     component: primitive.component,
     resolver: primitive.resolver,
+    meta: {
+      source: p.source,
+      label: p.label,
+      category: p.category,
+    },
   };
 }

@@ -39,6 +39,7 @@ function primitivePlugin(): any {
       if (id !== RESOLVED_ID) return;
 
       const configPath = path.join(projectDir(), 'ikary-primitives.yaml');
+      this.addWatchFile(configPath);
       if (!fs.existsSync(configPath)) return 'export default {};';
 
       try {
@@ -51,7 +52,9 @@ function primitivePlugin(): any {
           .filter(Boolean)
           .map((src) => {
             const abs = path.resolve(path.dirname(configPath), src);
-            return `import ${JSON.stringify(abs)};`;
+            // /@fs/ prefix tells Vite this is an absolute filesystem path,
+            // not a root-relative URL. Required for files outside the project root.
+            return `import ${JSON.stringify('/@fs' + abs)};`;
           })
           .join('\n');
         return imports || 'export default {};';
@@ -74,6 +77,11 @@ function manifestPlugin(): any {
   return {
     name: 'ikary-manifest',
     configureServer(server: any) {
+      server.middlewares.use('/health', (_req: any, res: any) => {
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ status: 'ok' }));
+      });
+
       const manifestPath = process.env['IKARY_MANIFEST_PATH'];
 
       server.middlewares.use('/manifest.json', async (_req: any, res: any) => {
@@ -125,7 +133,16 @@ function manifestPlugin(): any {
 
 export default defineConfig({
   plugins: [react(), manifestPlugin(), primitivePlugin()],
-  server: { port: 3000 },
+  server: {
+    port: 3000,
+    host: true,
+    fs: {
+      // '../..' resolves to the workspace root (needed for aliased libs)
+      // projectDir() is the directory containing the user's manifest and
+      // primitives/ folder — could be /manifest in Docker or any local path
+      allow: ['../..', projectDir()],
+    },
+  },
   resolve: {
     alias: {
       '@ikary/contract': path.resolve(__dirname, `${LIBS}/contract/src/index.ts`),

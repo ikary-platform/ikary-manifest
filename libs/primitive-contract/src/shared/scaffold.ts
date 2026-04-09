@@ -104,13 +104,12 @@ function generateRegister(name: string, PascalName: string, version: string, lab
 import { ${PascalName} } from './${PascalName}';
 import { resolve${PascalName} } from './${PascalName}.resolver';
 
-registerPrimitiveVersion('${name}', '${version}', {
-  component: ${PascalName},
-  resolver: resolve${PascalName},
-  source: 'custom',
-  category: '${category}',
-  label: '${label}',
-});
+registerPrimitiveVersion(
+  '${name}',
+  '${version}',
+  { component: ${PascalName}, resolver: resolve${PascalName} },
+  { source: 'custom', label: '${label}', category: '${category}' },
+);
 `;
 }
 
