@@ -20,9 +20,9 @@ The manifest system stays open. When the declarative layer is not expressive eno
 
 ## Current scope
 
-The first implementation targets Node.js with TypeScript. Python is the immediate next language. The manifest format is language-neutral: nothing prevents a Rust, Ruby, or Go runtime from consuming the same YAML.
+The first implementation targets Node.js with TypeScript. The manifest format is language-neutral: nothing prevents a Rust, Ruby, Go, or Python runtime from consuming the same YAML.
 
-On the API side, NestJS is the current generator for Node.js and FastAPI for Python. These are implementation choices, not permanent requirements. A different generator could produce Express routes or Django views from the same manifest.
+On the API side, NestJS is the current generator. This is an implementation choice, not a permanent requirement. A different generator could produce Express routes, Django views, or FastAPI endpoints from the same manifest.
 
 On the UI side, React is the first renderer target. Vue.js is next. Tailwind CSS provides sensible visual defaults. The renderer does not depend on Tailwind or any specific UI framework; dependencies are kept low by design. The project is and will remain open-source.
 
@@ -58,4 +58,4 @@ Manifests are structurally and semantically validated before any code runs. Inva
 
 ### Multi-runtime portability
 
-One manifest, multiple runtimes. React today, mobile tomorrow, FastAPI backend next week. Code generation ties you to one framework; a manifest is framework-neutral by design.
+One manifest, multiple runtimes. React today, mobile tomorrow, new backend next week. Code generation ties you to one framework; a manifest is framework-neutral by design.
