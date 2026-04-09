@@ -12,6 +12,8 @@ jobs:
   coverage-contracts:
     name: Coverage — Node contracts
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -31,6 +33,8 @@ jobs:
   coverage-ui:
     name: Coverage — UI
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -50,6 +54,8 @@ jobs:
   coverage-system-db-core:
     name: Coverage — system-db-core
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -69,6 +75,8 @@ jobs:
   coverage-cell-migration-core:
     name: Coverage — cell-migration-core
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -88,6 +96,8 @@ jobs:
   coverage-cell-runtime-core:
     name: Coverage — cell-runtime-core
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -107,6 +117,8 @@ jobs:
   coverage-python:
     name: Coverage — Python
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -122,6 +134,9 @@ jobs:
   e2e:
     name: E2E — MCP Server & API
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
       - uses: actions/checkout@v4
 

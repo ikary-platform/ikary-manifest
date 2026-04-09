@@ -47,6 +47,19 @@ export function runCompose(
   });
 }
 
+export function runVolumeRm(volumeName: string): Promise<{ code: number; stderr: string }> {
+  const runtime = getContainerRuntime();
+  if (!runtime) throw new Error('Docker or Podman is required but not found.');
+
+  return new Promise((resolve, reject) => {
+    const child = spawn(runtime, ['volume', 'rm', volumeName], { stdio: 'pipe' });
+    let stderr = '';
+    child.stderr?.on('data', (d) => (stderr += d.toString()));
+    child.on('error', reject);
+    child.on('close', (code) => resolve({ code: code ?? 0, stderr }));
+  });
+}
+
 export async function waitForHealth(url: string, timeoutMs = 30_000): Promise<boolean> {
   const deadline = Date.now() + timeoutMs;
   let delay = 500;

@@ -62,7 +62,7 @@ export async function previewCommand(path: string, _options: { port?: string }):
     mkdirSync(previewDir, { recursive: true });
 
     const htmlPath = join(previewDir, 'index.html');
-    writeFileSync(htmlPath, generatePreviewHtml(result.manifest));
+    writeFileSync(htmlPath, generatePreviewHtml(result.compiled ?? result.manifest));
     copyFileSync(bundlePath, join(previewDir, 'renderer.iife.js'));
 
     spinner.succeed(theme.success('Preview ready'));

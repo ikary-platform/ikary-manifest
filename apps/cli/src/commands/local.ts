@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
-import { getContainerRuntime, runCompose, waitForHealth, isPortInUse } from '../utils/docker.js';
+import { getContainerRuntime, runCompose, runVolumeRm, waitForHealth, isPortInUse } from '../utils/docker.js';
 
 function getComposePath(): string {
   const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -170,7 +170,7 @@ export async function localResetDataCommand(_options: Record<string, unknown>): 
     return;
   }
 
-  const { code, stderr } = await runCompose(['volume', 'rm', 'ikary-local-data'], composePath);
+  const { code, stderr } = await runVolumeRm('ikary-local-data');
 
   if (code !== 0 && !stderr.includes('no such volume')) {
     spinner.fail(theme.error('Failed to remove data volume'));
