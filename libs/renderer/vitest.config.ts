@@ -13,6 +13,7 @@ export default defineConfig({
         'src/**/index.ts',
         'src/**/*.tsx',                  // React components: require component/integration testing
         'src/__cell-styles.ts',          // CSS-in-JS style definitions
+        'src/__cell-css-vars.ts',        // CSS custom property definitions
         'src/context/**',                // React context + hooks requiring renderHook infrastructure
         'src/registry/default-registry.ts', // Registration of .tsx page components
         'src/detail/use-detail-page-mode.ts', // Barrel re-export
