@@ -8,6 +8,7 @@ COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
 COPY libs/contract/package.json libs/contract/package.json
 COPY libs/engine/package.json libs/engine/package.json
 COPY libs/loader/package.json libs/loader/package.json
+COPY libs/primitive-contract/package.json libs/primitive-contract/package.json
 COPY apps/mcp-server/package.json apps/mcp-server/package.json
 RUN pnpm install --frozen-lockfile --filter @ikary/mcp-server...
 
@@ -16,9 +17,14 @@ FROM deps AS build
 COPY libs/contract/ libs/contract/
 COPY libs/engine/ libs/engine/
 COPY libs/loader/ libs/loader/
+COPY libs/primitive-contract/ libs/primitive-contract/
 COPY apps/mcp-server/ apps/mcp-server/
 COPY manifests/ manifests/
-RUN pnpm --filter @ikary/contract build && pnpm --filter @ikary/engine build && pnpm --filter @ikary/loader build && pnpm --filter @ikary/mcp-server build
+RUN pnpm --filter @ikary/contract build \
+ && pnpm --filter @ikary/engine build \
+ && pnpm --filter @ikary/loader build \
+ && pnpm --filter @ikary/primitive-contract build \
+ && pnpm --filter @ikary/mcp-server build
 
 # ── Production image ──
 FROM base AS production
