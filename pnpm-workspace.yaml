@@ -3,4 +3,3 @@ packages:
   - 'runtime-api/node/*'
   - 'apps/*'
   - 'docs/playground-app'
-  - 'cell-playground'

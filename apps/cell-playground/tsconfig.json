@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["vite/client"],
+    "baseUrl": "./src",
+    "paths": {
+      "@ikary/cell-contract-core": ["../../../libs/contract/src/index.ts"],
+      "@ikary/cell-contract-presentation": ["../../../libs/presentation/src/index.ts"],
+      "@ikary/cell-engine": ["../../../libs/engine/src/index.ts"],
+      "@ikary/cell-runtime": ["../../../libs/renderer/src/index.ts"],
+      "@ikary/cell-runtime-ui/registry": ["../../../libs/primitives/src/registry.ts"],
+      "@ikary/cell-runtime-ui": ["../../../libs/primitives/src/index.ts"],
+      "@ikary/primitive-contract": ["../../../libs/primitive-contract/src/index.ts"],
+      "@ikary/primitive-studio/ui": ["../../../libs/primitive-studio/src/ui/index.ts"],
+      "@ikary/primitive-studio": ["../../../libs/primitive-studio/src/index.ts"]
+    }
+  },
+  "include": ["src", "vite.config.ts", "tailwind.config.ts"]
+}
