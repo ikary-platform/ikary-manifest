@@ -4,16 +4,15 @@ Packages are organised by concern, not by language. Each top-level directory ans
 
 ## contracts/
 
-Everything related to "what is a valid manifest?". Node.js and Python implementations of the same concern live side by side.
+Everything related to "what is a valid manifest?".
 
 | Package | Role |
 |---------|------|
 | `@ikary/contract` | Zod schemas, TypeScript types, structural + semantic validation |
 | `@ikary/loader` | YAML/JSON parsing, meta-property stripping, validation pipeline |
 | `@ikary/engine` | Compilation, normalization, field derivation, path builders |
-| `ikary-manifest` (Python) | Python manifest loader |
 
-See [Loading & Validation](/packages/loading) for the full API reference covering all three Node.js packages and the Python SDK.
+See [Loading & Validation](/packages/loading) for the full API reference.
 
 ## runtime-api/
 
@@ -22,7 +21,6 @@ Everything related to "how do I serve a REST API from a manifest?".
 | Package | Role |
 |---------|------|
 | `@ikary/generator-nest` | NestJS module/controller/service generator _(placeholder)_ |
-| `ikary-manifest-fastapi` (Python) | FastAPI route generator _(placeholder)_ |
 
 ## ui/
 
@@ -83,9 +81,7 @@ flowchart TD
     style E fill:#1d4ed8,stroke:#78afff,color:#f8fafc
 ```
 
-::: code-group
-
-```typescript [Node.js]
+```typescript
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp } from '@ikary/engine';
 
@@ -94,14 +90,6 @@ if (loaded.valid) {
   const compiled = compileCellApp(loaded.manifest!);
 }
 ```
-
-```python [Python]
-from ikary_manifest.loader import load_manifest_from_file
-
-manifest = load_manifest_from_file("manifest.yaml")
-```
-
-:::
 
 ## Building
 

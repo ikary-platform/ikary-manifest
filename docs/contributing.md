@@ -22,8 +22,8 @@ pnpm test
 ```
 ikary-manifest/
   manifests/       # YAML source of truth (schemas, entities, examples)
-  contracts/       # Schema, types, parsing, validation (Node.js + Python)
-  runtime-api/     # Server-side REST API generation (NestJS + FastAPI)
+  contracts/       # Schema, types, parsing, validation (Node.js)
+  runtime-api/     # Server-side REST API generation (NestJS)
   ui/              # Client-side React rendering
   apps/            # Standalone executables (CLI)
   docs/            # Documentation (VitePress)

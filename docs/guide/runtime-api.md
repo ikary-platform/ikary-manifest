@@ -44,22 +44,7 @@ The API runtime generates routes under `/customers`. The list endpoint returns a
 
 ## Current status
 
-::: code-group
-
-```bash [Node.js]
-# @ikary/generator-nest
-# Generates NestJS modules from a compiled manifest
-# Status: in progress
-```
-
-```python [Python]
-# FastAPI generator
-# Status: planned
-```
-
-:::
-
-The NestJS generator for Node.js is in active development under `node/packages/generator-nest`. The FastAPI generator for Python is planned.
+The NestJS module/controller/service generator (`@ikary/generator-nest`) is in active development.
 
 ## Related pages
 

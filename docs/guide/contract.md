@@ -57,18 +57,7 @@ if (semanticErrors.length > 0) {
 
 `loadManifestFromFile` runs structural validation internally and returns a `LoadManifestResult` with a `valid` flag and a typed `manifest` object. `validateManifestSemantics` checks the business rules on the already-parsed manifest.
 
-## Python: `ikary_manifest`
-
-The Python implementation loads manifests and returns plain dictionaries. Structural and semantic validation are in active development.
-
-```python
-from ikary_manifest.loader import load_manifest_from_file
-
-manifest = load_manifest_from_file("app.yaml")
-print(manifest["metadata"]["key"])
-```
-
 ## Related pages
 
-- [Loading & Validation](/packages/loading): full API reference for loader, contract, and Python SDK
+- [Loading & Validation](/packages/loading): full API reference for loader, contract, and engine
 - [Compilation](/packages/engine): engine API reference

@@ -14,7 +14,7 @@ The schema layer is language-neutral YAML manifests and JSON Schema definitions 
 
 ### Contract layer
 
-The contract layer consists of language-specific packages that load, parse, and validate manifests. TypeScript uses `@ikary/contract` with Zod-based validation. Python uses `ikary_manifest` with JSON Schema structural validation and native semantic rules.
+The contract layer consists of packages that load, parse, and validate manifests. TypeScript uses `@ikary/contract` with Zod-based validation.
 
 The contract layer owns all validation: structural checks (types, required fields, pattern matching) and semantic checks (unique keys, valid cross-references, lifecycle consistency). It produces a typed, validated manifest ready for compilation.
 
@@ -22,7 +22,7 @@ The contract layer owns all validation: structural checks (types, required field
 
 The runtime layer consumes a validated, compiled manifest and produces running software. It has two parts:
 
-- **API runtime**: generates REST API endpoints from entity definitions. NestJS for Node.js, FastAPI for Python.
+- **API runtime**: generates REST API endpoints from entity definitions. NestJS for Node.js.
 - **UI runtime**: renders a web application from page and entity definitions. React is the current renderer; Vue.js is next.
 
 The runtime layer works with the typed output of the contract layer. It has no direct dependency on raw YAML or schema files.

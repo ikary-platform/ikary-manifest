@@ -1,7 +1,6 @@
 import DefaultTheme from 'vitepress/theme';
 import type { Theme } from 'vitepress';
 import IkaryFooter from './IkaryFooter.vue';
-import LangComingSoon from '../components/LangComingSoon.vue';
 import { h, onMounted, watch, nextTick } from 'vue';
 import { useRoute } from 'vitepress';
 import './style.css';
@@ -69,9 +68,6 @@ export default {
     return h(DefaultTheme.Layout, null, {
       'layout-bottom': () => h(IkaryFooter),
     });
-  },
-  enhanceApp({ app }) {
-    app.component('LangComingSoon', LangComingSoon);
   },
   setup() {
     const route = useRoute();

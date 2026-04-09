@@ -51,11 +51,6 @@ ikary-manifest/
       data-runtime/        # Data-binding providers
       generator-nest/      # NestJS code generator (placeholder)
       cli/                 # Developer CLI (placeholder)
-  python/                  # Python SDK
-    ikary_manifest/
-      loader/              # YAML/JSON loading
-      runtime/             # Runtime (placeholder)
-      generator_fastapi/   # FastAPI generator (placeholder)
   docs/                    # Documentation
 ```
 
@@ -95,8 +90,6 @@ YAML manifest (manifests/)
     v
 @ikary/engine     # Normalization + compilation -> runtime manifest
 ```
-
-Python consumers use the same YAML manifests with generated JSON Schema for structural validation.
 
 ## Architecture
 

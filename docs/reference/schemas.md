@@ -89,7 +89,6 @@ These schemas cover **structural** validation: types, required fields, enum valu
 **Semantic** rules (unique entity keys, valid lifecycle transitions, relation consistency) are enforced at runtime by each language's validator:
 
 - **TypeScript**: `@ikary/contract` via Zod + custom validators
-- **Python**: to be implemented natively
 
 ## Relationship to Zod schemas
 

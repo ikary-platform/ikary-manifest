@@ -27,11 +27,11 @@ features:
   - icon:
       src: /icons/globe.svg
     title: Language-Neutral
-    details: YAML manifests and JSON Schema are the shared contracts. TypeScript validates and renders. Python consumes the same artifacts. No runtime coupling.
+    details: YAML manifests and JSON Schema are the shared contracts. Any language that can parse YAML can consume the same manifest. No runtime coupling.
   - icon:
       src: /icons/refresh-cw.svg
     title: Multi-Runtime
-    details: One manifest, multiple runtimes. React today, mobile tomorrow, FastAPI next week. Code generation ties you to one framework; manifests remain framework-neutral.
+    details: One manifest, multiple runtimes. React today, mobile tomorrow, new backend next week. Code generation ties you to one framework; manifests remain framework-neutral.
   - icon:
       src: /icons/sparkles.svg
     title: AI-Native
