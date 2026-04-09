@@ -121,7 +121,7 @@ const EVENT_ACTORS = [
 const EVENT_MESSAGES: Record<string, (actor: string) => string> = {
   'customer.created': (a) => `${a} created this customer`,
   'customer.updated': (a) => `${a} updated customer details`,
-  'invoice.approved': (a) => `${a} approved invoice INV-${1000 + (crypto.getRandomValues(new Uint32Array(1))[0]! % 900)}`,
+  'invoice.approved': (a) => `${a} approved invoice INV-${1001 + (a.charCodeAt(0) % 899)}`,
   'invoice.sent': (a) => `${a} sent invoice to customer`,
   'payment.received': () => `Payment received`,
   'note.added': (a) => `${a} added a note`,

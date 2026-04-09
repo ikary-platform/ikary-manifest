@@ -51,26 +51,21 @@ function generateFieldValue(field: FieldDefinition, index: number): unknown {
       return `Sample ${field.name || field.key} content for record ${index + 1}. This is generated test data.`;
 
     case 'number': {
-      const r = crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000;
       if (/revenue|amount|price|cost/i.test(key))
-        return Math.round(r * 100000 * 100) / 100;
-      return crypto.getRandomValues(new Uint32Array(1))[0]! % 1000;
+        return Math.round(((index * 7919 + 42) % 10000) * 10) / 100;
+      return (index * 37 + 17) % 1000;
     }
 
     case 'boolean':
       return index % 3 !== 0;
 
     case 'date':
-      return new Date(
-        Date.now() - (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 365 * 86400000,
-      )
+      return new Date(Date.now() - ((index * 13 + 7) % 365) * 86400000)
         .toISOString()
         .split('T')[0];
 
     case 'datetime':
-      return new Date(
-        Date.now() - (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 365 * 86400000,
-      ).toISOString();
+      return new Date(Date.now() - ((index * 13 + 7) % 365) * 86400000).toISOString();
 
     case 'enum': {
       const enumValues = (field as any).enumValues as

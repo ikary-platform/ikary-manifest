@@ -6,6 +6,7 @@
  *   GET /health           → { status: 'ok' }
  */
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
 import { readFileSync, watch } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -25,6 +26,8 @@ const { compileCellApp, isValidationResult } = await import('@ikary/engine');
 
 const app = express();
 const port = process.env.PORT ?? 3000;
+
+app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false }));
 
 // Serve static Vite build
 app.use(express.static(join(__dirname, 'dist')));
