@@ -5,13 +5,16 @@ import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 import { getContainerRuntime, runCompose, runVolumeRm, waitForHealth, isPortInUse } from '../utils/docker.js';
 
-function getComposePath(): string {
+function getComposePath(): string | null {
   const __dirname = fileURLToPath(new URL('.', import.meta.url));
-  // In production dist: cli.js is at dist/cli.js, compose is at ../../docker-compose.yml
-  const candidate = resolve(__dirname, '..', '..', 'docker-compose.yml');
-  if (existsSync(candidate)) return candidate;
-  // Fallback for dev
-  return resolve(__dirname, '..', '..', '..', '..', 'docker-compose.yml');
+  // Walk up from the dist directory to find docker-compose.yml
+  // dist/ → cli/ → apps/ → ikary-manifest/ (root)
+  const candidates = [
+    resolve(__dirname, '..', '..', '..', 'docker-compose.yml'),   // from dist/
+    resolve(__dirname, '..', '..', 'docker-compose.yml'),          // from src/ (dev)
+    resolve(__dirname, '..', '..', '..', '..', 'docker-compose.yml'), // fallback
+  ];
+  return candidates.find((p) => existsSync(p)) ?? null;
 }
 
 export async function localStartCommand(
@@ -19,39 +22,63 @@ export async function localStartCommand(
   _options: Record<string, unknown>,
 ): Promise<void> {
   fmt.section('Starting IKARY local stack');
+  fmt.newline();
 
-  const runtime = getContainerRuntime();
-  if (!runtime) {
-    fmt.error('Docker or Podman is required but not found. Install Docker Desktop or Podman.');
-    process.exitCode = 1;
-    return;
-  }
+  // ── Pre-flight checks ────────────────────────────────────────────────────
+  fmt.body('Pre-flight checks:');
+  fmt.newline();
 
+  let ok = true;
+
+  // 1. Manifest file
   const filePath = resolve(manifestPath);
-  if (!existsSync(filePath)) {
-    fmt.error(`Manifest not found: ${filePath}`);
-    process.exitCode = 1;
-    return;
-  }
+  const manifestOk = existsSync(filePath);
+  fmt.body(
+    `  ${manifestOk ? theme.success('✓') : theme.error('✗')} Manifest          ${manifestOk ? theme.muted(filePath) : theme.error(`not found: ${filePath}`)}`,
+  );
+  if (!manifestOk) ok = false;
 
-  // Check for port conflicts
-  const conflicts: number[] = [];
-  for (const port of [3000, 4000, 3100]) {
-    if (await isPortInUse(port)) conflicts.push(port);
-  }
-  if (conflicts.length > 0) {
-    fmt.error(`Port(s) already in use: ${conflicts.join(', ')}. Stop the conflicting processes and retry.`);
-    process.exitCode = 1;
-    return;
-  }
+  // 2. Docker / Podman daemon
+  const runtime = getContainerRuntime();
+  const dockerOk = runtime !== null;
+  fmt.body(
+    `  ${dockerOk ? theme.success('✓') : theme.error('✗')} Container runtime ${dockerOk ? theme.muted(`${runtime} running`) : theme.error('Docker or Podman daemon not running — start Docker Desktop')}`,
+  );
+  if (!dockerOk) ok = false;
 
+  // 3. docker-compose.yml
   const composePath = getComposePath();
+  const composeOk = composePath !== null;
+  fmt.body(
+    `  ${composeOk ? theme.success('✓') : theme.error('✗')} docker-compose.yml ${composeOk ? theme.muted(composePath!) : theme.error('not found — run this command from the ikary-manifest repo')}`,
+  );
+  if (!composeOk) ok = false;
+
+  // 4. Port availability
+  const portChecks = await Promise.all(
+    [
+      { port: 3000, name: 'Preview   (3000)' },
+      { port: 4000, name: 'Data API  (4000)' },
+      { port: 3100, name: 'MCP Server(3100)' },
+    ].map(async ({ port, name }) => ({ port, name, inUse: await isPortInUse(port) })),
+  );
+  for (const { name, inUse } of portChecks) {
+    fmt.body(
+      `  ${inUse ? theme.error('✗') : theme.success('✓')} Port ${name}   ${inUse ? theme.error('already in use — stop the conflicting process') : theme.muted('free')}`,
+    );
+    if (inUse) ok = false;
+  }
+
+  fmt.newline();
+
+  if (!ok) {
+    fmt.error('Fix the issues above, then re-run ikary local start.');
+    process.exitCode = 1;
+    return;
+  }
+
   const manifestDir = dirname(filePath);
   const manifestFile = basename(filePath);
-
-  fmt.muted(`Manifest: ${filePath}`);
-  fmt.muted(`Runtime:  ${runtime}`);
-  fmt.newline();
 
   const spinner = fmt.createSpinner('Starting containers…');
   spinner.start();
@@ -108,10 +135,16 @@ export async function localStopCommand(_options: Record<string, unknown>): Promi
     return;
   }
 
+  const composePath = getComposePath();
+  if (!composePath) {
+    fmt.error('docker-compose.yml not found — run this command from the ikary-manifest repo.');
+    process.exitCode = 1;
+    return;
+  }
+
   const spinner = fmt.createSpinner('Stopping containers…');
   spinner.start();
 
-  const composePath = getComposePath();
   const { code } = await runCompose(['down'], composePath);
 
   if (code !== 0) {
@@ -126,6 +159,10 @@ export async function localStopCommand(_options: Record<string, unknown>): Promi
 
 export async function localStatusCommand(_options: Record<string, unknown>): Promise<void> {
   const composePath = getComposePath();
+  if (!composePath) {
+    fmt.body('No IKARY local stack is running.');
+    return;
+  }
   const { code, stdout } = await runCompose(['ps'], composePath, { stdio: 'pipe' });
 
   if (code !== 0 || !stdout.trim()) {
@@ -142,6 +179,11 @@ export async function localLogsCommand(
   options: { follow?: boolean },
 ): Promise<void> {
   const composePath = getComposePath();
+  if (!composePath) {
+    fmt.error('docker-compose.yml not found.');
+    process.exitCode = 1;
+    return;
+  }
   const args = ['logs', '--tail', '100'];
   if (options.follow) args.push('--follow');
   if (service) args.push(service);
@@ -163,6 +205,11 @@ export async function localResetDataCommand(_options: Record<string, unknown>): 
   spinner.start();
 
   const composePath = getComposePath();
+  if (!composePath) {
+    spinner.fail(theme.error('docker-compose.yml not found.'));
+    process.exitCode = 1;
+    return;
+  }
   const { code: downCode } = await runCompose(['down'], composePath);
   if (downCode !== 0) {
     spinner.fail(theme.error('Failed to stop containers before reset'));
