@@ -6,23 +6,29 @@ WORKDIR /app
 # ── Install dependencies ──
 FROM base AS deps
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
+COPY libs/cell-migration-core/package.json libs/cell-migration-core/package.json
 COPY libs/cell-runtime-core/package.json libs/cell-runtime-core/package.json
 COPY libs/contract/package.json libs/contract/package.json
 COPY libs/engine/package.json libs/engine/package.json
 COPY libs/loader/package.json libs/loader/package.json
+COPY libs/system-db-core/package.json libs/system-db-core/package.json
 COPY apps/cell-runtime-api/package.json apps/cell-runtime-api/package.json
 RUN pnpm install --frozen-lockfile --filter @ikary/cell-runtime-api...
 
 # ── Build ──
 FROM deps AS build
+COPY libs/cell-migration-core/ libs/cell-migration-core/
 COPY libs/cell-runtime-core/ libs/cell-runtime-core/
 COPY libs/contract/ libs/contract/
 COPY libs/engine/ libs/engine/
 COPY libs/loader/ libs/loader/
+COPY libs/system-db-core/ libs/system-db-core/
 COPY apps/cell-runtime-api/ apps/cell-runtime-api/
 RUN pnpm --filter @ikary/contract build \
  && pnpm --filter @ikary/engine build \
  && pnpm --filter @ikary/loader build \
+ && pnpm --filter @ikary/system-db-core build \
+ && pnpm --filter @ikary/cell-migration-core build \
  && pnpm --filter @ikary/cell-runtime-core build \
  && pnpm --filter @ikary/cell-runtime-api build
 
