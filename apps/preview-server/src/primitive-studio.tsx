@@ -17,14 +17,16 @@ export function PreviewPrimitiveStudio() {
 
   const catalog: PrimitiveCatalogEntry[] = useMemo(
     () =>
-      listPrimitives().map((def) => ({
-        key: def.name,
-        label: def.label ?? toLabel(def.name),
-        category: (def.category as PrimitiveCatalogEntry['category']) ?? 'custom',
-        version: def.version,
-        source: def.source ?? 'core',
-        isController: def.isController ?? false,
-      })),
+      listPrimitives()
+        .filter((def) => def.source === 'custom')
+        .map((def) => ({
+          key: def.name,
+          label: def.label ?? toLabel(def.name),
+          category: (def.category as PrimitiveCatalogEntry['category']) ?? 'custom',
+          version: def.version,
+          source: 'custom' as const,
+          isController: def.isController ?? false,
+        })),
     [],
   );
 

@@ -263,7 +263,7 @@ ikary local start manifest.json
 http://localhost:3000/__primitive-studio
 \`\`\`
 
-- **Left panel** — grouped list of all core and custom primitives
+- **Left panel** — list of your project's custom primitives (grouped by category)
 - **Center panel** — scenario tabs + editable props JSON
 - **Right panel** — live component preview; updates as you edit props
 
