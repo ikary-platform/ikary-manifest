@@ -8,7 +8,7 @@ afterAll(async () => { await client.close(); });
 
 describe('MCP Discovery Tools', () => {
   describe('tools/list', () => {
-    it('exposes all 16 expected tools', async () => {
+    it('exposes all 19 expected tools', async () => {
       const res = await client.listTools();
       const names = res.tools.map((t) => t.name);
 
@@ -22,6 +22,10 @@ describe('MCP Discovery Tools', () => {
       expect(names).toContain('get_primitive_contract');
       expect(names).toContain('list_examples');
       expect(names).toContain('get_example_manifest');
+      // Primitive authoring
+      expect(names).toContain('get_primitive_examples');
+      expect(names).toContain('scaffold_primitive');
+      expect(names).toContain('validate_primitive_props');
       // Guidance
       expect(names).toContain('recommend_manifest_structure');
       expect(names).toContain('suggest_page_set_for_entities');
@@ -33,7 +37,7 @@ describe('MCP Discovery Tools', () => {
       expect(names).toContain('validate_page');
       expect(names).toContain('normalize_manifest');
 
-      expect(names.length).toBe(16);
+      expect(names.length).toBe(19);
     });
   });
 
