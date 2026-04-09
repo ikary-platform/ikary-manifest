@@ -187,8 +187,54 @@ access (curl, fetch, CLI).
 ## Custom UI primitives
 
 Custom primitives live in \`primitives/<name>/\` and are registered in \`ikary-primitives.yaml\`.
+Each primitive is a self-contained folder of six files:
 
-**CLI commands:**
+\`\`\`
+primitives/<name>/
+  <Name>.tsx                    # React component
+  <Name>PresentationSchema.ts   # Zod schema — source of truth for prop types
+  <name>.contract.yaml          # Human-readable props contract (drives Studio editor)
+  <Name>.resolver.ts            # ContractProps → ResolvedProps transform
+  <Name>.register.ts            # Calls registerPrimitiveVersion() — side-effect import
+  <Name>.example.ts             # Named example scenarios for the Studio preview
+\`\`\`
+
+### Claude Code skills
+
+Use these slash commands inside Claude Code to build and maintain primitives:
+
+| Skill | What it does |
+|-------|-------------|
+| \`/create-primitive\` | Scaffold a new primitive, implement the component, validate, and preview it live |
+| \`/update-primitive\` | Update props or logic — guides through non-breaking vs breaking changes |
+| \`/browse-primitives\` | List all core and custom primitives; show contracts and example props |
+
+**To create a primitive with Claude Code:**
+
+\`\`\`
+# 1. Make sure the local stack is running
+ikary local start manifest.json
+
+# 2. Open Claude Code in this directory
+claude
+
+# 3. Run the skill
+/create-primitive
+\`\`\`
+
+Claude will ask what the primitive should do, scaffold all six files using the
+\`scaffold_primitive\` MCP tool, implement the component, then open the live preview.
+
+**To update an existing primitive:**
+
+\`\`\`
+/update-primitive
+\`\`\`
+
+Claude will read the current files, determine whether the change is breaking or
+non-breaking, and walk through versioning if needed.
+
+### CLI commands
 
 | Command | Purpose |
 |---------|---------|
@@ -197,19 +243,32 @@ Custom primitives live in \`primitives/<name>/\` and are registered in \`ikary-p
 | \`ikary primitive list\` | List core and custom primitives |
 | \`ikary primitive studio\` | Open the Primitive Studio in the browser |
 
-**MCP tools for primitives:**
+### MCP tools for primitives
 
 | Tool | Purpose |
 |------|---------|
-| \`list_primitives\` | List all primitives; filter by \`source: "custom"\` for project-specific ones |
+| \`list_primitives\` | List all primitives; pass \`source: "custom"\` for project-specific ones |
 | \`get_primitive_contract\` | Get full props schema for a primitive |
 | \`get_primitive_examples\` | Get example scenarios for a custom primitive |
-| \`scaffold_primitive\` | Create a new primitive scaffold (same as CLI \`primitive add\`) |
+| \`scaffold_primitive\` | Create a new primitive scaffold (same as \`ikary primitive add\`) |
 | \`validate_primitive_props\` | Validate a props object against a primitive's contract |
 
-**Workflow:** Use \`scaffold_primitive\` to bootstrap, then implement
-\`[Name].tsx\` and \`[Name]PresentationSchema.ts\`, then open
-\`http://localhost:3000/__primitive-studio\` to preview live.
+### Primitive Studio
+
+The Primitive Studio is a live 3-panel preview environment:
+
+\`\`\`
+ikary local start manifest.json
+# then open:
+http://localhost:3000/__primitive-studio
+\`\`\`
+
+- **Left panel** — grouped list of all core and custom primitives
+- **Center panel** — scenario tabs + editable props JSON
+- **Right panel** — live component preview; updates as you edit props
+
+Custom primitives appear automatically once registered in \`ikary-primitives.yaml\`.
+The preview hot-reloads when you edit \`ikary-primitives.yaml\` or save any primitive file.
 
 ## Local stack
 
