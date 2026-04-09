@@ -61,6 +61,7 @@ export class LogRepository {
         actor_id: entry.actorId ?? null,
         actor_type: entry.actorType ?? null,
         sink_type: sinkType,
+        logged_at: new Date().toISOString() as unknown as Date,
         expires_at: expiresAt ? (expiresAt.toISOString() as unknown as Date) : null,
       } satisfies Insertable<PlatformLogsTable>)
       .execute();

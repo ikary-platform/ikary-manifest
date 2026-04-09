@@ -161,14 +161,28 @@ describe('LogRepository', () => {
       expect(rows).toHaveLength(1);
     });
 
-    it('applies from date filter (branch coverage)', async () => {
+    it('from filter returns entries logged after the cutoff', async () => {
+      // Insert then filter with from=epoch — all rows should be included
       const rows = await repo.find({ tenantId: TENANT_ID, from: new Date(0) });
-      expect(Array.isArray(rows)).toBe(true);
+      expect(rows).toHaveLength(2);
     });
 
-    it('applies to date filter (branch coverage)', async () => {
+    it('from filter excludes entries before the cutoff', async () => {
+      // A far-future from date should return nothing
+      const rows = await repo.find({ tenantId: TENANT_ID, from: new Date(Date.now() + 1e10) });
+      expect(rows).toHaveLength(0);
+    });
+
+    it('to filter returns entries logged before the cutoff', async () => {
+      // A far-future to date should include all rows
       const rows = await repo.find({ tenantId: TENANT_ID, to: new Date(Date.now() + 1e10) });
-      expect(Array.isArray(rows)).toBe(true);
+      expect(rows).toHaveLength(2);
+    });
+
+    it('to filter excludes entries after the cutoff', async () => {
+      // epoch to date should return nothing (rows were just inserted)
+      const rows = await repo.find({ tenantId: TENANT_ID, to: new Date(0) });
+      expect(rows).toHaveLength(0);
     });
 
     it('applies cursor pagination (branch coverage)', async () => {

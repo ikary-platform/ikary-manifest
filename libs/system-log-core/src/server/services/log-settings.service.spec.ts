@@ -100,10 +100,41 @@ describe('LogSettingsService', () => {
       mockRepo.cascade.mockResolvedValue('verbose');
       await service.resolveEffectiveLevel(T1, null, CELL1);
       service.invalidateCache(T1, null, CELL1);
-      // cellId is set, so the `${tenantId}:${workspaceId ?? ''}:` key is also deleted
       mockRepo.cascade.mockResolvedValue('normal');
       await service.resolveEffectiveLevel(T1, null, CELL1);
       expect(mockRepo.cascade).toHaveBeenCalledTimes(2);
+    });
+
+    it('tenant invalidation clears workspace and cell descendants', async () => {
+      mockRepo.cascade.mockResolvedValue('verbose');
+      await service.resolveEffectiveLevel(T1);           // seeds T1::
+      await service.resolveEffectiveLevel(T1, WS1);      // seeds T1:WS1:
+      await service.resolveEffectiveLevel(T1, WS1, CELL1); // seeds T1:WS1:CELL1
+      service.invalidateCache(T1);  // should clear ALL T1:* entries
+
+      mockRepo.cascade.mockResolvedValue('normal');
+      await service.resolveEffectiveLevel(T1);
+      await service.resolveEffectiveLevel(T1, WS1);
+      await service.resolveEffectiveLevel(T1, WS1, CELL1);
+      // All 3 re-fetched after tenant invalidation
+      expect(mockRepo.cascade).toHaveBeenCalledTimes(6);
+    });
+
+    it('workspace invalidation clears cell descendants but not tenant', async () => {
+      mockRepo.cascade.mockResolvedValue('verbose');
+      await service.resolveEffectiveLevel(T1);           // seeds T1::
+      await service.resolveEffectiveLevel(T1, WS1);      // seeds T1:WS1:
+      await service.resolveEffectiveLevel(T1, WS1, CELL1); // seeds T1:WS1:CELL1
+      service.invalidateCache(T1, WS1);  // clears T1:WS1:* but NOT T1::
+
+      mockRepo.cascade.mockResolvedValue('normal');
+      // T1:: still cached — no extra cascade call
+      expect(await service.resolveEffectiveLevel(T1)).toBe('verbose');
+      // T1:WS1: cleared — re-fetched
+      expect(await service.resolveEffectiveLevel(T1, WS1)).toBe('normal');
+      // T1:WS1:CELL1 cleared — re-fetched
+      expect(await service.resolveEffectiveLevel(T1, WS1, CELL1)).toBe('normal');
+      expect(mockRepo.cascade).toHaveBeenCalledTimes(5); // 3 seeds + 2 re-fetches
     });
   });
 

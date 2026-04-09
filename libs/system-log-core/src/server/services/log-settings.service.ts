@@ -34,13 +34,25 @@ export class LogSettingsService {
   }
 
   invalidateCache(tenantId: string, workspaceId?: string | null, cellId?: string | null): void {
-    const key = `${tenantId}:${workspaceId ?? ''}:${cellId ?? ''}`;
-    this.cache.delete(key);
     if (cellId) {
-      this.cache.delete(`${tenantId}:${workspaceId ?? ''}:`);
-    }
-    if (workspaceId) {
-      this.cache.delete(`${tenantId}::`);
+      // Cell-level change: only affects this exact key
+      this.cache.delete(`${tenantId}:${workspaceId ?? ''}:${cellId}`);
+    } else if (workspaceId) {
+      // Workspace-level change: clear this workspace and all its cell descendants
+      const prefix = `${tenantId}:${workspaceId}:`;
+      for (const k of this.cache.keys()) {
+        if (k.startsWith(prefix) || k === `${tenantId}:${workspaceId}:`) {
+          this.cache.delete(k);
+        }
+      }
+    } else {
+      // Tenant-level change: clear all entries for this tenant
+      const prefix = `${tenantId}:`;
+      for (const k of this.cache.keys()) {
+        if (k.startsWith(prefix)) {
+          this.cache.delete(k);
+        }
+      }
     }
   }
 

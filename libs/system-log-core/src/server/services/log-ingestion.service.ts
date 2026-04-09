@@ -61,7 +61,8 @@ export class LogIngestionService {
     if (sink.sink_type === 'ui' || sink.sink_type === 'persistent') {
       await this.repo.insert(entry, sink.sink_type, expiresAt);
     } else if (sink.sink_type === 'external') {
-      const parsed = externalSinkConfigSchema.safeParse(sink.config);
+      const rawConfig = typeof sink.config === 'string' ? JSON.parse(sink.config) : sink.config;
+      const parsed = externalSinkConfigSchema.safeParse(rawConfig);
       if (!parsed.success) return;
 
       void fetch(parsed.data.endpoint, {

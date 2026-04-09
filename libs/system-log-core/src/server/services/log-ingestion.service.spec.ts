@@ -138,7 +138,7 @@ describe('LogIngestionService', () => {
     expect(mockRepo.insert).toHaveBeenCalledWith(expect.anything(), 'ui', expect.any(Date));
   });
 
-  it('fires fetch for external sink with valid config', async () => {
+  it('fires fetch for external sink with valid config (object)', async () => {
     mockSinksService.getEnabledSinks.mockResolvedValue([
       makeSink({
         sink_type: 'external',
@@ -146,7 +146,21 @@ describe('LogIngestionService', () => {
       }),
     ]);
     await service.emit(makeEntry());
-    // fetch is fired via void (fire-and-forget), allow microtasks
+    await new Promise((r) => setTimeout(r, 0));
+    expect(fetch).toHaveBeenCalledWith(
+      'https://logs.example.com',
+      expect.objectContaining({ method: 'POST' }),
+    );
+  });
+
+  it('fires fetch for external sink when config is a JSON string (SQLite storage)', async () => {
+    mockSinksService.getEnabledSinks.mockResolvedValue([
+      makeSink({
+        sink_type: 'external',
+        config: JSON.stringify({ endpoint: 'https://logs.example.com', timeoutMs: 5000 }) as any,
+      }),
+    ]);
+    await service.emit(makeEntry());
     await new Promise((r) => setTimeout(r, 0));
     expect(fetch).toHaveBeenCalledWith(
       'https://logs.example.com',
