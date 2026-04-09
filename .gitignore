@@ -5,6 +5,10 @@ docs/.vitepress/cache/
 docs/.vitepress/dist/
 docs/public/playground/
 
+# Coverage reports
+coverage/
+**/coverage/
+
 # Local env files
 .env.local
 .env.*.local

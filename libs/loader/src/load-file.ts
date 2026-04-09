@@ -91,6 +91,7 @@ export async function loadManifestFromFile(
       errors: [
         {
           field: 'root',
+          /* v8 ignore next */
           message: `Parse error: ${err instanceof Error ? err.message : String(err)}`,
         },
       ],
