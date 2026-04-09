@@ -1,0 +1,54 @@
+{
+  "name": "@ikary/renderer",
+  "version": "0.1.1",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external @ikary/engine --external @ikary/primitives --external @tanstack/react-query --external react-hook-form --external @hookform/resolvers --external zod",
+    "build:standalone": "vite build --config vite.standalone.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/presentation": "workspace:*",
+    "@ikary/primitives": "workspace:*",
+    "react-hook-form": "^7.53.0",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.3",
+    "vite": "^6.0.0",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "@ikary/local-stack-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "description": "End-to-end tests for the IKARY local development stack (cell-runtime-api + preview-server)",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^20.0.0",
+    "better-sqlite3": "^11.0.0",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

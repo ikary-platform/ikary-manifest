@@ -74,14 +74,19 @@ export class RegistryService {
 
       // Resolve relative to the manifests directory
       const manifestsDir = path.resolve(__dirname, '../../../../manifests/examples');
-      const filePath = path.join(manifestsDir, `${key}.yaml`);
+      const filePath = path.resolve(manifestsDir, `${entry.key}.yaml`);
+
+      // Guard against path traversal: resolved path must stay within manifestsDir
+      if (path.relative(manifestsDir, filePath).startsWith('..')) {
+        return { error: 'Invalid example key' };
+      }
 
       if (!fs.existsSync(filePath)) {
-        return { error: `Example file not found at ${key}.yaml` };
+        return { error: `Example file not found at ${entry.key}.yaml` };
       }
 
       const content = fs.readFileSync(filePath, 'utf-8');
-      return { example: key, manifest: content };
+      return { example: entry.key, manifest: content };
     } catch (err) {
       return { error: `Failed to load example: ${String(err)}` };
     }

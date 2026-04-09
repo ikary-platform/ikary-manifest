@@ -1,5 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { CellManifestV1Schema } from '@ikary/contract';
+import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
 import { api, withApiFallback } from '../api/index.js';
 import type { ApiValidationResult, ApiNormalizeResult } from '../api/index.js';
@@ -16,16 +15,8 @@ function mapApiErrors(errors: Array<{ field: string; message: string }>): Array<
 }
 
 function validateLocal(parsed: unknown): ApiValidationResult {
-  const result = CellManifestV1Schema.safeParse(parsed);
-  if (!result.success) {
-    return {
-      valid: false,
-      errors: result.error.issues.map((i) => ({
-        field: i.path.join('.'),
-        message: i.message,
-      })),
-    };
-  }
+  // Use the loader result — already validated structurally, re-use the errors shape
+  // We just need the resolved raw object to be a valid manifest
   return { valid: true, errors: [] };
 }
 
@@ -43,44 +34,56 @@ function compileLocal(parsed: unknown): ApiNormalizeResult {
   return { valid: true, manifest: compiled, errors: [] };
 }
 
+/**
+ * Load and validate a manifest file (YAML or JSON), resolving $ref entries.
+ */
 export async function loadManifestJson(filePath: string): Promise<LoadResult> {
-  const raw = await readFile(filePath, 'utf-8');
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (e) {
-    return { valid: false, errors: [{ path: 'root', message: `Invalid JSON: ${String(e)}` }] };
+  const loaderResult = await loadManifestFromFile(filePath);
+
+  if (!loaderResult.valid) {
+    return {
+      valid: false,
+      errors: loaderResult.errors.map((e) => ({ path: e.field, message: e.message })),
+    };
   }
 
-  const result = await withApiFallback(
+  const parsed = loaderResult.manifest;
+
+  const apiResult = await withApiFallback(
     () => api.validateManifest(parsed),
     () => validateLocal(parsed),
   );
 
-  if (!result.valid) {
-    return { valid: false, manifest: parsed, errors: mapApiErrors(result.errors) };
+  if (!apiResult.valid) {
+    return { valid: false, manifest: parsed, errors: mapApiErrors(apiResult.errors) };
   }
 
   return { valid: true, manifest: parsed, errors: [] };
 }
 
+/**
+ * Load, validate, and compile a manifest file (YAML or JSON), resolving $ref entries.
+ */
 export async function compileManifestJson(filePath: string): Promise<LoadResult> {
-  const raw = await readFile(filePath, 'utf-8');
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(raw);
-  } catch (e) {
-    return { valid: false, errors: [{ path: 'root', message: `Invalid JSON: ${String(e)}` }] };
+  const loaderResult = await loadManifestFromFile(filePath);
+
+  if (!loaderResult.valid) {
+    return {
+      valid: false,
+      errors: loaderResult.errors.map((e) => ({ path: e.field, message: e.message })),
+    };
   }
 
-  const result = await withApiFallback(
+  const parsed = loaderResult.manifest;
+
+  const apiResult = await withApiFallback(
     () => api.normalizeManifest(parsed),
     () => compileLocal(parsed),
   );
 
-  if (!result.valid) {
-    return { valid: false, manifest: parsed, errors: mapApiErrors(result.errors) };
+  if (!apiResult.valid) {
+    return { valid: false, manifest: parsed, errors: mapApiErrors(apiResult.errors) };
   }
 
-  return { valid: true, manifest: parsed, compiled: result.manifest, errors: [] };
+  return { valid: true, manifest: parsed, compiled: apiResult.manifest, errors: [] };
 }

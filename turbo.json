@@ -11,6 +11,16 @@
       ],
       "outputs": ["dist/**"]
     },
+    "build:standalone": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "vite.standalone.config.*",
+        "tsconfig*.json",
+        "package.json"
+      ],
+      "outputs": ["dist/standalone/**"]
+    },
     "typecheck": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "tsconfig*.json", "package.json"],

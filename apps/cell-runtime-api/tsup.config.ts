@@ -1,0 +1,22 @@
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/main.ts'],
+  format: ['cjs'],
+  shims: true,
+  clean: true,
+  target: 'node20',
+  noExternal: ['@ikary/cell-migration-core', '@ikary/cell-runtime-core', '@ikary/contract', '@ikary/engine', '@ikary/loader', '@ikary/system-db-core'],
+  external: [
+    '@nestjs/common',
+    '@nestjs/core',
+    '@nestjs/platform-express',
+    '@nestjs/swagger',
+    'express',
+    'reflect-metadata',
+    'rxjs',
+    'better-sqlite3',
+    'kysely',
+    'pg',
+  ],
+});

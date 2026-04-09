@@ -30,11 +30,11 @@ export default defineConfig({
   base: '/playground/',
   resolve: {
     alias: {
-      '@ikary/contract': path.resolve(__dirname, '../../contracts/node/contract/src/index.ts'),
-      '@ikary/engine': path.resolve(__dirname, '../../contracts/node/engine/src/index.ts'),
-      '@ikary/presentation': path.resolve(__dirname, '../../ui/presentation/src/index.ts'),
-      '@ikary/primitives/registry': path.resolve(__dirname, '../../ui/primitives/src/registry.ts'),
-      '@ikary/primitives': path.resolve(__dirname, '../../ui/primitives/src/index.ts'),
+      '@ikary/contract': path.resolve(__dirname, '../../libs/contract/src/index.ts'),
+      '@ikary/engine': path.resolve(__dirname, '../../libs/engine/src/index.ts'),
+      '@ikary/presentation': path.resolve(__dirname, '../../libs/presentation/src/index.ts'),
+      '@ikary/primitives/registry': path.resolve(__dirname, '../../libs/primitives/src/registry.ts'),
+      '@ikary/primitives': path.resolve(__dirname, '../../libs/primitives/src/index.ts'),
     },
   },
   build: {

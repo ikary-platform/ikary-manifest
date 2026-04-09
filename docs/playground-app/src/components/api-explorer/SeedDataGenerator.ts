@@ -52,20 +52,20 @@ function generateFieldValue(field: FieldDefinition, index: number): unknown {
 
     case 'number': {
       if (/revenue|amount|price|cost/i.test(key))
-        return Math.round(Math.random() * 100000 * 100) / 100;
-      return Math.floor(Math.random() * 1000);
+        return Math.round(((index * 7919 + 42) % 10000) * 10) / 100;
+      return (index * 37 + 17) % 1000;
     }
 
     case 'boolean':
       return index % 3 !== 0;
 
     case 'date':
-      return new Date(Date.now() - Math.random() * 365 * 86400000)
+      return new Date(Date.now() - ((index * 13 + 7) % 365) * 86400000)
         .toISOString()
         .split('T')[0];
 
     case 'datetime':
-      return new Date(Date.now() - Math.random() * 365 * 86400000).toISOString();
+      return new Date(Date.now() - ((index * 13 + 7) % 365) * 86400000).toISOString();
 
     case 'enum': {
       const enumValues = (field as any).enumValues as
@@ -102,10 +102,10 @@ export function generateSeedRecords(
     const record: Record<string, unknown> = {
       id: crypto.randomUUID(),
       createdAt: new Date(
-        Date.now() - Math.random() * 90 * 86400000,
+        Date.now() - (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 90 * 86400000,
       ).toISOString(),
       updatedAt: new Date(
-        Date.now() - Math.random() * 90 * 86400000,
+        Date.now() - (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 90 * 86400000,
       ).toISOString(),
       createdBy: 'seed-generator',
       updatedBy: 'seed-generator',

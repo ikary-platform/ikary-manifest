@@ -32,7 +32,7 @@ export function useApiExplorer(entity: EntityDefinition) {
       const start = performance.now();
 
       // Simulate 50-150ms network latency
-      const latency = 50 + Math.random() * 100;
+      const latency = 50 + (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 100;
       await new Promise((resolve) => setTimeout(resolve, latency));
 
       const response = routerRef.current.dispatch(req);

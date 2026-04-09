@@ -260,7 +260,7 @@ export function ContractsSection() {
                   TypeScript Source
                 </h3>
                 <a
-                  href={`${GITHUB_BLOB}/contracts/node/contract/${selected.sourcePath}`}
+                  href={`${GITHUB_BLOB}/libs/contract/${selected.sourcePath}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-xs text-blue-600 font-mono hover:underline break-all"

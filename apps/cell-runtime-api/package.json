@@ -1,0 +1,40 @@
+{
+  "name": "@ikary/cell-runtime-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "IKARY local entity CRUD REST API — SQLite-backed runtime for local development",
+  "scripts": {
+    "dev": "tsup && node dist/main.js",
+    "build": "tsup",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ikary/cell-migration-core": "workspace:*",
+    "@ikary/cell-runtime-core": "workspace:*",
+    "@ikary/contract": "workspace:*",
+    "@ikary/engine": "workspace:*",
+    "@ikary/loader": "workspace:*",
+    "@ikary/system-db-core": "workspace:*",
+    "@nestjs/common": "^11.1.0",
+    "@nestjs/core": "^11.1.0",
+    "@nestjs/platform-express": "^11.1.0",
+    "@nestjs/swagger": "^11.2.0",
+    "better-sqlite3": "^11.0.0",
+    "express": "^5.1.0",
+    "kysely": "^0.27.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "@swc/core": "^1.15.24",
+    "tsup": "^8.0.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

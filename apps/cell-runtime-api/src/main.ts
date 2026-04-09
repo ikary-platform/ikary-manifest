@@ -1,0 +1,29 @@
+import 'reflect-metadata';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module.js';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors();
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('IKARY Cell Runtime API')
+    .setDescription('Local entity CRUD API for IKARY manifests. SQLite-backed, manifest-driven schema.')
+    .setVersion('0.1.0')
+    .addTag('entities', 'Entity record CRUD with versioning and audit log')
+    .addTag('health', 'Health check')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, document);
+
+  const port = process.env['PORT'] ?? 4000;
+  await app.listen(port);
+
+  console.log(`[cell-runtime-api] Running on http://localhost:${port}`);
+  console.log(`[cell-runtime-api] Swagger docs at http://localhost:${port}/api/docs`);
+}
+
+bootstrap();
