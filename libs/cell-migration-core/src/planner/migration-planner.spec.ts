@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { MigrationPlanner } from './migration-planner.js';
 
 function makeTmpDir(): string {
-  const dir = join(tmpdir(), `planner-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const dir = join(tmpdir(), `planner-test-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`);
   mkdirSync(dir, { recursive: true });
   return dir;
 }

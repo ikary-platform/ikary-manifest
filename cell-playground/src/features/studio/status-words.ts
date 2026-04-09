@@ -13,5 +13,7 @@ export function getStatusWord(index: number): string {
 }
 
 export function getRandomStatusWord(): string {
-  return STATUS_WORDS[Math.floor(Math.random() * STATUS_WORDS.length)];
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return STATUS_WORDS[arr[0]! % STATUS_WORDS.length];
 }

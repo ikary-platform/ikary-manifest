@@ -72,7 +72,7 @@ const FAKE_RECORDS: Record<string, Record<string, unknown>> = {
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export async function loadFakeSchema(entity: string): Promise<EntitySchema> {
-  await new Promise((r) => setTimeout(r, 40 + Math.random() * 40));
+  await new Promise((r) => setTimeout(r, 40 + (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 40));
   return (
     FAKE_SCHEMAS[entity] ?? {
       key: entity,
@@ -87,7 +87,7 @@ export async function loadFakeSchema(entity: string): Promise<EntitySchema> {
 }
 
 export async function loadFakeRecord(entity: string, id: string): Promise<Record<string, unknown>> {
-  await new Promise((r) => setTimeout(r, 60 + Math.random() * 80));
+  await new Promise((r) => setTimeout(r, 60 + (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 80));
   return (
     FAKE_RECORDS[`${entity}:${id}`] ?? {
       id,

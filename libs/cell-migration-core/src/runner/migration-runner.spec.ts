@@ -13,7 +13,7 @@ function createDb(): DatabaseService {
 }
 
 function makeTmpDir(): string {
-  const dir = join(tmpdir(), `runner-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const dir = join(tmpdir(), `runner-test-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`);
   mkdirSync(dir, { recursive: true });
   return dir;
 }

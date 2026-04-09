@@ -121,7 +121,7 @@ const EVENT_ACTORS = [
 const EVENT_MESSAGES: Record<string, (actor: string) => string> = {
   'customer.created': (a) => `${a} created this customer`,
   'customer.updated': (a) => `${a} updated customer details`,
-  'invoice.approved': (a) => `${a} approved invoice INV-${1000 + Math.floor(Math.random() * 900)}`,
+  'invoice.approved': (a) => `${a} approved invoice INV-${1000 + (crypto.getRandomValues(new Uint32Array(1))[0]! % 900)}`,
   'invoice.sent': (a) => `${a} sent invoice to customer`,
   'payment.received': () => `Payment received`,
   'note.added': (a) => `${a} added a note`,
@@ -170,7 +170,7 @@ function fakeAvg(entity: string, field: string, filter: Record<string, unknown>)
 
 export async function runQuery(context: RuntimeContext, query: QueryDefinition): Promise<QueryResult> {
   if (query.operation) {
-    await new Promise((r) => setTimeout(r, 80 + Math.random() * 120));
+    await new Promise((r) => setTimeout(r, 80 + (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 120));
     const filter = query.filter ?? {};
     let value: number;
     switch (query.operation) {
@@ -187,7 +187,7 @@ export async function runQuery(context: RuntimeContext, query: QueryDefinition):
   }
 
   // Simulate network latency
-  await new Promise((r) => setTimeout(r, 120 + Math.random() * 180));
+  await new Promise((r) => setTimeout(r, 120 + (crypto.getRandomValues(new Uint32Array(1))[0]! / 0x100000000) * 180));
 
   const count = query.limit ?? 10;
   const filter = query.filter ?? {};
