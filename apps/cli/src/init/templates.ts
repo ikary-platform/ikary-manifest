@@ -312,6 +312,20 @@ primitives that match.
 
 // ── Claude Code settings ───────────────────────────────────────────────
 
+export function generateGitignore(): string {
+  return [
+    '# Local database (created by ikary init and ikary local db migrate)',
+    'local.db',
+    'local.db-shm',
+    'local.db-wal',
+    '',
+    '# OS / editor',
+    '.DS_Store',
+    '*.swp',
+    '',
+  ].join('\n');
+}
+
 export function generateClaudeSettings(): string {
   return JSON.stringify({
     permissions: {
