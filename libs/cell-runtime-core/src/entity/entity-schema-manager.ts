@@ -1,9 +1,10 @@
-import { sql } from 'kysely';
-import type { Kysely } from 'kysely';
-import type { CellManifestV1, EntityDefinition, FieldType } from '@ikary/contract';
+import type { DatabaseService } from '@ikary/system-db-core';
+import { sql } from '@ikary/system-db-core';
+import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
 import type { CellRuntimeDatabase } from '../db/schema.js';
+import type { FieldType } from '../shared/field-type.schema.js';
 
-function fieldTypeToSql(type: FieldType, isPostgres: boolean): string {
+export function fieldTypeToSql(type: FieldType, isPostgres: boolean): string {
   switch (type) {
     case 'string':
     case 'text':
@@ -26,11 +27,16 @@ export function tableName(entityKey: string): string {
   return `entity_${entityKey}`;
 }
 
+export function isDuplicateColumnError(msg: string): boolean {
+  return msg.includes('already exists') || msg.includes('duplicate column');
+}
+
 export class EntitySchemaManager {
-  constructor(
-    private readonly db: Kysely<CellRuntimeDatabase>,
-    private readonly isPostgres: boolean = false,
-  ) {}
+  private readonly isPostgres: boolean;
+
+  constructor(private readonly dbService: DatabaseService<CellRuntimeDatabase>) {
+    this.isPostgres = !dbService.isSqlite;
+  }
 
   async ensureSystemTables(): Promise<void> {
     if (this.isPostgres) {
@@ -46,7 +52,7 @@ export class EntitySchemaManager {
           diff TEXT,
           occurred_at TIMESTAMPTZ NOT NULL
         )
-      `.execute(this.db);
+      `.execute(this.dbService.db);
     } else {
       await sql`
         CREATE TABLE IF NOT EXISTS audit_log (
@@ -60,12 +66,11 @@ export class EntitySchemaManager {
           diff TEXT,
           occurred_at TEXT NOT NULL
         )
-      `.execute(this.db);
+      `.execute(this.dbService.db);
     }
   }
 
   async initFromManifest(manifest: CellManifestV1): Promise<void> {
-    await this.ensureSystemTables();
     for (const entity of manifest.spec.entities ?? []) {
       await this.ensureEntityTable(entity);
     }
@@ -90,7 +95,7 @@ export class EntitySchemaManager {
           deleted_at TIMESTAMPTZ
           ${extra}
         )
-      `).execute(this.db);
+      `).execute(this.dbService.db);
     } else {
       await sql.raw(`
         CREATE TABLE IF NOT EXISTS ${table} (
@@ -101,10 +106,9 @@ export class EntitySchemaManager {
           deleted_at TEXT
           ${extra}
         )
-      `).execute(this.db);
+      `).execute(this.dbService.db);
     }
 
-    // Additive migration: add any new fields without dropping existing columns
     for (const field of entity.fields ?? []) {
       await this.addColumnIfMissing(
         table,
@@ -116,10 +120,11 @@ export class EntitySchemaManager {
 
   private async addColumnIfMissing(table: string, column: string, sqlType: string): Promise<void> {
     try {
-      await sql.raw(`ALTER TABLE ${table} ADD COLUMN ${column} ${sqlType}`).execute(this.db);
-    } catch (err: any) {
-      const msg: string = (err?.message ?? '').toLowerCase();
-      if (msg.includes('already exists') || msg.includes('duplicate column')) return;
+      await sql.raw(`ALTER TABLE ${table} ADD COLUMN ${column} ${sqlType}`).execute(this.dbService.db);
+    } catch (err: unknown) {
+      /* v8 ignore next */
+      const msg = ((err as { message?: string })?.message ?? '').toLowerCase();
+      if (isDuplicateColumnError(msg)) return;
       throw err;
     }
   }

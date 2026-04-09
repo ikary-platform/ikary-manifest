@@ -1,20 +1,11 @@
-import type { Kysely } from 'kysely';
+import type { DatabaseService } from '@ikary/system-db-core';
 import type { CellRuntimeDatabase, AuditLogRow, NewAuditLog } from '../db/schema.js';
+import type { AuditEntry } from '../shared/audit-entry.schema.js';
 
-export type ChangeKind = 'snapshot' | 'patch' | 'rollback';
-
-export interface AuditEntry {
-  entityKey: string;
-  entityId: string;
-  eventType: string;
-  resourceVersion: number;
-  changeKind: ChangeKind;
-  snapshot: Record<string, unknown>;
-  diff?: Record<string, unknown> | null;
-}
+export type { AuditEntry };
 
 export class AuditService {
-  constructor(private readonly db: Kysely<CellRuntimeDatabase>) {}
+  constructor(private readonly dbService: DatabaseService<CellRuntimeDatabase>) {}
 
   async insert(entry: AuditEntry): Promise<void> {
     const row: NewAuditLog = {
@@ -28,11 +19,11 @@ export class AuditService {
       occurred_at: new Date().toISOString(),
     };
 
-    await this.db.insertInto('audit_log').values(row).execute();
+    await this.dbService.db.insertInto('audit_log').values(row).execute();
   }
 
   async list(entityKey: string, entityId: string): Promise<AuditLogRow[]> {
-    return this.db
+    return this.dbService.db
       .selectFrom('audit_log')
       .selectAll()
       .where('entity_key', '=', entityKey)
@@ -42,7 +33,7 @@ export class AuditService {
   }
 
   async findByVersion(entityKey: string, entityId: string, version: number): Promise<AuditLogRow | null> {
-    const row = await this.db
+    const row = await this.dbService.db
       .selectFrom('audit_log')
       .selectAll()
       .where('entity_key', '=', entityKey)

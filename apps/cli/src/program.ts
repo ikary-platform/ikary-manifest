@@ -11,6 +11,11 @@ import {
   localLogsCommand,
   localResetDataCommand,
 } from './commands/local.js';
+import {
+  localDbMigrateCommand,
+  localDbStatusCommand,
+  localDbResetCommand,
+} from './commands/local-db.js';
 
 export function createProgram(): Command {
   configureTheme();
@@ -81,6 +86,32 @@ export function createProgram(): Command {
     .command('reset-data')
     .description('Delete the local SQLite data volume (stops the stack first)')
     .action(localResetDataCommand);
+
+  const localDb = local.command('db').description('Database migration commands');
+
+  localDb
+    .command('migrate')
+    .description('Apply pending database migrations')
+    .option(
+      '--database-url <url>',
+      'Database connection URL (default: DATABASE_URL env or sqlite://./local.db)',
+    )
+    .option('--dry-run', 'Print pending migrations without applying them')
+    .option('--force', 'Re-apply all migrations even if already tracked')
+    .action(localDbMigrateCommand);
+
+  localDb
+    .command('status')
+    .description('Show which migrations have been applied')
+    .option('--database-url <url>', 'Database connection URL')
+    .action(localDbStatusCommand);
+
+  localDb
+    .command('reset')
+    .description('Clear migration tracking so all migrations run again (dev only)')
+    .option('--database-url <url>', 'Database connection URL')
+    .option('--yes', 'Confirm the reset without prompting')
+    .action(localDbResetCommand);
 
   return program;
 }

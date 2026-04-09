@@ -70,8 +70,8 @@ watch(manifestPath, () => {
   }
 });
 
-// SPA fallback
-app.get('*', (_req, res) => {
+// SPA fallback (Express 5 requires named wildcards)
+app.get('/{*splat}', (_req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 

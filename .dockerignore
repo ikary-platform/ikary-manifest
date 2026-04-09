@@ -14,6 +14,9 @@ libs/data
 libs/contract/coverage
 libs/engine/coverage
 libs/loader/coverage
+libs/cell-runtime-core/coverage
+libs/system-db-core/coverage
+libs/cell-migration-core/coverage
 apps/cli
 apps/ikary
 *.md
