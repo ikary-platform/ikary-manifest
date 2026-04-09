@@ -12,14 +12,12 @@ import {
   EntityService,
   AuditService,
 } from '@ikary/cell-runtime-core';
-import {
-  DatabaseService,
-  databaseConnectionOptionsSchema,
-} from '@ikary/system-db-core';
+import { DatabaseService } from '@ikary/system-db-core';
 import { MigrationRunner } from '@ikary/cell-migration-core';
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
 import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
+import { DatabaseModule } from './database.module.js';
 import type { RuntimeContext } from './runtime-context.js';
 
 function resolveMigrationsRoot(packageName: string): string {
@@ -39,6 +37,7 @@ function resolveMigrationsRoot(packageName: string): string {
 
 @Module({
   imports: [
+    DatabaseModule,
     SystemLogModule.register({
       databaseProviderToken: DatabaseService,
       service: 'cell-runtime-api',
@@ -47,15 +46,6 @@ function resolveMigrationsRoot(packageName: string): string {
   ],
   controllers: [HealthController, EntityController],
   providers: [
-    // DatabaseService is provided here so SystemLogModule can inject it without circularity.
-    {
-      provide: DatabaseService,
-      useFactory: () => {
-        const rawDbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
-        const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
-        return new DatabaseService(dbOptions);
-      },
-    },
     {
       provide: RUNTIME_CONTEXT_TOKEN,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
