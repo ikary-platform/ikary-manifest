@@ -1,4 +1,5 @@
 import { spawn, execSync } from 'node:child_process';
+import { createServer } from 'node:net';
 
 export type ContainerRuntime = 'docker' | 'podman';
 
@@ -79,8 +80,7 @@ export async function waitForHealth(url: string, timeoutMs = 30_000): Promise<bo
 
 export function isPortInUse(port: number): Promise<boolean> {
   return new Promise((resolve) => {
-    const net = require('node:net');
-    const server = net.createServer();
+    const server = createServer();
     server.once('error', () => resolve(true));
     server.once('listening', () => {
       server.close(() => resolve(false));
