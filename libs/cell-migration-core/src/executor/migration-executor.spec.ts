@@ -130,6 +130,22 @@ describe('MigrationExecutor', () => {
     expect(result.applied).toBe(0);
   });
 
+  it('applies multi-statement SQL files (multiple DDL statements per file)', async () => {
+    const version = makeVersion('0.1.0', [
+      {
+        name: '001-multi.sql',
+        content: [
+          'CREATE TABLE multi_stmt (id INTEGER PRIMARY KEY);',
+          'CREATE INDEX IF NOT EXISTS idx_multi_stmt ON multi_stmt (id);',
+        ].join('\n'),
+      },
+    ]);
+    await executor.execute([version]);
+
+    const rows = await (db.db as any).selectFrom('multi_stmt').selectAll().execute();
+    expect(rows).toHaveLength(0);
+  });
+
   it('verifies SCHEMA_VERSIONS_TABLE constant', () => {
     expect(SCHEMA_VERSIONS_TABLE).toBe('ikary_schema_versions');
   });

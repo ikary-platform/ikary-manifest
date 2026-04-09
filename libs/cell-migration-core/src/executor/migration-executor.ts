@@ -19,7 +19,13 @@ export class MigrationExecutor {
       await this.dbService.withTransaction(async (trx) => {
         for (const file of version.files) {
           const sqlText = readFileSync(file.absolutePath, 'utf8');
-          await sql.raw(sqlText).execute(trx as any);
+          const statements = sqlText
+            .split(';')
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0);
+          for (const statement of statements) {
+            await sql.raw(statement).execute(trx as any);
+          }
         }
         /* v8 ignore next */
         const appliedAt = this.dbService.isSqlite ? new Date().toISOString() : new Date();
