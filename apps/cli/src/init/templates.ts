@@ -164,13 +164,16 @@ for actionable fix suggestions.
 ## MCP server
 
 An MCP server is configured in \`.mcp.json\` at \`https://public.ikary.co/mcp\`.
-It exposes 16 tools across four categories:
+It exposes 19 tools across five categories:
 
 **Discovery:** \`get_manifest_schema\`, \`get_entity_definition_schema\`,
 \`get_page_schema\`, \`get_capability_schema\`
 
 **Registry:** \`list_primitives\`, \`get_primitive_contract\`, \`list_examples\`,
 \`get_example_manifest\`
+
+**Primitives:** \`get_primitive_examples\`, \`scaffold_primitive\`,
+\`validate_primitive_props\`
 
 **Guidance:** \`recommend_manifest_structure\`, \`suggest_page_set_for_entities\`,
 \`suggest_relations\`, \`explain_validation_errors\`
@@ -180,6 +183,33 @@ It exposes 16 tools across four categories:
 
 Use MCP tools for interactive guidance. Use the REST API for programmatic
 access (curl, fetch, CLI).
+
+## Custom UI primitives
+
+Custom primitives live in \`primitives/<name>/\` and are registered in \`ikary-primitives.yaml\`.
+
+**CLI commands:**
+
+| Command | Purpose |
+|---------|---------|
+| \`ikary primitive add <name>\` | Scaffold a new primitive (6 files + config entry) |
+| \`ikary primitive validate\` | Validate all entries in ikary-primitives.yaml |
+| \`ikary primitive list\` | List core and custom primitives |
+| \`ikary primitive studio\` | Open the Primitive Studio in the browser |
+
+**MCP tools for primitives:**
+
+| Tool | Purpose |
+|------|---------|
+| \`list_primitives\` | List all primitives; filter by \`source: "custom"\` for project-specific ones |
+| \`get_primitive_contract\` | Get full props schema for a primitive |
+| \`get_primitive_examples\` | Get example scenarios for a custom primitive |
+| \`scaffold_primitive\` | Create a new primitive scaffold (same as CLI \`primitive add\`) |
+| \`validate_primitive_props\` | Validate a props object against a primitive's contract |
+
+**Workflow:** Use \`scaffold_primitive\` to bootstrap, then implement
+\`[Name].tsx\` and \`[Name]PresentationSchema.ts\`, then open
+\`http://localhost:3000/__primitive-studio\` to preview live.
 
 ## Local stack
 
@@ -301,13 +331,89 @@ export function generateBrowsePrimitivesCommand(): string {
   return `Show the available IKARY UI primitives.
 
 Use the list_primitives MCP tool to get the full catalog.
+Pass source: "custom" to see only project-specific primitives.
 
-Organize them by category (collection, input, form, layout, page, display,
-feedback) and explain which ones are relevant for the current manifest's
-page types.
+Organize them by category (data, form, layout, feedback, navigation, custom)
+and explain which ones are relevant for the current manifest's page types.
+
+For any primitive of interest, call get_primitive_contract to see its full
+props schema, then get_primitive_examples for sample prop sets.
 
 Read manifest.json first to understand what pages exist, then recommend
 primitives that match.
+`;
+}
+
+export function generateCreatePrimitiveCommand(): string {
+  return `Create a new custom UI primitive for this project.
+
+Ask the user what the primitive should do (name, purpose, props it needs).
+
+Use the scaffold_primitive MCP tool to generate the 6-file scaffold:
+  primitives/<name>/
+    <Name>.tsx                  # React component
+    <Name>PresentationSchema.ts # Zod schema
+    <name>.contract.yaml        # human-readable props contract
+    <Name>.resolver.ts          # props transform
+    <Name>.register.ts          # registry entry
+    <Name>.example.ts           # example scenarios
+
+scaffold_primitive also appends an entry to ikary-primitives.yaml.
+
+After scaffolding:
+1. Open primitives/<name>/<Name>.tsx and implement the component.
+   - Use props typed with z.infer<typeof <Name>PresentationSchema>.
+   - Keep it a pure function; no side effects.
+2. Update <Name>PresentationSchema.ts to reflect the real props.
+3. Update <name>.contract.yaml so the Studio editor shows accurate types.
+4. Update <Name>.example.ts with realistic scenario data.
+
+Validate the scaffold:
+  Run: ikary primitive validate
+
+Preview the primitive live:
+  Run: ikary local start manifest.json (if not already running)
+  Open: http://localhost:3000/__primitive-studio
+  The primitive will appear under the "Custom" group.
+
+Use validate_primitive_props to check that example props match the contract.
+`;
+}
+
+export function generateUpdatePrimitiveCommand(): string {
+  return `Update an existing custom UI primitive.
+
+Ask the user which primitive to update and what should change.
+
+Read the current files:
+  primitives/<name>/<Name>.tsx
+  primitives/<name>/<Name>PresentationSchema.ts
+  primitives/<name>/<name>.contract.yaml
+
+Use get_primitive_contract to see the current schema, then decide:
+
+──── NON-BREAKING change (no existing manifests break) ────────────────────
+Examples: adding an optional prop, changing a label, fixing a bug.
+
+1. Edit the component, schema, contract, and examples as needed.
+2. Keep the version number in <name>.contract.yaml unchanged.
+3. Run: ikary primitive validate
+4. Check the live preview at http://localhost:3000/__primitive-studio
+
+──── BREAKING change (existing manifests would break) ─────────────────────
+Examples: removing a required prop, renaming a prop, changing a prop type.
+
+1. Copy the current <Name>.register.ts to <Name>.v<N>.register.ts and
+   adjust it to register the old version under the explicit old version key.
+2. Bump the version in <name>.contract.yaml (e.g. "1.0.0" → "2.0.0").
+3. Update <Name>PresentationSchema.ts and <Name>.tsx for the new API.
+4. Add the old version key to breakingChanges in <name>.contract.yaml.
+5. Register the new version in <Name>.register.ts with the bumped version.
+6. Run: ikary primitive validate
+7. Update manifests that referenced the old primitive to use the new props.
+
+After any update, use validate_primitive_props with the new example props
+to confirm the contract and component stay in sync.
 `;
 }
 
@@ -338,7 +444,11 @@ export function generateClaudeSettings(): string {
         "Bash(ikary local stop)",
         "Bash(ikary local status)",
         "Bash(ikary local logs *)",
-        "Bash(ikary local reset-data)"
+        "Bash(ikary local reset-data)",
+        "Bash(ikary primitive add *)",
+        "Bash(ikary primitive validate)",
+        "Bash(ikary primitive list)",
+        "Bash(ikary primitive studio)"
       ]
     }
   }, null, 2);

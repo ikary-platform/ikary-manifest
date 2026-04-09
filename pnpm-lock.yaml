@@ -408,6 +408,12 @@ importers:
       '@ikary/presentation':
         specifier: workspace:*
         version: link:../../libs/presentation
+      '@ikary/primitive-contract':
+        specifier: workspace:*
+        version: link:../../libs/primitive-contract
+      '@ikary/primitive-studio':
+        specifier: workspace:*
+        version: link:../../libs/primitive-studio
       '@ikary/primitives':
         specifier: workspace:*
         version: link:../../libs/primitives
@@ -423,6 +429,9 @@ importers:
       express-rate-limit:
         specifier: ^7.0.0
         version: 7.5.1(express@5.2.1)
+      lucide-react:
+        specifier: ^0.469.0
+        version: 0.469.0(react@19.2.4)
       react:
         specifier: ^19.0.0
         version: 19.2.4

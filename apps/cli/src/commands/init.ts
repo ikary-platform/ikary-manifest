@@ -13,6 +13,8 @@ import {
   generateValidateCommand,
   generateRecommendCommand,
   generateBrowsePrimitivesCommand,
+  generateCreatePrimitiveCommand,
+  generateUpdatePrimitiveCommand,
   generateClaudeSettings,
   generateMcpConfig,
   generateGitignore,
@@ -135,6 +137,8 @@ export async function initCommand(projectName?: string): Promise<void> {
     await writeFile(join(projectDir, '.claude', 'commands', 'validate.md'), generateValidateCommand(), 'utf-8');
     await writeFile(join(projectDir, '.claude', 'commands', 'recommend.md'), generateRecommendCommand(), 'utf-8');
     await writeFile(join(projectDir, '.claude', 'commands', 'browse-primitives.md'), generateBrowsePrimitivesCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'create-primitive.md'), generateCreatePrimitiveCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'update-primitive.md'), generateUpdatePrimitiveCommand(), 'utf-8');
     await writeFile(join(projectDir, '.claude', 'settings.json'), generateClaudeSettings(), 'utf-8');
     await writeFile(join(projectDir, '.gitignore'), generateGitignore(), 'utf-8');
 
@@ -148,7 +152,7 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.body(`  ${theme.accent('manifest.json')}          Cell Manifest`);
     fmt.body(`  ${theme.accent('CLAUDE.md')}              AI context for Claude Code`);
     fmt.body(`  ${theme.accent('.gitignore')}             Excludes local.db and OS files`);
-    fmt.body(`  ${theme.accent('.claude/commands/')}       /add-entity  /validate  /recommend  /browse-primitives`);
+    fmt.body(`  ${theme.accent('.claude/commands/')}       /add-entity  /validate  /recommend  /browse-primitives  /create-primitive  /update-primitive`);
     if (options.aiTool === 'claude-code') {
       fmt.body(`  ${theme.accent('.mcp.json')}              MCP server config`);
     }

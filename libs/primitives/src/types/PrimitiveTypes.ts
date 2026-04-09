@@ -14,6 +14,8 @@ export type UIPrimitiveDefinition<ContractProps = unknown, ResolvedProps = unkno
   isController?: boolean;
   version?: string;
   source?: 'core' | 'custom';
+  category?: string;
+  label?: string;
 };
 
 export type RegisterablePrimitive<ContractProps = unknown, ResolvedProps = unknown, Context = unknown> =

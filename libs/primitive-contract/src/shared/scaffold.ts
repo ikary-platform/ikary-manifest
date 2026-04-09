@@ -33,7 +33,7 @@ export function scaffoldPrimitiveFiles(opts: PrimitiveScaffoldOptions): Scaffold
     [`${dir}/${PascalName}PresentationSchema.ts`]: generatePresentationSchema(PascalName),
     [`${dir}/${name}.contract.yaml`]: generateContract(name, label, description, category, version),
     [`${dir}/${PascalName}.resolver.ts`]: generateResolver(PascalName),
-    [`${dir}/${PascalName}.register.ts`]: generateRegister(name, PascalName, version),
+    [`${dir}/${PascalName}.register.ts`]: generateRegister(name, PascalName, version, label, category),
     [`${dir}/${PascalName}.example.ts`]: generateExample(PascalName, label),
   };
 }
@@ -99,7 +99,7 @@ export function resolve${PascalName}(props: ${PascalName}Props): ${PascalName}Pr
 `;
 }
 
-function generateRegister(name: string, PascalName: string, version: string): string {
+function generateRegister(name: string, PascalName: string, version: string, label: string, category: string): string {
   return `import { registerPrimitiveVersion } from '@ikary/primitives';
 import { ${PascalName} } from './${PascalName}';
 import { resolve${PascalName} } from './${PascalName}.resolver';
@@ -108,6 +108,8 @@ registerPrimitiveVersion('${name}', '${version}', {
   component: ${PascalName},
   resolver: resolve${PascalName},
   source: 'custom',
+  category: '${category}',
+  label: '${label}',
 });
 `;
 }
