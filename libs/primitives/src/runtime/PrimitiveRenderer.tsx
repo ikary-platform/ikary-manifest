@@ -3,13 +3,14 @@ import { getPrimitive } from '../registry/primitiveRegistry';
 
 interface PrimitiveRendererProps {
   primitive: string;
+  version?: string;
   props?: unknown;
   runtime?: unknown;
   children?: ReactNode;
 }
 
-export function PrimitiveRenderer({ primitive, props = {}, runtime, children }: PrimitiveRendererProps) {
-  const definition = getPrimitive(primitive);
+export function PrimitiveRenderer({ primitive, version, props = {}, runtime, children }: PrimitiveRendererProps) {
+  const definition = getPrimitive(primitive, version);
 
   if (!definition) {
     console.warn(`[cell-runtime] Unknown primitive: "${primitive}"`);

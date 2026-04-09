@@ -11,9 +11,9 @@ import { isDemoPrimitiveVisible } from '../features/launchpad/demo-hidden-primit
 
 const PRIMITIVE_DOCUMENTATION_MD_LOADERS = import.meta.glob(
   [
-    '../../../../libs/cell-contract-presentation/src/contract/**/*.md',
-    '!../../../../libs/cell-contract-presentation/src/contract/**/*.LLD.md',
-    '!../../../../libs/cell-contract-presentation/src/contract/**/*.llm.md',
+    '../../../libs/presentation/src/contract/**/*.md',
+    '!../../../libs/presentation/src/contract/**/*.LLD.md',
+    '!../../../libs/presentation/src/contract/**/*.llm.md',
   ],
   {
     query: '?raw',

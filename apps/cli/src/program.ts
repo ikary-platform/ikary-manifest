@@ -17,6 +17,10 @@ import {
   localDbStatusCommand,
   localDbResetCommand,
 } from './commands/local-db.js';
+import { primitiveAddCommand } from './commands/primitive-add.js';
+import { primitiveValidateCommand } from './commands/primitive-validate.js';
+import { primitiveStudioCommand } from './commands/primitive-studio.js';
+import { primitiveListCommand } from './commands/primitive-list.js';
 
 export function createProgram(): Command {
   configureTheme();
@@ -124,6 +128,35 @@ export function createProgram(): Command {
     .option('--database-url <url>', 'Database connection URL')
     .option('--yes', 'Confirm the reset without prompting')
     .action(localDbResetCommand);
+
+  const primitive = program
+    .command('primitive')
+    .description('Manage UI primitives (scaffold, validate, list, preview)');
+
+  primitive
+    .command('add <name>')
+    .description('Scaffold a new custom primitive in the current project')
+    .option('--category <cat>', 'Primitive category (data|form|layout|feedback|navigation|custom)')
+    .option('--label <label>', 'Display label')
+    .option('--description <desc>', 'Short description')
+    .action(primitiveAddCommand);
+
+  primitive
+    .command('validate')
+    .description('Validate all custom primitives in ikary-primitives.yaml')
+    .action(primitiveValidateCommand);
+
+  primitive
+    .command('studio')
+    .description('Open the Primitive Studio in the browser')
+    .option('-p, --port <port>', 'Local stack port', '3000')
+    .action(primitiveStudioCommand);
+
+  primitive
+    .command('list')
+    .description('List all registered primitives (core + custom)')
+    .option('--json', 'Output as JSON')
+    .action(primitiveListCommand);
 
   return program;
 }

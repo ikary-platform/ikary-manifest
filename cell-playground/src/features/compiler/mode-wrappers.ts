@@ -115,7 +115,7 @@ export function wrapEntityForMode(parsed: unknown, mode: EntityWrapMode): CellMa
       : `${key}-create`;
 
   const manifest: CellManifestV1 = {
-    apiVersion: 'ikary.io/v1alpha1',
+    apiVersion: 'ikary.co/v1alpha1',
     kind: 'Cell',
     metadata: {
       key: `${key}-preview`,
@@ -201,7 +201,7 @@ export function wrapPage(parsed: unknown): CellManifestV1 {
   const pageTitle = page.title ?? 'Page Preview';
 
   return {
-    apiVersion: 'ikary.io/v1alpha1',
+    apiVersion: 'ikary.co/v1alpha1',
     kind: 'Cell',
     metadata: {
       key: `${key}-preview`,

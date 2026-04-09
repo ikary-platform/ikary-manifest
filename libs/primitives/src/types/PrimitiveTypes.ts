@@ -12,6 +12,8 @@ export type UIPrimitiveDefinition<ContractProps = unknown, ResolvedProps = unkno
   component: PrimitiveComponent<ResolvedProps>;
   resolver?: PrimitiveResolver<ContractProps, ResolvedProps, Context>;
   isController?: boolean;
+  version?: string;
+  source?: 'core' | 'custom';
 };
 
 export type RegisterablePrimitive<ContractProps = unknown, ResolvedProps = unknown, Context = unknown> =

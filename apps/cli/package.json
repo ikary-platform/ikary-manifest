@@ -51,6 +51,7 @@
   "dependencies": {
     "@ikary/cell-migration-core": "workspace:*",
     "@ikary/cell-runtime-core": "workspace:*",
+    "@ikary/primitive-contract": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",

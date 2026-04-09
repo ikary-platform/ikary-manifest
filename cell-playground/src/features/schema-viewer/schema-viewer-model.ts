@@ -29,8 +29,8 @@ const DETAIL_CACHE = new Map<string, SchemaViewerDetail>();
 const HUMAN_CONTRACT_MD_CACHE = new Map<string, string | null>();
 const HUMAN_CONTRACT_MD_LOADERS = import.meta.glob(
   [
-    '../../../../../libs/cell-contract-core/src/contract/**/*.md',
-    '!../../../../../libs/cell-contract-core/src/contract/**/*.llm.md',
+    '../../../../libs/contract/src/contract/**/*.md',
+    '!../../../../libs/contract/src/contract/**/*.llm.md',
   ],
   {
     query: '?raw',

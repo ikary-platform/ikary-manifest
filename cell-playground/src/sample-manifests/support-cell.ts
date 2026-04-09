@@ -1,7 +1,7 @@
 import type { CellManifestV1 } from '@ikary/cell-contract-core';
 
 export const SUPPORT_CELL_MANIFEST: CellManifestV1 = {
-  apiVersion: 'ikary.io/v1alpha1',
+  apiVersion: 'ikary.co/v1alpha1',
   kind: 'Cell',
   metadata: {
     key: 'support',

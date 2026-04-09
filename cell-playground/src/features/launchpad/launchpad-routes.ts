@@ -41,7 +41,8 @@ export type LaunchpadTab = 'views' | 'data' | 'runtime' | 'primitives' | 'schema
 export type LaunchpadDestination =
   | { kind: 'studio' }
   | { kind: 'builder'; mode: BuilderMode }
-  | { kind: 'runtime'; primitive: string };
+  | { kind: 'runtime'; primitive: string }
+  | { kind: 'primitive-studio'; primitiveKey: string };
 
 export interface LaunchpadBlockDefinition {
   tab: LaunchpadTab;
@@ -328,7 +329,253 @@ const BLOCKS: LaunchpadBlockDefinition[] = [
     destination: { kind: 'builder', mode: 'policies-roles' },
   },
 
-  // Runtime
+  // Primitives tab (studio view)
+  {
+    tab: 'primitives',
+    slug: 'data-grid',
+    aliases: ['data_grid'],
+    title: 'Data Grid',
+    description: 'Tabular data display with sorting, filtering, and pagination',
+    icon: Table2,
+    destination: { kind: 'primitive-studio', primitiveKey: 'data-grid' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'list-page',
+    aliases: ['list_page'],
+    title: 'List Page',
+    description: 'Full-page entity list container with grid and controls',
+    icon: LayoutTemplate,
+    destination: { kind: 'primitive-studio', primitiveKey: 'list-page' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'card-list',
+    aliases: ['card_list'],
+    title: 'Card List',
+    description: 'Grid of entity cards with actions and metadata',
+    icon: PackageOpen,
+    destination: { kind: 'primitive-studio', primitiveKey: 'card-list' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'metric-card',
+    aliases: ['metric_card'],
+    title: 'Metric Card',
+    description: 'KPI display with trend indicator and sparkline',
+    icon: Sigma,
+    destination: { kind: 'primitive-studio', primitiveKey: 'metric-card' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'activity-feed',
+    aliases: ['activity_feed'],
+    title: 'Activity Feed',
+    description: 'Chronological activity stream',
+    icon: Bell,
+    destination: { kind: 'primitive-studio', primitiveKey: 'activity-feed' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'pagination',
+    title: 'Pagination',
+    description: 'Page navigation controls',
+    icon: SlidersHorizontal,
+    destination: { kind: 'primitive-studio', primitiveKey: 'pagination' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'page-header',
+    aliases: ['page_header'],
+    title: 'Page Header',
+    description: 'Page title, breadcrumbs, and primary actions',
+    icon: LayoutTemplate,
+    destination: { kind: 'primitive-studio', primitiveKey: 'page-header' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'detail-page',
+    aliases: ['detail_page'],
+    title: 'Detail Page',
+    description: 'Entity detail view with tabs and actions',
+    icon: FileText,
+    destination: { kind: 'primitive-studio', primitiveKey: 'detail-page' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'dashboard-page',
+    aliases: ['dashboard_page'],
+    title: 'Dashboard Page',
+    description: 'KPI widgets and content sections',
+    icon: LayoutDashboard,
+    destination: { kind: 'primitive-studio', primitiveKey: 'dashboard-page' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'detail-section',
+    aliases: ['detail_section'],
+    title: 'Detail Section',
+    description: 'Collapsible content block within a detail page',
+    icon: ClipboardList,
+    destination: { kind: 'primitive-studio', primitiveKey: 'detail-section' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'detail-item',
+    aliases: ['detail_item'],
+    title: 'Detail Item',
+    description: 'Label + value display for entity fields',
+    icon: FileText,
+    destination: { kind: 'primitive-studio', primitiveKey: 'detail-item' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'empty-state',
+    aliases: ['empty_state'],
+    title: 'Empty State',
+    description: 'Zero-result feedback with call to action',
+    icon: Box,
+    destination: { kind: 'primitive-studio', primitiveKey: 'empty-state' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'loading-state',
+    aliases: ['loading_state'],
+    title: 'Loading State',
+    description: 'Skeleton and spinner feedback patterns',
+    icon: SlidersHorizontal,
+    destination: { kind: 'primitive-studio', primitiveKey: 'loading-state' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'error-state',
+    aliases: ['error_state'],
+    title: 'Error State',
+    description: 'Error message with retry and escalation actions',
+    icon: Shield,
+    destination: { kind: 'primitive-studio', primitiveKey: 'error-state' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'field-value',
+    aliases: ['field_value'],
+    title: 'Field Value',
+    description: 'Typed field value renderer (text, badge, link, etc.)',
+    icon: Braces,
+    destination: { kind: 'primitive-studio', primitiveKey: 'field-value' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'filter-bar',
+    aliases: ['filter_bar'],
+    title: 'Filter Bar',
+    description: 'Active filters, search, and sort controls',
+    icon: SlidersHorizontal,
+    destination: { kind: 'primitive-studio', primitiveKey: 'filter-bar' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'bulk-command-bar',
+    aliases: ['bulk_command_bar'],
+    title: 'Bulk Command Bar',
+    description: 'Multi-select action bar',
+    icon: Zap,
+    destination: { kind: 'primitive-studio', primitiveKey: 'bulk-command-bar' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'tabs',
+    title: 'Tabs',
+    description: 'Tab strip for section navigation',
+    icon: LayoutGrid,
+    destination: { kind: 'primitive-studio', primitiveKey: 'tabs' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'input',
+    title: 'Input',
+    description: 'Text, number, email, and password inputs',
+    icon: MousePointerClick,
+    destination: { kind: 'primitive-studio', primitiveKey: 'input' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'textarea',
+    title: 'Textarea',
+    description: 'Multi-line text input',
+    icon: FileText,
+    destination: { kind: 'primitive-studio', primitiveKey: 'textarea' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'select',
+    title: 'Select',
+    description: 'Dropdown option selector',
+    icon: SlidersHorizontal,
+    destination: { kind: 'primitive-studio', primitiveKey: 'select' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'checkbox',
+    title: 'Checkbox',
+    description: 'Boolean toggle checkbox',
+    icon: ShieldCheck,
+    destination: { kind: 'primitive-studio', primitiveKey: 'checkbox' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'radio-group',
+    aliases: ['radio_group'],
+    title: 'Radio Group',
+    description: 'Exclusive option selection',
+    icon: Radio,
+    destination: { kind: 'primitive-studio', primitiveKey: 'radio-group' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'toggle',
+    title: 'Toggle',
+    description: 'On/off switch control',
+    icon: BellRing,
+    destination: { kind: 'primitive-studio', primitiveKey: 'toggle' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'date-input',
+    aliases: ['date_input'],
+    title: 'Date Input',
+    description: 'Date and datetime picker',
+    icon: ClipboardList,
+    destination: { kind: 'primitive-studio', primitiveKey: 'date-input' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'form-field',
+    aliases: ['form_field'],
+    title: 'Form Field',
+    description: 'Labeled field wrapper with validation messages',
+    icon: PenLine,
+    destination: { kind: 'primitive-studio', primitiveKey: 'form-field' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'form-section',
+    aliases: ['form_section'],
+    title: 'Form Section',
+    description: 'Grouped form fields with header and actions',
+    icon: LayoutTemplate,
+    destination: { kind: 'primitive-studio', primitiveKey: 'form-section' },
+  },
+  {
+    tab: 'primitives',
+    slug: 'form',
+    title: 'Form',
+    description: 'Full entity form with draft, commit, and discard',
+    icon: PenLine,
+    destination: { kind: 'primitive-studio', primitiveKey: 'form' },
+  },
+
+  // Runtime tab (kept for backward compat — same blocks, legacy routing)
   {
     tab: 'runtime',
     slug: 'data-grid',
@@ -641,7 +888,47 @@ const GROUP_SPECS: Record<LaunchpadTab, Array<{ label: string; slugs: string[] }
       ],
     },
   ],
-  primitives: [],
+  primitives: [
+    {
+      label: 'Data',
+      slugs: [
+        'list-page',
+        'data-grid',
+        'card-list',
+        'metric-card',
+        'activity-feed',
+        'pagination',
+        'page-header',
+        'detail-page',
+        'dashboard-page',
+        'detail-section',
+        'detail-item',
+      ],
+    },
+    {
+      label: 'Feedback',
+      slugs: ['empty-state', 'loading-state', 'error-state', 'field-value'],
+    },
+    {
+      label: 'Filters & Commands',
+      slugs: ['filter-bar', 'bulk-command-bar', 'tabs'],
+    },
+    {
+      label: 'Form',
+      slugs: [
+        'input',
+        'textarea',
+        'select',
+        'checkbox',
+        'radio-group',
+        'toggle',
+        'date-input',
+        'form-field',
+        'form-section',
+        'form',
+      ],
+    },
+  ],
   schemas: [],
 };
 
@@ -747,6 +1034,20 @@ export function resolveRuntimeSlug(slug: string): { primitive: string; block: La
 
   return {
     primitive: block.destination.primitive,
+    block,
+  };
+}
+
+export function resolvePrimitiveStudioSlug(
+  slug: string,
+): { primitiveKey: string; block: LaunchpadBlockDefinition } | null {
+  const block = resolveBlock('primitives', slug);
+  if (!block || block.destination.kind !== 'primitive-studio') {
+    return null;
+  }
+
+  return {
+    primitiveKey: block.destination.primitiveKey,
     block,
   };
 }

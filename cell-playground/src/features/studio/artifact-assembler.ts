@@ -101,7 +101,7 @@ function normalizeManifest(manifest: CellManifestV1, current: StudioCurrentArtif
   const fallbackKey = deriveCellKey(asNonEmptyString(metadata.key) ?? fallbackName);
 
   return {
-    apiVersion: 'ikary.io/v1alpha1',
+    apiVersion: 'ikary.co/v1alpha1',
     kind: 'Cell',
     metadata: {
       key: asNonEmptyString(metadata.key) ?? fallbackKey,
@@ -182,7 +182,7 @@ export function assembleManifest(current: StudioCurrentArtifactSet): CellManifes
   const pages = buildPagesFromLayouts(layouts);
 
   return {
-    apiVersion: 'ikary.io/v1alpha1',
+    apiVersion: 'ikary.co/v1alpha1',
     kind: 'Cell',
     metadata: {
       key: cellKey,

@@ -2,11 +2,13 @@ import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-do
 import { LaunchpadPage } from '../pages/launchpad-page';
 import { BuilderPage } from '../pages/builder-page';
 import { RuntimePage } from '../pages/runtime-page';
+import { PrimitiveStudioPage } from '../pages/primitive-studio-page';
 import { StudioPage } from '../pages/studio-page';
 import {
   resolveBlock,
   resolveLegacyMode,
   resolveRuntimeSlug,
+  resolvePrimitiveStudioSlug,
   toBlockPath,
   toTabPath,
 } from '../features/launchpad/launchpad-routes';
@@ -61,6 +63,31 @@ function DataBlockRoute() {
   }
 
   return <BuilderPage mode={resolved.destination.mode} onBack={() => navigate(toTabPath('data'))} />;
+}
+
+function PrimitivesBlockRoute() {
+  const { blockSlug } = useParams<{ blockSlug: string }>();
+
+  if (!blockSlug) {
+    return <Navigate to={toTabPath('primitives')} replace />;
+  }
+
+  const resolved = resolvePrimitiveStudioSlug(blockSlug);
+  if (!resolved) {
+    return <Navigate to={toTabPath('primitives')} replace />;
+  }
+
+  if (blockSlug !== resolved.block.slug) {
+    return <Navigate to={toBlockPath('primitives', resolved.block.slug)} replace />;
+  }
+
+  return (
+    <PrimitiveStudioPage
+      key={resolved.primitiveKey}
+      primitiveKey={resolved.primitiveKey}
+      backPath={toTabPath('primitives')}
+    />
+  );
 }
 
 function RuntimeBlockRoute() {
@@ -126,7 +153,7 @@ export function Root() {
 
       <Route path="/views/:blockSlug" element={<ViewsBlockRoute />} />
       <Route path="/data/:blockSlug" element={<DataBlockRoute />} />
-      <Route path="/primitives/:blockSlug" element={<RuntimeBlockRoute />} />
+      <Route path="/primitives/:blockSlug" element={<PrimitivesBlockRoute />} />
       <Route path="/runtime" element={<Navigate to={toTabPath('primitives')} replace />} />
       <Route path="/runtime/:blockSlug" element={<RuntimeBlockRoute />} />
 
