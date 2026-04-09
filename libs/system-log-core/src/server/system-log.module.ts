@@ -33,7 +33,7 @@ export class SystemLogModule {
 
     const providers: Provider[] = [
       { provide: SYSTEM_LOG_MODULE_OPTIONS, useValue: resolved },
-      { provide: SYSTEM_LOG_DATABASE, useExisting: input.databaseProviderToken },
+      { provide: SYSTEM_LOG_DATABASE, useFactory: (db: unknown) => db, inject: [input.databaseProviderToken] },
       LogRepository,
       LogSettingsRepository,
       LogSinksRepository,
