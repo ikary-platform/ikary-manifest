@@ -49,6 +49,9 @@
     "dev": "tsx src/bin/cli.ts"
   },
   "dependencies": {
+    "@ikary/cell-migration-core": "workspace:*",
+    "@ikary/cell-runtime-core": "workspace:*",
+    "@ikary/system-db-core": "workspace:*",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "commander": "^13.0.0",

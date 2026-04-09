@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import type { EntityRepository, ListOptions, ListResult } from './entity-repository.js';
+import type { EntityRepository } from './entity-repository.js';
+import type { ListOptionsInput, ListResult } from '../shared/list-options.schema.js';
 import type { AuditService } from '../audit/audit-service.js';
 import type { AuditLogRow } from '../db/schema.js';
 import { EntityNotFoundError } from '../errors.js';
@@ -24,7 +25,7 @@ export class EntityService {
     private readonly audit: AuditService,
   ) {}
 
-  async list(entityKey: string, opts?: ListOptions): Promise<ListResult<Record<string, unknown>>> {
+  async list(entityKey: string, opts?: ListOptionsInput): Promise<ListResult<Record<string, unknown>>> {
     return this.repository.list(entityKey, opts);
   }
 
@@ -110,7 +111,7 @@ export class EntityService {
     }
 
     const snapshot = JSON.parse(auditEntry.snapshot) as Record<string, unknown>;
-    const newVersion = ((current.version as number | undefined) ?? expectedVersion ?? 1) + 1;
+    const newVersion = (current['version'] as number) + 1;
 
     const restored = await this.repository.restoreSnapshot(entityKey, id, snapshot, newVersion);
 

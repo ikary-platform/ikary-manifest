@@ -44,6 +44,63 @@ jobs:
 
       - run: pnpm coverage:ui
 
+  coverage-system-db-core:
+    name: Coverage — system-db-core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - run: pnpm coverage:system-db-core
+
+  coverage-cell-migration-core:
+    name: Coverage — cell-migration-core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - run: pnpm coverage:cell-migration-core
+
+  coverage-cell-runtime-core:
+    name: Coverage — cell-runtime-core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - run: pnpm coverage:cell-runtime-core
+
   coverage-python:
     name: Coverage — Python
     runs-on: ubuntu-latest
@@ -93,4 +150,15 @@ jobs:
         with:
           name: e2e-test-results
           path: apps/mcp-server-e2e/test-results/junit.xml
+          retention-days: 30
+
+      - name: Run local stack E2E tests
+        run: pnpm --filter @ikary/local-stack-e2e test
+
+      - name: Upload local stack E2E results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-stack-e2e-results
+          path: apps/local-stack-e2e/test-results/junit.xml
           retention-days: 30
