@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { configureTheme } from './output/theme.js';
 import { initCommand } from './commands/init.js';
+import { setupAiCommand } from './commands/setup.js';
 import { validateCommand } from './commands/validate.js';
 import { compileCommand } from './commands/compile.js';
 import { previewCommand } from './commands/preview.js';
@@ -37,6 +38,17 @@ export function createProgram(): Command {
     .command('init [project-name]')
     .description('Create a new Cell manifest project')
     .action(initCommand);
+
+  const setup = program
+    .command('setup')
+    .description('Configure tools and integrations for the current project');
+
+  setup
+    .command('ai')
+    .description('Set up Claude Code integration (MCP server, slash commands, CLAUDE.md)')
+    .option('--local', 'Point the MCP server at the local stack (http://localhost:3100/mcp)')
+    .option('--force', 'Overwrite existing files')
+    .action(setupAiCommand);
 
   program
     .command('validate <path>')

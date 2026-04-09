@@ -226,6 +226,7 @@ export function generateMcpConfig(useLocal = false): string {
   return JSON.stringify({
     mcpServers: {
       'ikary-manifest': {
+        type: 'http',
         url: useLocal ? 'http://localhost:3100/mcp' : 'https://public.ikary.co/mcp',
       },
     },
