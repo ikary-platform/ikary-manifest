@@ -2,9 +2,13 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
+import { LogService } from '@ikary/system-log-core/server';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  const logger = app.get(LogService);
+  app.useLogger(logger);
 
   app.enableCors();
 
@@ -22,8 +26,8 @@ async function bootstrap() {
   const port = process.env['PORT'] ?? 4000;
   await app.listen(port);
 
-  console.log(`[cell-runtime-api] Running on http://localhost:${port}`);
-  console.log(`[cell-runtime-api] Swagger docs at http://localhost:${port}/api/docs`);
+  logger.log(`cell-runtime-api running on http://localhost:${port}`, { operation: 'server.ready' });
+  logger.log(`Swagger docs at http://localhost:${port}/api/docs`, { operation: 'server.ready' });
 }
 
 bootstrap();

@@ -2,9 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
+    "baseUrl": "./src",
+    "jsx": "react-jsx",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "moduleResolution": "Bundler"
+    "emitDecoratorMetadata": true
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]

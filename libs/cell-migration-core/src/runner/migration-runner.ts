@@ -4,10 +4,17 @@ import { MigrationPlanner } from '../planner/migration-planner.js';
 import { MigrationExecutor } from '../executor/migration-executor.js';
 import type { MigrationRunnerOptions, MigrationStatus } from '../shared/migration-version.schema.js';
 
+export type MigrationLoggerFn = (
+  level: 'info' | 'warn' | 'error',
+  message: string,
+  context?: Record<string, unknown>,
+) => void;
+
 export class MigrationRunner {
   constructor(
     private readonly dbService: DatabaseService,
     private readonly options: MigrationRunnerOptions,
+    private readonly logger?: MigrationLoggerFn,
   ) {}
 
   async migrate(opts?: { dryRun?: boolean; force?: boolean }): Promise<{ applied: number; total: number }> {
@@ -23,6 +30,15 @@ export class MigrationRunner {
     const plan = planner.buildPlan(applied, opts?.force ?? false);
     const executor = new MigrationExecutor(this.dbService);
     const result = await executor.execute(plan, opts?.dryRun ?? false);
+
+    if (result.applied > 0) {
+      this.logger?.('info', `Applied ${result.applied} migration(s)`, {
+        operation: 'migration.complete',
+        packageName: this.options.packageName,
+        applied: result.applied,
+        total: plan.length,
+      });
+    }
 
     return { applied: result.applied, total: plan.length };
   }

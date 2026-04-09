@@ -19,40 +19,51 @@ import {
 import { MigrationRunner } from '@ikary/cell-migration-core';
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
+import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
 import type { RuntimeContext } from './runtime-context.js';
 
-function resolveMigrationsRoot(): string {
-  // Primary: path relative to this compiled file.
-  // Docker layout: dist/main.js lives at apps/cell-runtime-api/dist/
-  //   migrations are copied to: libs/cell-runtime-core/migrations/ (3 dirs up)
-  // Monorepo dev: same relative layout from src/ → still resolves correctly
+function resolveMigrationsRoot(packageName: string): string {
   const here = fileURLToPath(new URL('.', import.meta.url));
-  const relPath = resolve(here, '..', '..', '..', 'libs', 'cell-runtime-core', 'migrations');
+  const libFolder = packageName.replace('@ikary/', '');
+  const relPath = resolve(here, '..', '..', '..', 'libs', libFolder, 'migrations');
   if (existsSync(relPath)) return relPath;
 
-  // Fallback: package-resolution (works in dev when workspace symlinks are intact)
   try {
     const req = createRequire(import.meta.url);
-    const pkgJson = req.resolve('@ikary/cell-runtime-core/package.json');
+    const pkgJson = req.resolve(`${packageName}/package.json`);
     return resolve(pkgJson, '..', 'migrations');
   } catch {
-    throw new Error(`Cannot locate cell-runtime-core migrations. Looked at: ${relPath}`);
+    throw new Error(`Cannot locate ${packageName} migrations. Looked at: ${relPath}`);
   }
 }
 
 @Module({
+  imports: [
+    SystemLogModule.register({
+      databaseProviderToken: DatabaseService,
+      service: 'cell-runtime-api',
+      pretty: true,
+    }),
+  ],
   controllers: [HealthController, EntityController],
   providers: [
+    // DatabaseService is provided here so SystemLogModule can inject it without circularity.
+    {
+      provide: DatabaseService,
+      useFactory: () => {
+        const rawDbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
+        const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
+        return new DatabaseService(dbOptions);
+      },
+    },
     {
       provide: RUNTIME_CONTEXT_TOKEN,
-      useFactory: async (): Promise<RuntimeContext> => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      useFactory: async (dbService: any, logger: LogService): Promise<RuntimeContext> => {
         const manifestPath = process.env['IKARY_MANIFEST_PATH'];
         if (!manifestPath) {
           throw new Error('IKARY_MANIFEST_PATH environment variable is required');
         }
-
-        const rawDbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
-        const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
 
         const loaderResult = await loadManifestFromFile(manifestPath);
         if (!loaderResult.valid || !loaderResult.manifest) {
@@ -66,31 +77,45 @@ function resolveMigrationsRoot(): string {
           throw new Error(`Manifest compilation failed: ${errSummary}`);
         }
 
-        const dbService = new DatabaseService(dbOptions);
+        const migrationLog = (level: 'info' | 'warn' | 'error', msg: string, ctx?: Record<string, unknown>) => {
+          if (level === 'error') logger.error(msg, ctx as any);
+          else if (level === 'warn') logger.warn(msg, ctx as any);
+          else logger.log(msg, ctx as any);
+        };
 
-        const migrationRunner = new MigrationRunner(dbService, {
-          packageName: '@ikary/cell-runtime-core',
-          migrationsRoot: resolveMigrationsRoot(),
-        });
-        await migrationRunner.migrate();
+        const runtimeMigrations = new MigrationRunner(
+          dbService,
+          { packageName: '@ikary/cell-runtime-core', migrationsRoot: resolveMigrationsRoot('@ikary/cell-runtime-core') },
+          migrationLog,
+        );
+        await runtimeMigrations.migrate();
+
+        const logMigrations = new MigrationRunner(
+          dbService,
+          { packageName: '@ikary/system-log-core', migrationsRoot: resolveMigrationsRoot('@ikary/system-log-core') },
+          migrationLog,
+        );
+        await logMigrations.migrate();
 
         const schemaManager = new EntitySchemaManager(dbService);
         await schemaManager.initFromManifest(compiled as any);
 
-        console.log(`[cell-runtime-api] Manifest: ${loaderResult.manifest.metadata.key}`);
-        console.log(`[cell-runtime-api] Database: ${rawDbUrl}`);
+        logger.log('cell-runtime-api started', { operation: 'server.start' });
 
         return { dbService, manifest: compiled as any };
       },
+      inject: [DatabaseService, LogService],
     },
     {
       provide: 'ENTITY_SERVICE',
-      useFactory: (ctx: RuntimeContext): EntityService => {
-        const repo = new EntityRepository(ctx.dbService);
-        const audit = new AuditService(ctx.dbService);
-        return new EntityService(repo, audit);
+      useFactory: (ctx: RuntimeContext, logger: LogService): EntityService => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const db = ctx.dbService as any;
+        const repo = new EntityRepository(db);
+        const audit = new AuditService(db);
+        return new EntityService(repo, audit, logger);
       },
-      inject: [RUNTIME_CONTEXT_TOKEN],
+      inject: [RUNTIME_CONTEXT_TOKEN, LogService],
     },
   ],
 })
