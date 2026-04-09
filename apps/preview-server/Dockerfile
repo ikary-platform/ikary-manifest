@@ -29,16 +29,17 @@ RUN pnpm --filter @ikary/contract build \
  && pnpm --filter @ikary/presentation build \
  && pnpm --filter @ikary/primitives build \
  && pnpm --filter @ikary/renderer build \
- && pnpm --filter @ikary/preview-server build
+ && pnpm --filter @ikary/preview-server build \
+ && pnpm --filter @ikary/preview-server build:server
 
 # ── Production image ──
 FROM base AS production
 ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/preview-server/node_modules ./apps/preview-server/node_modules
+# dist/ contains both the Vite frontend bundle and the bundled server.js
 COPY --from=build /app/apps/preview-server/dist ./apps/preview-server/dist
-COPY apps/preview-server/server.mjs apps/preview-server/server.mjs
 
 EXPOSE 3000
 ENV PORT=3000
-CMD ["node", "apps/preview-server/server.mjs"]
+CMD ["node", "apps/preview-server/dist/server.js"]

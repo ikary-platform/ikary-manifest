@@ -1,5 +1,7 @@
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { Module } from '@nestjs/common';
 import { EntityController } from './entity/entity.controller.js';
 import { HealthController } from './health/health.controller.js';
@@ -20,9 +22,22 @@ import { compileCellApp, isValidationResult } from '@ikary/engine';
 import type { RuntimeContext } from './runtime-context.js';
 
 function resolveMigrationsRoot(): string {
-  const req = createRequire(import.meta.url);
-  const pkgJson = req.resolve('@ikary/cell-runtime-core/package.json');
-  return resolve(pkgJson, '..', 'migrations');
+  // Primary: path relative to this compiled file.
+  // Docker layout: dist/main.js lives at apps/cell-runtime-api/dist/
+  //   migrations are copied to: libs/cell-runtime-core/migrations/ (3 dirs up)
+  // Monorepo dev: same relative layout from src/ → still resolves correctly
+  const here = fileURLToPath(new URL('.', import.meta.url));
+  const relPath = resolve(here, '..', '..', '..', 'libs', 'cell-runtime-core', 'migrations');
+  if (existsSync(relPath)) return relPath;
+
+  // Fallback: package-resolution (works in dev when workspace symlinks are intact)
+  try {
+    const req = createRequire(import.meta.url);
+    const pkgJson = req.resolve('@ikary/cell-runtime-core/package.json');
+    return resolve(pkgJson, '..', 'migrations');
+  } catch {
+    throw new Error(`Cannot locate cell-runtime-core migrations. Looked at: ${relPath}`);
+  }
 }
 
 @Module({

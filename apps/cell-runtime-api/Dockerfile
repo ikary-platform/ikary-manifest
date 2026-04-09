@@ -38,6 +38,9 @@ ENV NODE_ENV=production
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/cell-runtime-api/node_modules ./apps/cell-runtime-api/node_modules
 COPY --from=build /app/apps/cell-runtime-api/dist ./apps/cell-runtime-api/dist
+# Migrations must live at libs/cell-runtime-core/migrations/ relative to the app root
+# (resolveMigrationsRoot() in app.module resolves 3 dirs up from dist/)
+COPY --from=build /app/libs/cell-runtime-core/migrations ./libs/cell-runtime-core/migrations
 
 RUN mkdir -p /data
 VOLUME ["/data"]
