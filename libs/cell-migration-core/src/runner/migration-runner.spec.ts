@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -57,6 +57,13 @@ describe('MigrationRunner', () => {
     const result = await runner.migrate();
     expect(result.applied).toBe(2);
     expect(result.total).toBe(2);
+  });
+
+  it('calls logger when migrations are applied', async () => {
+    const logger = vi.fn();
+    const loggedRunner = new MigrationRunner(db, { packageName: '@ikary/test', migrationsRoot }, logger);
+    await loggedRunner.migrate();
+    expect(logger).toHaveBeenCalledWith('info', expect.stringContaining('Applied'), expect.objectContaining({ operation: 'migration.complete' }));
   });
 
   it('second migrate() applies 0 (already applied)', async () => {
