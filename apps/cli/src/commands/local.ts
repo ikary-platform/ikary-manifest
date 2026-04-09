@@ -117,11 +117,28 @@ export async function localStartCommand(
   fmt.newline();
   fmt.body('Services:');
   fmt.newline();
-  fmt.body(`  Preview     ${theme.accent('http://localhost:3000')}`);
-  fmt.body(`  Data API    ${theme.accent('http://localhost:4000')}`);
-  fmt.body(`  MCP Server  ${theme.accent('http://localhost:3100/mcp')}`);
+  fmt.body(`  ${theme.bold('Preview')}     ${theme.accent('http://localhost:3000')}`);
+  fmt.body(`  ${theme.bold('Data API')}    ${theme.accent('http://localhost:4000')}`);
+  fmt.body(`  ${theme.bold('MCP Server')}  ${theme.accent('http://localhost:3100/mcp')}`);
   fmt.newline();
-  fmt.muted('Run `ikary local stop` to shut down.');
+  fmt.body('Next steps:');
+  fmt.newline();
+  fmt.body(`  1. Open the preview in your browser:`);
+  fmt.body(`     ${theme.accent('http://localhost:3000')}`);
+  fmt.newline();
+  fmt.body(`  2. Add the MCP server to your AI assistant (Cursor, Claude Desktop…):`);
+  fmt.body(`     ${theme.muted('Type:  ')  }${theme.accent('http://localhost:3100/mcp')}`);
+  fmt.newline();
+  fmt.body(`  3. Connect your AI assistant to the local MCP server:`);
+  fmt.body(`     ${theme.accent('ikary setup ai --local')}`);
+  fmt.body(`     ${theme.muted('Then open Claude Code with `claude .` — all tools point at localhost')}`);
+  fmt.newline();
+  fmt.body(`  4. Edit your manifest file — the preview hot-reloads automatically.`);
+  fmt.newline();
+  fmt.muted('Useful commands:');
+  fmt.muted('  ikary local logs [service]   stream container logs');
+  fmt.muted('  ikary local status           show container status');
+  fmt.muted('  ikary local stop             shut down the stack');
   fmt.newline();
 }
 
