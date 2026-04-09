@@ -109,7 +109,7 @@ export async function localStartCommand(
   const allHealthy = results.every(Boolean);
 
   if (!allHealthy) {
-    spinner.warn(theme.warning('Some services may still be starting up'));
+    spinner.warn(theme.muted('Some services may still be starting up'));
   } else {
     spinner.succeed(theme.success('All services healthy'));
   }
