@@ -53,7 +53,7 @@ export class LogRepository {
         level: entry.level,
         message: entry.message,
         source: entry.source ?? null,
-        metadata: entry.metadata ?? null,
+        metadata: entry.metadata != null ? JSON.stringify(entry.metadata) : null,
         request_id: entry.requestId ?? null,
         trace_id: entry.traceId ?? null,
         span_id: entry.spanId ?? null,
@@ -61,7 +61,7 @@ export class LogRepository {
         actor_id: entry.actorId ?? null,
         actor_type: entry.actorType ?? null,
         sink_type: sinkType,
-        expires_at: expiresAt,
+        expires_at: expiresAt ? (expiresAt.toISOString() as unknown as Date) : null,
       } satisfies Insertable<PlatformLogsTable>)
       .execute();
   }
@@ -88,10 +88,10 @@ export class LogRepository {
       q = q.where('correlation_id', '=', filter.correlationId);
     }
     if (filter.from) {
-      q = q.where('logged_at', '>=', filter.from);
+      q = q.where('logged_at', '>=', filter.from.toISOString() as unknown as Date);
     }
     if (filter.to) {
-      q = q.where('logged_at', '<=', filter.to);
+      q = q.where('logged_at', '<=', filter.to.toISOString() as unknown as Date);
     }
     if (filter.search) {
       const term = `%${filter.search}%`;
@@ -99,10 +99,11 @@ export class LogRepository {
     }
 
     if (useCursor) {
+      const beforeIso = filter.before!.toISOString() as unknown as Date;
       q = q.where((eb) =>
         eb.or([
-          eb('logged_at', '<', filter.before!),
-          eb.and([eb('logged_at', '=', filter.before!), eb('id', '<', filter.beforeId!)]),
+          eb('logged_at', '<', beforeIso),
+          eb.and([eb('logged_at', '=', beforeIso), eb('id', '<', filter.beforeId!)]),
         ]),
       );
     } else {
@@ -118,7 +119,7 @@ export class LogRepository {
     await this.executor(client)
       .deleteFrom('platform_logs')
       .where('expires_at', 'is not', null)
-      .where('expires_at', '<', new Date())
+      .where('expires_at', '<', new Date().toISOString() as unknown as Date)
       .execute();
   }
 }

@@ -13,6 +13,8 @@ export default defineConfig({
         'src/**/*.spec.ts',
         'src/**/index.ts',
         'src/**/tokens.ts',
+        'src/**/*.types.ts',
+        'src/**/db/schema.ts',
         'src/ui/**',
       ],
     },

@@ -84,7 +84,7 @@ export class LogSettingsRepository {
       .set({
         log_level: input.logLevel,
         version: existing.version + 1,
-        updated_at: new Date(),
+        updated_at: new Date().toISOString() as unknown as Date,
       })
       .where('id', '=', existing.id)
       .returningAll()
