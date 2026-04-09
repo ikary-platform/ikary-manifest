@@ -7,9 +7,6 @@ node_modules
 docs
 runtime-api
 contracts/python
-libs/presentation
-libs/primitives
-libs/renderer
 libs/data
 libs/contract/coverage
 libs/engine/coverage
