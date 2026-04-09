@@ -20,6 +20,7 @@ import { useCreateApiDataStore } from '../store/use-api-data-store';
 import type { EntityApiAdapter } from '../store/entity-api-adapter';
 import type { CellComponentRegistry } from '../registry/cell-component-registry';
 import { getManifestRoutes, resolveLandingPath } from '../manifest/selectors';
+import { CELL_CSS_VARS } from '../__cell-css-vars';
 import { CELL_RUNTIME_CSS } from '../__cell-styles';
 
 export type CellDataMode = 'mock' | 'live';
@@ -102,7 +103,7 @@ function CellAppRendererInner({
         dataMode,
       }}
     >
-      <style dangerouslySetInnerHTML={{ __html: CELL_RUNTIME_CSS }} />
+      <style dangerouslySetInnerHTML={{ __html: CELL_CSS_VARS + CELL_RUNTIME_CSS }} />
       <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
         <UNSAFE_LocationContext.Provider value={null as any}>
           <UNSAFE_NavigationContext.Provider value={null as any}>
