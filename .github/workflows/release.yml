@@ -139,9 +139,16 @@ jobs:
             NOTES="# v${CLI_VERSION}"$'\n\n'"${CHANGELOGS}"
           fi
 
-          # Update the GitHub Release body with the generated notes (no push to main needed)
-          gh release edit "v${CLI_VERSION}" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
-          echo "✅ Updated GitHub Release v${CLI_VERSION} with generated notes"
+          # Update the GitHub Release body with the generated notes.
+          # changesets tags releases as @ikary/cli@X.Y.Z, not vX.Y.Z.
+          # Edit if it exists (normal publish flow), create if not (manual backfill).
+          RELEASE_TAG="@ikary/cli@${CLI_VERSION}"
+          if gh release view "$RELEASE_TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+          else
+            gh release create "$RELEASE_TAG" --title "v${CLI_VERSION}" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+          fi
+          echo "✅ Updated GitHub Release ${RELEASE_TAG} with generated notes"
 
           # Create a permanent release branch (release/* has no branch protection)
           git config user.name "github-actions[bot]"
