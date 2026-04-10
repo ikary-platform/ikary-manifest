@@ -5,11 +5,21 @@
  * in a temp directory and opened directly in the system browser.
  */
 const FAVICON_SVG =
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">` +
-  `<rect width="64" height="64" rx="12" fill="#060B17"/>` +
-  `<path d="M17 46L24 18H30L23 46H17ZM34 46L41 18H47L40 46H34Z" fill="#E7ECF8"/>` +
-  `<path d="M30 34H47" stroke="#3B82F6" stroke-width="4" stroke-linecap="round"/>` +
-  `</svg>`;
+  `<?xml version="1.0" encoding="UTF-8"?>` +
+  `<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 285.4564 240.5992">` +
+  `<defs><style>.cls-1{fill:url(#linear-gradient)}.cls-2{fill:#1f2a5a}</style>` +
+  `<linearGradient id="linear-gradient" x1="58.9361" y1="255.9249" x2="205.2447" y2="2.5109" gradientUnits="userSpaceOnUse">` +
+  `<stop offset="0" stop-color="#5c7cff"/>` +
+  `<stop offset=".1165" stop-color="#5877f6"/>` +
+  `<stop offset=".3007" stop-color="#506cdf"/>` +
+  `<stop offset=".5294" stop-color="#425aba"/>` +
+  `<stop offset=".7912" stop-color="#2f4087"/>` +
+  `<stop offset="1" stop-color="#1f2a5a"/>` +
+  `</linearGradient></defs>` +
+  `<g id="Layer_1-2" data-name="Layer 1"><g>` +
+  `<path class="cls-1" d="M235.9623.8372c-14.6507,2.9045-20.3224,12.1361-28.0846,25.5187-5.2897,8.7625-10.8544,17.9836-16.1331,26.7286-18.9552,31.3213-37.2418,61.173-57.2533,91.4448-11.0394,16.6876-22.8317,33.2108-37.0919,47.1794-24.4656,25.3958-57.0999,37.3721-92.0308,30.6905-3.1517-.5063-5.3686-.9591-5.3686-.9591,0,0,.2751.7063.4372.8211,40.4589,28.6684,95.7283,18.6551,119.2976,4.1447,8.632-5.3142,20.2908-15.4014,27.122-22.8508C178.9657,169.2637,285.4564.1451,285.4564.1451c0,0-36.7925-.6038-49.2443.6519l-.2498.0401Z"/>` +
+  `<path class="cls-2" d="M153.946,99.9139l-29.4749,46.6446-43.9529-60.1287L18.6607.4232l53.3685-.0786c7.2257-.0106,14.119,3.8964,18.9819,10.7587l62.9348,88.8106Z"/>` +
+  `</g></g></svg>`;
 
 const FAVICON_DATA_URI = `data:image/svg+xml;base64,${btoa(FAVICON_SVG)}`;
 
