@@ -1,0 +1,107 @@
+name: Claude PR Fix Loop
+
+on:
+  pull_request_review_comment:
+    types: [created]
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: claude-pr-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  fix-from-review:
+    runs-on: ubuntu-latest
+
+    if: |
+      (
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+        (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude'))
+      ) &&
+      contains(vars.CLAUDE_ALLOWED_USERS, github.event.comment.user.login)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref || '' }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: >
+            --model claude-sonnet-4-6
+            --max-turns 25
+          custom_instructions: |
+            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+
+            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
+            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            4. .claude/doc-voice.md — documentation writing rules
+            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
+
+            Key IKARY rules:
+
+            CONTRACTS:
+            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
+            - Raw interface/type only for purely structural helpers with no runtime validation need
+
+            LIBRARY STRUCTURE:
+            - Every libs/* package declares "microPackageKind" in package.json
+            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
+            - src/server/ for Node/NestJS runtime code in mixed packages
+            - src/ui/ for React hooks and components (not src/client/)
+
+            DATABASE:
+            - Runtime DB access via Kysely through @ikary/system-db-core
+            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
+            - Migration naming: NNN_<lib>_<module>_<action>.sql
+
+            REACT:
+            - Components: UI + callbacks only, no business logic, no API calls, no side effects
+            - Library hooks live in src/hooks or src/ui/hooks
+
+            DOCUMENTATION:
+            - Follow .claude/doc-voice.md strictly
+            - No emojis anywhere
+            - No em-dashes as clause separators
+            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
+            - Direct peer-to-peer tone, active voice, short sentences
+
+            ---
+
+            You are fixing code on an open pull request based on review feedback.
+
+            1. Read the review comment that triggered this run.
+            2. Read the full PR diff to understand the current state of the changes.
+            3. Fix the issue described in the review comment.
+            4. Follow all IKARY conventions listed above.
+            5. Run pnpm run build and pnpm run typecheck before pushing.
+            6. Push the fix to the same branch.
+            7. Reply to the review comment explaining what you changed.
+
+            Rules:
+            - Only fix what the review comment asks for. Do not refactor unrelated code.
+            - If the requested change contradicts IKARY conventions, explain why and propose an alternative.
+            - Be concise in your reply. No filler sentences. No emojis.
