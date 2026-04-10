@@ -33,6 +33,7 @@ export default defineConfig({
       '@ikary/contract': path.resolve(__dirname, '../../libs/contract/src/index.ts'),
       '@ikary/engine': path.resolve(__dirname, '../../libs/engine/src/index.ts'),
       '@ikary/presentation': path.resolve(__dirname, '../../libs/presentation/src/index.ts'),
+      '@ikary/primitive-contract': path.resolve(__dirname, '../../libs/primitive-contract/src/index.ts'),
       '@ikary/primitives/registry': path.resolve(__dirname, '../../libs/primitives/src/registry.ts'),
       '@ikary/primitives': path.resolve(__dirname, '../../libs/primitives/src/index.ts'),
     },
