@@ -1,10 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CellAppRenderer } from '@ikary/renderer';
 import type { EntityApiAdapter } from '@ikary/renderer';
 import type { CellManifestV1 } from '@ikary/contract';
 import { useManifest } from './hooks/use-manifest.js';
 import { useLocalEntityAdapter } from './hooks/use-local-entity-adapter.js';
 import { ErrorPanel } from './components/ErrorPanel.js';
+import { PreviewPrimitiveStudio } from './primitive-studio.js';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: false } },
@@ -25,7 +27,7 @@ function LiveRenderer({ manifest }: { manifest: CellManifestV1 }) {
   );
 }
 
-function AppInner() {
+function ManifestPreview() {
   const state = useManifest();
 
   if (state.status === 'loading') {
@@ -50,7 +52,12 @@ function AppInner() {
 export function PreviewApp() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppInner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/__primitive-studio/*" element={<PreviewPrimitiveStudio />} />
+          <Route path="*" element={<ManifestPreview />} />
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

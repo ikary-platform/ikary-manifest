@@ -9,6 +9,8 @@ import {
   generateValidateCommand,
   generateRecommendCommand,
   generateBrowsePrimitivesCommand,
+  generateCreatePrimitiveCommand,
+  generateUpdatePrimitiveCommand,
   generateClaudeSettings,
   generateMcpConfig,
 } from '../init/templates.js';
@@ -116,6 +118,18 @@ export async function setupAiCommand(options: {
       description: '/browse-primitives — explore the UI catalog',
     },
     {
+      filePath: join(cwd, '.claude', 'commands', 'create-primitive.md'),
+      content: generateCreatePrimitiveCommand(),
+      label: '.claude/commands/create-primitive.md',
+      description: '/create-primitive — scaffold + build a custom primitive',
+    },
+    {
+      filePath: join(cwd, '.claude', 'commands', 'update-primitive.md'),
+      content: generateUpdatePrimitiveCommand(),
+      label: '.claude/commands/update-primitive.md',
+      description: '/update-primitive — update or version an existing primitive',
+    },
+    {
       filePath: join(cwd, '.claude', 'settings.json'),
       content: generateClaudeSettings(),
       label: '.claude/settings.json',
@@ -183,9 +197,11 @@ export async function setupAiCommand(options: {
   fmt.newline();
   fmt.body(`  3. Use these slash commands inside Claude Code:`);
   fmt.newline();
-  fmt.body(`     ${theme.accent('/recommend')}          Scaffold your entire manifest from a description`);
-  fmt.body(`     ${theme.accent('/add-entity')}         Add a new entity to the manifest`);
-  fmt.body(`     ${theme.accent('/validate')}           Check the manifest for errors`);
-  fmt.body(`     ${theme.accent('/browse-primitives')}  Explore the UI component catalog`);
+  fmt.body(`     ${theme.accent('/recommend')}           Scaffold your entire manifest from a description`);
+  fmt.body(`     ${theme.accent('/add-entity')}          Add a new entity to the manifest`);
+  fmt.body(`     ${theme.accent('/validate')}            Check the manifest for errors`);
+  fmt.body(`     ${theme.accent('/browse-primitives')}   Explore the UI component catalog`);
+  fmt.body(`     ${theme.accent('/create-primitive')}    Scaffold + implement a custom UI primitive`);
+  fmt.body(`     ${theme.accent('/update-primitive')}    Update or version an existing primitive`);
   fmt.newline();
 }

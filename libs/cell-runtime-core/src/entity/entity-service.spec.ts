@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
 import { EntitySchemaManager } from './entity-schema-manager.js';
 import { EntityRepository } from './entity-repository.js';
@@ -172,6 +172,31 @@ describe('EntityService', () => {
   });
 
   // ── computeDiff (tested via update) ──────────────────────────────────────
+
+  // ── logger integration ────────────────────────────────────────────────────
+
+  describe('optional logger', () => {
+    it('calls logger.log on create, update, delete, and rollback', async () => {
+      const mockLog = vi.fn();
+      const repo = (service as any).repository;
+      const audit = (service as any).audit;
+      const loggedService = new EntityService(repo, audit, { log: mockLog, error: vi.fn() });
+
+      const record = await loggedService.create('order', { customer: 'Z' });
+      const id = record['id'] as string;
+      expect(mockLog).toHaveBeenCalledWith('Entity created', expect.objectContaining({ operation: 'entity.create' }));
+
+      await loggedService.update('order', id, { customer: 'Z2' });
+      expect(mockLog).toHaveBeenCalledWith('Entity updated', expect.objectContaining({ operation: 'entity.update' }));
+
+      await loggedService.update('order', id, { customer: 'Z3' });
+      await loggedService.rollback('order', id, 1);
+      expect(mockLog).toHaveBeenCalledWith('Entity rolled back', expect.objectContaining({ operation: 'entity.rollback' }));
+
+      await loggedService.delete('order', id);
+      expect(mockLog).toHaveBeenCalledWith('Entity deleted', expect.objectContaining({ operation: 'entity.delete' }));
+    });
+  });
 
   describe('computeDiff edge cases (via update)', () => {
     it('key only in after appears in diff with before=undefined', async () => {

@@ -12,6 +12,7 @@ COPY libs/contract/package.json libs/contract/package.json
 COPY libs/engine/package.json libs/engine/package.json
 COPY libs/loader/package.json libs/loader/package.json
 COPY libs/system-db-core/package.json libs/system-db-core/package.json
+COPY libs/system-log-core/package.json libs/system-log-core/package.json
 COPY apps/cell-runtime-api/package.json apps/cell-runtime-api/package.json
 RUN pnpm install --frozen-lockfile --filter @ikary/cell-runtime-api...
 
@@ -23,11 +24,13 @@ COPY libs/contract/ libs/contract/
 COPY libs/engine/ libs/engine/
 COPY libs/loader/ libs/loader/
 COPY libs/system-db-core/ libs/system-db-core/
+COPY libs/system-log-core/ libs/system-log-core/
 COPY apps/cell-runtime-api/ apps/cell-runtime-api/
 RUN pnpm --filter @ikary/contract build \
  && pnpm --filter @ikary/engine build \
  && pnpm --filter @ikary/loader build \
  && pnpm --filter @ikary/system-db-core build \
+ && pnpm --filter @ikary/system-log-core build \
  && pnpm --filter @ikary/cell-migration-core build \
  && pnpm --filter @ikary/cell-runtime-core build \
  && pnpm --filter @ikary/cell-runtime-api build

@@ -2,7 +2,15 @@ export type { PrimitiveComponent, UIPrimitiveDefinition } from './types/Primitiv
 export type { FieldBinding, ValueBinding, Binding } from './types/BindingTypes';
 export type { EntityField, EntitySchema } from './types/EntityTypes';
 export type { ActionDefinition, RenderedAction } from './types/ActionTypes';
-export { registerPrimitive, getPrimitive, listPrimitives } from './registry/primitiveRegistry';
+export {
+  registerPrimitive,
+  registerPrimitiveVersion,
+  setLatestPrimitive,
+  getPrimitive,
+  listPrimitives,
+  listPrimitiveVersions,
+  listAllPrimitiveVersions,
+} from './registry/primitiveRegistry';
 export { registerResolver, getResolver } from './registry/resolverRegistry';
 export type { PrimitiveResolver, RuntimeContext } from './registry/resolverRegistry';
 export { resolveValue, resolveBinding } from './resolver/resolveValue';

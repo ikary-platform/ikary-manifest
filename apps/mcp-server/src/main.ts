@@ -2,9 +2,13 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { LogService } from '@ikary/system-log-core/server';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  const logger = app.get(LogService);
+  app.useLogger(logger);
 
   app.enableCors();
 
@@ -28,9 +32,8 @@ async function bootstrap() {
   const port = process.env.PORT ?? 3100;
   await app.listen(port);
 
-  console.log(`IKARY Manifest API running on http://localhost:${port}`);
-  console.log(`Swagger docs at http://localhost:${port}/api/docs`);
-  console.log(`MCP endpoint at POST http://localhost:${port}/mcp`);
+  logger.log(`IKARY Manifest API running on http://localhost:${port}`, { operation: 'server.ready' });
+  logger.log(`MCP endpoint at POST http://localhost:${port}/mcp`, { operation: 'server.ready' });
 }
 
 bootstrap();

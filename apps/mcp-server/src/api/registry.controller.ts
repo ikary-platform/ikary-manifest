@@ -11,7 +11,7 @@ export class RegistryPrimitivesController {
   @ApiOperation({ summary: 'List UI primitives', description: 'Returns the catalog of 30 IKARY UI primitives with categories and descriptions.' })
   @ApiQuery({ name: 'category', required: false, description: 'Filter by category (collection, input, form, layout, page, display, feedback)' })
   listPrimitives(@Query('category') category?: string) {
-    return this.registry.listPrimitives(category);
+    return this.registry.listPrimitives({ category });
   }
 
   @Get(':key')

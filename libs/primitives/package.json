@@ -28,6 +28,7 @@
   "dependencies": {
     "@ikary/contract": "workspace:*",
     "@ikary/presentation": "workspace:*",
+    "@ikary/primitive-contract": "workspace:*",
     "lucide-react": "^0.400.0"
   },
   "peerDependencies": {

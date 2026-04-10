@@ -19,10 +19,17 @@ function computeDiff(
   return diff;
 }
 
+/** Optional structured logger for entity operations — decoupled from NestJS. */
+export interface EntityLogger {
+  log(message: string, context?: { operation: string; [key: string]: unknown }): void;
+  error(message: string, context?: { operation: string; [key: string]: unknown }): void;
+}
+
 export class EntityService {
   constructor(
     private readonly repository: EntityRepository,
     private readonly audit: AuditService,
+    private readonly logger?: EntityLogger,
   ) {}
 
   async list(entityKey: string, opts?: ListOptionsInput): Promise<ListResult<Record<string, unknown>>> {
@@ -49,6 +56,8 @@ export class EntityService {
       snapshot: record,
     });
 
+    this.logger?.log('Entity created', { operation: 'entity.create', entityKey, entityId: id });
+
     return record;
   }
 
@@ -73,6 +82,8 @@ export class EntityService {
       diff: computeDiff(before, after),
     });
 
+    this.logger?.log('Entity updated', { operation: 'entity.update', entityKey, entityId: id });
+
     return after;
   }
 
@@ -94,6 +105,8 @@ export class EntityService {
       changeKind: 'snapshot',
       snapshot: { ...record, deleted_at: new Date().toISOString() },
     });
+
+    this.logger?.log('Entity deleted', { operation: 'entity.delete', entityKey, entityId: id });
   }
 
   async rollback(
@@ -124,6 +137,8 @@ export class EntityService {
       snapshot: restored,
       diff: computeDiff(current, restored),
     });
+
+    this.logger?.log('Entity rolled back', { operation: 'entity.rollback', entityKey, entityId: id, targetVersion });
 
     return restored;
   }

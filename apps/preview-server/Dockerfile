@@ -9,6 +9,8 @@ COPY libs/contract/package.json libs/contract/package.json
 COPY libs/engine/package.json libs/engine/package.json
 COPY libs/loader/package.json libs/loader/package.json
 COPY libs/presentation/package.json libs/presentation/package.json
+COPY libs/primitive-contract/package.json libs/primitive-contract/package.json
+COPY libs/primitive-studio/package.json libs/primitive-studio/package.json
 COPY libs/primitives/package.json libs/primitives/package.json
 COPY libs/renderer/package.json libs/renderer/package.json
 COPY apps/preview-server/package.json apps/preview-server/package.json
@@ -20,6 +22,8 @@ COPY libs/contract/ libs/contract/
 COPY libs/engine/ libs/engine/
 COPY libs/loader/ libs/loader/
 COPY libs/presentation/ libs/presentation/
+COPY libs/primitive-contract/ libs/primitive-contract/
+COPY libs/primitive-studio/ libs/primitive-studio/
 COPY libs/primitives/ libs/primitives/
 COPY libs/renderer/ libs/renderer/
 COPY apps/preview-server/ apps/preview-server/
@@ -27,6 +31,8 @@ RUN pnpm --filter @ikary/contract build \
  && pnpm --filter @ikary/engine build \
  && pnpm --filter @ikary/loader build \
  && pnpm --filter @ikary/presentation build \
+ && pnpm --filter @ikary/primitive-contract build \
+ && pnpm --filter @ikary/primitive-studio build \
  && pnpm --filter @ikary/primitives build \
  && pnpm --filter @ikary/renderer build \
  && pnpm --filter @ikary/preview-server build \

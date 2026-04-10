@@ -4,7 +4,7 @@
     "outDir": "dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node"
+    "moduleResolution": "Bundler"
   },
   "include": ["src"],
   "exclude": ["dist", "node_modules"]
