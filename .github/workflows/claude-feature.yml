@@ -57,7 +57,6 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          trigger_phrase: "@claude do feature"
           branch_prefix: "claude/"
           show_full_output: true
           claude_args: >
