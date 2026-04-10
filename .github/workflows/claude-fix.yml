@@ -61,68 +61,22 @@ jobs:
           show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
-            --max-turns 25
+            --max-turns 30
           prompt: |
-            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+            Fix the bug described in this issue. Follow all rules in CLAUDE.md.
 
-            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
-            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
-            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
-            4. .claude/doc-voice.md — documentation writing rules
-            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
+            IKARY convention files you should consult:
+            - libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            - libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            - .claude/doc-voice.md — documentation writing rules
+            - CONTRIBUTING.md — package structure, Zod schemas, testing requirements
 
-            Key IKARY rules:
-
-            CONTRACTS:
-            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
-            - Raw interface/type only for purely structural helpers with no runtime validation need
-
-            LIBRARY STRUCTURE:
-            - Every libs/* package declares "microPackageKind" in package.json
-            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
-            - src/server/ for Node/NestJS runtime code in mixed packages
-            - src/ui/ for React hooks and components (not src/client/)
-
-            DATABASE:
-            - Runtime DB access via Kysely through @ikary/system-db-core
-            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
-            - Migration naming: NNN_<lib>_<module>_<action>.sql
-
-            REACT:
-            - Components: UI + callbacks only, no business logic, no API calls, no side effects
-            - Library hooks live in src/hooks or src/ui/hooks
-
-            DOCUMENTATION:
-            - Follow .claude/doc-voice.md strictly
-            - No emojis anywhere
-            - No em-dashes as clause separators
-            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
-            - Direct peer-to-peer tone, active voice, short sentences
-
-            ---
-
-            You are implementing a bug fix in the IKARY monorepo.
-
-            1. Read the full issue body and all comments.
-            2. Find the fix plan (## Fix Plan heading). Follow it step by step.
-            3. If no plan exists, investigate the root cause from the issue description and implement the fix directly, following IKARY conventions.
-
-            IMPLEMENTATION RULES:
-            - Maintain Zod-first contract pattern for any modified or new boundary types
-            - No inline SQL in runtime code
-            - Follow existing folder conventions (src/shared/, src/server/, src/ui/)
-            - Database changes must use Kysely via @ikary/system-db-core
-            - Migration files: NNN_<lib>_<module>_<action>.sql
-            - Add or update tests to cover the fix and prevent regression
-
-            BEFORE CREATING THE PR:
-            1. Run: pnpm run build
-            2. Run: pnpm run typecheck
-            3. Verify no regressions in affected areas
+            1. Find the fix plan in the comments (## Fix Plan heading). Follow it step by step.
+            2. If no plan exists, investigate the root cause and implement the fix directly.
+            3. Add or update tests to prevent regression.
+            4. Run pnpm run build and pnpm run typecheck before creating the PR.
 
             PR FORMAT:
             - Title: fix(<scope>): <description>
-            - Body: follow .claude/doc-voice.md (no emojis, no em-dashes, active voice)
-            - Include a root cause summary
-            - Include "Closes #<issue-number>" to auto-close the issue
-            - List any tests added or updated
+            - Body: no emojis, no em-dashes, active voice, include root cause summary
+            - Include "Closes #<issue-number>"

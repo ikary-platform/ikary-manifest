@@ -61,69 +61,21 @@ jobs:
           show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
-            --max-turns 25
+            --max-turns 30
           prompt: |
-            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+            Implement the feature described in this issue. Follow all rules in CLAUDE.md.
 
-            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
-            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
-            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
-            4. .claude/doc-voice.md — documentation writing rules
-            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
+            IKARY convention files you should consult:
+            - libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            - libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            - .claude/doc-voice.md — documentation writing rules
+            - CONTRIBUTING.md — package structure, Zod schemas, testing requirements
 
-            Key IKARY rules:
-
-            CONTRACTS:
-            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
-            - Raw interface/type only for purely structural helpers with no runtime validation need
-
-            LIBRARY STRUCTURE:
-            - Every libs/* package declares "microPackageKind" in package.json
-            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
-            - src/server/ for Node/NestJS runtime code in mixed packages
-            - src/ui/ for React hooks and components (not src/client/)
-
-            DATABASE:
-            - Runtime DB access via Kysely through @ikary/system-db-core
-            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
-            - Migration naming: NNN_<lib>_<module>_<action>.sql
-
-            REACT:
-            - Components: UI + callbacks only, no business logic, no API calls, no side effects
-            - Library hooks live in src/hooks or src/ui/hooks
-
-            DOCUMENTATION:
-            - Follow .claude/doc-voice.md strictly
-            - No emojis anywhere
-            - No em-dashes as clause separators
-            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
-            - Direct peer-to-peer tone, active voice, short sentences
-
-            ---
-
-            You are implementing a feature in the IKARY monorepo.
-
-            1. Read the full issue body and all comments.
-            2. Find the feature plan (## Feature Plan heading). Follow it step by step.
-            3. If no plan exists, implement from the issue description directly, following IKARY conventions.
-
-            IMPLEMENTATION RULES:
-            - All new boundary types must be Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
-            - New libraries must follow libs/LIBRARY_TEMPLATE.md blueprint
-            - Declare microPackageKind in package.json for new libs/* packages
-            - Use src/shared/ for contracts, src/server/ for backend, src/ui/ for React
-            - Database access via Kysely through @ikary/system-db-core
-            - Migration files: NNN_<lib>_<module>_<action>.sql
-            - React components: UI + callbacks only, no business logic
-
-            BEFORE CREATING THE PR:
-            1. Run: pnpm run build
-            2. Run: pnpm run typecheck
-            3. Verify all new exports are intentional and minimal
-            4. Ensure README is complete for any new or modified library
+            1. Find the feature plan in the comments (## Feature Plan heading). Follow it step by step.
+            2. If no plan exists, implement from the issue description directly.
+            3. Run pnpm run build and pnpm run typecheck before creating the PR.
 
             PR FORMAT:
             - Title: feat(<scope>): <description>
-            - Body: follow .claude/doc-voice.md (no emojis, no em-dashes, active voice)
-            - Include "Closes #<issue-number>" to auto-close the issue
-            - Summarize what was implemented and any deviations from the plan
+            - Body: no emojis, no em-dashes, active voice
+            - Include "Closes #<issue-number>"

@@ -49,63 +49,30 @@ jobs:
           show_full_output: true
           claude_args: >
             --model claude-opus-4-6
-            --max-turns 8
+            --max-turns 20
           prompt: |
-            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+            Plan a fix for the bug described in this issue. Follow all rules in CLAUDE.md.
 
-            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
-            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
-            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
-            4. .claude/doc-voice.md — documentation writing rules
-            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
+            IKARY convention files you should consult:
+            - libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            - libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            - .claude/doc-voice.md — documentation writing rules
+            - CONTRIBUTING.md — package structure, Zod schemas, testing requirements
 
-            Key IKARY rules:
+            Explore the codebase to investigate the root cause before planning.
 
-            CONTRACTS:
-            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
-            - Raw interface/type only for purely structural helpers with no runtime validation need
-
-            LIBRARY STRUCTURE:
-            - Every libs/* package declares "microPackageKind" in package.json
-            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
-            - src/server/ for Node/NestJS runtime code in mixed packages
-            - src/ui/ for React hooks and components (not src/client/)
-
-            DATABASE:
-            - Runtime DB access via Kysely through @ikary/system-db-core
-            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
-            - Migration naming: NNN_<lib>_<module>_<action>.sql
-
-            REACT:
-            - Components: UI + callbacks only, no business logic, no API calls, no side effects
-            - Library hooks live in src/hooks or src/ui/hooks
-
-            DOCUMENTATION:
-            - Follow .claude/doc-voice.md strictly
-            - No emojis anywhere
-            - No em-dashes as clause separators
-            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
-            - Direct peer-to-peer tone, active voice, short sentences
-
-            ---
-
-            You are a senior software engineer planning bug fixes for the IKARY monorepo.
-
-            When producing a fix plan, use this exact format:
+            Use this exact output format:
 
             ## Fix Plan
 
             ### Problem Summary
-            Brief restatement of the bug in your own words. One or two sentences max.
+            Brief restatement of the bug. One or two sentences max.
 
             ### Root Cause Analysis
-            What likely causes this. Be specific about code areas, functions, or modules.
-            Reference actual file paths and function names from the codebase when possible.
+            What causes this. Reference actual file paths and function names from the codebase.
 
             ### Proposed Fix
-            Numbered step-by-step implementation plan.
-            For each step: which file/module, what change, and why.
-            Reference IKARY conventions where relevant.
+            Numbered step-by-step implementation plan. For each step: which file/module, what change, and why.
 
             ### IKARY Convention Checklist
             - [ ] Changes maintain Zod-first contract pattern
@@ -127,6 +94,5 @@ jobs:
 
             Rules:
             - Do NOT write any code. Only produce the plan.
-            - Be concise and direct. No filler sentences.
-            - Use markdown formatting. No emojis in headers or body text.
-            - If the issue lacks enough detail to hypothesize a root cause, say so and ask a specific follow-up question.
+            - Be concise and direct. No filler sentences. No emojis.
+            - If the issue lacks enough detail, ask a specific follow-up question.
