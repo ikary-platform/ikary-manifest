@@ -7,10 +7,14 @@ on:
 
 jobs:
   auto-changeset:
-    # Only run when a PR with the 'release' label is merged
+    # Only run when a PR with a release* label is merged
     if: >
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'release')
+      github.event.pull_request.merged == true && (
+        contains(github.event.pull_request.labels.*.name, 'release') ||
+        contains(github.event.pull_request.labels.*.name, 'release:minor') ||
+        contains(github.event.pull_request.labels.*.name, 'release:major') ||
+        contains(github.event.pull_request.labels.*.name, 'release:patch')
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

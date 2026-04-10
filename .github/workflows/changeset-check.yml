@@ -21,7 +21,7 @@ jobs:
           # 'no-changeset': explicitly no release needed
           # 'release', 'release:patch', 'release:minor', 'release:major':
           #   changeset will be auto-created after merge
-          if echo "$LABELS" | grep -qE '"(no-changeset|release)"'; then
+          if echo "$LABELS" | grep -qE '"no-changeset"|"release'; then
             echo "✅ Label present — skipping check (changeset will be auto-created if applicable)."
             exit 0
           fi
