@@ -1,5 +1,11 @@
 # @ikary/cli
 
+## 0.2.0
+
+### Minor Changes
+
+- 2ea9533: Add Primitive Studio, DB migrations, local runtime stack, MCP integration, and CLI prereq checks
+
 ## 0.1.1
 
 ### Patch Changes
