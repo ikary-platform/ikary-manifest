@@ -1,7 +1,23 @@
 import { spawn, execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { createServer } from 'node:net';
 
 export type ContainerRuntime = 'docker' | 'podman';
+
+const DOCKER_SOCKET_PATHS = [
+  homedir() + '/.docker/run/docker.sock',
+  '/var/run/docker.sock',
+];
+
+/** Returns a hint explaining why Docker isn't responding, if we can tell. */
+export function getDockerHint(): string {
+  const socketExists = DOCKER_SOCKET_PATHS.some((p) => existsSync(p));
+  if (socketExists) {
+    return 'Docker Desktop is open but the engine is not running — click the Docker icon and choose "Start Engine", or wait for it to finish starting';
+  }
+  return 'Docker Desktop is not running — open Docker Desktop and wait for the engine to start';
+}
 
 export function getContainerRuntime(): ContainerRuntime | null {
   for (const cmd of ['docker', 'podman'] as const) {
@@ -14,6 +30,21 @@ export function getContainerRuntime(): ContainerRuntime | null {
       // not available or daemon not running
     }
   }
+  return null;
+}
+
+export async function waitForContainerRuntime(
+  maxWaitMs = 30_000,
+  pollIntervalMs = 2_000,
+): Promise<ContainerRuntime | null> {
+  const deadline = Date.now() + maxWaitMs;
+  do {
+    const runtime = getContainerRuntime();
+    if (runtime) return runtime;
+    if (Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, pollIntervalMs));
+    }
+  } while (Date.now() < deadline);
   return null;
 }
 

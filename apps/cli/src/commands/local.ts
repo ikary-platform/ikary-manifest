@@ -3,7 +3,8 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
-import { getContainerRuntime, runCompose, runVolumeRm, waitForHealth, isPortInUse } from '../utils/docker.js';
+import { getContainerRuntime, waitForContainerRuntime, getDockerHint, runCompose, runVolumeRm, waitForHealth, isPortInUse } from '../utils/docker.js';
+import { PORTS } from '../utils/ports.js';
 
 function getComposePath(): string | null {
   const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -38,11 +39,20 @@ export async function localStartCommand(
   );
   if (!manifestOk) ok = false;
 
-  // 2. Docker / Podman daemon
-  const runtime = getContainerRuntime();
+  // 2. Docker / Podman daemon — if all prior checks passed, poll up to 30s to handle
+  //    slow Docker Desktop startup; otherwise do a quick synchronous check
+  let runtime: ReturnType<typeof getContainerRuntime>;
+  if (ok) {
+    const runtimeSpinner = fmt.createSpinner('Waiting for container runtime…');
+    runtimeSpinner.start();
+    runtime = await waitForContainerRuntime(30_000);
+    runtimeSpinner.stop();
+  } else {
+    runtime = getContainerRuntime();
+  }
   const dockerOk = runtime !== null;
   fmt.body(
-    `  ${dockerOk ? theme.success('✓') : theme.error('✗')} Container runtime ${dockerOk ? theme.muted(`${runtime} running`) : theme.error('Docker or Podman daemon not running — start Docker Desktop')}`,
+    `  ${dockerOk ? theme.success('✓') : theme.error('✗')} Container runtime ${dockerOk ? theme.muted(`${runtime} running`) : theme.error(getDockerHint())}`,
   );
   if (!dockerOk) ok = false;
 
@@ -57,9 +67,9 @@ export async function localStartCommand(
   // 4. Port availability
   const portChecks = await Promise.all(
     [
-      { port: 3000, name: 'Preview   (3000)' },
-      { port: 4000, name: 'Data API  (4000)' },
-      { port: 3100, name: 'MCP Server(3100)' },
+      { port: PORTS.PREVIEW,    name: `Preview   (${PORTS.PREVIEW})` },
+      { port: PORTS.DATA_API,   name: `Data API  (${PORTS.DATA_API})` },
+      { port: PORTS.MCP_SERVER, name: `MCP Server(${PORTS.MCP_SERVER})` },
     ].map(async ({ port, name }) => ({ port, name, inUse: await isPortInUse(port) })),
   );
   for (const { name, inUse } of portChecks) {
@@ -100,9 +110,9 @@ export async function localStartCommand(
   spinner.text = 'Waiting for services to be healthy…';
 
   const services = [
-    { name: 'MCP Server', url: 'http://localhost:3100/health' },
-    { name: 'Data API', url: 'http://localhost:4000/health' },
-    { name: 'Preview', url: 'http://localhost:3000/health' },
+    { name: 'MCP Server', url: `http://localhost:${PORTS.MCP_SERVER}/health` },
+    { name: 'Data API',   url: `http://localhost:${PORTS.DATA_API}/health` },
+    { name: 'Preview',    url: `http://localhost:${PORTS.PREVIEW}/health` },
   ];
 
   const results = await Promise.all(services.map((s) => waitForHealth(s.url, 60_000)));
@@ -117,17 +127,17 @@ export async function localStartCommand(
   fmt.newline();
   fmt.body('Services:');
   fmt.newline();
-  fmt.body(`  ${theme.bold('Preview')}     ${theme.accent('http://localhost:3000')}`);
-  fmt.body(`  ${theme.bold('Data API')}    ${theme.accent('http://localhost:4000')}`);
-  fmt.body(`  ${theme.bold('MCP Server')}  ${theme.accent('http://localhost:3100/mcp')}`);
+  fmt.body(`  ${theme.bold('Preview')}     ${theme.accent(`http://localhost:${PORTS.PREVIEW}`)}`);
+  fmt.body(`  ${theme.bold('Data API')}    ${theme.accent(`http://localhost:${PORTS.DATA_API}`)}`);
+  fmt.body(`  ${theme.bold('MCP Server')}  ${theme.accent(`http://localhost:${PORTS.MCP_SERVER}/mcp`)}`);
   fmt.newline();
   fmt.body('Next steps:');
   fmt.newline();
   fmt.body(`  1. Open the preview in your browser:`);
-  fmt.body(`     ${theme.accent('http://localhost:3000')}`);
+  fmt.body(`     ${theme.accent(`http://localhost:${PORTS.PREVIEW}`)}`);
   fmt.newline();
   fmt.body(`  2. Add the MCP server to your AI assistant (Cursor, Claude Desktop…):`);
-  fmt.body(`     ${theme.muted('Type:  ')  }${theme.accent('http://localhost:3100/mcp')}`);
+  fmt.body(`     ${theme.muted('Type:  ')  }${theme.accent(`http://localhost:${PORTS.MCP_SERVER}/mcp`)}`);
   fmt.newline();
   fmt.body(`  3. Connect your AI assistant to the local MCP server:`);
   fmt.body(`     ${theme.accent('ikary setup ai --local')}`);
@@ -147,8 +157,7 @@ export async function localStopCommand(_options: Record<string, unknown>): Promi
 
   const runtime = getContainerRuntime();
   if (!runtime) {
-    fmt.error('Docker or Podman not found.');
-    process.exitCode = 1;
+    fmt.body(theme.muted('Docker is not running — nothing to stop.'));
     return;
   }
 
