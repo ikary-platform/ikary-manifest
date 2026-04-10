@@ -1,0 +1,92 @@
+name: Claude Revise Plan
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: claude-issue-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  revise-plan:
+    runs-on: ubuntu-latest
+
+    if: |
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, '@claude revise') &&
+      !github.event.issue.pull_request &&
+      contains(vars.CLAUDE_ALLOWED_USERS, github.event.comment.user.login)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          use_sticky_comment: "true"
+          claude_args: >
+            --model claude-sonnet-4-6
+            --max-turns 8
+          custom_instructions: |
+            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+
+            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
+            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            4. .claude/doc-voice.md — documentation writing rules
+            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
+
+            Key IKARY rules:
+
+            CONTRACTS:
+            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
+            - Raw interface/type only for purely structural helpers with no runtime validation need
+
+            LIBRARY STRUCTURE:
+            - Every libs/* package declares "microPackageKind" in package.json
+            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
+            - src/server/ for Node/NestJS runtime code in mixed packages
+            - src/ui/ for React hooks and components (not src/client/)
+
+            DATABASE:
+            - Runtime DB access via Kysely through @ikary/system-db-core
+            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
+            - Migration naming: NNN_<lib>_<module>_<action>.sql
+
+            REACT:
+            - Components: UI + callbacks only, no business logic, no API calls, no side effects
+            - Library hooks live in src/hooks or src/ui/hooks
+
+            DOCUMENTATION:
+            - Follow .claude/doc-voice.md strictly
+            - No emojis anywhere
+            - No em-dashes as clause separators
+            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
+            - Direct peer-to-peer tone, active voice, short sentences
+
+            ---
+
+            You are revising an existing plan based on feedback.
+
+            1. Read all comments on this issue.
+            2. Find the existing plan (look for "## Feature Plan" or "## Fix Plan" heading).
+            3. Read the comment that triggered this run. It contains the feedback to incorporate.
+            4. Produce a revised plan in the same format as the original.
+            5. Add a "### Revisions" section at the top of the plan noting what changed and why.
+            6. If the feedback contradicts IKARY conventions, follow the conventions and explain why.
+            7. If no existing plan is found, respond asking the user to first run @claude plan feature or @claude plan fix.
+
+            Rules:
+            - Do NOT write any code. Only produce the revised plan.
+            - Be concise and direct. No filler sentences.
+            - Use markdown formatting. No emojis in headers or body text.
+            - Preserve all sections from the original plan, updating only what the feedback requires.
