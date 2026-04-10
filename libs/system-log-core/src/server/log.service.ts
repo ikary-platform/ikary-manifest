@@ -1,5 +1,6 @@
 import { Inject, Injectable, type LoggerService } from '@nestjs/common';
 import pino from 'pino';
+import PinoPretty from 'pino-pretty';
 import { SYSTEM_LOG_MODULE_OPTIONS, SERVICE_TENANT_ID } from './log.tokens';
 import type { SystemLogModuleOptions } from './log.options.schema';
 import type { LogEntry } from './log.types';
@@ -12,31 +13,31 @@ function toEntryLevel(pinoLevel: string): LogEntryLevel {
   return pinoLevel as LogEntryLevel;
 }
 
-function buildPinoOptions(pretty: boolean): pino.LoggerOptions {
-  const base: pino.LoggerOptions = {
-    level: 'trace',
-    base: null,
+const BASE_PINO_OPTIONS: pino.LoggerOptions = {
+  level: 'trace',
+  base: null,
+  messageKey: 'message',
+  timestamp: pino.stdTimeFunctions.isoTime,
+  formatters: {
+    level: (label) => ({ level: label }),
+  },
+};
+
+function buildPinoLogger(pretty: boolean): pino.Logger {
+  if (!pretty) return pino(BASE_PINO_OPTIONS);
+
+  // Use pino-pretty as a synchronous stream destination instead of the
+  // transport: { target } API. The transport API spawns a worker thread
+  // via thread-stream, which breaks when the app is bundled with tsup/esbuild
+  // because the worker script path cannot be resolved from inside the bundle.
+  const stream = PinoPretty({
+    colorize: true,
+    translateTime: 'SYS:standard',
+    ignore: 'pid,hostname',
     messageKey: 'message',
-    timestamp: pino.stdTimeFunctions.isoTime,
-    formatters: {
-      level: (label) => ({ level: label }),
-    },
-  };
-
-  if (!pretty) return base;
-
-  return {
-    ...base,
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'SYS:standard',
-        ignore: 'pid,hostname',
-        messageKey: 'message',
-      },
-    },
-  };
+    sync: true,
+  });
+  return pino(BASE_PINO_OPTIONS, stream);
 }
 
 @Injectable()
@@ -49,7 +50,7 @@ export class LogService implements LoggerService {
     private readonly ingestion: LogIngestionService,
   ) {
     this.service = options.service;
-    this.pinoLogger = pino(buildPinoOptions(options.pretty ?? false));
+    this.pinoLogger = buildPinoLogger(options.pretty ?? false);
   }
 
   private buildPinoFields(context?: string | LogContext): Record<string, unknown> {
