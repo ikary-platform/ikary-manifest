@@ -39,7 +39,25 @@ jobs:
           version: pnpm run version
           title: "chore: version packages"
           commit: "chore: version packages"
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create release branch
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          CLI_VERSION=$(echo '${{ steps.changesets.outputs.publishedPackages }}' \
+            | jq -r '.[] | select(.name == "@ikary/cli") | .version' 2>/dev/null || true)
+
+          if [ -n "$CLI_VERSION" ]; then
+            BRANCH="release/v${CLI_VERSION}"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git checkout -b "$BRANCH"
+            git push origin "$BRANCH"
+            echo "✅ Created release branch: $BRANCH"
+          else
+            echo "ℹ️ @ikary/cli was not in this publish — no release branch created."
+          fi
