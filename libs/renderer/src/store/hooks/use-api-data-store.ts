@@ -190,9 +190,11 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
         patch: Record<string, unknown>,
       ): Promise<Record<string, unknown> | undefined> {
         const version = Number(patch['_version'] ?? patch['expectedVersion'] ?? 1);
+        // Strip internal meta fields — the API doesn't accept them as column data
+        const { _version, _createdAt, _createdBy, _updatedAt, _updatedBy, expectedVersion: _ev, ...data } = patch;
         const result = await adapter.updateAsync({
           id,
-          data: patch,
+          data,
           expectedVersion: version,
         });
         return result?.data as Record<string, unknown> | undefined;
