@@ -70,6 +70,7 @@ jobs:
           claude_args: >
             --model claude-sonnet-4-6
             --max-turns 30
+            --dangerously-skip-permissions
           prompt: |
             Fix the code based on the review comment. Follow all rules in CLAUDE.md.
 
