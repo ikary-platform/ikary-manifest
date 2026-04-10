@@ -63,7 +63,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
 
           # Collect CHANGELOG sections for every published package
           CHANGELOGS=""
@@ -143,7 +143,7 @@ jobs:
 
           git add "$RELEASE_FILE"
           git commit -m "chore: add release note for v${CLI_VERSION}"
-          git pull --rebase origin main
+          git pull --rebase --autostash origin main
           git push origin main
 
           # Create a permanent release branch
