@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: claude-issue-${{ github.event.issue.number }}
+  group: claude-revise-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
@@ -23,6 +23,17 @@ jobs:
       contains(vars.CLAUDE_ALLOWED_USERS, github.event.comment.user.login)
 
     steps:
+      - name: Acknowledge trigger
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes'
+            });
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
