@@ -34,39 +34,46 @@ Ikary Manifest lets you define **entire business applications declaratively** us
 
 ## Repository Structure
 
-```
+```text
 ikary-manifest/
-  manifests/               # Language-neutral source of truth
-    entities/              # Standalone entity YAML fragments
-    examples/              # Complete Cell manifest examples (YAML)
-    schemas/               # Generated JSON Schema files
-  node/                    # TypeScript/Node.js packages
-    packages/
-      contract/            # Zod schemas, TS types, validation
-      loader/              # YAML/JSON loading and parsing
-      engine/              # Compilation, normalization, field derivation
-      presentation/        # UI primitive presentation schemas
-      runtime-ui/          # Declarative UI engine, primitives, registries
-      renderer/            # Manifest-driven React renderer
-      data-runtime/        # Data-binding providers
-      generator-nest/      # NestJS code generator (placeholder)
-      cli/                 # Developer CLI (placeholder)
-  docs/                    # Documentation
+  manifests/                 # Canonical YAML schemas + examples
+  libs/                      # Core libraries (contract, loader, engine, renderer, etc.)
+  apps/                      # Executables and services (CLI, preview server, MCP server)
+  runtime-api/               # Runtime API generators/adapters
+  docs/                      # VitePress docs site
+  decisions/                 # Architecture decision records and diagrams
 ```
 
-## Node Packages
+## Core Packages
 
-| Package | Description |
-|---|---|
-| [`@ikary/contract`](./node/packages/contract/) | Zod schemas, TypeScript types, and validation for cell manifests |
-| [`@ikary/loader`](./node/packages/loader/) | YAML/JSON manifest loading, parsing, and validation pipeline |
-| [`@ikary/engine`](./node/packages/engine/) | Manifest compilation, field derivation, scope registry, route builders |
-| [`@ikary/presentation`](./node/packages/presentation/) | Presentation-layer schemas for 40+ UI primitives |
-| [`@ikary/runtime-ui`](./node/packages/runtime-ui/) | Declarative UI engine: primitive registry, resolver, actions, EntityClient |
-| [`@ikary/renderer`](./node/packages/renderer/) | Manifest-driven React renderer: CellAppRenderer, data grids, forms, sheets |
-| [`@ikary/data-runtime`](./node/packages/data-runtime/) | Data-binding glue: wires entity data to the UI runtime context |
+| Package               | Path                                        | Responsibility                                                  |
+| --------------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| `@ikary/contract`     | [`libs/contract`](./libs/contract/)         | Zod schemas, TypeScript types, structural + semantic validation |
+| `@ikary/loader`       | [`libs/loader`](./libs/loader/)             | YAML/JSON loading, parsing, and pre-validation pipeline         |
+| `@ikary/engine`       | [`libs/engine`](./libs/engine/)             | Manifest normalization, compilation, and derivation             |
+| `@ikary/presentation` | [`libs/presentation`](./libs/presentation/) | Presentation contracts for UI primitives                        |
+| `@ikary/primitives`   | [`libs/primitives`](./libs/primitives/)     | Runtime primitive components, resolvers, and registry           |
+| `@ikary/renderer`     | [`libs/renderer`](./libs/renderer/)         | React rendering runtime (pages, forms, grids, detail views)     |
+| `@ikary/data`         | [`libs/data`](./libs/data/)                 | Data providers and page/runtime data orchestration              |
+| `@ikary/cli`          | [`apps/cli`](./apps/cli/)                   | Authoring and local-stack developer workflow                    |
 
 ## Quick Start
+
+### Option A: Use the published CLI (fastest)
+
+```bash
+npx ikary init
+```
+
+Then run:
+
+```bash
+ikary validate manifests/examples/crm-manifest.yaml
+ikary compile manifests/examples/crm-manifest.yaml
+ikary local start manifests/examples/crm-manifest.yaml
+```
+
+### Option B: Work from this monorepo
 
 ```bash
 pnpm install
@@ -76,47 +83,43 @@ pnpm test
 
 ## Local Stack Ports
 
-When you run `ikary local start`, three services start on the following ports:
+When you run `ikary local start <manifest-path>`, three services start on the following ports:
 
-| Port | Service |
-|------|---------|
+| Port | Service        |
+| ---- | -------------- |
 | 4500 | Preview Server |
-| 4501 | Data API |
-| 4502 | MCP Server |
+| 4501 | Data API       |
+| 4502 | MCP Server     |
 
 ## How Manifests Work
 
 YAML is the authoring format. The processing pipeline:
 
-```
-YAML manifest (manifests/)
-    |
-    v
-@ikary/loader     # Parse YAML -> JSON object
-    |
-    v
-@ikary/contract   # Zod structural validation + semantic rules
-    |
-    v
-@ikary/engine     # Normalization + compilation -> runtime manifest
+```mermaid
+flowchart TD
+    M["YAML manifest<br/>(manifests/)"] --> L["@ikary/loader<br/>Parse YAML → JSON object"]
+    L --> C["@ikary/contract<br/>Zod structural validation + semantic rules"]
+    C --> E["@ikary/engine<br/>Normalization + compilation → runtime manifest"]
 ```
 
 ## Architecture
 
-```
-contract  (Zod schemas + types)
-   |
-   +--> loader  (YAML/JSON parsing + validation pipeline)
-   |
-   +--> presentation  (UI primitive schemas)
-   |
-   +--> engine  (compilation + derivation)
-   |
-   +--> runtime-ui  (primitives + registries + EntityClient)
-   |         |
-   |         +--> renderer  (CellAppRenderer + forms + grids)
-   |         |
-   |         +--> data-runtime  (data-binding providers)
+```mermaid
+flowchart TD
+    C["contract<br/>Zod schemas + types"]
+    L["loader<br/>YAML/JSON parsing + validation pipeline"]
+    P["presentation<br/>UI primitive schemas"]
+    E["engine<br/>compilation + derivation"]
+    R["runtime-ui<br/>primitives + registries + EntityClient"]
+    RR["renderer<br/>CellAppRenderer + forms + grids"]
+    D["data-runtime<br/>data-binding providers"]
+
+    C --> L
+    C --> P
+    C --> E
+    C --> R
+    R --> RR
+    R --> D
 ```
 
 All packages are framework-agnostic at the schema level. The `runtime-ui`, `renderer`, and `data-runtime` packages use React.
@@ -133,9 +136,11 @@ All packages are framework-agnostic at the schema level. The `runtime-ui`, `rend
 Full documentation: **[ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest/)**
 
 - [Why Ikary Manifest](./docs/guide/why-ikary-manifest.md)
-- [Getting Started](./docs/guide/getting-started.md)
+- [CLI Guide](./docs/guide/cli.md)
 - [Architecture](./docs/guide/architecture.md)
 - [Manifest Format](./docs/guide/manifest-format.md)
+- [Runtime UI](./docs/guide/runtime-ui.md)
+- [Runtime API](./docs/guide/runtime-api.md)
 - [Entity Definition](./docs/reference/entity-definition.md)
 - [Entity Governance](./docs/reference/entity-governance.md)
 
