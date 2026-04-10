@@ -86,7 +86,7 @@ describe('REST Registry — GET /api/primitives and /api/examples', () => {
   describe('GET /api/examples/:key', () => {
     // The server reads YAML files from disk at runtime. On production the files may
     // not be bundled, in which case the response is { error: "..." }. On a local server
-    // (IKARY_API_URL=http://localhost:3100) the files resolve correctly and the test
+    // (IKARY_API_URL=http://localhost:4502) the files resolve correctly and the test
     // asserts the full manifest content.
     it('returns manifest content (local) or a meaningful error (production) for minimal-manifest', async () => {
       const res = await restGet('/api/examples/minimal-manifest');

@@ -7,6 +7,7 @@ import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 import { scaffoldPrimitiveFiles, toPascalCase } from '@ikary/primitive-contract';
 import type { IkaryPrimitivesConfig } from '@ikary/primitive-contract';
+import { PORTS } from '../utils/ports.js';
 
 const CATEGORIES = ['data', 'form', 'layout', 'feedback', 'navigation', 'custom'] as const;
 type Category = (typeof CATEGORIES)[number];
@@ -138,7 +139,7 @@ export async function primitiveAddCommand(
     fmt.body(`  2. Edit ${theme.accent(`primitives/${name}/${PascalName}.tsx`)} to implement the component`);
     fmt.body(`  3. Run ${theme.accent('ikary primitive validate')} to check your contract`);
     fmt.body(`  4. Run ${theme.accent('ikary local start manifest.json')} then open`);
-    fmt.body(`     ${theme.accent('http://localhost:3000/__primitive-studio')} to preview live`);
+    fmt.body(`     ${theme.accent(`http://localhost:${PORTS.PREVIEW}/__primitive-studio`)} to preview live`);
     fmt.newline();
     fmt.muted(`  To update the primitive later, run /ikary-update-primitive in Claude Code.`);
     fmt.newline();

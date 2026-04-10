@@ -46,6 +46,6 @@ COPY --from=build /app/manifests ./manifests
 # (resolveSystemLogMigrationsRoot() resolves 3 dirs up from dist/)
 COPY --from=build /app/libs/system-log-core/migrations ./libs/system-log-core/migrations
 
-EXPOSE 3100
-ENV PORT=3100
+EXPOSE 4502
+ENV PORT=4502
 CMD ["node", "apps/mcp-server/dist/main.js"]

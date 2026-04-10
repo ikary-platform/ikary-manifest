@@ -138,12 +138,12 @@ jobs:
         run: pnpm --filter @ikary/mcp-server start &
 
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3100/api/schemas/manifest --timeout 30000
+        run: npx wait-on http://localhost:4502/api/schemas/manifest --timeout 30000
 
       - name: Run E2E tests
         run: pnpm --filter @ikary/mcp-server-e2e test
         env:
-          IKARY_API_URL: http://localhost:3100
+          IKARY_API_URL: http://localhost:4502
 
       - name: Upload E2E test results
         uses: actions/upload-artifact@v4

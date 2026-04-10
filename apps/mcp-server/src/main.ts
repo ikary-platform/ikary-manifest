@@ -29,7 +29,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.PORT ?? 3100;
+  const port = process.env.PORT ?? 4502;
   await app.listen(port);
 
   logger.log(`IKARY Manifest API running on http://localhost:${port}`, { operation: 'server.ready' });

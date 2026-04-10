@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 import { openBrowser } from '../utils/open-browser.js';
+import { PORTS } from '../utils/ports.js';
 
 async function pollHealth(url: string, maxAttempts = 10, intervalMs = 500): Promise<boolean> {
   for (let i = 0; i < maxAttempts; i++) {
@@ -20,7 +21,7 @@ async function pollHealth(url: string, maxAttempts = 10, intervalMs = 500): Prom
 }
 
 export async function primitiveStudioCommand(options: { port?: string }): Promise<void> {
-  const port = options.port ?? '3000';
+  const port = options.port ?? String(PORTS.PREVIEW);
   const studioUrl = `http://localhost:${port}/__primitive-studio`;
   const healthUrl = `http://localhost:${port}/health`;
 
