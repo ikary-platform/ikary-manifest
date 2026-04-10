@@ -59,6 +59,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLISHED_PACKAGES: ${{ github.event_name == 'workflow_dispatch' && inputs.published_packages || steps.changesets.outputs.publishedPackages }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           CLI_VERSION=$(echo "$PUBLISHED_PACKAGES" \
             | jq -r '.[] | select(.name == "@ikary/cli") | .version' 2>/dev/null || true)
@@ -70,6 +71,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git pull --rebase --autostash origin main
 
           # Collect CHANGELOG sections for every published package
