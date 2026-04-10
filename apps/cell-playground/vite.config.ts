@@ -25,6 +25,7 @@ export default defineConfig({
       '@ikary/cell-runtime': path.resolve(__dirname, `${LIBS}/renderer/src/index.ts`),
       '@ikary/cell-runtime-ui/registry': path.resolve(__dirname, `${LIBS}/primitives/src/registry.ts`),
       '@ikary/cell-runtime-ui': path.resolve(__dirname, `${LIBS}/primitives/src/index.ts`),
+      '@ikary/primitives': path.resolve(__dirname, `${LIBS}/primitives/src/index.ts`),
       // new primitive system libs
       '@ikary/primitive-contract': path.resolve(__dirname, `${LIBS}/primitive-contract/src/index.ts`),
       '@ikary/primitive-studio/ui': path.resolve(__dirname, `${LIBS}/primitive-studio/src/ui/index.ts`),
