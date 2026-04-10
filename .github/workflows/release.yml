@@ -45,19 +45,47 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create release branch
+      - name: Create release note and release branch
         if: steps.changesets.outputs.published == 'true'
         run: |
           CLI_VERSION=$(echo '${{ steps.changesets.outputs.publishedPackages }}' \
             | jq -r '.[] | select(.name == "@ikary/cli") | .version' 2>/dev/null || true)
 
-          if [ -n "$CLI_VERSION" ]; then
-            BRANCH="release/v${CLI_VERSION}"
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git checkout -b "$BRANCH"
-            git push origin "$BRANCH"
-            echo "✅ Created release branch: $BRANCH"
-          else
-            echo "ℹ️ @ikary/cli was not in this publish — no release branch created."
+          if [ -z "$CLI_VERSION" ]; then
+            echo "ℹ️ @ikary/cli was not in this publish — skipping."
+            exit 0
           fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+          # Extract the CHANGELOG section for this version and write releases/vX.Y.Z.md
+          CHANGELOG_BODY=$(awk \
+            "/^## ${CLI_VERSION}$/{found=1; next} /^## /{if(found) exit} found{print}" \
+            apps/cli/CHANGELOG.md | sed '/^[[:space:]]*$/d')
+
+          RELEASE_FILE="releases/v${CLI_VERSION}.md"
+
+          {
+            echo "---"
+            echo "version: ${CLI_VERSION}"
+            echo "date: $(date -u +%Y-%m-%d)"
+            echo "---"
+            echo ""
+            echo "# v${CLI_VERSION}"
+            echo ""
+            echo "${CHANGELOG_BODY}"
+          } > "${RELEASE_FILE}"
+
+          git add "${RELEASE_FILE}"
+          git commit -m "chore: add release note for v${CLI_VERSION}"
+          git pull --rebase origin main
+          git push origin main
+          echo "✅ Created ${RELEASE_FILE}"
+
+          # Create a permanent release branch
+          BRANCH="release/v${CLI_VERSION}"
+          git checkout -b "${BRANCH}"
+          git push origin "${BRANCH}"
+          echo "✅ Created release branch: ${BRANCH}"
