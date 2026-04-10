@@ -217,8 +217,9 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
           return [];
         }
 
-        if (!adapter.auditData?.data) return [];
-        return adapter.auditData.data.map(mapAuditToVersion).sort((a, b) => b.version - a.version);
+        const auditEntries = adapter.auditData?.data;
+        if (!Array.isArray(auditEntries)) return [];
+        return auditEntries.map(mapAuditToVersion).sort((a, b) => b.version - a.version);
       },
 
       getAuditEvents(entityKey: string, id: string): AuditEvent[] {
@@ -230,8 +231,9 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
           return [];
         }
 
-        if (!adapter.auditData?.data) return [];
-        return adapter.auditData.data
+        const auditEntries = adapter.auditData?.data;
+        if (!Array.isArray(auditEntries)) return [];
+        return auditEntries
           .map((e) => mapAuditEntry(e, entityKey, id))
           .sort((a, b) => b.version - a.version);
       },

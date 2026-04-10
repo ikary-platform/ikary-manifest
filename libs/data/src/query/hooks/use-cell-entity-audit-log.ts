@@ -34,10 +34,15 @@ export function useCellEntityAuditLog(
   const { apiBase, getToken } = useCellApi();
   return useQuery<AuditLogPage, CellApiError>({
     queryKey: [...cellEntityQueryKeys.audit(params, id ?? ''), page, pageSize],
-    queryFn: () => {
+    queryFn: async () => {
       const base = localEntityItemUrl(params.entityKey, id!, apiBase);
       const url = `${base}/audit?page=${page}&pageSize=${pageSize}`;
-      return cellApiFetch<AuditLogPage>({ url, method: 'GET', token: getToken() });
+      const raw = await cellApiFetch<AuditLogEntry[] | AuditLogPage>({ url, method: 'GET', token: getToken() });
+      // The local API returns a raw array; normalize to AuditLogPage shape
+      if (Array.isArray(raw)) {
+        return { data: raw, total: raw.length };
+      }
+      return raw;
     },
     enabled: Boolean(params.entityKey) && Boolean(id),
   });

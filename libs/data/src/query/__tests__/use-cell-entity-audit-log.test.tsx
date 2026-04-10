@@ -94,6 +94,18 @@ describe('useCellEntityAuditLog', () => {
     expect(headers['X-Correlation-ID']).toBeTruthy();
   });
 
+  it('normalizes raw array response into AuditLogPage shape', async () => {
+    // The local API returns a raw array, not { data: [...], total: N }
+    const rawArray = [AUDIT_PAGE.data[0]];
+    mockFetch(rawArray);
+    const { result } = renderHook(() => useCellEntityAuditLog(PARAMS, 'abc'), {
+      wrapper: makeWrapper(),
+    });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data?.data).toHaveLength(1);
+    expect(result.current.data?.total).toBe(1);
+  });
+
   it('returns CellApiError on non-2xx response', async () => {
     mockFetch({ message: 'Not Found' }, 404);
     const { result } = renderHook(() => useCellEntityAuditLog(PARAMS, 'missing'), {
