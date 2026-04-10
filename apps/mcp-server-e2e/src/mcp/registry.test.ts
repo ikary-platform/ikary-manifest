@@ -74,7 +74,7 @@ describe('MCP Registry Tools', () => {
   describe('get_example_manifest', () => {
     // The server reads YAML files from disk at runtime. On production those files may
     // not be bundled, so the tool returns isError=true with a file-not-found message.
-    // On a local server (IKARY_API_URL=http://localhost:3100) the files resolve correctly.
+    // On a local server (IKARY_API_URL=http://localhost:4502) the files resolve correctly.
     it('returns manifest content (local) or a meaningful error (production) for minimal-manifest', async () => {
       const result = await client.callTool({ name: 'get_example_manifest', arguments: { example: 'minimal-manifest' } }) as McpToolResult;
       const summary = getMcpSummary(result);

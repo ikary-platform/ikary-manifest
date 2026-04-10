@@ -134,7 +134,7 @@ function manifestPlugin(): any {
 export default defineConfig({
   plugins: [react(), manifestPlugin(), primitivePlugin()],
   server: {
-    port: 3000,
+    port: 4500,
     host: true,
     fs: {
       // '../..' resolves to the workspace root (needed for aliased libs)

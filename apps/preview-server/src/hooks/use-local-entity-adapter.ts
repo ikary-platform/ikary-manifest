@@ -20,7 +20,7 @@ const EMPTY_LIST: EntityListResponse = { data: [], total: 0 };
  */
 export function useLocalEntityAdapter(): EntityApiAdapter {
   const { dataApiUrl } = getRuntimeConfig();
-  const apiBase = dataApiUrl ?? 'http://localhost:4000';
+  const apiBase = dataApiUrl ?? 'http://localhost:4501';
 
   const [activeEntityKey, setActiveEntityKeyState] = useState<string>('');
   const [activeRecordId, setActiveRecordId] = useState<string | null>(null);

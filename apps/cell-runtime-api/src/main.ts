@@ -23,7 +23,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env['PORT'] ?? 4000;
+  const port = process.env['PORT'] ?? 4501;
   await app.listen(port);
 
   logger.log(`cell-runtime-api running on http://localhost:${port}`, { operation: 'server.ready' });

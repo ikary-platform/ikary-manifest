@@ -74,6 +74,16 @@ pnpm build
 pnpm test
 ```
 
+## Local Stack Ports
+
+When you run `ikary local start`, three services start on the following ports:
+
+| Port | Service |
+|------|---------|
+| 4500 | Preview Server |
+| 4501 | Data API |
+| 4502 | MCP Server |
+
 ## How Manifests Work
 
 YAML is the authoring format. The processing pipeline:

@@ -50,7 +50,7 @@ export function createProgram(): Command {
   setup
     .command('ai')
     .description('Set up Claude Code integration (MCP server, slash commands, CLAUDE.md)')
-    .option('--local', 'Point the MCP server at the local stack (http://localhost:3100/mcp)')
+    .option('--local', 'Point the MCP server at the local stack (http://localhost:4502/mcp)')
     .option('--force', 'Overwrite existing files')
     .action(setupAiCommand);
 
@@ -70,7 +70,7 @@ export function createProgram(): Command {
   program
     .command('preview <path>')
     .description('Preview a Cell manifest in the playground')
-    .option('-p, --port <port>', 'Dev server port', '3000')
+    .option('-p, --port <port>', 'Dev server port', '4500')
     .action(previewCommand);
 
   const local = program
@@ -149,7 +149,7 @@ export function createProgram(): Command {
   primitive
     .command('studio')
     .description('Open the Primitive Studio in the browser')
-    .option('-p, --port <port>', 'Local stack port', '3000')
+    .option('-p, --port <port>', 'Local stack port', '4500')
     .action(primitiveStudioCommand);
 
   primitive

@@ -165,10 +165,10 @@ Build and run the container locally before deploying:
 
 ```bash
 docker build -t ikary-manifest-api .
-docker run -p 3100:3100 ikary-manifest-api
+docker run -p 4502:4502 ikary-manifest-api
 ```
 
-Then open `http://localhost:3100/api/docs` to verify.
+Then open `http://localhost:4502/api/docs` to verify.
 
 ## Cost
 

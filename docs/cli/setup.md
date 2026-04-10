@@ -40,5 +40,5 @@ ikary setup ai --force
 
 | Option | Description |
 |--------|-------------|
-| `--local` | Point `.mcp.json` at `http://localhost:3100/mcp` |
+| `--local` | Point `.mcp.json` at `http://localhost:4502/mcp` |
 | `--force` | Overwrite existing files |
