@@ -17,51 +17,48 @@ ikary --help
 
 ## Commands
 
+### Manifest
+
 ```bash
-ikary init [project-name]   # Create a new Cell manifest project
-ikary validate <path>       # Validate a manifest JSON file
-ikary compile <path>        # Compile a manifest to normalized JSON
-ikary preview <path>        # Preview a manifest in the playground
+ikary init [project-name]      # Create a new Cell manifest project
+ikary validate <path>          # Validate a manifest (--explain for fix suggestions)
+ikary compile <path>           # Compile a manifest to normalized JSON
+ikary preview <path>           # Preview a manifest in the browser
 ```
 
-### `ikary init`
-
-Scaffolds a new Cell manifest project with a valid starting template.
+### Local development stack
 
 ```bash
-ikary init my-app
+ikary local start <manifest>   # Start preview server + data API + MCP server
+ikary local stop               # Stop the stack
+ikary local status             # Show container status
+ikary local logs [service]     # Stream logs (-f to follow)
+ikary local reset-data         # Clear the local SQLite volume
+ikary local db migrate         # Run pending database migrations
 ```
 
-### `ikary validate`
+Requires Docker Desktop or Podman.
 
-Validates a Cell manifest JSON file against the schema and runs semantic checks.
+### Custom primitives
 
 ```bash
-ikary validate ./manifest.json
+ikary primitive add <name>     # Scaffold a new primitive (6 files + config)
+ikary primitive validate       # Validate ikary-primitives.yaml
+ikary primitive list           # List all primitives (--json for machine output)
+ikary primitive studio         # Open the Primitive Studio in the browser
 ```
 
-### `ikary compile`
-
-Compiles a Cell manifest to its normalized form. Useful for inspecting the final output the engine produces.
+### Claude Code integration
 
 ```bash
-ikary compile ./manifest.json
-ikary compile ./manifest.json -o compiled.json
-ikary compile ./manifest.json --stdout
-```
-
-### `ikary preview`
-
-Launches a local dev server to preview the manifest in the Cell Playground.
-
-```bash
-ikary preview ./manifest.json
-ikary preview ./manifest.json --port 4000
+ikary setup ai                 # Write CLAUDE.md, .mcp.json, and slash commands
+ikary setup ai --local         # Point MCP config at the local stack
+ikary setup ai --force         # Overwrite existing files
 ```
 
 ## Documentation
 
-Full documentation lives in the [ikary-manifest](https://github.com/ikary-platform/ikary-manifest) repository.
+Full documentation: [ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest)
 
 ## License
 

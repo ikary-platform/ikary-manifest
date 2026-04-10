@@ -63,7 +63,7 @@ curl -X POST {{ baseUrl }}/mcp \
 
 ## Available tools
 
-The server exposes 16 tools across four groups.
+The server exposes 19 tools across five groups.
 
 ### Discovery
 
@@ -78,10 +78,20 @@ The server exposes 16 tools across four groups.
 
 | Tool | Description | Parameters |
 |------|-------------|------------|
-| `list_primitives` | Returns the catalog of 30 UI primitives | `category` (string, optional) |
-| `get_primitive_contract` | Returns one primitive's presentation contract | `primitive` (string, required) |
+| `list_primitives` | Returns the primitive catalog; pass `source: "custom"` for project-specific ones | `category` (string, optional), `source` (string, optional) |
+| `get_primitive_contract` | Returns one primitive's full props contract | `primitive` (string, required) |
 | `list_examples` | Returns available sample manifests | (none) |
 | `get_example_manifest` | Returns the full content of one example | `example` (string, required) |
+
+### Primitives
+
+These tools have full capability when connecting to the local MCP server (`ikary setup ai --local`). With the public server, they cover core primitives only.
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `get_primitive_examples` | Returns named example scenarios for a primitive | `key` (string, required), `version` (string, optional) |
+| `scaffold_primitive` | Creates a new custom primitive scaffold in the project | `name`, `label`, `description`, `category`, `props` |
+| `validate_primitive_props` | Validates a props object against a primitive's declared contract | `key` (string, required), `version` (string, optional), `props` (object, required) |
 
 ### Guidance
 

@@ -151,6 +151,7 @@ export default defineConfig({
             { text: 'Architecture', link: '/guide/architecture' },
             { text: 'Runtime API', link: '/guide/runtime-api' },
             { text: 'Runtime UI', link: '/guide/runtime-ui' },
+            { text: 'Custom Primitives', link: '/guide/primitives' },
           ],
         },
       ],
