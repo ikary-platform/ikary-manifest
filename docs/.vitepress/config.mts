@@ -119,6 +119,7 @@ export default defineConfig({
 
     nav: [
       { text: 'Guide', link: '/guide/why-ikary-manifest' },
+      { text: 'CLI', link: '/cli/' },
       { text: 'Reference', link: '/reference/entity-definition' },
       { text: 'API', link: '/api/' },
       { text: 'Packages', link: '/packages/overview' },
@@ -131,6 +132,19 @@ export default defineConfig({
     ],
 
     sidebar: {
+      '/cli/': [
+        {
+          text: 'CLI Reference',
+          items: [
+            { text: 'Overview', link: '/cli/' },
+            { text: 'Manifest', link: '/cli/manifest' },
+            { text: 'Local stack', link: '/cli/local' },
+            { text: 'Primitives', link: '/cli/primitives' },
+            { text: 'Setup', link: '/cli/setup' },
+          ],
+        },
+      ],
+
       '/guide/': [
         {
           text: 'Introduction',
@@ -151,6 +165,7 @@ export default defineConfig({
             { text: 'Architecture', link: '/guide/architecture' },
             { text: 'Runtime API', link: '/guide/runtime-api' },
             { text: 'Runtime UI', link: '/guide/runtime-ui' },
+            { text: 'Custom Primitives', link: '/guide/primitives' },
           ],
         },
       ],

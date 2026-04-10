@@ -1,0 +1,10 @@
+
+Validating manifest
+manifests/examples/minimal-manifest.yaml
+
+- Parsing and validating...
+✔ Manifest is valid
+
+  Entities: 0
+  Pages:    1
+  Roles:    0

@@ -1,6 +1,4 @@
-# CLI
-
-The IKARY CLI scaffolds, validates, compiles, and previews Cell manifests from the terminal.
+# Getting Started
 
 ## Install
 
@@ -17,97 +15,48 @@ npm install -g @ikary/cli
 ikary --help
 ```
 
-You can also use the `@ikary/ikary` wrapper package, which forwards to `@ikary/cli`:
+## Quick start
 
 ```bash
-npx @ikary/ikary init
-```
-
-## Commands
-
-### `ikary init`
-
-Scaffolds a new Cell manifest project with an interactive wizard.
-
-```bash
+# 1. Create a new project
 ikary init my-app
+cd my-app
+
+# 2. Start the local stack (requires Docker)
+ikary local start manifest.json
+
+# 3. Open the preview
+open http://localhost:3000
 ```
 
-The wizard prompts for a project description and preferred AI tool. It generates:
+The preview server hot-reloads when you edit `manifest.json`. The data API runs at `http://localhost:4000`. Stop everything with `ikary local stop`.
 
-- `manifest.json` with a starter Cell manifest
-- `CLAUDE.md` with AI context for Claude Code
-- `.claude/commands/` with slash command templates
-- `.ikary/` directory for project configuration
-
-After scaffolding, the wizard prints next steps specific to your chosen workflow.
-
-### `ikary validate`
-
-Validates a Cell manifest JSON file against the schema and runs semantic checks.
+## Validate your manifest
 
 ```bash
-ikary validate ./manifest.json
+ikary validate manifest.json
 ```
 
-On success, it prints entity, page, and role counts. On failure, it lists each error with its path and message.
+<<< @/snippets/cli/validate-success.txt
+
+Pass `--explain` to get fix suggestions when errors are found:
 
 ```bash
-# Example output on failure
-✖ 2 validation errors
-
-  spec.entities[0].fields[1].type
-  Invalid field type "number". Expected string | boolean | date | ...
-
-  spec.pages[0].entity
-  Entity "unknown_entity" is not defined in spec.entities
+ikary validate manifest.json --explain
 ```
 
-### `ikary compile`
+## Set up Claude Code
 
-Compiles a Cell manifest to its normalized form. The engine resolves defaults, derives computed fields, and produces the structure that runtimes consume.
+Run this once in your project directory to write the MCP config and slash command templates:
 
 ```bash
-ikary compile ./manifest.json
+ikary setup ai
 ```
 
-Write the output to a file:
+Then open Claude Code and use `/add-entity`, `/validate`, `/recommend`, or `/create-primitive` to build with AI assistance.
 
-```bash
-ikary compile ./manifest.json -o compiled.json
-```
+## Next steps
 
-Print to stdout instead:
-
-```bash
-ikary compile ./manifest.json --stdout
-```
-
-| Option | Description |
-|--------|-------------|
-| `-o, --output <file>` | Write compiled JSON to a file |
-| `--stdout` | Print compiled JSON to stdout |
-
-### `ikary preview`
-
-Compiles a manifest and shows instructions for previewing it in the IKARY Playground.
-
-```bash
-ikary preview ./manifest.json
-```
-
-The command validates and compiles the manifest first. If compilation succeeds, it prints a link to the live [IKARY Playground](https://ikary-platform.github.io/ikary-manifest/playground/api-runtime) where you can paste the compiled output.
-
-A local preview server is planned for a future release.
-
-## Version
-
-Check the installed version:
-
-```bash
-ikary --version
-```
-
-## Requirements
-
-- Node.js 20 or later
+- [CLI Reference](/cli/) — full reference for all commands and options
+- [Manifest Format](/guide/manifest-format) — entity, page, and navigation schema
+- [Custom Primitives](/guide/primitives) — building custom UI components

@@ -1,0 +1,8 @@
+
+Validating manifest
+docs/fixtures/invalid.json
+
+- Parsing and validating...
+✖ Found 1 error(s)
+
+✖ spec.pages[customers].entity Page references unknown entity key: "contact"

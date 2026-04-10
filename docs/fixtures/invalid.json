@@ -1,0 +1,49 @@
+{
+  "apiVersion": "ikary.co/v1alpha1",
+  "kind": "Cell",
+  "metadata": {
+    "key": "invalid-example",
+    "name": "Invalid Example",
+    "version": "1.0.0"
+  },
+  "spec": {
+    "mount": {
+      "mountPath": "/",
+      "landingPage": "customers"
+    },
+    "entities": [
+      {
+        "key": "customer",
+        "name": "Customer",
+        "pluralName": "Customers",
+        "fields": [
+          {
+            "key": "name",
+            "type": "string",
+            "name": "Name"
+          }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "key": "customers",
+        "type": "entity-list",
+        "title": "Customers",
+        "path": "/customers",
+        "entity": "contact"
+      }
+    ],
+    "roles": [],
+    "navigation": {
+      "items": [
+        {
+          "type": "page",
+          "key": "nav-customers",
+          "label": "Customers",
+          "pageKey": "customers"
+        }
+      ]
+    }
+  }
+}
