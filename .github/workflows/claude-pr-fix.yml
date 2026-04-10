@@ -68,57 +68,21 @@ jobs:
           show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
-            --max-turns 25
+            --max-turns 30
           prompt: |
-            You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
+            Fix the code based on the review comment. Follow all rules in CLAUDE.md.
 
-            1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
-            2. libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
-            3. libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
-            4. .claude/doc-voice.md — documentation writing rules
-            5. CONTRIBUTING.md — package structure, Zod schemas, testing requirements
-
-            Key IKARY rules:
-
-            CONTRACTS:
-            - Every boundary type: Zod-first (z.ZodSchema, derive type via z.infer<typeof schema>)
-            - Raw interface/type only for purely structural helpers with no runtime validation need
-
-            LIBRARY STRUCTURE:
-            - Every libs/* package declares "microPackageKind" in package.json
-            - src/shared/ for browser-safe Zod schemas and types (not src/contracts/)
-            - src/server/ for Node/NestJS runtime code in mixed packages
-            - src/ui/ for React hooks and components (not src/client/)
-
-            DATABASE:
-            - Runtime DB access via Kysely through @ikary/system-db-core
-            - No inline SQL in runtime code; raw SQL only in migrations and approved scripts
-            - Migration naming: NNN_<lib>_<module>_<action>.sql
-
-            REACT:
-            - Components: UI + callbacks only, no business logic, no API calls, no side effects
-            - Library hooks live in src/hooks or src/ui/hooks
-
-            DOCUMENTATION:
-            - Follow .claude/doc-voice.md strictly
-            - No emojis anywhere
-            - No em-dashes as clause separators
-            - No marketing words (seamlessly, robust, powerful, intuitive, modern, cutting-edge)
-            - Direct peer-to-peer tone, active voice, short sentences
-
-            ---
-
-            You are fixing code on an open pull request based on review feedback.
+            IKARY convention files you should consult:
+            - libs/LIBRARY_STYLE_RULES.md — microPackageKind, folder layout, naming, Kysely, export surface
+            - libs/LIBRARY_TEMPLATE.md — folder blueprint, export conventions, README template
+            - .claude/doc-voice.md — documentation writing rules
+            - CONTRIBUTING.md — package structure, Zod schemas, testing requirements
 
             1. Read the review comment that triggered this run.
-            2. Read the full PR diff to understand the current state of the changes.
-            3. Fix the issue described in the review comment.
-            4. Follow all IKARY conventions listed above.
-            5. Run pnpm run build and pnpm run typecheck before pushing.
-            6. Push the fix to the same branch.
-            7. Reply to the review comment explaining what you changed.
+            2. Fix the issue described in the comment.
+            3. Run pnpm run build and pnpm run typecheck before pushing.
+            4. Reply to the review comment explaining what you changed.
 
             Rules:
             - Only fix what the review comment asks for. Do not refactor unrelated code.
             - If the requested change contradicts IKARY conventions, explain why and propose an alternative.
-            - Be concise in your reply. No filler sentences. No emojis.
