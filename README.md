@@ -59,7 +59,21 @@ ikary-manifest/
 
 ## Quick Start
 
-### 1) Install and run checks
+### Option A: Use the published CLI (fastest)
+
+```bash
+npx ikary init
+```
+
+Then run:
+
+```bash
+ikary validate manifests/examples/crm-manifest.yaml
+ikary compile manifests/examples/crm-manifest.yaml
+ikary local start manifests/examples/crm-manifest.yaml
+```
+
+### Option B: Work from this monorepo
 
 ```bash
 pnpm install
@@ -67,22 +81,9 @@ pnpm build
 pnpm test
 ```
 
-### 2) Validate and compile a sample manifest
-
-```bash
-pnpm exec ikary validate manifests/examples/crm-manifest.yaml
-pnpm exec ikary compile manifests/examples/crm-manifest.yaml
-```
-
-### 3) Run the local stack
-
-```bash
-pnpm exec ikary local start manifests/examples/crm-manifest.yaml
-```
-
 ## Local Stack Ports
 
-When you run `ikary local start`, three services start on the following ports:
+When you run `ikary local start <manifest-path>`, three services start on the following ports:
 
 | Port | Service        |
 | ---- | -------------- |
