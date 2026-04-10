@@ -93,7 +93,13 @@ export function useRQEntityAdapter(cellKey: string): EntityApiAdapter {
   // ── Mutations (imperative — use cellApiFetch + ref for current entity) ─────
 
   const listData: EntityListResponse = useMemo(
-    () => (activeEntityKey ? (listResponse as EntityListResponse) : EMPTY_LIST),
+    () => {
+      if (!activeEntityKey) return EMPTY_LIST;
+      // Guard against malformed or pending responses
+      const resp = listResponse as EntityListResponse;
+      if (!resp?.data || !Array.isArray(resp.data)) return EMPTY_LIST;
+      return resp;
+    },
     [activeEntityKey, listResponse],
   );
 

@@ -35,6 +35,7 @@ export function useCellEntityList<T = Record<string, unknown>>(
       const url = qsStr ? `${base}?${qsStr}` : base;
       return cellApiFetch<EntityListResponse<T>>({ url, method: 'GET', token: getToken() });
     },
+    enabled: Boolean(params.entityKey),
   });
 
   const emptyList: EntityListResponse<T> = {

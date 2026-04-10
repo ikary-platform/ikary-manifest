@@ -39,6 +39,6 @@ export function useCellEntityAuditLog(
       const url = `${base}/audit?page=${page}&pageSize=${pageSize}`;
       return cellApiFetch<AuditLogPage>({ url, method: 'GET', token: getToken() });
     },
-    enabled: Boolean(id),
+    enabled: Boolean(params.entityKey) && Boolean(id),
   });
 }

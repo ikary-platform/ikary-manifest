@@ -20,7 +20,7 @@ export function useCellEntityGetOne<T = Record<string, unknown>>(
       const url = localEntityItemUrl(params.entityKey, id!, apiBase);
       return cellApiFetch<EntityItemResponse<T>>({ url, method: 'GET', token: getToken() });
     },
-    enabled: Boolean(id),
+    enabled: Boolean(params.entityKey) && Boolean(id),
   });
 
   return [result.data ?? null, result.isLoading, result.error ?? null, result];
