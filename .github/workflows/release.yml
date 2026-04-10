@@ -84,42 +84,31 @@ jobs:
                 "/^## ${ESCAPED}$/{found=1;next} /^## /{if(found)exit} found{print}" \
                 "$CHANGELOG" | grep -v '^[[:space:]]*$' || true)
               if [ -n "$SECTION" ]; then
-                CHANGELOGS="${CHANGELOGS}
-
-=== ${PKG_NAME} v${PKG_VERSION} ===
-${SECTION}"
+                ENTRY=$(printf '\n\n=== %s v%s ===\n%s' "$PKG_NAME" "$PKG_VERSION" "$SECTION")
+                CHANGELOGS="${CHANGELOGS}${ENTRY}"
               fi
             fi
           done < <(echo "$PUBLISHED_PACKAGES" | jq -c '.[]')
 
-          # Build the Claude prompt
-          PROMPT="You are writing release notes for the ikary platform v${CLI_VERSION}.
-
-The following packages were published. Here are the raw changeset entries for each:
-${CHANGELOGS}
-
-Write the release notes in exactly this format:
-
-# v${CLI_VERSION}
-
-[2-3 sentences summarising what this release brings from a user perspective. No commit hashes.]
-
-## CLI
-
-[User-facing changes to the ikary CLI and its commands. This section covers @ikary/cli.]
-
-## [Full scoped package name, e.g. @ikary/contract]
-
-[Changes for that package — only include if there are user-facing changes.]
-
-Guidelines:
-- Past tense, active voice throughout
-- Strip all commit hashes (7-character hex strings followed by a colon)
-- Skip any entry that only says 'Updated dependencies [...]'
-- Group closely related changes into a single bullet rather than listing each changeset line separately
-- Use 'CLI' as the section heading for @ikary/cli; use the full package name for all other packages
-- Omit any package section where the only content would be dependency bumps
-- Write for someone who uses ikary but does not know the internal repo structure"
+          # Build the Claude prompt line by line to avoid column-0 content breaking YAML
+          PROMPT="You are writing release notes for the ikary platform v${CLI_VERSION}."
+          PROMPT="${PROMPT}"$'\n\n'"The following packages were published. Here are the raw changeset entries for each:"
+          PROMPT="${PROMPT}"$'\n'"${CHANGELOGS}"
+          PROMPT="${PROMPT}"$'\n\n'"Write the release notes in exactly this format:"
+          PROMPT="${PROMPT}"$'\n\n'"# v${CLI_VERSION}"
+          PROMPT="${PROMPT}"$'\n\n'"[2-3 sentences summarising what this release brings from a user perspective. No commit hashes.]"
+          PROMPT="${PROMPT}"$'\n\n'"## CLI"
+          PROMPT="${PROMPT}"$'\n\n'"[User-facing changes to the ikary CLI and its commands. This section covers @ikary/cli.]"
+          PROMPT="${PROMPT}"$'\n\n'"## [Full scoped package name, e.g. @ikary/contract]"
+          PROMPT="${PROMPT}"$'\n\n'"[Changes for that package — only include if there are user-facing changes.]"
+          PROMPT="${PROMPT}"$'\n\n'"Guidelines:"
+          PROMPT="${PROMPT}"$'\n'"- Past tense, active voice throughout"
+          PROMPT="${PROMPT}"$'\n'"- Strip all commit hashes (7-character hex strings followed by a colon)"
+          PROMPT="${PROMPT}"$'\n'"- Skip any entry that only says Updated dependencies"
+          PROMPT="${PROMPT}"$'\n'"- Group closely related changes into a single bullet rather than listing each changeset line separately"
+          PROMPT="${PROMPT}"$'\n'"- Use CLI as the section heading for @ikary/cli; use the full package name for all other packages"
+          PROMPT="${PROMPT}"$'\n'"- Omit any package section where the only content would be dependency bumps"
+          PROMPT="${PROMPT}"$'\n'"- Write for someone who uses ikary but does not know the internal repo structure"
 
           # Call Claude to generate the release note
           RESPONSE=$(curl -sf https://api.anthropic.com/v1/messages \
