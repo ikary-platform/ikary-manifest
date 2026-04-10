@@ -112,14 +112,15 @@ export function useRQEntityAdapter(cellKey: string): EntityApiAdapter {
     async (data: Record<string, unknown>): Promise<EntityItemResponse> => {
       const ek = entityKeyRef.current;
       const url = localEntityBaseUrl(ek, apiBase);
-      const result = await cellApiFetch<EntityItemResponse>({
+      const raw = await cellApiFetch<Record<string, unknown>>({
         url,
         method: 'POST',
         body: data,
         token: getToken(),
       });
       await queryClient.invalidateQueries({ queryKey: cellEntityQueryKeys.lists(currentRouteParams()) });
-      return result;
+      // Normalize: local API returns record directly, not { data: record }
+      return ('data' in raw ? raw : { data: raw }) as unknown as EntityItemResponse;
     },
     [apiBase, getToken, queryClient, currentRouteParams],
   );
@@ -129,7 +130,7 @@ export function useRQEntityAdapter(cellKey: string): EntityApiAdapter {
       const ek = entityKeyRef.current;
       const url = localEntityItemUrl(ek, id, apiBase);
       const body = expectedVersion !== undefined ? { ...data, expectedVersion } : data;
-      const result = await cellApiFetch<EntityItemResponse>({
+      const raw = await cellApiFetch<Record<string, unknown>>({
         url,
         method: 'PATCH',
         body,
@@ -138,7 +139,8 @@ export function useRQEntityAdapter(cellKey: string): EntityApiAdapter {
       const params = currentRouteParams();
       await queryClient.invalidateQueries({ queryKey: cellEntityQueryKeys.lists(params) });
       await queryClient.invalidateQueries({ queryKey: cellEntityQueryKeys.detail(params, id) });
-      return result;
+      // Normalize: local API returns record directly, not { data: record }
+      return ('data' in raw ? raw : { data: raw }) as unknown as EntityItemResponse;
     },
     [apiBase, getToken, queryClient, currentRouteParams],
   );

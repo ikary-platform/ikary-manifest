@@ -16,9 +16,12 @@ export function useCellEntityGetOne<T = Record<string, unknown>>(
 
   const result = useQuery<EntityItemResponse<T> | null, CellApiError>({
     queryKey: cellEntityQueryKeys.detail(params, id ?? ''),
-    queryFn: () => {
+    queryFn: async () => {
       const url = localEntityItemUrl(params.entityKey, id!, apiBase);
-      return cellApiFetch<EntityItemResponse<T>>({ url, method: 'GET', token: getToken() });
+      const raw = await cellApiFetch<T | EntityItemResponse<T>>({ url, method: 'GET', token: getToken() });
+      // The local API returns the record directly; normalize to { data: T }
+      if (raw && typeof raw === 'object' && 'data' in raw) return raw as EntityItemResponse<T>;
+      return { data: raw } as EntityItemResponse<T>;
     },
     enabled: Boolean(params.entityKey) && Boolean(id),
   });

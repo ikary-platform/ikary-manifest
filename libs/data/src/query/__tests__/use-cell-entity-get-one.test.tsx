@@ -68,6 +68,15 @@ describe('useCellEntityGetOne', () => {
     expect(url.pathname).toBe('/entities/contact/records/abc');
   });
 
+  it('normalizes raw record response into EntityItemResponse shape', async () => {
+    // The local API returns the record directly, not { data: record }
+    const rawRecord = { id: 'abc', name: 'Acme' };
+    mockFetch(rawRecord);
+    const { result } = renderHook(() => useCellEntityGetOne(PARAMS, 'abc'), { wrapper: makeWrapper() });
+    await waitFor(() => expect(result.current[1]).toBe(false));
+    expect(result.current[0]).toEqual({ data: { id: 'abc', name: 'Acme' } });
+  });
+
   it('returns CellApiError on non-2xx response', async () => {
     mockFetch({ message: 'Not Found' }, 404);
     const { result } = renderHook(() => useCellEntityGetOne(PARAMS, 'missing'), { wrapper: makeWrapper() });
