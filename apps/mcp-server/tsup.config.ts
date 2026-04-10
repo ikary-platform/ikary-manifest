@@ -4,6 +4,7 @@ export default defineConfig([
   {
     entry: ['src/main.ts'],
     format: ['cjs'],
+    shims: true,
     clean: true,
     target: 'node20',
     noExternal: [
@@ -25,10 +26,6 @@ export default defineConfig([
       'reflect-metadata',
       'rxjs',
       'better-sqlite3',
-      'kysely',
-      'pg',
-      'pino',
-      'pino-pretty',
     ],
   },
   {
