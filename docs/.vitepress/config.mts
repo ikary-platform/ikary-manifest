@@ -23,6 +23,9 @@ export default defineConfig({
     'Open-source declarative cell contracts — AI should generate manifests, not code.',
   base: '/',
 
+  // localhost URLs in the CLI docs are intentional — suppress dead-link CI failures
+  ignoreDeadLinks: [/^http:\/\/localhost/],
+
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/brand/original-symbol.svg' }],
