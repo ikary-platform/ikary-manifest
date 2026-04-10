@@ -2,8 +2,11 @@ import { defineConfig } from 'vitepress';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const CLI_VERSION: string = (require('../../apps/cli/package.json') as { version: string }).version;
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -124,6 +127,11 @@ export default defineConfig({
       { text: 'API', link: '/api/' },
       { text: 'Packages', link: '/packages/overview' },
       { text: 'Playground', link: '/playground' },
+      {
+        text: `v${CLI_VERSION}`,
+        link: 'https://www.npmjs.com/package/@ikary/cli',
+        target: '_blank',
+      },
       {
         text: 'ikary.co',
         link: 'https://ikary.co',

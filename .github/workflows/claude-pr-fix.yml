@@ -65,11 +65,11 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          track_progress: "true"
           show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
             --max-turns 30
+            --dangerously-skip-permissions
           prompt: |
             Fix the code based on the review comment. Follow all rules in CLAUDE.md.
 
