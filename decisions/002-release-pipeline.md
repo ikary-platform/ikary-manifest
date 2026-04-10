@@ -43,9 +43,13 @@ The generated changeset targets `@ikary/cli`. Because `@ikary/cli` and `@ikary/i
 
 ### Release notes
 
-After each publish, `release.yml` extracts the CLI's CHANGELOG section for the new version and commits `releases/vX.Y.Z.md` to main. The file is editable by hand after the fact — the GitHub Release is not updated automatically, so edit it separately on the GitHub Releases page if needed.
+After each publish, `release.yml` calls the Anthropic API (`claude-opus-4-6`) to generate a human-readable release note from the raw changeset entries of every published package. The result is committed to `releases/vX.Y.Z.md` on main.
 
-The `releases/` folder contains one file per CLI release. The format is documented in `releases/README.md`. Use past tense, group by Added / Changed / Fixed / Removed, one sentence per entry.
+Claude receives the CHANGELOG sections for all published packages and writes notes grouped by component: a `## CLI` section for `@ikary/cli`, and a `## @ikary/package` section for any other package with user-facing changes. Dependency-only bumps and the `@ikary/ikary` wrapper are omitted. If the API call fails, the step falls back to the raw changeset content.
+
+The file is editable by hand after the fact. The GitHub Release is not updated automatically — edit it separately on the GitHub Releases page if needed. The format and section conventions are documented in `releases/README.md`.
+
+This requires an `ANTHROPIC_API_KEY` secret in the repository (`Settings → Secrets → Actions`).
 
 ### Docs version badge
 
@@ -66,4 +70,5 @@ After merging this decision, go to **GitHub → Settings → Branches → Branch
 - The `changeset-check` workflow blocks merges silently if the required status check is not configured. Configure it.
 - Auto-generated changeset descriptions use the PR title. Keep PR titles descriptive.
 - If two labeled PRs merge within seconds of each other, the `git pull --rebase` in `auto-changeset.yml` handles the conflict. A rare hard failure here requires a manual `pnpm changeset` run.
-- Auto-generated release notes in `releases/` use the raw changeset descriptions. Quality depends on how descriptive those descriptions are. Edit the file on main after release if needed.
+- Release note quality depends on how descriptive the changeset entries are. Claude rewrites them into readable prose, but richer input produces richer output. Edit `releases/vX.Y.Z.md` on main after release if needed.
+- The `ANTHROPIC_API_KEY` secret must be set in the repository. Without it the step falls back to raw changelog content.
