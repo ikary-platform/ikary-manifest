@@ -81,11 +81,18 @@ export async function startApiServer(manifestPath: string): Promise<ServerHandle
 }
 
 /** Spawn preview-server on port 3001. */
-export async function startPreviewServer(manifestPath: string): Promise<ServerHandle> {
-  const { stop } = spawnServer(PREVIEW_SERVER_PATH, {
+export async function startPreviewServer(
+  manifestPath: string,
+  opts?: { dataApiUrl?: string },
+): Promise<ServerHandle> {
+  const env: NodeJS.ProcessEnv = {
     IKARY_MANIFEST_PATH: manifestPath,
     PORT: String(PREVIEW_PORT),
-  });
+  };
+  if (opts?.dataApiUrl) {
+    env['VITE_DATA_API_URL'] = opts.dataApiUrl;
+  }
+  const { stop } = spawnServer(PREVIEW_SERVER_PATH, env);
 
   try {
     await waitForHttp(`http://localhost:${PREVIEW_PORT}/health`);

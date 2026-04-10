@@ -20,3 +20,36 @@ export type { JustInTimeDataProviderProps } from './JustInTimeDataProvider';
 export type { CellDataHooks, CellEntityQueryKeys, EntityListQuery, CellApiFetchOptions } from './data-hooks';
 export { DataHooksProvider, useDataHooks } from './data-hooks';
 export { mockDataHooks } from './mock-data-hooks';
+export { liveDataHooks } from './live-data-hooks';
+
+// ── Query layer (React Query entity hooks) ───────────────────────────────────
+export {
+  // Utilities
+  generateCorrelationId,
+  CellApiError,
+  cellApiFetch,
+  // Context
+  CellApiProvider,
+  useCellApi,
+  // Query keys
+  cellEntityQueryKeys,
+  // URL builders
+  localEntityBaseUrl,
+  localEntityItemUrl,
+  // Read hooks
+  useCellEntityList,
+  useCellEntityGetOne,
+  useCellEntityAuditLog,
+  // Mutation hooks
+  useCellEntityCreate,
+  useCellEntityUpdate,
+  useCellEntityDelete,
+  useCellEntityRollback,
+} from './query';
+export type {
+  CellApiContextValue,
+  AuditLogEntry,
+  AuditLogPage,
+  UpdateVars,
+  RollbackVars,
+} from './query';

@@ -6,6 +6,7 @@ WORKDIR /app
 FROM base AS deps
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
 COPY libs/contract/package.json libs/contract/package.json
+COPY libs/data/package.json libs/data/package.json
 COPY libs/engine/package.json libs/engine/package.json
 COPY libs/loader/package.json libs/loader/package.json
 COPY libs/presentation/package.json libs/presentation/package.json
@@ -19,6 +20,7 @@ RUN pnpm install --frozen-lockfile --filter @ikary/preview-server...
 # ── Build ──
 FROM deps AS build
 COPY libs/contract/ libs/contract/
+COPY libs/data/ libs/data/
 COPY libs/engine/ libs/engine/
 COPY libs/loader/ libs/loader/
 COPY libs/presentation/ libs/presentation/
@@ -28,6 +30,7 @@ COPY libs/primitives/ libs/primitives/
 COPY libs/renderer/ libs/renderer/
 COPY apps/preview-server/ apps/preview-server/
 RUN pnpm --filter @ikary/contract build \
+ && pnpm --filter @ikary/data build \
  && pnpm --filter @ikary/engine build \
  && pnpm --filter @ikary/loader build \
  && pnpm --filter @ikary/presentation build \

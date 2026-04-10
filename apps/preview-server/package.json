@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@ikary/contract": "workspace:*",
+    "@ikary/data": "workspace:*",
     "@ikary/engine": "workspace:*",
     "@ikary/loader": "workspace:*",
     "@ikary/presentation": "workspace:*",

@@ -7,15 +7,20 @@ import type {
   UpdateVars,
   RollbackVars,
 } from '@ikary/renderer';
+import { getRuntimeConfig } from '../runtime-config.js';
 
 const EMPTY_LIST: EntityListResponse = { data: [], total: 0 };
 
 /**
  * Implements EntityApiAdapter by calling the local cell-runtime-api REST endpoints.
- * Pass DATA_API_URL via import.meta.env.VITE_DATA_API_URL (default: http://localhost:4000).
+ *
+ * @deprecated Use `useRQEntityAdapter` from `./use-rq-entity-adapter` instead.
+ * This adapter uses plain fetch+useState — the replacement uses React Query with
+ * proper cache invalidation, correlation IDs, and query key scoping.
  */
 export function useLocalEntityAdapter(): EntityApiAdapter {
-  const apiBase = (import.meta as any).env?.VITE_DATA_API_URL ?? 'http://localhost:4000';
+  const { dataApiUrl } = getRuntimeConfig();
+  const apiBase = dataApiUrl ?? 'http://localhost:4000';
 
   const [activeEntityKey, setActiveEntityKeyState] = useState<string>('');
   const [activeRecordId, setActiveRecordId] = useState<string | null>(null);

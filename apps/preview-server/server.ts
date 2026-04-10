@@ -9,7 +9,7 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
-import { watch } from 'node:fs';
+import { readFileSync, watch } from 'node:fs';
 import { join } from 'node:path';
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
@@ -28,8 +28,10 @@ const port = process.env.PORT ?? 3000;
 
 app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false }));
 
-// Serve static Vite build (server.js lives in the same dist/ dir as the Vite output)
-app.use(express.static(__dirname));
+// Serve static Vite build (index: false so / falls through to the SPA route
+// which injects runtime config into the HTML).
+// server.js lives in the same dist/ dir as the Vite output.
+app.use(express.static(__dirname, { index: false }));
 
 // Health check
 app.get('/health', (_req: express.Request, res: express.Response) => res.json({ status: 'ok' }));
@@ -72,9 +74,34 @@ watch(manifestPath, () => {
   }
 });
 
+// ── Runtime config injection ─────────────────────────────────────────────────
+// Vite replaces import.meta.env.VITE_* at build time, but in Docker the env
+// var is only available at runtime.  We inject it into the HTML as a global so
+// the client bundle can read it without a rebuild.
+const runtimeConfig = JSON.stringify({
+  dataApiUrl: process.env.VITE_DATA_API_URL ?? undefined,
+});
+const configScript = `<script>window.__IKARY_CONFIG__=${runtimeConfig}</script>`;
+
+let indexHtml: string | null = null;
+function getIndexHtml(): string {
+  if (!indexHtml) {
+    const htmlPath = join(__dirname, 'index.html');
+    try {
+      const raw = readFileSync(htmlPath, 'utf-8');
+      indexHtml = raw.replace('</head>', `${configScript}\n</head>`);
+    } catch {
+      // Fallback when dist has not been built yet
+      indexHtml = `<!doctype html><html><head>${configScript}</head><body><div id="root"></div></body></html>`;
+    }
+  }
+  return indexHtml;
+}
+
 // SPA fallback (Express 5 requires named wildcards)
 app.get('/{*splat}', (_req: express.Request, res: express.Response) => {
-  res.sendFile(join(__dirname, 'index.html'));
+  res.setHeader('Content-Type', 'text/html');
+  res.send(getIndexHtml());
 });
 
 createServer(app).listen(port, () => {
