@@ -3,6 +3,12 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      published_packages:
+        description: 'JSON array, e.g. [{"name":"@ikary/cli","version":"0.2.0"}]'
+        required: true
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,6 +41,7 @@ jobs:
 
       - name: Create Release PR or Publish
         id: changesets
+        if: github.event_name != 'workflow_dispatch'
         uses: changesets/action@v1
         with:
           publish: pnpm run release
@@ -48,10 +55,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Generate release note with Claude and create release branch
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.changesets.outputs.published == 'true' || github.event_name == 'workflow_dispatch'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
+          PUBLISHED_PACKAGES: ${{ github.event_name == 'workflow_dispatch' && inputs.published_packages || steps.changesets.outputs.publishedPackages }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           CLI_VERSION=$(echo "$PUBLISHED_PACKAGES" \
             | jq -r '.[] | select(.name == "@ikary/cli") | .version' 2>/dev/null || true)
@@ -60,10 +69,6 @@ jobs:
             echo "ℹ️ @ikary/cli was not in this publish — skipping."
             exit 0
           fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
 
           # Collect CHANGELOG sections for every published package
           CHANGELOGS=""
@@ -126,27 +131,29 @@ jobs:
 
           GENERATED=$(echo "$RESPONSE" | jq -r '.content[0].text // empty' 2>/dev/null || true)
 
-          RELEASE_FILE="releases/v${CLI_VERSION}.md"
-
           if [ -n "$GENERATED" ]; then
-            printf '%s\n' "$GENERATED" > "$RELEASE_FILE"
+            NOTES="$GENERATED"
             echo "✅ Claude generated release note for v${CLI_VERSION}"
           else
-            # Fallback: structured raw CHANGELOG content
             echo "⚠️ Claude API unavailable — falling back to raw changelog."
-            {
-              echo "# v${CLI_VERSION}"
-              echo ""
-              echo "$CHANGELOGS"
-            } > "$RELEASE_FILE"
+            NOTES="# v${CLI_VERSION}"$'\n\n'"${CHANGELOGS}"
           fi
 
-          git add "$RELEASE_FILE"
-          git commit -m "chore: add release note for v${CLI_VERSION}"
-          git pull --rebase origin main
-          git push origin main
+          # Update the GitHub Release body with the generated notes.
+          # changesets tags releases as @ikary/cli@X.Y.Z, not vX.Y.Z.
+          # Edit if it exists (normal publish flow), create if not (manual backfill).
+          RELEASE_TAG="@ikary/cli@${CLI_VERSION}"
+          if gh release view "$RELEASE_TAG" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+          else
+            gh release create "$RELEASE_TAG" --title "v${CLI_VERSION}" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+          fi
+          echo "✅ Updated GitHub Release ${RELEASE_TAG} with generated notes"
 
-          # Create a permanent release branch
+          # Create a permanent release branch (release/* has no branch protection)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git checkout -b "release/v${CLI_VERSION}"
           git push origin "release/v${CLI_VERSION}"
           echo "✅ Created release branch: release/v${CLI_VERSION}"
