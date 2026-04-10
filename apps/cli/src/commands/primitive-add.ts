@@ -127,7 +127,7 @@ export async function primitiveAddCommand(
     fmt.newline();
     fmt.body(`  1. Open Claude Code in this directory: ${theme.accent('claude')}`);
     fmt.body(`  2. Tell Claude what the primitive should do:`);
-    fmt.body(`     ${theme.muted(`/create-primitive`)}`);
+    fmt.body(`     ${theme.muted(`/ikary-create-primitive`)}`);
     fmt.body(`     ${theme.muted(`> build the ${label} primitive — it should...`)}`);
     fmt.body(`     Claude will implement the component, update the schema and contract,`);
     fmt.body(`     validate it, and open the live preview for you.`);
@@ -140,7 +140,7 @@ export async function primitiveAddCommand(
     fmt.body(`  4. Run ${theme.accent('ikary local start manifest.json')} then open`);
     fmt.body(`     ${theme.accent('http://localhost:3000/__primitive-studio')} to preview live`);
     fmt.newline();
-    fmt.muted(`  To update the primitive later, run /update-primitive in Claude Code.`);
+    fmt.muted(`  To update the primitive later, run /ikary-update-primitive in Claude Code.`);
     fmt.newline();
   } catch (err) {
     spinner.fail(theme.error('Scaffold failed'));

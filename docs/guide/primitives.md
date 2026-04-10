@@ -158,9 +158,9 @@ Run `ikary setup ai` once to configure Claude Code for the project. After that, 
 
 | Command | What it does |
 |---------|-------------|
-| `/create-primitive` | Scaffolds a new primitive and implements the component based on your description |
-| `/update-primitive` | Updates an existing primitive, with guidance on breaking versus non-breaking changes |
-| `/browse-primitives` | Lists all custom primitives and shows their contracts and example props |
+| `/ikary-create-primitive` | Scaffolds a new primitive and implements the component based on your description |
+| `/ikary-update-primitive` | Updates an existing primitive, with guidance on breaking versus non-breaking changes |
+| `/ikary-browse-primitives` | Lists all custom primitives and shows their contracts and example props |
 
 Example session:
 
@@ -169,7 +169,7 @@ ikary primitive add my-widget
 cd my-project
 claude
 
-> /create-primitive
+> /ikary-create-primitive
 > build the my-widget primitive — it should display a count with an icon
 ```
 

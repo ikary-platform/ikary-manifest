@@ -6,7 +6,9 @@ export type ContainerRuntime = 'docker' | 'podman';
 export function getContainerRuntime(): ContainerRuntime | null {
   for (const cmd of ['docker', 'podman'] as const) {
     try {
-      execSync(`${cmd} info --format '{{.ServerVersion}}'`, { stdio: 'ignore' });
+      // `docker info` can pass on Windows even when Docker Desktop's Linux engine
+      // isn't fully ready. `docker ps` requires a working connection to the daemon.
+      execSync(`${cmd} ps`, { stdio: 'ignore', timeout: 10_000 });
       return cmd;
     } catch {
       // not available or daemon not running

@@ -205,9 +205,9 @@ Use these slash commands inside Claude Code to build and maintain primitives:
 
 | Skill | What it does |
 |-------|-------------|
-| \`/create-primitive\` | Scaffold a new primitive, implement the component, validate, and preview it live |
-| \`/update-primitive\` | Update props or logic — guides through non-breaking vs breaking changes |
-| \`/browse-primitives\` | List all core and custom primitives; show contracts and example props |
+| \`/ikary-create-primitive\` | Scaffold a new primitive, implement the component, validate, and preview it live |
+| \`/ikary-update-primitive\` | Update props or logic — guides through non-breaking vs breaking changes |
+| \`/ikary-browse-primitives\` | List all core and custom primitives; show contracts and example props |
 
 **To create a primitive with Claude Code:**
 
@@ -219,7 +219,7 @@ ikary local start manifest.json
 claude
 
 # 3. Run the skill
-/create-primitive
+/ikary-create-primitive
 \`\`\`
 
 Claude will ask what the primitive should do, scaffold all six files using the
@@ -228,7 +228,7 @@ Claude will ask what the primitive should do, scaffold all six files using the
 **To update an existing primitive:**
 
 \`\`\`
-/update-primitive
+/ikary-update-primitive
 \`\`\`
 
 Claude will read the current files, determine whether the change is breaking or
@@ -290,13 +290,12 @@ in the browser with mock data — no server needed.
 ## Recommended workflow
 
 1. Run \`ikary local start manifest.json\` to boot the local stack.
-2. Run \`recommend_manifest_structure\` with the application goal to scaffold
-   entities, relations, pages, and navigation.
-3. Edit \`manifest.json\` with the generated structure — preview hot-reloads at http://localhost:3000.
+2. Open Claude Code and run \`/ikary-bootstrap\` to build the manifest interactively.
+3. Preview hot-reloads at http://localhost:3000 as you edit \`manifest.json\`.
 4. Validate with \`ikary validate manifest.json\` or the \`validate_manifest\` MCP tool.
 5. If errors occur, run \`explain_validation_errors\` or use \`ikary validate manifest.json --explain\`.
 6. Compile with \`ikary compile manifest.json\` or \`normalize_manifest\`.
-7. Use \`list_primitives\` to find the right UI components for page layouts.
+7. Use \`/ikary-browse-primitives\` to find the right UI components for page layouts.
 
 ## Source reference
 
@@ -366,23 +365,96 @@ If there are errors, fix them in manifest.json and re-validate.
 `;
 }
 
-export function generateRecommendCommand(): string {
-  return `Help me build a manifest for my application.
+export function generateBootstrapCommand(): string {
+  return `Bootstrap a Cell Manifest from scratch through an interactive questionnaire.
 
-Ask the user what kind of application they want to build.
+Walk the user through building a manifest step by step. Ask one section at a
+time, confirm before moving on, and write to manifest.json incrementally.
 
-Use the recommend_manifest_structure MCP tool with their description as the
-goal. This returns suggested entities, relations, pages, and navigation.
+## Step 1 — Application overview
 
-Take the recommendations and generate a complete manifest.json file with:
-- All suggested entities with their fields, relations, and lifecycle
-- CRUD pages (entity-list, entity-detail, entity-create) for each entity
-- A dashboard page
-- Navigation items for all list pages
-- Roles (admin, viewer at minimum)
+Ask:
+- What is the application name?
+- One-sentence description of what it does.
+- What kind of app is it? (e.g., CRM, project tracker, inventory system, marketplace)
 
-After generating, run: ikary validate manifest.json --explain
+Update metadata in manifest.json with the answers.
+
+## Step 2 — Entities
+
+Ask the user to list the main entities (nouns) in their application, one at a
+time. For each entity ask:
+- Entity name (e.g., "Customer", "Invoice", "Product")
+- What fields does it have? For each field: name, type (string, text, number,
+  boolean, date, datetime, enum, object), and whether it is required.
+- If any field is an enum, ask for the allowed values.
+- Does this entity have lifecycle states? If yes, ask for the states and
+  transitions.
+
+Use the get_entity_definition_schema MCP tool to confirm the entity shape.
+Add each entity to spec.entities in manifest.json as it is defined.
+Use the validate_entity MCP tool after each entity to catch errors early.
+
+After all entities are defined, ask: "Are there more entities, or shall we
+move on to relations?"
+
+## Step 3 — Relations
+
+Show the user the list of entities defined so far.
+Use the suggest_relations MCP tool with the full entity list to propose
+relations between entities.
+
+Present the suggestions and ask the user to confirm, modify, or reject each
+one. Also ask if there are any additional relations the suggestions missed.
+
+Add confirmed relations to the relevant entities in manifest.json.
+
+## Step 4 — Pages
+
+For each entity, ask the user which page types they want:
+- Entity list page (browse/search)
+- Entity detail page (view a single record)
+- Entity create page (new record form)
+- Entity edit page (edit existing record)
+
+Also ask:
+- Do you want a dashboard page? What should it show?
+- Any other custom pages?
+
+Use the suggest_page_set_for_entities MCP tool to generate the page
+definitions, then let the user review and adjust.
+
+Add the pages to spec.pages in manifest.json.
+
+## Step 5 — Navigation
+
+Ask the user how they want the sidebar/navigation organized:
+- Which pages should appear in the main navigation?
+- What order?
+- What icons? (suggest sensible defaults)
+
+Add navigation items to spec.navigation.items in manifest.json.
+
+## Step 6 — Roles and permissions
+
+Ask:
+- What roles does the app have? (default: admin, viewer)
+- For each role, what scopes/permissions should they have?
+
+Add roles to spec.roles in manifest.json.
+
+## Step 7 — Validate and review
+
+Run: ikary validate manifest.json --explain
 If there are errors, use the explain_validation_errors MCP tool and fix them.
+
+Show the user a summary of what was created:
+- Number of entities, fields, relations
+- Number of pages
+- Navigation structure
+- Roles defined
+
+Ask if they want to adjust anything before finishing.
 `;
 }
 
