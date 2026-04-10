@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: claude-pr-${{ github.event.pull_request.number || github.event.issue.number }}
+  group: claude-pr-fix-${{ github.event.pull_request.number || github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:

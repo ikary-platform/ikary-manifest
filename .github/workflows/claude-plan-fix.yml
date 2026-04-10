@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: claude-issue-${{ github.event.issue.number }}
+  group: claude-plan-fix-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:

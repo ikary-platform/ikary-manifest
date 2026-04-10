@@ -10,7 +10,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: claude-issue-${{ github.event.issue.number }}
+  group: claude-do-fix-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
