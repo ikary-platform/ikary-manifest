@@ -44,9 +44,11 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude revise"
           use_sticky_comment: "true"
+          show_full_output: true
           claude_args: >
-            --model claude-sonnet-4-6
+            --model claude-opus-4-6
             --max-turns 8
           prompt: |
             You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
