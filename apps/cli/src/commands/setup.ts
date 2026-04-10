@@ -7,7 +7,7 @@ import {
   generateClaudeMd,
   generateAddEntityCommand,
   generateValidateCommand,
-  generateRecommendCommand,
+  generateBootstrapCommand,
   generateBrowsePrimitivesCommand,
   generateCreatePrimitiveCommand,
   generateUpdatePrimitiveCommand,
@@ -94,40 +94,40 @@ export async function setupAiCommand(options: {
 
   const files: Array<{ filePath: string; content: string; label: string; description: string }> = [
     {
-      filePath: join(cwd, '.claude', 'commands', 'add-entity.md'),
+      filePath: join(cwd, '.claude', 'commands', 'ikary-add-entity.md'),
       content: generateAddEntityCommand(),
-      label: '.claude/commands/add-entity.md',
-      description: '/add-entity — scaffold a new entity',
+      label: '.claude/commands/ikary-add-entity.md',
+      description: '/ikary-add-entity — scaffold a new entity',
     },
     {
-      filePath: join(cwd, '.claude', 'commands', 'validate.md'),
+      filePath: join(cwd, '.claude', 'commands', 'ikary-validate.md'),
       content: generateValidateCommand(),
-      label: '.claude/commands/validate.md',
-      description: '/validate — validate the manifest',
+      label: '.claude/commands/ikary-validate.md',
+      description: '/ikary-validate — validate the manifest',
     },
     {
-      filePath: join(cwd, '.claude', 'commands', 'recommend.md'),
-      content: generateRecommendCommand(),
-      label: '.claude/commands/recommend.md',
-      description: '/recommend — scaffold from a description',
+      filePath: join(cwd, '.claude', 'commands', 'ikary-bootstrap.md'),
+      content: generateBootstrapCommand(),
+      label: '.claude/commands/ikary-bootstrap.md',
+      description: '/ikary-bootstrap — build manifest step by step',
     },
     {
-      filePath: join(cwd, '.claude', 'commands', 'browse-primitives.md'),
+      filePath: join(cwd, '.claude', 'commands', 'ikary-browse-primitives.md'),
       content: generateBrowsePrimitivesCommand(),
-      label: '.claude/commands/browse-primitives.md',
-      description: '/browse-primitives — explore the UI catalog',
+      label: '.claude/commands/ikary-browse-primitives.md',
+      description: '/ikary-browse-primitives — explore the UI catalog',
     },
     {
-      filePath: join(cwd, '.claude', 'commands', 'create-primitive.md'),
+      filePath: join(cwd, '.claude', 'commands', 'ikary-create-primitive.md'),
       content: generateCreatePrimitiveCommand(),
-      label: '.claude/commands/create-primitive.md',
-      description: '/create-primitive — scaffold + build a custom primitive',
+      label: '.claude/commands/ikary-create-primitive.md',
+      description: '/ikary-create-primitive — scaffold + build a custom primitive',
     },
     {
-      filePath: join(cwd, '.claude', 'commands', 'update-primitive.md'),
+      filePath: join(cwd, '.claude', 'commands', 'ikary-update-primitive.md'),
       content: generateUpdatePrimitiveCommand(),
-      label: '.claude/commands/update-primitive.md',
-      description: '/update-primitive — update or version an existing primitive',
+      label: '.claude/commands/ikary-update-primitive.md',
+      description: '/ikary-update-primitive — update or version an existing primitive',
     },
     {
       filePath: join(cwd, '.claude', 'settings.json'),
@@ -197,11 +197,11 @@ export async function setupAiCommand(options: {
   fmt.newline();
   fmt.body(`  3. Use these slash commands inside Claude Code:`);
   fmt.newline();
-  fmt.body(`     ${theme.accent('/recommend')}           Scaffold your entire manifest from a description`);
-  fmt.body(`     ${theme.accent('/add-entity')}          Add a new entity to the manifest`);
-  fmt.body(`     ${theme.accent('/validate')}            Check the manifest for errors`);
-  fmt.body(`     ${theme.accent('/browse-primitives')}   Explore the UI component catalog`);
-  fmt.body(`     ${theme.accent('/create-primitive')}    Scaffold + implement a custom UI primitive`);
-  fmt.body(`     ${theme.accent('/update-primitive')}    Update or version an existing primitive`);
+  fmt.body(`     ${theme.accent('/ikary-bootstrap')}           Build your manifest step by step`);
+  fmt.body(`     ${theme.accent('/ikary-add-entity')}          Add a new entity to the manifest`);
+  fmt.body(`     ${theme.accent('/ikary-validate')}            Check the manifest for errors`);
+  fmt.body(`     ${theme.accent('/ikary-browse-primitives')}   Explore the UI component catalog`);
+  fmt.body(`     ${theme.accent('/ikary-create-primitive')}    Scaffold + implement a custom UI primitive`);
+  fmt.body(`     ${theme.accent('/ikary-update-primitive')}    Update or version an existing primitive`);
   fmt.newline();
 }

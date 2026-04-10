@@ -29,12 +29,12 @@ ikary setup ai --force
 | `CLAUDE.md` | AI context: manifest format, validation rules, MCP tools reference, primitives workflow |
 | `.mcp.json` | MCP server URL for Claude Code |
 | `.claude/settings.json` | Allowed CLI commands for Claude Code |
-| `.claude/commands/add-entity.md` | `/add-entity` — scaffold a new entity in the manifest |
-| `.claude/commands/validate.md` | `/validate` — validate the manifest and explain errors |
-| `.claude/commands/recommend.md` | `/recommend` — get entity and page recommendations |
-| `.claude/commands/browse-primitives.md` | `/browse-primitives` — list primitives and show contracts |
-| `.claude/commands/create-primitive.md` | `/create-primitive` — scaffold and implement a custom primitive |
-| `.claude/commands/update-primitive.md` | `/update-primitive` — update or version an existing primitive |
+| `.claude/commands/ikary-add-entity.md` | `/ikary-add-entity` — scaffold a new entity in the manifest |
+| `.claude/commands/ikary-validate.md` | `/ikary-validate` — validate the manifest and explain errors |
+| `.claude/commands/ikary-bootstrap.md` | `/ikary-bootstrap` — build manifest step by step |
+| `.claude/commands/ikary-browse-primitives.md` | `/ikary-browse-primitives` — list primitives and show contracts |
+| `.claude/commands/ikary-create-primitive.md` | `/ikary-create-primitive` — scaffold and implement a custom primitive |
+| `.claude/commands/ikary-update-primitive.md` | `/ikary-update-primitive` — update or version an existing primitive |
 
 ### Options
 

@@ -44,6 +44,7 @@ COPY --from=build /app/apps/cell-runtime-api/dist ./apps/cell-runtime-api/dist
 # Migrations must live at libs/cell-runtime-core/migrations/ relative to the app root
 # (resolveMigrationsRoot() in app.module resolves 3 dirs up from dist/)
 COPY --from=build /app/libs/cell-runtime-core/migrations ./libs/cell-runtime-core/migrations
+COPY --from=build /app/libs/system-log-core/migrations ./libs/system-log-core/migrations
 
 RUN mkdir -p /data
 VOLUME ["/data"]

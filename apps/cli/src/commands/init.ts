@@ -11,7 +11,7 @@ import {
   generateClaudeMd,
   generateAddEntityCommand,
   generateValidateCommand,
-  generateRecommendCommand,
+  generateBootstrapCommand,
   generateBrowsePrimitivesCommand,
   generateCreatePrimitiveCommand,
   generateUpdatePrimitiveCommand,
@@ -133,12 +133,12 @@ export async function initCommand(projectName?: string): Promise<void> {
 
     await writeFile(join(projectDir, 'manifest.json'), generateManifestJson(options), 'utf-8');
     await writeFile(join(projectDir, 'CLAUDE.md'), generateClaudeMd(options), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'add-entity.md'), generateAddEntityCommand(), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'validate.md'), generateValidateCommand(), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'recommend.md'), generateRecommendCommand(), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'browse-primitives.md'), generateBrowsePrimitivesCommand(), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'create-primitive.md'), generateCreatePrimitiveCommand(), 'utf-8');
-    await writeFile(join(projectDir, '.claude', 'commands', 'update-primitive.md'), generateUpdatePrimitiveCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-add-entity.md'), generateAddEntityCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-validate.md'), generateValidateCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-bootstrap.md'), generateBootstrapCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-browse-primitives.md'), generateBrowsePrimitivesCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-create-primitive.md'), generateCreatePrimitiveCommand(), 'utf-8');
+    await writeFile(join(projectDir, '.claude', 'commands', 'ikary-update-primitive.md'), generateUpdatePrimitiveCommand(), 'utf-8');
     await writeFile(join(projectDir, '.claude', 'settings.json'), generateClaudeSettings(), 'utf-8');
     await writeFile(join(projectDir, '.gitignore'), generateGitignore(), 'utf-8');
 
@@ -152,7 +152,8 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.body(`  ${theme.accent('manifest.json')}          Cell Manifest`);
     fmt.body(`  ${theme.accent('CLAUDE.md')}              AI context for Claude Code`);
     fmt.body(`  ${theme.accent('.gitignore')}             Excludes local.db and OS files`);
-    fmt.body(`  ${theme.accent('.claude/commands/')}       /add-entity  /validate  /recommend  /browse-primitives  /create-primitive  /update-primitive`);
+    fmt.body(`  ${theme.accent('.claude/commands/')}       /ikary-add-entity  /ikary-validate  /ikary-bootstrap`);
+    fmt.body(`  ${''.padEnd(25)}  /ikary-browse-primitives  /ikary-create-primitive  /ikary-update-primitive`);
     if (options.aiTool === 'claude-code') {
       fmt.body(`  ${theme.accent('.mcp.json')}              MCP server config`);
     }
@@ -199,8 +200,8 @@ export async function initCommand(projectName?: string): Promise<void> {
 
     if (options.aiTool === 'claude-code') {
       fmt.body(`  ${theme.accent('claude')}                          Open Claude Code`);
-      fmt.body(`  ${theme.accent('/recommend')}                      Scaffold entities from your app description`);
-      fmt.body(`  ${theme.accent('/add-entity')}                     Add entities one at a time`);
+      fmt.body(`  ${theme.accent('/ikary-bootstrap')}                Build your manifest step by step`);
+      fmt.body(`  ${theme.accent('/ikary-add-entity')}               Add entities one at a time`);
       fmt.newline();
     } else {
       fmt.body(`  Edit ${theme.accent('manifest.json')} to define your entities`);

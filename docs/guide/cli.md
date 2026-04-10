@@ -53,7 +53,7 @@ Run this once in your project directory to write the MCP config and slash comman
 ikary setup ai
 ```
 
-Then open Claude Code and use `/add-entity`, `/validate`, `/recommend`, or `/create-primitive` to build with AI assistance.
+Then open Claude Code and use `/ikary-add-entity`, `/ikary-validate`, `/ikary-bootstrap`, or `/ikary-create-primitive` to build with AI assistance.
 
 ## Next steps
 
