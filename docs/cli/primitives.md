@@ -74,8 +74,8 @@ Opens the Primitive Studio in the browser. Requires the [local stack](/cli/local
 ikary primitive studio
 ```
 
-The Studio opens at `http://localhost:3000/__primitive-studio`. It shows all custom primitives registered in `ikary-primitives.yaml` with a live props editor and component preview.
+The Studio opens at `http://localhost:4500/__primitive-studio`. It shows all custom primitives registered in `ikary-primitives.yaml` with a live props editor and component preview.
 
 | Option | Description |
 |--------|-------------|
-| `-p, --port <port>` | Port the preview server is running on (default: 3000) |
+| `-p, --port <port>` | Port the preview server is running on (default: 4500) |

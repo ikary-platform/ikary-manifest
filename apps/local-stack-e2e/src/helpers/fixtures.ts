@@ -2,8 +2,8 @@ import { writeFileSync, unlinkSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-export const API_BASE = 'http://localhost:4100';
-export const PREVIEW_BASE = 'http://localhost:3001';
+export const API_BASE = 'http://localhost:4511';
+export const PREVIEW_BASE = 'http://localhost:4510';
 
 /** Manifest JSON for E2E tests — item entity with name (string) + count (number). */
 const TEST_MANIFEST_JSON = JSON.stringify({

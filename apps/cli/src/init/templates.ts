@@ -1,4 +1,5 @@
 import type { InitOptions } from './prompts.js';
+import { PORTS } from '../utils/ports.js';
 
 // ── Starter manifest JSON ──────────────────────────────────────────────
 
@@ -260,7 +261,7 @@ The Primitive Studio is a live 3-panel preview environment:
 \`\`\`
 ikary local start manifest.json
 # then open:
-http://localhost:3000/__primitive-studio
+http://localhost:${PORTS.PREVIEW}/__primitive-studio
 \`\`\`
 
 - **Left panel** — list of your project's custom primitives (grouped by category)
@@ -276,9 +277,9 @@ Run \`ikary local start manifest.json\` to boot the full local stack:
 
 | Service | URL |
 |---------|-----|
-| Preview | http://localhost:3000 |
-| Data API | http://localhost:4000 |
-| MCP Server | http://localhost:3100/mcp |
+| Preview | http://localhost:${PORTS.PREVIEW} |
+| Data API | http://localhost:${PORTS.DATA_API} |
+| MCP Server | http://localhost:${PORTS.MCP_SERVER}/mcp |
 
 The preview server hot-reloads when \`manifest.json\` changes.
 The data API persists records in a local SQLite database.
@@ -291,7 +292,7 @@ in the browser with mock data — no server needed.
 
 1. Run \`ikary local start manifest.json\` to boot the local stack.
 2. Open Claude Code and run \`/ikary-bootstrap\` to build the manifest interactively.
-3. Preview hot-reloads at http://localhost:3000 as you edit \`manifest.json\`.
+3. Edit \`manifest.json\` with the generated structure — preview hot-reloads at http://localhost:${PORTS.PREVIEW}.
 4. Validate with \`ikary validate manifest.json\` or the \`validate_manifest\` MCP tool.
 5. If errors occur, run \`explain_validation_errors\` or use \`ikary validate manifest.json --explain\`.
 6. Compile with \`ikary compile manifest.json\` or \`normalize_manifest\`.
@@ -315,7 +316,7 @@ export function generateMcpConfig(useLocal = false): string {
     mcpServers: {
       'ikary-manifest': {
         type: 'http',
-        url: useLocal ? 'http://localhost:3100/mcp' : 'https://public.ikary.co/mcp',
+        url: useLocal ? `http://localhost:${PORTS.MCP_SERVER}/mcp` : 'https://public.ikary.co/mcp',
       },
     },
   }, null, 2);
@@ -504,7 +505,7 @@ Validate the scaffold:
 
 Preview the primitive live:
   Run: ikary local start manifest.json (if not already running)
-  Open: http://localhost:3000/__primitive-studio
+  Open: http://localhost:${PORTS.PREVIEW}/__primitive-studio
   The primitive will appear under the "Custom" group.
 
 Use validate_primitive_props to check that example props match the contract.
@@ -529,7 +530,7 @@ Examples: adding an optional prop, changing a label, fixing a bug.
 1. Edit the component, schema, contract, and examples as needed.
 2. Keep the version number in <name>.contract.yaml unchanged.
 3. Run: ikary primitive validate
-4. Check the live preview at http://localhost:3000/__primitive-studio
+4. Check the live preview at http://localhost:${PORTS.PREVIEW}/__primitive-studio
 
 ──── BREAKING change (existing manifests would break) ─────────────────────
 Examples: removing a required prop, renaming a prop, changing a prop type.

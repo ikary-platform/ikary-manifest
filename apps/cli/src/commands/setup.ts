@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import { PORTS } from '../utils/ports.js';
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { existsSync, readFileSync as readFileSyncNode } from 'node:fs';
 import * as fmt from '../output/format.js';
@@ -53,7 +54,7 @@ function detectProjectName(cwd: string): string {
 
 async function checkLocalStack(): Promise<boolean> {
   try {
-    const res = await fetch('http://localhost:3100/health', { signal: AbortSignal.timeout(2000) });
+    const res = await fetch(`http://localhost:${PORTS.MCP_SERVER}/health`, { signal: AbortSignal.timeout(2000) });
     return res.ok;
   } catch {
     return false;
@@ -65,7 +66,7 @@ export async function setupAiCommand(options: {
   force?: boolean;
 }): Promise<void> {
   const cwd = process.cwd();
-  const mcpUrl = options.local ? 'http://localhost:3100/mcp' : 'https://public.ikary.co/mcp';
+  const mcpUrl = options.local ? `http://localhost:${PORTS.MCP_SERVER}/mcp` : 'https://public.ikary.co/mcp';
 
   fmt.section('Setting up Claude Code integration');
   fmt.newline();
@@ -78,7 +79,7 @@ export async function setupAiCommand(options: {
         `  ${theme.muted('○')} Local MCP server is not running — files will be written with`,
       );
       fmt.body(
-        `    ${theme.muted('http://localhost:3100/mcp')} but start the stack first:`,
+        `    ${theme.muted(`http://localhost:${PORTS.MCP_SERVER}/mcp`)} but start the stack first:`,
       );
       fmt.body(`    ${theme.accent('ikary local start <manifest>')}`);
       fmt.newline();

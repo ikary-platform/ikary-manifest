@@ -46,6 +46,6 @@ COPY --from=deps /app/apps/preview-server/node_modules ./apps/preview-server/nod
 # dist/ contains both the Vite frontend bundle and the bundled server.js
 COPY --from=build /app/apps/preview-server/dist ./apps/preview-server/dist
 
-EXPOSE 3000
-ENV PORT=3000
+EXPOSE 4500
+ENV PORT=4500
 CMD ["node", "apps/preview-server/dist/server.js"]

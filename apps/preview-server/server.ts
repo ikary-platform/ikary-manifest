@@ -24,7 +24,7 @@ if (!manifestPath) {
 }
 
 const app = express();
-const port = process.env.PORT ?? 3000;
+const port = process.env.PORT ?? 4500;
 
 app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false }));
 

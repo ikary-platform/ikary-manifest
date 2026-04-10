@@ -2,6 +2,14 @@
 
 `ikary local` manages a Docker Compose stack that runs three services together: the preview server, the data API, and the MCP server.
 
+## Port reference
+
+| Port | Service | URL |
+|------|---------|-----|
+| 4500 | Preview Server | http://localhost:4500 |
+| 4501 | Data API | http://localhost:4501 |
+| 4502 | MCP Server | http://localhost:4502/mcp |
+
 **Requires:** Docker Desktop or Podman.
 
 ## `ikary local start <manifest>`
@@ -22,17 +30,17 @@ Pre-flight checks:
   ✓ Manifest          ./manifest.json
   ✓ Container runtime docker running
   ✓ docker-compose.yml found
-  ✓ Port Preview   (3000)   free
-  ✓ Port Data API  (4000)   free
-  ✓ Port MCP Server(3100)   free
+  ✓ Port Preview   (4500)   free
+  ✓ Port Data API  (4501)   free
+  ✓ Port MCP Server(4502)   free
 
 ✔ All services healthy
 
 Services:
 
-  Preview     http://localhost:3000
-  Data API    http://localhost:4000
-  MCP Server  http://localhost:3100/mcp
+  Preview     http://localhost:4500
+  Data API    http://localhost:4501
+  MCP Server  http://localhost:4502/mcp
 ```
 
 The preview server hot-reloads when `manifest.json` changes. Entity records persist in a local SQLite database between restarts.
