@@ -93,19 +93,23 @@ Use this to clear all seed data and return to an empty database.
 Database migration commands. Useful after pulling a new version of the runtime that includes schema changes.
 
 ```bash
-ikary local db migrate    # run pending migrations
-ikary local db status     # show which migrations have run
-ikary local db reset      # clear migration tracking
+ikary local db migrate        # run pending migrations
+ikary local db status         # show which migrations have run
+ikary local db reset --yes    # clear migration tracking (--yes required)
 ```
 
 | Subcommand | Description |
 |-----------|-------------|
 | `migrate` | Run all pending migrations against the local database |
 | `status` | Print the migration history and any pending migrations |
-| `reset` | Clear the migration tracking table (does not drop data tables) |
+| `reset` | Clear the migration tracking table (does not drop data tables); requires `--yes` |
 
 | Option (migrate) | Description |
 |-----------------|-------------|
 | `--database-url <url>` | Target a specific database instead of the local volume |
 | `--dry-run` | Print migrations that would run without executing them |
 | `--force` | Run migrations even if the database reports them as applied |
+
+| Option (reset) | Description |
+|----------------|-------------|
+| `--yes` | Required. Confirms the reset without an interactive prompt |

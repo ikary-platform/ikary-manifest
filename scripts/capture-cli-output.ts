@@ -8,7 +8,7 @@
  */
 
 import { execSync } from 'node:child_process';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +16,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const snippetsDir = join(root, 'docs', 'snippets', 'cli');
 const cli = join(root, 'apps', 'cli', 'dist', 'cli.js');
+
+// Build the CLI if the dist artifact is missing
+if (!existsSync(cli)) {
+  console.log('CLI dist not found — building @ikary/cli first...\n');
+  execSync('pnpm --filter @ikary/cli build', { cwd: root, stdio: 'inherit' });
+}
 
 mkdirSync(snippetsDir, { recursive: true });
 
