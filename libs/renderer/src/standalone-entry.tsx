@@ -4,12 +4,16 @@
  * Reads window.__IKARY_MANIFEST__ (a compiled CellManifestV1 JSON object),
  * then mounts CellAppRenderer in mock-data mode into #root.
  *
+ * Uses HashRouter so URL-based routing works even when opened via file://
+ * protocol (e.g. `ikary preview manifest.json` opens a local HTML file).
+ *
  * Built by: vite build --config vite.standalone.config.ts
  * Output:   dist/standalone/renderer.iife.js
  */
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HashRouter } from 'react-router-dom';
 import { CellAppRenderer } from './components/cell-app-renderer';
 import type { CellManifestV1 } from '@ikary/contract';
 
@@ -43,7 +47,9 @@ function mount(): void {
   createRoot(el).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <CellAppRenderer manifest={manifest} dataMode="mock" />
+        <HashRouter>
+          <CellAppRenderer manifest={manifest} dataMode="mock" />
+        </HashRouter>
       </QueryClientProvider>
     </StrictMode>,
   );
