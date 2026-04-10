@@ -107,6 +107,19 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
   const [requestedEntity, setRequestedEntity] = useState<string | null>(null);
   const [requestedRecordId, setRequestedRecordId] = useState<string | null>(null);
 
+  // Sync the initial effectiveEntity to the adapter on mount.
+  // Without this, the first entity in the manifest never triggers
+  // adapter.setActiveEntity because getRows() matches effectiveEntity
+  // directly and never sets requestedEntity.
+  const entities = manifest.spec.entities ?? [];
+  const initialEntityKey = entities[0]?.key ?? '';
+
+  useEffect(() => {
+    if (initialEntityKey && activeEntity === null) {
+      adapter.setActiveEntity(initialEntityKey);
+    }
+  }, [initialEntityKey, activeEntity, adapter]);
+
   // Sync requested → active via useEffect (avoids setState-during-render)
   useEffect(() => {
     if (requestedEntity !== null && requestedEntity !== activeEntity) {
@@ -124,8 +137,7 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
     }
   }, [requestedRecordId, activeRecordId, requestedEntity, adapter]);
 
-  const entities = manifest.spec.entities ?? [];
-  const effectiveEntity = activeEntity ?? entities[0]?.key ?? '';
+  const effectiveEntity = activeEntity ?? initialEntityKey;
 
   return useMemo<CellDataStore>(() => {
     return {
