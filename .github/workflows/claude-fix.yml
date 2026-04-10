@@ -57,7 +57,9 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude do fix"
           branch_prefix: "claude/"
+          show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
             --max-turns 25

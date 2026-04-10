@@ -44,7 +44,9 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude plan feature"
           use_sticky_comment: "true"
+          show_full_output: true
           claude_args: >
             --model claude-opus-4-6
             --max-turns 8
