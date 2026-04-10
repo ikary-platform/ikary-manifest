@@ -10,6 +10,7 @@ permissions:
   issues: write
   contents: write
   pull-requests: write
+  id-token: write
 
 concurrency:
   group: claude-pr-fix-${{ github.event.pull_request.number || github.event.issue.number }}
@@ -67,7 +68,7 @@ jobs:
           claude_args: >
             --model claude-sonnet-4-6
             --max-turns 25
-          custom_instructions: |
+          prompt: |
             You are working in the IKARY monorepo (ikary-manifest). Before producing any output, read these files:
 
             1. CLAUDE.md (root) — Zod contracts rule, library rules, doc-voice reference
