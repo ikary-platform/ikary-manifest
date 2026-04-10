@@ -27,6 +27,21 @@ jobs:
       contains(vars.CLAUDE_ALLOWED_USERS, github.event.comment.user.login)
 
     steps:
+      - name: Acknowledge trigger
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commentId = context.payload.comment.id;
+            const endpoint = context.eventName === 'pull_request_review_comment'
+              ? github.rest.reactions.createForPullRequestReviewComment
+              : github.rest.reactions.createForIssueComment;
+            await endpoint({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: commentId,
+              content: 'eyes'
+            });
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
