@@ -61,7 +61,7 @@ jobs:
           show_full_output: true
           claude_args: >
             --model claude-sonnet-4-6
-            --max-turns 30
+            --max-turns 50
             --dangerously-skip-permissions
           prompt: |
             Implement the feature described in this issue. Follow all rules in CLAUDE.md.
