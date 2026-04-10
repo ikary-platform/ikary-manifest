@@ -60,6 +60,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           PUBLISHED_PACKAGES: ${{ github.event_name == 'workflow_dispatch' && inputs.published_packages || steps.changesets.outputs.publishedPackages }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           CLI_VERSION=$(echo "$PUBLISHED_PACKAGES" \
             | jq -r '.[] | select(.name == "@ikary/cli") | .version' 2>/dev/null || true)
@@ -68,11 +69,6 @@ jobs:
             echo "ℹ️ @ikary/cli was not in this publish — skipping."
             exit 0
           fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git pull --rebase --autostash origin main
 
           # Collect CHANGELOG sections for every published package
           CHANGELOGS=""
@@ -135,27 +131,22 @@ jobs:
 
           GENERATED=$(echo "$RESPONSE" | jq -r '.content[0].text // empty' 2>/dev/null || true)
 
-          RELEASE_FILE="releases/v${CLI_VERSION}.md"
-
           if [ -n "$GENERATED" ]; then
-            printf '%s\n' "$GENERATED" > "$RELEASE_FILE"
+            NOTES="$GENERATED"
             echo "✅ Claude generated release note for v${CLI_VERSION}"
           else
-            # Fallback: structured raw CHANGELOG content
             echo "⚠️ Claude API unavailable — falling back to raw changelog."
-            {
-              echo "# v${CLI_VERSION}"
-              echo ""
-              echo "$CHANGELOGS"
-            } > "$RELEASE_FILE"
+            NOTES="# v${CLI_VERSION}"$'\n\n'"${CHANGELOGS}"
           fi
 
-          git add "$RELEASE_FILE"
-          git commit -m "chore: add release note for v${CLI_VERSION}"
-          git pull --rebase --autostash origin main
-          git push origin main
+          # Update the GitHub Release body with the generated notes (no push to main needed)
+          gh release edit "v${CLI_VERSION}" --notes "$NOTES" --repo "${GITHUB_REPOSITORY}"
+          echo "✅ Updated GitHub Release v${CLI_VERSION} with generated notes"
 
-          # Create a permanent release branch
+          # Create a permanent release branch (release/* has no branch protection)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${RELEASE_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git checkout -b "release/v${CLI_VERSION}"
           git push origin "release/v${CLI_VERSION}"
           echo "✅ Created release branch: release/v${CLI_VERSION}"
