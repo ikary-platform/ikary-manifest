@@ -277,8 +277,14 @@ export class AuthController {
     let safeReturnTo: string;
     try {
       const url = new URL(returnTo);
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') throw new Error();
-      safeReturnTo = returnTo;
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') throw new Error('bad protocol');
+      const cookieDomain = this.authConfig.config.cookie.domain;
+      const isLocalhost = url.hostname === 'localhost' && cookieDomain === 'localhost';
+      const matchesDomain = cookieDomain.startsWith('.')
+        ? url.hostname === cookieDomain.slice(1) || url.hostname.endsWith(cookieDomain)
+        : url.hostname === cookieDomain;
+      if (!isLocalhost && !matchesDomain) throw new Error('host not allowed');
+      safeReturnTo = url.toString();
     } catch {
       throw new BadRequestException('Invalid returnTo URL');
     }

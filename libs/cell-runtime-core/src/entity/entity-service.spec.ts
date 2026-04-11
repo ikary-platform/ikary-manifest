@@ -221,4 +221,52 @@ describe('EntityService', () => {
       expect(diff['total']).toBeDefined();
     });
   });
+
+  // ── EntityRuntimeContext (actor attribution) ──────────────────────────────
+
+  describe('actor attribution via EntityRuntimeContext', () => {
+    it('create stores actor_id and request_id in audit entry', async () => {
+      const record = await service.create('order', { customer: 'Ctx' }, { actorId: 'user-1', requestId: 'req-1' });
+      const audit = await service.getAuditLog('order', record['id'] as string);
+      expect(audit[0]?.actor_id).toBe('user-1');
+      expect(audit[0]?.request_id).toBe('req-1');
+    });
+
+    it('update stores actor_id and request_id in audit entry', async () => {
+      const record = await service.create('order', { customer: 'Ctx2' });
+      const id = record['id'] as string;
+      await service.update('order', id, { total: 42 }, undefined, { actorId: 'user-2', requestId: 'req-2' });
+      const audit = await service.getAuditLog('order', id);
+      expect(audit[1]?.actor_id).toBe('user-2');
+      expect(audit[1]?.request_id).toBe('req-2');
+    });
+
+    it('delete stores actor_id and request_id in audit entry', async () => {
+      const record = await service.create('order', { customer: 'Ctx3' });
+      const id = record['id'] as string;
+      await service.delete('order', id, undefined, { actorId: 'user-3', requestId: 'req-3' });
+      const audit = await service.getAuditLog('order', id);
+      const deleteEntry = audit.find(e => e.event_type === 'entity.deleted');
+      expect(deleteEntry?.actor_id).toBe('user-3');
+      expect(deleteEntry?.request_id).toBe('req-3');
+    });
+
+    it('rollback stores actor_id and request_id in audit entry', async () => {
+      const record = await service.create('order', { customer: 'Ctx4', total: 10 });
+      const id = record['id'] as string;
+      await service.update('order', id, { total: 20 });
+      await service.rollback('order', id, 1, undefined, { actorId: 'user-4', requestId: 'req-4' });
+      const audit = await service.getAuditLog('order', id);
+      const rollbackEntry = audit.find(e => e.event_type === 'entity.rolled_back');
+      expect(rollbackEntry?.actor_id).toBe('user-4');
+      expect(rollbackEntry?.request_id).toBe('req-4');
+    });
+
+    it('audit entries have null actor_id when no context is provided', async () => {
+      const record = await service.create('order', { customer: 'NoCtx' });
+      const audit = await service.getAuditLog('order', record['id'] as string);
+      expect(audit[0]?.actor_id).toBeNull();
+      expect(audit[0]?.request_id).toBeNull();
+    });
+  });
 });

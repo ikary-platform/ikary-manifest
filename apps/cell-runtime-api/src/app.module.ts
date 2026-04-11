@@ -21,8 +21,6 @@ import { compileCellApp, isValidationResult } from '@ikary/engine';
 import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
 import {
   AuthModule,
-  AuditInterceptor,
-  JwtAuthGuard,
   AuthAuditService,
 } from '@ikary/system-auth';
 import { DatabaseModule } from './database.module.js';
