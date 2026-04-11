@@ -198,6 +198,16 @@ export default defineConfig({
             { text: 'YAML Schemas', link: '/reference/schemas' },
           ],
         },
+        {
+          text: 'Entity Concepts',
+          items: [
+            { text: 'Validation Rules', link: '/reference/entity-validation' },
+            { text: 'Computed Fields', link: '/reference/entity-computed' },
+            { text: 'Lifecycle & State Machine', link: '/reference/entity-lifecycle' },
+            { text: 'Relationships', link: '/reference/entity-relations' },
+            { text: 'Policies & Permissions', link: '/reference/entity-policies' },
+          ],
+        },
       ],
 
       '/api/': [

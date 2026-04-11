@@ -32,3 +32,7 @@ export type { HydratedValidation } from './validation';
 export { UIComponentsProvider, useUIComponents } from './UIComponentsProvider';
 export type { UIComponents } from './ui-components';
 export { defaultUIComponents } from './default-ui-components';
+// Form building
+export { buildCreateZodSchema } from './form/schema/build-create-zod-schema';
+export type { CreateFormValues } from './form/schema/build-create-zod-schema';
+export { FieldControl } from './form/field-control';
