@@ -66,20 +66,7 @@ export function PrimitiveStudioPage({ primitiveKey, backPath }: PrimitiveStudioP
 
   // Convert PRIMITIVE_DEMOS to ScenarioDefinition[] keyed by primitive name
   const scenariosByKey: Record<string, ScenarioDefinition[]> = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(PRIMITIVE_DEMOS).map(([key, demo]) => [
-          key,
-          [
-            {
-              label: demo.label,
-              description: demo.description,
-              props: demo.props,
-              runtime: demo.runtime,
-            },
-          ],
-        ]),
-      ),
+    () => Object.fromEntries(Object.entries(PRIMITIVE_DEMOS).map(([key, entry]) => [key, entry.scenarios])),
     [],
   );
 

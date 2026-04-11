@@ -208,6 +208,16 @@ export type {
   BulkCommandBarVariant,
   BulkCommandBarViewProps,
 } from './primitives/bulk-command-bar/BulkCommandBar.types';
+export { Tabs } from './primitives/tabs/Tabs';
+export { buildTabsViewModel, type BuildTabsViewModelInput } from './primitives/tabs/Tabs.adapter';
+export { resolveTabs, type TabsResolverRuntime } from './primitives/tabs/Tabs.resolver';
+export type {
+  TabsOverflowMode,
+  TabsResponsiveBreakpoint,
+  TabsResolvedItem,
+  TabsVariant,
+  TabsViewProps,
+} from './primitives/tabs/Tabs.types';
 export { CardList } from './primitives/card-list/CardList';
 export type {
   CardListActionIntent,

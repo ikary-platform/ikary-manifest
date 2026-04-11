@@ -58,13 +58,17 @@ type ContractPresentationType =
   | PaginationPresentation['type']
   | TabsPresentation['type'];
 
-export interface PrimitiveDemo {
+export interface PrimitiveScenario {
   label: string;
-  description: string;
-  primitive: string;
-  contractType: ContractPresentationType;
+  description?: string;
   props: Record<string, unknown>;
   runtime: Record<string, unknown>;
+}
+
+export interface PrimitiveDemoEntry {
+  primitive: string;
+  contractType: ContractPresentationType;
+  scenarios: PrimitiveScenario[];
 }
 
 const DATA_GRID_CONTRACT_TYPE: DataGridPresentation['type'] = 'data-grid';
@@ -1369,44 +1373,76 @@ const IKARY_FORM_RUNTIME = {
   commitDelayMs: 550,
 };
 
-const TABS_PROPS: TabsPresentation = {
+const TABS_PROPS_LINE: TabsPresentation = {
   type: TABS_CONTRACT_TYPE,
+  variant: 'line',
   activeKey: 'overview',
-  overflow: {
-    mode: 'menu',
-    collapseBelow: 'md',
-  },
+  overflow: { mode: 'scroll' },
   items: [
-    {
-      key: 'overview',
-      label: 'Overview',
-      href: '/primitives/tabs',
-      count: 12,
-    },
-    {
-      key: 'activity',
-      label: 'Activity',
-      actionKey: 'open-activity',
-      count: 4,
-    },
-    {
-      key: 'billing',
-      label: 'Billing',
-      actionKey: 'open-billing',
-      hiddenWhenUnauthorized: true,
-    },
-    {
-      key: 'settings',
-      label: 'Settings',
-      href: '/primitives/tabs',
-      disabled: true,
-    },
+    { key: 'overview', label: 'Overview', href: '/primitives/tabs' },
+    { key: 'activity', label: 'Activity', actionKey: 'open-activity' },
+    { key: 'billing', label: 'Billing', actionKey: 'open-billing' },
+    { key: 'settings', label: 'Settings', href: '/primitives/tabs', disabled: true },
   ],
 };
+const TABS_RUNTIME_LINE = { authorizedActionKeys: ['open-activity', 'open-billing'] };
 
-const TABS_RUNTIME = {
-  authorizedActionKeys: ['open-activity'],
+const TABS_PROPS_PILL: TabsPresentation = {
+  type: TABS_CONTRACT_TYPE,
+  variant: 'pill',
+  activeKey: 'active',
+  items: [
+    { key: 'all', label: 'All', href: '/primitives/tabs' },
+    { key: 'active', label: 'Active', href: '/primitives/tabs' },
+    { key: 'archived', label: 'Archived', href: '/primitives/tabs' },
+  ],
 };
+const TABS_RUNTIME_PILL = {};
+
+const TABS_PROPS_COUNTS: TabsPresentation = {
+  type: TABS_CONTRACT_TYPE,
+  variant: 'line',
+  activeKey: 'overview',
+  items: [
+    { key: 'overview', label: 'Overview', href: '/primitives/tabs', count: 12 },
+    { key: 'activity', label: 'Activity', actionKey: 'open-activity', count: 4 },
+    { key: 'billing', label: 'Billing', actionKey: 'open-billing', hiddenWhenUnauthorized: true },
+    { key: 'settings', label: 'Settings', href: '/primitives/tabs', disabled: true },
+  ],
+};
+const TABS_RUNTIME_COUNTS = { authorizedActionKeys: ['open-activity'] };
+
+const TABS_PROPS_DENSE: TabsPresentation = {
+  type: TABS_CONTRACT_TYPE,
+  variant: 'line',
+  activeKey: 'open',
+  dense: true,
+  items: [
+    { key: 'open', label: 'Open', href: '/primitives/tabs' },
+    { key: 'pending', label: 'Pending', href: '/primitives/tabs' },
+    { key: 'closed', label: 'Closed', href: '/primitives/tabs' },
+    { key: 'all', label: 'All', href: '/primitives/tabs' },
+  ],
+};
+const TABS_RUNTIME_DENSE = {};
+
+const TABS_PROPS_OVERFLOW: TabsPresentation = {
+  type: TABS_CONTRACT_TYPE,
+  variant: 'line',
+  activeKey: 'tab3',
+  overflow: { mode: 'scroll' },
+  items: [
+    { key: 'tab1', label: 'Summary', href: '/primitives/tabs' },
+    { key: 'tab2', label: 'Timeline', href: '/primitives/tabs' },
+    { key: 'tab3', label: 'Documents', href: '/primitives/tabs' },
+    { key: 'tab4', label: 'Contacts', href: '/primitives/tabs' },
+    { key: 'tab5', label: 'Billing', href: '/primitives/tabs' },
+    { key: 'tab6', label: 'Tasks', href: '/primitives/tabs' },
+    { key: 'tab7', label: 'Notes', href: '/primitives/tabs' },
+    { key: 'tab8', label: 'Integrations', href: '/primitives/tabs' },
+  ],
+};
+const TABS_RUNTIME_OVERFLOW = {};
 
 const LIST_PAGE_PROPS: ListPagePresentation = {
   type: LIST_PAGE_CONTRACT_TYPE,
@@ -1499,257 +1535,339 @@ const LIST_PAGE_RUNTIME = {
   loading: false,
 };
 
-export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemo> = {
+export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemoEntry> = {
   'data-grid': {
-    label: 'Data Grid',
-    description: 'Preview through PrimitiveRenderer using presentation contract props + runtime state',
     primitive: 'data-grid',
     contractType: DATA_GRID_CONTRACT_TYPE,
-    props: DATA_GRID_PROPS as unknown as Record<string, unknown>,
-    runtime: DATA_GRID_RUNTIME,
+    scenarios: [{
+      label: 'Data Grid',
+      description: 'Preview through PrimitiveRenderer using presentation contract props + runtime state',
+      props: DATA_GRID_PROPS as unknown as Record<string, unknown>,
+      runtime: DATA_GRID_RUNTIME,
+    }],
   },
 
   'card-list': {
-    label: 'Card List',
-    description: 'Preview through PrimitiveRenderer using CardList contract props + runtime state',
     primitive: 'card-list',
     contractType: CARD_LIST_CONTRACT_TYPE,
-    props: CARD_LIST_PROPS as Record<string, unknown>,
-    runtime: CARD_LIST_RUNTIME,
+    scenarios: [{
+      label: 'Card List',
+      description: 'Preview through PrimitiveRenderer using CardList contract props + runtime state',
+      props: CARD_LIST_PROPS as Record<string, unknown>,
+      runtime: CARD_LIST_RUNTIME,
+    }],
   },
 
   'metric-card': {
-    label: 'Metric Card',
-    description: 'Preview through PrimitiveRenderer using MetricCardPresentation contract props + runtime state',
     primitive: 'metric-card',
     contractType: METRIC_CARD_CONTRACT_TYPE,
-    props: METRIC_CARD_PROPS as unknown as Record<string, unknown>,
-    runtime: METRIC_CARD_RUNTIME,
+    scenarios: [{
+      label: 'Metric Card',
+      description: 'Preview through PrimitiveRenderer using MetricCardPresentation contract props + runtime state',
+      props: METRIC_CARD_PROPS as unknown as Record<string, unknown>,
+      runtime: METRIC_CARD_RUNTIME,
+    }],
   },
 
   'activity-feed': {
-    label: 'Activity Feed',
-    description: 'Preview through PrimitiveRenderer using ActivityFeedPresentation contract props + runtime state',
     primitive: 'activity-feed',
     contractType: ACTIVITY_FEED_CONTRACT_TYPE,
-    props: ACTIVITY_FEED_PROPS as unknown as Record<string, unknown>,
-    runtime: ACTIVITY_FEED_RUNTIME,
+    scenarios: [{
+      label: 'Activity Feed',
+      description: 'Preview through PrimitiveRenderer using ActivityFeedPresentation contract props + runtime state',
+      props: ACTIVITY_FEED_PROPS as unknown as Record<string, unknown>,
+      runtime: ACTIVITY_FEED_RUNTIME,
+    }],
   },
 
   pagination: {
-    label: 'Pagination',
-    description: 'Preview through PrimitiveRenderer using presentation contract props + runtime state',
     primitive: 'pagination',
     contractType: PAGINATION_CONTRACT_TYPE,
-    props: PAGINATION_PROPS as unknown as Record<string, unknown>,
-    runtime: PAGINATION_RUNTIME,
+    scenarios: [{
+      label: 'Pagination',
+      description: 'Preview through PrimitiveRenderer using presentation contract props + runtime state',
+      props: PAGINATION_PROPS as unknown as Record<string, unknown>,
+      runtime: PAGINATION_RUNTIME,
+    }],
   },
 
   'page-header': {
-    label: 'Page Header',
-    description: 'Preview through PrimitiveRenderer using PageHeaderPresentation contract props + runtime state',
     primitive: 'page-header',
     contractType: PAGE_HEADER_CONTRACT_TYPE,
-    props: PAGE_HEADER_PROPS as unknown as Record<string, unknown>,
-    runtime: PAGE_HEADER_RUNTIME,
+    scenarios: [{
+      label: 'Page Header',
+      description: 'Preview through PrimitiveRenderer using PageHeaderPresentation contract props + runtime state',
+      props: PAGE_HEADER_PROPS as unknown as Record<string, unknown>,
+      runtime: PAGE_HEADER_RUNTIME,
+    }],
   },
 
   'detail-page': {
-    label: 'Detail Page',
-    description: 'Preview through PrimitiveRenderer using DetailPagePresentation contract props + runtime state',
     primitive: 'detail-page',
     contractType: DETAIL_PAGE_CONTRACT_TYPE,
-    props: DETAIL_PAGE_PROPS as unknown as Record<string, unknown>,
-    runtime: DETAIL_PAGE_RUNTIME,
+    scenarios: [{
+      label: 'Detail Page',
+      description: 'Preview through PrimitiveRenderer using DetailPagePresentation contract props + runtime state',
+      props: DETAIL_PAGE_PROPS as unknown as Record<string, unknown>,
+      runtime: DETAIL_PAGE_RUNTIME,
+    }],
   },
 
   'dashboard-page': {
-    label: 'Dashboard Page',
-    description: 'Preview through PrimitiveRenderer using DashboardPagePresentation contract props + runtime state',
     primitive: 'dashboard-page',
     contractType: DASHBOARD_PAGE_CONTRACT_TYPE,
-    props: DASHBOARD_PAGE_PROPS as unknown as Record<string, unknown>,
-    runtime: DASHBOARD_PAGE_RUNTIME,
+    scenarios: [{
+      label: 'Dashboard Page',
+      description: 'Preview through PrimitiveRenderer using DashboardPagePresentation contract props + runtime state',
+      props: DASHBOARD_PAGE_PROPS as unknown as Record<string, unknown>,
+      runtime: DASHBOARD_PAGE_RUNTIME,
+    }],
   },
 
   'detail-section': {
-    label: 'Detail Section',
-    description: 'Preview through PrimitiveRenderer using DetailSectionPresentation contract props + runtime state',
     primitive: 'detail-section',
     contractType: DETAIL_SECTION_CONTRACT_TYPE,
-    props: DETAIL_SECTION_PROPS as unknown as Record<string, unknown>,
-    runtime: DETAIL_SECTION_RUNTIME,
+    scenarios: [{
+      label: 'Detail Section',
+      description: 'Preview through PrimitiveRenderer using DetailSectionPresentation contract props + runtime state',
+      props: DETAIL_SECTION_PROPS as unknown as Record<string, unknown>,
+      runtime: DETAIL_SECTION_RUNTIME,
+    }],
   },
 
   'detail-item': {
-    label: 'Detail Item',
-    description: 'Preview through PrimitiveRenderer using DetailItemPresentation contract props + runtime state',
     primitive: 'detail-item',
     contractType: DETAIL_ITEM_CONTRACT_TYPE,
-    props: DETAIL_ITEM_PROPS as unknown as Record<string, unknown>,
-    runtime: DETAIL_ITEM_RUNTIME,
+    scenarios: [{
+      label: 'Detail Item',
+      description: 'Preview through PrimitiveRenderer using DetailItemPresentation contract props + runtime state',
+      props: DETAIL_ITEM_PROPS as unknown as Record<string, unknown>,
+      runtime: DETAIL_ITEM_RUNTIME,
+    }],
   },
 
   'empty-state': {
-    label: 'Empty State',
-    description: 'Preview through PrimitiveRenderer using EmptyStatePresentation contract props + runtime state',
     primitive: 'empty-state',
     contractType: EMPTY_STATE_CONTRACT_TYPE,
-    props: EMPTY_STATE_PROPS as unknown as Record<string, unknown>,
-    runtime: EMPTY_STATE_RUNTIME,
+    scenarios: [{
+      label: 'Empty State',
+      description: 'Preview through PrimitiveRenderer using EmptyStatePresentation contract props + runtime state',
+      props: EMPTY_STATE_PROPS as unknown as Record<string, unknown>,
+      runtime: EMPTY_STATE_RUNTIME,
+    }],
   },
 
   'error-state': {
-    label: 'Error State',
-    description: 'Preview through PrimitiveRenderer using ErrorStatePresentation contract props + runtime state',
     primitive: 'error-state',
     contractType: ERROR_STATE_CONTRACT_TYPE,
-    props: ERROR_STATE_PROPS as unknown as Record<string, unknown>,
-    runtime: ERROR_STATE_RUNTIME,
+    scenarios: [{
+      label: 'Error State',
+      description: 'Preview through PrimitiveRenderer using ErrorStatePresentation contract props + runtime state',
+      props: ERROR_STATE_PROPS as unknown as Record<string, unknown>,
+      runtime: ERROR_STATE_RUNTIME,
+    }],
   },
 
   'loading-state': {
-    label: 'Loading State',
-    description: 'Preview through PrimitiveRenderer using LoadingStatePresentation contract props + runtime state',
     primitive: 'loading-state',
     contractType: LOADING_STATE_CONTRACT_TYPE,
-    props: LOADING_STATE_PROPS as unknown as Record<string, unknown>,
-    runtime: LOADING_STATE_RUNTIME,
+    scenarios: [{
+      label: 'Loading State',
+      description: 'Preview through PrimitiveRenderer using LoadingStatePresentation contract props + runtime state',
+      props: LOADING_STATE_PROPS as unknown as Record<string, unknown>,
+      runtime: LOADING_STATE_RUNTIME,
+    }],
   },
 
   'filter-bar': {
-    label: 'Filter Bar',
-    description: 'Preview through PrimitiveRenderer using FilterBarPresentation contract props + runtime state',
     primitive: 'filter-bar',
     contractType: FILTER_BAR_CONTRACT_TYPE,
-    props: FILTER_BAR_PROPS as unknown as Record<string, unknown>,
-    runtime: FILTER_BAR_RUNTIME,
+    scenarios: [{
+      label: 'Filter Bar',
+      description: 'Preview through PrimitiveRenderer using FilterBarPresentation contract props + runtime state',
+      props: FILTER_BAR_PROPS as unknown as Record<string, unknown>,
+      runtime: FILTER_BAR_RUNTIME,
+    }],
   },
 
   'bulk-command-bar': {
-    label: 'Bulk Command Bar',
-    description: 'Preview through PrimitiveRenderer using BulkCommandBarPresentation contract props + runtime state',
     primitive: 'bulk-command-bar',
     contractType: BULK_COMMAND_BAR_CONTRACT_TYPE,
-    props: BULK_COMMAND_BAR_PROPS as unknown as Record<string, unknown>,
-    runtime: BULK_COMMAND_BAR_RUNTIME,
+    scenarios: [{
+      label: 'Bulk Command Bar',
+      description: 'Preview through PrimitiveRenderer using BulkCommandBarPresentation contract props + runtime state',
+      props: BULK_COMMAND_BAR_PROPS as unknown as Record<string, unknown>,
+      runtime: BULK_COMMAND_BAR_RUNTIME,
+    }],
   },
 
   'field-value': {
-    label: 'Field Value',
-    description: 'Preview through PrimitiveRenderer using FieldValuePresentation contract props + runtime state',
     primitive: 'field-value',
     contractType: FIELD_VALUE_CONTRACT_TYPE,
-    props: FIELD_VALUE_PROPS as unknown as Record<string, unknown>,
-    runtime: FIELD_VALUE_RUNTIME,
+    scenarios: [{
+      label: 'Field Value',
+      description: 'Preview through PrimitiveRenderer using FieldValuePresentation contract props + runtime state',
+      props: FIELD_VALUE_PROPS as unknown as Record<string, unknown>,
+      runtime: FIELD_VALUE_RUNTIME,
+    }],
   },
 
   input: {
-    label: 'Input',
-    description: 'Preview through PrimitiveRenderer using InputPresentation contract props + runtime state',
     primitive: 'input',
     contractType: INPUT_CONTRACT_TYPE,
-    props: INPUT_PROPS as unknown as Record<string, unknown>,
-    runtime: INPUT_RUNTIME,
+    scenarios: [{
+      label: 'Input',
+      description: 'Preview through PrimitiveRenderer using InputPresentation contract props + runtime state',
+      props: INPUT_PROPS as unknown as Record<string, unknown>,
+      runtime: INPUT_RUNTIME,
+    }],
   },
 
   textarea: {
-    label: 'Textarea',
-    description: 'Preview through PrimitiveRenderer using TextareaPresentation contract props + runtime state',
     primitive: 'textarea',
     contractType: TEXTAREA_CONTRACT_TYPE,
-    props: TEXTAREA_PROPS as unknown as Record<string, unknown>,
-    runtime: TEXTAREA_RUNTIME,
+    scenarios: [{
+      label: 'Textarea',
+      description: 'Preview through PrimitiveRenderer using TextareaPresentation contract props + runtime state',
+      props: TEXTAREA_PROPS as unknown as Record<string, unknown>,
+      runtime: TEXTAREA_RUNTIME,
+    }],
   },
 
   select: {
-    label: 'Select',
-    description: 'Preview through PrimitiveRenderer using SelectPresentation contract props + runtime state',
     primitive: 'select',
     contractType: SELECT_CONTRACT_TYPE,
-    props: SELECT_PROPS as unknown as Record<string, unknown>,
-    runtime: SELECT_RUNTIME,
+    scenarios: [{
+      label: 'Select',
+      description: 'Preview through PrimitiveRenderer using SelectPresentation contract props + runtime state',
+      props: SELECT_PROPS as unknown as Record<string, unknown>,
+      runtime: SELECT_RUNTIME,
+    }],
   },
 
   checkbox: {
-    label: 'Checkbox',
-    description: 'Preview through PrimitiveRenderer using CheckboxPresentation contract props + runtime state',
     primitive: 'checkbox',
     contractType: CHECKBOX_CONTRACT_TYPE,
-    props: CHECKBOX_PROPS as unknown as Record<string, unknown>,
-    runtime: CHECKBOX_RUNTIME,
+    scenarios: [{
+      label: 'Checkbox',
+      description: 'Preview through PrimitiveRenderer using CheckboxPresentation contract props + runtime state',
+      props: CHECKBOX_PROPS as unknown as Record<string, unknown>,
+      runtime: CHECKBOX_RUNTIME,
+    }],
   },
 
   'radio-group': {
-    label: 'Radio Group',
-    description: 'Preview through PrimitiveRenderer using RadioGroupPresentation contract props + runtime state',
     primitive: 'radio-group',
     contractType: RADIO_GROUP_CONTRACT_TYPE,
-    props: RADIO_GROUP_PROPS as unknown as Record<string, unknown>,
-    runtime: RADIO_GROUP_RUNTIME,
+    scenarios: [{
+      label: 'Radio Group',
+      description: 'Preview through PrimitiveRenderer using RadioGroupPresentation contract props + runtime state',
+      props: RADIO_GROUP_PROPS as unknown as Record<string, unknown>,
+      runtime: RADIO_GROUP_RUNTIME,
+    }],
   },
 
   toggle: {
-    label: 'Toggle',
-    description: 'Preview through PrimitiveRenderer using TogglePresentation contract props + runtime state',
     primitive: 'toggle',
     contractType: TOGGLE_CONTRACT_TYPE,
-    props: TOGGLE_PROPS as unknown as Record<string, unknown>,
-    runtime: TOGGLE_RUNTIME,
+    scenarios: [{
+      label: 'Toggle',
+      description: 'Preview through PrimitiveRenderer using TogglePresentation contract props + runtime state',
+      props: TOGGLE_PROPS as unknown as Record<string, unknown>,
+      runtime: TOGGLE_RUNTIME,
+    }],
   },
 
   'date-input': {
-    label: 'Date Input',
-    description: 'Preview through PrimitiveRenderer using DateInputPresentation contract props + runtime state',
     primitive: 'date-input',
     contractType: DATE_INPUT_CONTRACT_TYPE,
-    props: DATE_INPUT_PROPS as unknown as Record<string, unknown>,
-    runtime: DATE_INPUT_RUNTIME,
+    scenarios: [{
+      label: 'Date Input',
+      description: 'Preview through PrimitiveRenderer using DateInputPresentation contract props + runtime state',
+      props: DATE_INPUT_PROPS as unknown as Record<string, unknown>,
+      runtime: DATE_INPUT_RUNTIME,
+    }],
   },
 
   'form-field': {
-    label: 'Form Field',
-    description: 'Preview through PrimitiveRenderer using FormFieldPresentation contract props + runtime state',
     primitive: 'form-field',
     contractType: FORM_FIELD_CONTRACT_TYPE,
-    props: FORM_FIELD_PROPS as unknown as Record<string, unknown>,
-    runtime: FORM_FIELD_RUNTIME,
+    scenarios: [{
+      label: 'Form Field',
+      description: 'Preview through PrimitiveRenderer using FormFieldPresentation contract props + runtime state',
+      props: FORM_FIELD_PROPS as unknown as Record<string, unknown>,
+      runtime: FORM_FIELD_RUNTIME,
+    }],
   },
 
   'form-section': {
-    label: 'Form Section',
-    description: 'Preview through PrimitiveRenderer using FormSectionPresentation contract props + runtime state',
     primitive: 'form-section',
     contractType: FORM_SECTION_CONTRACT_TYPE,
-    props: FORM_SECTION_PROPS as unknown as Record<string, unknown>,
-    runtime: FORM_SECTION_RUNTIME,
+    scenarios: [{
+      label: 'Form Section',
+      description: 'Preview through PrimitiveRenderer using FormSectionPresentation contract props + runtime state',
+      props: FORM_SECTION_PROPS as unknown as Record<string, unknown>,
+      runtime: FORM_SECTION_RUNTIME,
+    }],
   },
 
   form: {
-    label: 'Ikary Form',
-    description: 'Preview through PrimitiveRenderer using IkaryFormPresentation contract props + runtime state',
     primitive: 'form',
     contractType: IKARY_FORM_CONTRACT_TYPE,
-    props: IKARY_FORM_PROPS as unknown as Record<string, unknown>,
-    runtime: IKARY_FORM_RUNTIME,
+    scenarios: [{
+      label: 'Ikary Form',
+      description: 'Preview through PrimitiveRenderer using IkaryFormPresentation contract props + runtime state',
+      props: IKARY_FORM_PROPS as unknown as Record<string, unknown>,
+      runtime: IKARY_FORM_RUNTIME,
+    }],
   },
 
   'list-page': {
-    label: 'List Page',
-    description: 'Preview through PrimitiveRenderer using ListPagePresentation contract props + runtime state',
     primitive: 'list-page',
     contractType: LIST_PAGE_CONTRACT_TYPE,
-    props: LIST_PAGE_PROPS as unknown as Record<string, unknown>,
-    runtime: LIST_PAGE_RUNTIME,
+    scenarios: [{
+      label: 'List Page',
+      description: 'Preview through PrimitiveRenderer using ListPagePresentation contract props + runtime state',
+      props: LIST_PAGE_PROPS as unknown as Record<string, unknown>,
+      runtime: LIST_PAGE_RUNTIME,
+    }],
   },
 
   tabs: {
-    label: 'Tabs',
-    description: 'Preview through PrimitiveRenderer using TabsPresentation contract props + runtime state',
     primitive: 'tabs',
     contractType: TABS_CONTRACT_TYPE,
-    props: TABS_PROPS as unknown as Record<string, unknown>,
-    runtime: TABS_RUNTIME,
+    scenarios: [
+      {
+        label: 'Default (line)',
+        description: 'Line variant — underline indicator, scroll overflow',
+        props: TABS_PROPS_LINE as unknown as Record<string, unknown>,
+        runtime: TABS_RUNTIME_LINE,
+      },
+      {
+        label: 'Pill variant',
+        description: 'Pill variant — solid background on active tab',
+        props: TABS_PROPS_PILL as unknown as Record<string, unknown>,
+        runtime: TABS_RUNTIME_PILL,
+      },
+      {
+        label: 'With counts',
+        description: 'Count badges, hidden-when-unauthorized, disabled tab',
+        props: TABS_PROPS_COUNTS as unknown as Record<string, unknown>,
+        runtime: TABS_RUNTIME_COUNTS,
+      },
+      {
+        label: 'Dense',
+        description: 'Dense mode for compact layouts',
+        props: TABS_PROPS_DENSE as unknown as Record<string, unknown>,
+        runtime: TABS_RUNTIME_DENSE,
+      },
+      {
+        label: 'Overflow scroll',
+        description: 'Many tabs triggering horizontal scroll',
+        props: TABS_PROPS_OVERFLOW as unknown as Record<string, unknown>,
+        runtime: TABS_RUNTIME_OVERFLOW,
+      },
+    ],
   },
 };
 

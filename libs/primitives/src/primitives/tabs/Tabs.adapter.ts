@@ -22,6 +22,7 @@ export function buildTabsViewModel(input: BuildTabsViewModelInput): TabsViewProp
     activeKey: input.presentation.activeKey,
     overflowMode: input.presentation.overflow?.mode ?? 'scroll',
     collapseBelow: input.presentation.overflow?.collapseBelow,
+    variant: input.presentation.variant ?? 'line',
     dense: input.presentation.dense ?? false,
   };
 }

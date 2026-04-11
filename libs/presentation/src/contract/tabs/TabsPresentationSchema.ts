@@ -4,6 +4,9 @@ export const TabsOverflowModeSchema = z.enum(['scroll', 'menu']);
 
 export const TabsResponsiveBreakpointSchema = z.enum(['sm', 'md', 'lg']);
 
+export const TabsVariantSchema = z.enum(['line', 'pill']);
+export type TabsVariant = z.infer<typeof TabsVariantSchema>;
+
 export const TabsItemSchema = z
   .object({
     key: z.string().min(1),
@@ -70,6 +73,8 @@ export const TabsPresentationSchema = z
     overflow: TabsOverflowSchema.optional(),
 
     dense: z.boolean().optional(),
+
+    variant: TabsVariantSchema.optional(),
   })
   .strict()
   .superRefine((value, ctx) => {

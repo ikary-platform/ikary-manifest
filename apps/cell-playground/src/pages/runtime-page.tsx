@@ -1371,9 +1371,10 @@ export function RuntimePage({ primitive, backPath = '/' }: RuntimePageProps) {
   const runtimeRootPath = toTabPath('primitives');
 
   const demo = primitive && PRIMITIVE_DEMOS[primitive] ? PRIMITIVE_DEMOS[primitive] : DEFAULT_DEMO;
+  const demoScenario = demo.scenarios[0];
 
-  const [propsState, onPropsChange] = useJsonState<Record<string, unknown>>(demo.props);
-  const [runtimeState, onRuntimeChange] = useJsonState<Record<string, unknown>>(demo.runtime);
+  const [propsState, onPropsChange] = useJsonState<Record<string, unknown>>(demoScenario.props);
+  const [runtimeState, onRuntimeChange] = useJsonState<Record<string, unknown>>(demoScenario.runtime);
   const [rightTab, setRightTab] = useState<RightTab>('preview');
   const [documentationState, setDocumentationState] = useState<'idle' | 'loading' | 'loaded' | 'missing'>('idle');
   const [documentationMarkdown, setDocumentationMarkdown] = useState<string | null>(null);
@@ -1465,11 +1466,11 @@ export function RuntimePage({ primitive, backPath = '/' }: RuntimePageProps) {
           Runtime
         </button>
         <span className="text-gray-300 dark:text-gray-600">/</span>
-        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{demo.label}</span>
-        {demo.description && (
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{demoScenario.label}</span>
+        {demoScenario.description && (
           <>
             <span className="text-gray-300 dark:text-gray-600 hidden sm:inline">/</span>
-            <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:inline">{demo.description}</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:inline">{demoScenario.description}</span>
           </>
         )}
         <span
