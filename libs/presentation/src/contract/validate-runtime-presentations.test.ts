@@ -67,6 +67,46 @@ import {
   validateRuntimeTogglePresentation,
   parseRuntimeTogglePresentation,
 } from './toggle/validate-runtime-toggle-presentation';
+import {
+  validateRuntimeAlertPresentation,
+  parseRuntimeAlertPresentation,
+} from './alert/validate-runtime-alert-presentation';
+import {
+  validateRuntimeAvatarPresentation,
+  parseRuntimeAvatarPresentation,
+} from './avatar/validate-runtime-avatar-presentation';
+import {
+  validateRuntimeBadgePresentation,
+  parseRuntimeBadgePresentation,
+} from './badge/validate-runtime-badge-presentation';
+import {
+  validateRuntimeBreadcrumbPresentation,
+  parseRuntimeBreadcrumbPresentation,
+} from './breadcrumb/validate-runtime-breadcrumb-presentation';
+import {
+  validateRuntimeButtonPresentation,
+  parseRuntimeButtonPresentation,
+} from './button/validate-runtime-button-presentation';
+import {
+  validateRuntimeCardPresentation,
+  parseRuntimeCardPresentation,
+} from './card/validate-runtime-card-presentation';
+import {
+  validateRuntimeLabelPresentation,
+  parseRuntimeLabelPresentation,
+} from './label/validate-runtime-label-presentation';
+import {
+  validateRuntimeProgressPresentation,
+  parseRuntimeProgressPresentation,
+} from './progress/validate-runtime-progress-presentation';
+import {
+  validateRuntimeSeparatorPresentation,
+  parseRuntimeSeparatorPresentation,
+} from './separator/validate-runtime-separator-presentation';
+import {
+  validateRuntimeSkeletonPresentation,
+  parseRuntimeSkeletonPresentation,
+} from './skeleton/validate-runtime-skeleton-presentation';
 
 // ── ActivityFeed ──────────────────────────────────────────────────────────────
 
@@ -1010,5 +1050,353 @@ describe('DetailPage schema superRefine branches', () => {
       ],
     });
     expect(result.ok).toBe(true);
+  });
+});
+
+// ── Alert ─────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeAlertPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeAlertPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with all fields provided', () => {
+    const result = validateRuntimeAlertPresentation({ variant: 'destructive', title: 'Error', description: 'Something went wrong' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeAlertPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for unknown field', () => {
+    const result = validateRuntimeAlertPresentation({ unknownField: true });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeAlertPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeAlertPresentation({})).not.toThrow();
+  });
+
+  it('parseRuntimeAlertPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeAlertPresentation(null)).toThrow();
+  });
+});
+
+// ── Avatar ────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeAvatarPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeAvatarPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with all fields provided', () => {
+    const result = validateRuntimeAvatarPresentation({ src: 'https://example.com/avatar.png', alt: 'User', fallback: 'AB', size: 'lg' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeAvatarPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for invalid size enum', () => {
+    const result = validateRuntimeAvatarPresentation({ size: 'xl' });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeAvatarPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeAvatarPresentation({ fallback: 'JD' })).not.toThrow();
+  });
+
+  it('parseRuntimeAvatarPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeAvatarPresentation(null)).toThrow();
+  });
+});
+
+// ── Badge ─────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeBadgePresentation', () => {
+  const valid = { label: 'Active' };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeBadgePresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with variant', () => {
+    const result = validateRuntimeBadgePresentation({ label: 'Error', variant: 'destructive' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false when label is missing', () => {
+    const result = validateRuntimeBadgePresentation({});
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeBadgePresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeBadgePresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeBadgePresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeBadgePresentation throws for invalid input', () => {
+    expect(() => parseRuntimeBadgePresentation({})).toThrow();
+  });
+});
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeBreadcrumbPresentation', () => {
+  const valid = { items: [{ label: 'Home', href: '/' }, { label: 'Settings' }] };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeBreadcrumbPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with separator', () => {
+    const result = validateRuntimeBreadcrumbPresentation({ items: [{ label: 'Home' }], separator: 'chevron' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false when items is missing', () => {
+    const result = validateRuntimeBreadcrumbPresentation({});
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false when items array is empty', () => {
+    const result = validateRuntimeBreadcrumbPresentation({ items: [] });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeBreadcrumbPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeBreadcrumbPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeBreadcrumbPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeBreadcrumbPresentation({})).toThrow();
+  });
+});
+
+// ── Button ────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeButtonPresentation', () => {
+  const valid = { label: 'Submit' };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeButtonPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with all optional fields', () => {
+    const result = validateRuntimeButtonPresentation({ label: 'Delete', variant: 'destructive', size: 'sm', disabled: true, loading: false, buttonType: 'submit' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false when label is missing', () => {
+    const result = validateRuntimeButtonPresentation({});
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeButtonPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeButtonPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeButtonPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeButtonPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeButtonPresentation({})).toThrow();
+  });
+});
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeCardPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeCardPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with all fields provided', () => {
+    const result = validateRuntimeCardPresentation({ title: 'My Card', description: 'A card', content: 'Body text', footer: 'Footer' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeCardPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for unknown field', () => {
+    const result = validateRuntimeCardPresentation({ unknownField: 'x' });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeCardPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeCardPresentation({ title: 'Hello' })).not.toThrow();
+  });
+
+  it('parseRuntimeCardPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeCardPresentation(null)).toThrow();
+  });
+});
+
+// ── Label ─────────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeLabelPresentation', () => {
+  const valid = { text: 'Email address' };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeLabelPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with optional fields', () => {
+    const result = validateRuntimeLabelPresentation({ text: 'Name', htmlFor: 'name-input', required: true });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false when text is missing', () => {
+    const result = validateRuntimeLabelPresentation({});
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeLabelPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeLabelPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeLabelPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeLabelPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeLabelPresentation({})).toThrow();
+  });
+});
+
+// ── Progress ──────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeProgressPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeProgressPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with value and label', () => {
+    const result = validateRuntimeProgressPresentation({ value: 75, label: 'Loading', showValue: true });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeProgressPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false when value is out of range', () => {
+    const result = validateRuntimeProgressPresentation({ value: 150 });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeProgressPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeProgressPresentation({ value: 50 })).not.toThrow();
+  });
+
+  it('parseRuntimeProgressPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeProgressPresentation(null)).toThrow();
+  });
+});
+
+// ── Separator ─────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeSeparatorPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeSeparatorPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with orientation and decorative', () => {
+    const result = validateRuntimeSeparatorPresentation({ orientation: 'vertical', decorative: true });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeSeparatorPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for invalid orientation enum', () => {
+    const result = validateRuntimeSeparatorPresentation({ orientation: 'diagonal' });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeSeparatorPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeSeparatorPresentation({ orientation: 'horizontal' })).not.toThrow();
+  });
+
+  it('parseRuntimeSeparatorPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeSeparatorPresentation(null)).toThrow();
+  });
+});
+
+// ── Skeleton ──────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeSkeletonPresentation', () => {
+  it('returns ok:true for valid input (all optional)', () => {
+    const result = validateRuntimeSkeletonPresentation({});
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:true with all fields provided', () => {
+    const result = validateRuntimeSkeletonPresentation({ count: 3, heightClass: 'h-4', widthClass: 'w-full' });
+    expect(result.ok).toBe(true);
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeSkeletonPresentation(null);
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false when count is less than 1', () => {
+    const result = validateRuntimeSkeletonPresentation({ count: 0 });
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeSkeletonPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeSkeletonPresentation({ count: 2 })).not.toThrow();
+  });
+
+  it('parseRuntimeSkeletonPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeSkeletonPresentation(null)).toThrow();
   });
 });
