@@ -44,20 +44,19 @@ export function RadioGroup({
               onBlur={onBlur}
               onChange={(event) => onValueChange?.(event.currentTarget.value)}
               className={[
-                'mt-0.5 h-4 w-4 border-gray-300 text-blue-600',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+                'mt-0.5 h-4 w-4 border-border text-primary',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 'disabled:cursor-not-allowed disabled:opacity-60',
-                'dark:border-gray-600 dark:bg-gray-900',
-                invalid ? 'border-red-400 dark:border-red-700' : '',
+                invalid ? 'border-destructive' : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
             />
 
-            <span className="min-w-0 text-sm text-gray-700 dark:text-gray-200">
+            <span className="min-w-0 text-sm text-foreground">
               <span className="block">{option.label}</span>
               {option.description ? (
-                <span className="block text-xs text-gray-500 dark:text-gray-400">{option.description}</span>
+                <span className="block text-xs text-muted-foreground">{option.description}</span>
               ) : null}
             </span>
           </label>

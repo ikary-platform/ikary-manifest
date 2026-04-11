@@ -28,12 +28,21 @@ function serveRepoRoot() {
 export default defineConfig({
   plugins: [react(), serveRepoRoot()],
   base: '/playground/',
+  server: {
+    port: 4505,
+    strictPort: true,
+  },
+  preview: {
+    port: 4505,
+  },
   resolve: {
     alias: {
       '@ikary/contract': path.resolve(__dirname, '../../libs/contract/src/index.ts'),
       '@ikary/engine': path.resolve(__dirname, '../../libs/engine/src/index.ts'),
       '@ikary/presentation': path.resolve(__dirname, '../../libs/presentation/src/index.ts'),
       '@ikary/primitive-contract': path.resolve(__dirname, '../../libs/primitive-contract/src/index.ts'),
+      '@ikary/primitive-studio/ui': path.resolve(__dirname, '../../libs/primitive-studio/src/ui/index.ts'),
+      '@ikary/primitive-studio': path.resolve(__dirname, '../../libs/primitive-studio/src/index.ts'),
       '@ikary/primitives/registry': path.resolve(__dirname, '../../libs/primitives/src/registry.ts'),
       '@ikary/primitives': path.resolve(__dirname, '../../libs/primitives/src/index.ts'),
     },

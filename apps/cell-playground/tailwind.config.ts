@@ -1,12 +1,13 @@
 import type { Config } from 'tailwindcss';
+import animate from 'tailwindcss-animate';
 
 export default {
   darkMode: 'class',
   content: [
     './index.html',
     './src/**/*.{ts,tsx}',
-    '../../libs/cell-runtime/src/**/*.{ts,tsx}',
-    '../../libs/cell-runtime-ui/src/**/*.{ts,tsx}',
+    '../../libs/primitives/src/**/*.{ts,tsx}',
+    '../../libs/primitive-studio/src/**/*.{ts,tsx}',
   ],
   theme: {
     extend: {
@@ -30,5 +31,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [animate],
 } satisfies Config;

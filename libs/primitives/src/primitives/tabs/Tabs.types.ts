@@ -2,6 +2,8 @@ export type TabsOverflowMode = 'scroll' | 'menu';
 
 export type TabsResponsiveBreakpoint = 'sm' | 'md' | 'lg';
 
+export type TabsVariant = 'line' | 'pill';
+
 export type TabsResolvedItem = {
   key: string;
   label: string;
@@ -19,5 +21,6 @@ export type TabsViewProps = {
   overflowMode?: TabsOverflowMode;
   collapseBelow?: TabsResponsiveBreakpoint;
 
+  variant?: TabsVariant;
   dense?: boolean;
 };

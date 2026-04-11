@@ -48,15 +48,10 @@ export function Pagination({
       ? buildCompactEllipsisPageItems(currentPage, safeTotalPages, maxVisiblePages)
       : [];
 
-  const containerClass = [
-    'rounded-md border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900',
-  ].join(' ');
-
+  const containerClass = 'rounded-md border bg-background px-3 py-2';
   const layoutClass = ['flex w-full items-center justify-between gap-3', stackLayoutClass(stackBelow)].join(' ');
-
   const leftClass = 'flex flex-wrap items-center gap-3';
   const rightClass = 'flex flex-wrap items-center gap-2';
-
   const controlHeightClass = dense ? 'h-7' : 'h-8';
   const textClass = dense ? 'text-[11px]' : 'text-xs';
 
@@ -65,13 +60,13 @@ export function Pagination({
       <div className={layoutClass}>
         <div className={leftClass}>
           {showRange && (
-            <span className={`${textClass} text-gray-500 dark:text-gray-400`}>
+            <span className={`${textClass} text-muted-foreground`}>
               {formatRange(rangeFormat, rangeStart, rangeEnd, totalItems)}
             </span>
           )}
 
           {showSummary && (
-            <span className={`${textClass} text-gray-500 dark:text-gray-400`}>
+            <span className={`${textClass} text-muted-foreground`}>
               {formatSummary(summaryFormat, currentPage, safeTotalPages)}
             </span>
           )}
@@ -79,12 +74,12 @@ export function Pagination({
 
         <div className={rightClass}>
           {showPageSize && onPageSizeChange && (
-            <label className={`flex items-center gap-2 ${textClass} text-gray-500 dark:text-gray-400`}>
+            <label className={`flex items-center gap-2 ${textClass} text-muted-foreground`}>
               <span>{pageSizeLabel}</span>
               <select
                 value={pageSize}
                 onChange={(event) => onPageSizeChange(Number(event.target.value))}
-                className={`${controlHeightClass} rounded border border-gray-200 bg-white px-2 text-xs text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200`}
+                className={`${controlHeightClass} rounded border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring`}
                 aria-label={pageSizeLabel}
               >
                 {pageSizeOptions.map((option) => (
@@ -119,7 +114,7 @@ export function Pagination({
               <div className={`items-center gap-1 ${collapsePageListClass(collapsePageListBelow)}`}>
                 {pageItems.map((item, index) =>
                   item === 'ellipsis' ? (
-                    <span key={`ellipsis-${index}`} className={`${textClass} px-1 text-gray-400 dark:text-gray-500`}>
+                    <span key={`ellipsis-${index}`} className={`${textClass} px-1 text-muted-foreground`}>
                       …
                     </span>
                   ) : (
@@ -177,9 +172,9 @@ function NavButton({
       disabled={disabled}
       className={[
         heightClass,
-        'rounded border border-gray-200 px-2.5 text-xs text-gray-700 transition-colors',
-        'hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40',
-        'dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800',
+        'rounded border border-input px-2.5 text-xs text-foreground transition-colors',
+        'hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40',
+        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
       ].join(' ')}
     >
       {label}
@@ -206,9 +201,10 @@ function PageButton({
       className={[
         heightClass,
         'min-w-8 rounded border px-2 text-xs transition-colors',
+        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         active
-          ? 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-300'
-          : 'border-gray-200 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800',
+          ? 'border-primary/30 bg-primary/5 text-primary font-medium'
+          : 'border-input text-foreground hover:bg-muted',
       ].join(' ')}
     >
       {page}

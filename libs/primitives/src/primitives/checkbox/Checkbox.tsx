@@ -29,11 +29,10 @@ export function Checkbox({
       onBlur={onBlur}
       onChange={(event) => onCheckedChange?.(event.currentTarget.checked)}
       className={[
-        'mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+        'mt-0.5 h-4 w-4 rounded border-border text-primary',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         'disabled:cursor-not-allowed disabled:opacity-60',
-        'dark:border-gray-600 dark:bg-gray-900',
-        invalid ? 'border-red-400 dark:border-red-700' : '',
+        invalid ? 'border-destructive' : '',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -47,7 +46,7 @@ export function Checkbox({
   return (
     <label htmlFor={id} className="inline-flex items-start gap-2">
       {control}
-      <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
+      <span className="text-sm text-foreground">{label}</span>
     </label>
   );
 }

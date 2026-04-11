@@ -462,7 +462,7 @@ export function useIkaryForm(input: UseIkaryFormInput): UseIkaryFormResult {
 
   const sections = useMemo<UseIkaryFormResult['sections']>(
     () =>
-      config.sections.map((section) => {
+      (config.sections ?? []).map((section) => {
         const sectionPresentation = applyFormStateToSection({
           section,
           fieldErrors,
@@ -705,7 +705,7 @@ function resolveInitialExpandedSections(
   sections: FormSectionPresentation[],
   expandedSections: Record<string, boolean> | undefined,
 ): Record<string, boolean> {
-  const resolvedEntries = sections.map((section) => [
+  const resolvedEntries = (sections ?? []).map((section) => [
     section.key,
     expandedSections?.[section.key] ?? section.defaultExpanded ?? true,
   ]);
