@@ -46,7 +46,7 @@ function TabTrigger({
   dense: boolean;
   variant: TabsVariant;
 }) {
-  const className = triggerCn({ active, dense, variant, disabled: item.disabled });
+  const className = triggerCn({ dense, variant, disabled: item.disabled });
   const content = (
     <>
       <span className="truncate">{item.label}</span>
@@ -101,12 +101,12 @@ function CountBadge({
       className={cn(
         'inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold',
         variant === 'line' && [
-          'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
-          active && 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300',
+          'bg-muted text-muted-foreground',
+          active && 'bg-primary/10 text-primary',
         ],
         variant === 'pill' && [
-          'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400',
-          active && 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+          'bg-muted text-muted-foreground',
+          active && 'bg-background text-foreground',
         ],
       )}
     >
@@ -118,46 +118,44 @@ function CountBadge({
 function listCn(variant: TabsVariant, dense: boolean): string {
   return cn(
     'flex min-w-max items-center',
-    dense ? 'gap-0.5' : 'gap-1',
-    variant === 'line' && 'border-b border-gray-200 pb-1 dark:border-gray-800',
-    variant === 'pill' && 'rounded-lg bg-gray-100 p-1 dark:bg-gray-800/50',
+    variant === 'line' && 'h-auto rounded-none border-b bg-transparent p-0',
+    variant === 'pill' && [
+      'rounded-md bg-muted p-1 text-muted-foreground',
+      'gap-1',
+      dense ? 'h-8' : 'h-10',
+    ],
   );
 }
 
 function triggerCn({
-  active,
   dense,
   variant,
   disabled,
 }: {
-  active: boolean;
   dense: boolean;
   variant: TabsVariant;
   disabled?: boolean;
 }): string {
   const base = cn(
-    'inline-flex max-w-full items-center gap-2 font-medium transition-colors',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
-    dense ? 'h-8 px-2.5 text-xs' : 'h-9 px-3 text-sm',
-    disabled && 'cursor-not-allowed opacity-50',
+    'inline-flex items-center justify-center whitespace-nowrap gap-2 font-semibold transition-none',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0',
+    disabled && 'pointer-events-none opacity-50',
   );
 
   if (variant === 'line') {
     return cn(
       base,
-      'rounded-t-md border-b-2',
-      active
-        ? 'border-blue-600 text-blue-700 dark:border-blue-400 dark:text-blue-300'
-        : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
+      'relative rounded-none border-b-2 border-b-transparent bg-transparent text-muted-foreground shadow-none',
+      dense ? 'h-8 px-3 pb-2 pt-1.5 text-xs' : 'h-9 px-4 pb-3 pt-2 text-sm',
+      'data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none',
     );
   }
 
   // pill
   return cn(
     base,
-    'rounded-md',
-    active
-      ? 'bg-white shadow-sm text-gray-900 dark:bg-gray-900 dark:text-gray-100'
-      : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100',
+    'rounded-sm text-muted-foreground ring-offset-background',
+    dense ? 'h-7 px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm',
+    'data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
   );
 }

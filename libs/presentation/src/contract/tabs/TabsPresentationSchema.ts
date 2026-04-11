@@ -62,19 +62,19 @@ export const TabsPresentationSchema = z
   .object({
     type: z.literal('tabs'),
 
-    items: z.array(TabsItemSchema).min(1),
+    items: z.array(TabsItemSchema).min(1).describe('Tab items to display. Each requires key, label, and href or actionKey.'),
 
     /**
      * Optional active item key.
      * Runtime may also control active state.
      */
-    activeKey: z.string().min(1).optional(),
+    activeKey: z.string().min(1).optional().describe('Key of the currently active tab. Runtime can control this instead.'),
 
-    overflow: TabsOverflowSchema.optional(),
+    overflow: TabsOverflowSchema.optional().describe('How to handle overflow when tabs exceed container width.'),
 
-    dense: z.boolean().optional(),
+    dense: z.boolean().optional().describe('Compact height variant — h-8 (dense) vs h-9 (default).'),
 
-    variant: TabsVariantSchema.optional(),
+    variant: TabsVariantSchema.optional().describe('Visual style: "line" (underline border, default) or "pill" (segmented button).'),
   })
   .strict()
   .superRefine((value, ctx) => {

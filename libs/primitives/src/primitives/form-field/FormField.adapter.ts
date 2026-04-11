@@ -70,7 +70,7 @@ export function buildFormFieldViewModel(input: BuildFormFieldViewModelInput): Fo
       ...common,
       variant: 'choice-group',
       legend: input.presentation.legend,
-      options: input.presentation.options.map(mapOption),
+      options: (input.presentation.options ?? []).map(mapOption),
       value: typeof input.value === 'string' ? input.value : undefined,
       onValueChange: (value: string) => input.onValueChange?.(value),
     };

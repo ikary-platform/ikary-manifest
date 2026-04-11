@@ -1,0 +1,6 @@
+[
+  {},
+  { "orientation": "horizontal" },
+  { "orientation": "vertical" },
+  { "orientation": "horizontal", "decorative": true }
+]

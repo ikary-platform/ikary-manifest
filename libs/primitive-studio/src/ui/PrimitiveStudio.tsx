@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PrimitiveSidebar } from './components/PrimitiveSidebar';
 import { PropsEditor } from './components/PropsEditor';
+import type { ContractField } from './components/PropsEditor';
 import { PrimitivePreview } from './components/PrimitivePreview';
 import { usePropsEditorState } from './hooks/usePropsEditorState';
 import type { PrimitiveCatalogEntry } from '../shared/catalog';
@@ -13,12 +14,27 @@ export interface PrimitiveStudioProps {
    * Pass primitive-specific examples here (e.g. from each primitive's .example.ts).
    */
   scenariosByKey?: Record<string, ScenarioDefinition[]>;
+  /**
+   * Map from primitive key → contract field list.
+   * When provided, a CONTRACT SCHEMA panel is rendered below the editors.
+   */
+  contractFieldsByKey?: Record<string, ContractField[]>;
   /** Initially selected primitive key */
   initialKey?: string | null;
+  /**
+   * Called whenever the user selects a different primitive.
+   * Use this to sync the URL so browser navigation and reload work correctly.
+   */
+  onSelectPrimitive?: (key: string) => void;
 }
 
-export function PrimitiveStudio({ catalog, scenariosByKey = {}, initialKey = null }: PrimitiveStudioProps) {
+export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsByKey = {}, initialKey = null, onSelectPrimitive }: PrimitiveStudioProps) {
   const [selectedKey, setSelectedKey] = useState<string | null>(initialKey);
+
+  function handleSelectPrimitive(key: string) {
+    setSelectedKey(key);
+    onSelectPrimitive?.(key);
+  }
   const [activeScenario, setActiveScenario] = useState(0);
   const [selectedVersion, setSelectedVersion] = useState<string | undefined>(undefined);
 
@@ -71,7 +87,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, initialKey = nul
       <PrimitiveSidebar
         entries={catalog}
         selectedKey={selectedKey}
-        onSelect={(key) => setSelectedKey(key)}
+        onSelect={handleSelectPrimitive}
       />
 
       {/* Center: props editor */}
@@ -83,6 +99,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, initialKey = nul
         scenarios={scenarios}
         activeScenario={activeScenario}
         onScenarioSelect={handleScenarioSelect}
+        contractFields={selectedKey ? contractFieldsByKey[selectedKey] : undefined}
       />
 
       {/* Right: live preview */}

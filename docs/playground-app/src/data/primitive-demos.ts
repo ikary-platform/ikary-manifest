@@ -26,7 +26,17 @@ import type {
   TabsPresentation,
   TextareaPresentation,
   TogglePresentation,
-} from '@ikary/cell-contract-presentation';
+  BadgePresentation,
+  SeparatorPresentation,
+  LabelPresentation,
+  ButtonPresentation,
+  AlertPresentation,
+  ProgressPresentation,
+  SkeletonPresentation,
+  AvatarPresentation,
+  BreadcrumbPresentation,
+  CardPresentation,
+} from '@ikary/presentation';
 
 type ContractPresentationType =
   | 'activity-feed'
@@ -46,6 +56,16 @@ type ContractPresentationType =
   | 'select'
   | 'textarea'
   | 'toggle'
+  | 'badge'
+  | 'separator'
+  | 'label'
+  | 'button'
+  | 'alert'
+  | 'progress'
+  | 'skeleton'
+  | 'avatar'
+  | 'breadcrumb'
+  | 'card'
   | DataGridPresentation['type']
   | DetailItemPresentation['type']
   | DetailSectionPresentation['type']
@@ -99,6 +119,16 @@ const LIST_PAGE_CONTRACT_TYPE: ListPagePresentation['type'] = 'list-page';
 const PAGE_HEADER_CONTRACT_TYPE: PageHeaderPresentation['type'] = 'page-header';
 const PAGINATION_CONTRACT_TYPE: PaginationPresentation['type'] = 'pagination';
 const TABS_CONTRACT_TYPE: TabsPresentation['type'] = 'tabs';
+const BADGE_CONTRACT_TYPE = 'badge' as const;
+const SEPARATOR_CONTRACT_TYPE = 'separator' as const;
+const LABEL_CONTRACT_TYPE = 'label' as const;
+const BUTTON_CONTRACT_TYPE = 'button' as const;
+const ALERT_CONTRACT_TYPE = 'alert' as const;
+const PROGRESS_CONTRACT_TYPE = 'progress' as const;
+const SKELETON_CONTRACT_TYPE = 'skeleton' as const;
+const AVATAR_CONTRACT_TYPE = 'avatar' as const;
+const BREADCRUMB_CONTRACT_TYPE = 'breadcrumb' as const;
+const CARD_CONTRACT_TYPE = 'card' as const;
 
 const DATA_GRID_PROPS: DataGridPresentation = {
   type: DATA_GRID_CONTRACT_TYPE,
@@ -1583,12 +1613,32 @@ export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemoEntry> = {
   pagination: {
     primitive: 'pagination',
     contractType: PAGINATION_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Pagination',
-      description: 'Preview through PrimitiveRenderer using presentation contract props + runtime state',
-      props: PAGINATION_PROPS as unknown as Record<string, unknown>,
-      runtime: PAGINATION_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'Middle page',
+        description: 'Page 2 of 6 — range, page size, and full nav controls visible',
+        props: PAGINATION_PROPS as unknown as Record<string, unknown>,
+        runtime: PAGINATION_RUNTIME,
+      },
+      {
+        label: 'First page',
+        description: 'Page 1 — First and Previous buttons disabled',
+        props: PAGINATION_PROPS as unknown as Record<string, unknown>,
+        runtime: { page: 1, pageSize: 25, totalItems: 132, totalPages: 6 },
+      },
+      {
+        label: 'Last page',
+        description: 'Page 6 — Next and Last buttons disabled',
+        props: PAGINATION_PROPS as unknown as Record<string, unknown>,
+        runtime: { page: 6, pageSize: 25, totalItems: 132, totalPages: 6 },
+      },
+      {
+        label: 'Single page (hidden)',
+        description: 'hideWhenSinglePage=true with only 1 page — renders nothing',
+        props: PAGINATION_PROPS as unknown as Record<string, unknown>,
+        runtime: { page: 1, pageSize: 50, totalItems: 12, totalPages: 1 },
+      },
+    ],
   },
 
   'page-header': {
@@ -1715,78 +1765,232 @@ export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemoEntry> = {
   input: {
     primitive: 'input',
     contractType: INPUT_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Input',
-      description: 'Preview through PrimitiveRenderer using InputPresentation contract props + runtime state',
-      props: INPUT_PROPS as unknown as Record<string, unknown>,
-      runtime: INPUT_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'Text with adornment',
+        description: 'Text input with leading "@" adornment and controlled value',
+        props: INPUT_PROPS as unknown as Record<string, unknown>,
+        runtime: INPUT_RUNTIME,
+      },
+      {
+        label: 'Disabled',
+        description: 'Input in disabled state',
+        props: { placeholder: 'Cannot edit', disabled: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Invalid',
+        description: 'Input with invalid/error styling',
+        props: { placeholder: 'Enter email', invalid: true } as unknown as Record<string, unknown>,
+        runtime: { value: 'not-an-email' },
+      },
+      {
+        label: 'Loading',
+        description: 'Input with inline spinner (async lookup)',
+        props: { placeholder: 'Search…', loading: true } as unknown as Record<string, unknown>,
+        runtime: { value: 'ikary' },
+      },
+    ],
   },
 
   textarea: {
     primitive: 'textarea',
     contractType: TEXTAREA_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Textarea',
-      description: 'Preview through PrimitiveRenderer using TextareaPresentation contract props + runtime state',
-      props: TEXTAREA_PROPS as unknown as Record<string, unknown>,
-      runtime: TEXTAREA_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'With value',
+        description: 'Textarea with preset content',
+        props: TEXTAREA_PROPS as unknown as Record<string, unknown>,
+        runtime: TEXTAREA_RUNTIME,
+      },
+      {
+        label: 'Disabled',
+        description: 'Textarea in disabled state',
+        props: { placeholder: 'Cannot edit', disabled: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Readonly',
+        description: 'Textarea in readonly mode',
+        props: { readonly: true, rows: 3 } as unknown as Record<string, unknown>,
+        runtime: { value: 'This content is read-only and cannot be modified.' },
+      },
+      {
+        label: 'Invalid',
+        description: 'Textarea with validation error styling',
+        props: { placeholder: 'Required field', invalid: true, required: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+    ],
   },
 
   select: {
     primitive: 'select',
     contractType: SELECT_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Select',
-      description: 'Preview through PrimitiveRenderer using SelectPresentation contract props + runtime state',
-      props: SELECT_PROPS as unknown as Record<string, unknown>,
-      runtime: SELECT_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'With value',
+        description: 'Select with a chosen option',
+        props: SELECT_PROPS as unknown as Record<string, unknown>,
+        runtime: SELECT_RUNTIME,
+      },
+      {
+        label: 'With placeholder',
+        description: 'Select showing placeholder (no selection)',
+        props: { ...SELECT_PROPS, placeholder: 'Choose region…' } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Disabled',
+        description: 'Select in disabled state',
+        props: { ...SELECT_PROPS, disabled: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Invalid',
+        description: 'Select with validation error styling',
+        props: { ...SELECT_PROPS, invalid: true, required: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+    ],
   },
 
   checkbox: {
     primitive: 'checkbox',
     contractType: CHECKBOX_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Checkbox',
-      description: 'Preview through PrimitiveRenderer using CheckboxPresentation contract props + runtime state',
-      props: CHECKBOX_PROPS as unknown as Record<string, unknown>,
-      runtime: CHECKBOX_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'Checked',
+        description: 'Checkbox in checked state',
+        props: CHECKBOX_PROPS as unknown as Record<string, unknown>,
+        runtime: CHECKBOX_RUNTIME,
+      },
+      {
+        label: 'Unchecked',
+        description: 'Checkbox in unchecked state',
+        props: { label: 'Subscribe to updates' } as unknown as Record<string, unknown>,
+        runtime: { checked: false },
+      },
+      {
+        label: 'Disabled',
+        description: 'Checkbox in disabled state',
+        props: { label: 'Managed by admin', disabled: true } as unknown as Record<string, unknown>,
+        runtime: { checked: true },
+      },
+      {
+        label: 'Invalid',
+        description: 'Checkbox with validation error styling',
+        props: { label: 'Accept terms (required)', invalid: true, required: true } as unknown as Record<string, unknown>,
+        runtime: { checked: false },
+      },
+    ],
   },
 
   'radio-group': {
     primitive: 'radio-group',
     contractType: RADIO_GROUP_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Radio Group',
-      description: 'Preview through PrimitiveRenderer using RadioGroupPresentation contract props + runtime state',
-      props: RADIO_GROUP_PROPS as unknown as Record<string, unknown>,
-      runtime: RADIO_GROUP_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'Vertical',
+        description: 'Vertical radio group with descriptions',
+        props: RADIO_GROUP_PROPS as unknown as Record<string, unknown>,
+        runtime: RADIO_GROUP_RUNTIME,
+      },
+      {
+        label: 'Horizontal',
+        description: 'Inline horizontal layout',
+        props: { direction: 'horizontal', options: [
+          { value: 'yes', label: 'Yes' },
+          { value: 'no', label: 'No' },
+          { value: 'maybe', label: 'Maybe' },
+        ] } as unknown as Record<string, unknown>,
+        runtime: { value: 'yes' },
+      },
+      {
+        label: 'With disabled option',
+        description: 'One option disabled in the group',
+        props: { direction: 'vertical', options: [
+          { value: 'starter', label: 'Starter' },
+          { value: 'pro', label: 'Pro' },
+          { value: 'enterprise', label: 'Enterprise', disabled: true },
+        ] } as unknown as Record<string, unknown>,
+        runtime: { value: 'pro' },
+      },
+    ],
   },
 
   toggle: {
     primitive: 'toggle',
     contractType: TOGGLE_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Toggle',
-      description: 'Preview through PrimitiveRenderer using TogglePresentation contract props + runtime state',
-      props: TOGGLE_PROPS as unknown as Record<string, unknown>,
-      runtime: TOGGLE_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'On',
+        description: 'Toggle in checked/on state',
+        props: TOGGLE_PROPS as unknown as Record<string, unknown>,
+        runtime: TOGGLE_RUNTIME,
+      },
+      {
+        label: 'Off',
+        description: 'Toggle in unchecked/off state',
+        props: { label: 'Public mode' } as unknown as Record<string, unknown>,
+        runtime: { checked: false },
+      },
+      {
+        label: 'Disabled',
+        description: 'Toggle that cannot be interacted with',
+        props: { label: 'Managed by SSO', disabled: true } as unknown as Record<string, unknown>,
+        runtime: { checked: true },
+      },
+      {
+        label: 'Loading',
+        description: 'Toggle with inline spinner (async state save)',
+        props: { label: 'Auto-sync', loading: true } as unknown as Record<string, unknown>,
+        runtime: { checked: true },
+      },
+    ],
   },
 
   'date-input': {
     primitive: 'date-input',
     contractType: DATE_INPUT_CONTRACT_TYPE,
-    scenarios: [{
-      label: 'Date Input',
-      description: 'Preview through PrimitiveRenderer using DateInputPresentation contract props + runtime state',
-      props: DATE_INPUT_PROPS as unknown as Record<string, unknown>,
-      runtime: DATE_INPUT_RUNTIME,
-    }],
+    scenarios: [
+      {
+        label: 'With value',
+        description: 'Popover calendar with a pre-selected date — click to reopen and pick another',
+        props: DATE_INPUT_PROPS as unknown as Record<string, unknown>,
+        runtime: DATE_INPUT_RUNTIME,
+      },
+      {
+        label: 'Empty',
+        description: 'No date selected — click the trigger to open the calendar popover',
+        props: {} as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Custom placeholder',
+        description: 'Trigger with a custom placeholder text',
+        props: { placeholder: 'Select a start date' } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+      {
+        label: 'Disabled',
+        description: 'Trigger is disabled; popover cannot be opened',
+        props: { disabled: true } as unknown as Record<string, unknown>,
+        runtime: { value: '2026-01-01' },
+      },
+      {
+        label: 'Readonly',
+        description: 'Trigger renders but popover is blocked from opening',
+        props: { readonly: true } as unknown as Record<string, unknown>,
+        runtime: { value: '2026-06-15' },
+      },
+      {
+        label: 'Invalid',
+        description: 'Trigger styled with destructive border for validation error state',
+        props: { invalid: true, required: true } as unknown as Record<string, unknown>,
+        runtime: {},
+      },
+    ],
   },
 
   'form-field': {
@@ -1813,6 +2017,17 @@ export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemoEntry> = {
 
   form: {
     primitive: 'form',
+    contractType: IKARY_FORM_CONTRACT_TYPE,
+    scenarios: [{
+      label: 'Ikary Form',
+      description: 'Preview through PrimitiveRenderer using IkaryFormPresentation contract props + runtime state',
+      props: IKARY_FORM_PROPS as unknown as Record<string, unknown>,
+      runtime: IKARY_FORM_RUNTIME,
+    }],
+  },
+
+  'ikary-form': {
+    primitive: 'ikary-form',
     contractType: IKARY_FORM_CONTRACT_TYPE,
     scenarios: [{
       label: 'Ikary Form',
@@ -1869,6 +2084,206 @@ export const PRIMITIVE_DEMOS: Record<string, PrimitiveDemoEntry> = {
       },
     ],
   },
+};
+
+// ─── Badge ────────────────────────────────────────────────────────────────────
+const BADGE_DEFAULT: BadgePresentation = { label: 'New' };
+const BADGE_SECONDARY: BadgePresentation = { label: 'Beta', variant: 'secondary' };
+const BADGE_DESTRUCTIVE: BadgePresentation = { label: 'Error', variant: 'destructive' };
+const BADGE_OUTLINE: BadgePresentation = { label: 'Draft', variant: 'outline' };
+
+PRIMITIVE_DEMOS['badge'] = {
+  primitive: 'badge',
+  contractType: BADGE_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Default', description: 'Primary badge variant', props: BADGE_DEFAULT as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Secondary', description: 'Secondary / neutral variant', props: BADGE_SECONDARY as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Destructive', description: 'Error / danger variant', props: BADGE_DESTRUCTIVE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Outline', description: 'Outline / subdued variant', props: BADGE_OUTLINE as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Separator ────────────────────────────────────────────────────────────────
+const SEPARATOR_HORIZONTAL: SeparatorPresentation = { orientation: 'horizontal' };
+const SEPARATOR_VERTICAL: SeparatorPresentation = { orientation: 'vertical' };
+const SEPARATOR_DECORATIVE: SeparatorPresentation = { orientation: 'horizontal', decorative: true };
+
+PRIMITIVE_DEMOS['separator'] = {
+  primitive: 'separator',
+  contractType: SEPARATOR_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Horizontal', description: 'Full-width horizontal rule', props: SEPARATOR_HORIZONTAL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Vertical', description: 'Inline vertical divider', props: SEPARATOR_VERTICAL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Decorative', description: 'Decorative (aria-hidden)', props: SEPARATOR_DECORATIVE as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+const LABEL_BASIC: LabelPresentation = { text: 'Email address' };
+const LABEL_WITH_FOR: LabelPresentation = { text: 'Full name', htmlFor: 'full-name' };
+const LABEL_REQUIRED: LabelPresentation = { text: 'Password', htmlFor: 'password', required: true };
+
+PRIMITIVE_DEMOS['label'] = {
+  primitive: 'label',
+  contractType: LABEL_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Basic', description: 'Plain label', props: LABEL_BASIC as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'With htmlFor', description: 'Associated with a form control id', props: LABEL_WITH_FOR as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Required', description: 'Required marker appended', props: LABEL_REQUIRED as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Button ───────────────────────────────────────────────────────────────────
+const BUTTON_DEFAULT: ButtonPresentation = { label: 'Save changes' };
+const BUTTON_DESTRUCTIVE: ButtonPresentation = { label: 'Delete', variant: 'destructive' };
+const BUTTON_OUTLINE: ButtonPresentation = { label: 'Cancel', variant: 'outline' };
+const BUTTON_SECONDARY: ButtonPresentation = { label: 'Export', variant: 'secondary' };
+const BUTTON_GHOST: ButtonPresentation = { label: 'More', variant: 'ghost' };
+const BUTTON_LOADING: ButtonPresentation = { label: 'Saving…', loading: true };
+const BUTTON_SM: ButtonPresentation = { label: 'Small', size: 'sm' };
+const BUTTON_LG: ButtonPresentation = { label: 'Large action', size: 'lg' };
+
+PRIMITIVE_DEMOS['button'] = {
+  primitive: 'button',
+  contractType: BUTTON_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Default', description: 'Primary action button', props: BUTTON_DEFAULT as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Destructive', description: 'Danger / irreversible action', props: BUTTON_DESTRUCTIVE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Outline', description: 'Secondary border button', props: BUTTON_OUTLINE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Secondary', description: 'Lower-priority action', props: BUTTON_SECONDARY as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Ghost', description: 'Minimal visual weight', props: BUTTON_GHOST as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Loading', description: 'Shows spinner and disables button', props: BUTTON_LOADING as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Small', description: 'sm size variant', props: BUTTON_SM as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Large', description: 'lg size variant', props: BUTTON_LG as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Alert ────────────────────────────────────────────────────────────────────
+const ALERT_DEFAULT: AlertPresentation = { title: 'Heads up!', description: 'You can change your settings in the preferences page.' };
+const ALERT_DESTRUCTIVE: AlertPresentation = { variant: 'destructive', title: 'Error', description: 'Your session has expired. Please log in again.' };
+const ALERT_TITLE_ONLY: AlertPresentation = { title: 'Deployment complete' };
+const ALERT_DESC_ONLY: AlertPresentation = { description: 'Background sync is running. Changes may take a moment to appear.' };
+
+PRIMITIVE_DEMOS['alert'] = {
+  primitive: 'alert',
+  contractType: ALERT_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Default', description: 'Neutral informational alert', props: ALERT_DEFAULT as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Destructive', description: 'Error / critical warning', props: ALERT_DESTRUCTIVE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Title only', description: 'Alert without description', props: ALERT_TITLE_ONLY as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Description only', description: 'Alert without title', props: ALERT_DESC_ONLY as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Progress ─────────────────────────────────────────────────────────────────
+const PROGRESS_ZERO: ProgressPresentation = { value: 0, label: 'Starting' };
+const PROGRESS_HALF: ProgressPresentation = { value: 35, label: 'Upload progress', showValue: true };
+const PROGRESS_MOSTLY: ProgressPresentation = { value: 75, showValue: true };
+const PROGRESS_COMPLETE: ProgressPresentation = { value: 100, label: 'Complete', showValue: true };
+const PROGRESS_INDETERMINATE: ProgressPresentation = { label: 'Loading…' };
+
+PRIMITIVE_DEMOS['progress'] = {
+  primitive: 'progress',
+  contractType: PROGRESS_CONTRACT_TYPE,
+  scenarios: [
+    { label: '0%', description: 'Not yet started', props: PROGRESS_ZERO as unknown as Record<string, unknown>, runtime: {} },
+    { label: '35%', description: 'With value display', props: PROGRESS_HALF as unknown as Record<string, unknown>, runtime: {} },
+    { label: '75%', description: 'Mostly complete', props: PROGRESS_MOSTLY as unknown as Record<string, unknown>, runtime: {} },
+    { label: '100%', description: 'Fully complete', props: PROGRESS_COMPLETE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Indeterminate', description: 'No value — pulsing animation', props: PROGRESS_INDETERMINATE as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+const SKELETON_SINGLE: SkeletonPresentation = {};
+const SKELETON_PARAGRAPH: SkeletonPresentation = { count: 3 };
+const SKELETON_NARROW: SkeletonPresentation = { heightClass: 'h-4', widthClass: 'w-3/4' };
+const SKELETON_CARD: SkeletonPresentation = { heightClass: 'h-32', widthClass: 'w-full' };
+
+PRIMITIVE_DEMOS['skeleton'] = {
+  primitive: 'skeleton',
+  contractType: SKELETON_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Single line', description: 'One skeleton row', props: SKELETON_SINGLE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Paragraph', description: 'Three rows simulating text', props: SKELETON_PARAGRAPH as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Narrow line', description: 'Short 75%-width row', props: SKELETON_NARROW as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Card placeholder', description: 'Tall block for image or card', props: SKELETON_CARD as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+const AVATAR_INITIALS: AvatarPresentation = { fallback: 'JD' };
+const AVATAR_SMALL: AvatarPresentation = { fallback: 'AB', size: 'sm' };
+const AVATAR_LARGE: AvatarPresentation = { fallback: 'XL', size: 'lg' };
+const AVATAR_IMAGE: AvatarPresentation = { src: 'https://github.com/shadcn.png', alt: 'shadcn', fallback: 'CN' };
+const AVATAR_BROKEN: AvatarPresentation = { src: 'https://broken.example.com/404.png', fallback: 'FB', alt: 'Fallback test' };
+
+PRIMITIVE_DEMOS['avatar'] = {
+  primitive: 'avatar',
+  contractType: AVATAR_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Initials (md)', description: 'Default size with initials fallback', props: AVATAR_INITIALS as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Small', description: 'sm size — 32px', props: AVATAR_SMALL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Large', description: 'lg size — 56px', props: AVATAR_LARGE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'With image', description: 'Image loaded from URL', props: AVATAR_IMAGE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Broken image', description: 'Src 404 — falls back to initials', props: AVATAR_BROKEN as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Breadcrumb ───────────────────────────────────────────────────────────────
+const BREADCRUMB_TWO: BreadcrumbPresentation = {
+  items: [
+    { label: 'Home', href: '/' },
+    { label: 'Settings' },
+  ],
+};
+const BREADCRUMB_THREE: BreadcrumbPresentation = {
+  items: [
+    { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Dashboard' },
+  ],
+};
+const BREADCRUMB_FOUR_CHEVRON: BreadcrumbPresentation = {
+  items: [
+    { label: 'Home', href: '/' },
+    { label: 'Users', href: '/users' },
+    { label: 'Alice Smith', href: '/users/alice' },
+    { label: 'Edit' },
+  ],
+  separator: 'chevron',
+};
+
+PRIMITIVE_DEMOS['breadcrumb'] = {
+  primitive: 'breadcrumb',
+  contractType: BREADCRUMB_CONTRACT_TYPE,
+  scenarios: [
+    { label: '2 levels', description: 'Home → current page', props: BREADCRUMB_TWO as unknown as Record<string, unknown>, runtime: {} },
+    { label: '3 levels', description: 'Home → section → page', props: BREADCRUMB_THREE as unknown as Record<string, unknown>, runtime: {} },
+    { label: '4 levels (chevron)', description: 'Deep path with chevron separator', props: BREADCRUMB_FOUR_CHEVRON as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+const CARD_MINIMAL: CardPresentation = { title: 'Project Alpha', description: 'Active · 3 contributors' };
+const CARD_FULL: CardPresentation = {
+  title: 'Invoice #4821',
+  description: 'Due 2026-04-30',
+  content: 'Total amount: $1,250.00. Payment method: credit card ending in 4242.',
+  footer: 'Pay now or schedule for later.',
+};
+const CARD_CONTENT_ONLY: CardPresentation = {
+  content: 'No configuration needed. Defaults are applied automatically on first run.',
+};
+
+PRIMITIVE_DEMOS['card'] = {
+  primitive: 'card',
+  contractType: CARD_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Header only', description: 'Title + description, no content', props: CARD_MINIMAL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Full card', description: 'Header + content + footer', props: CARD_FULL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Content only', description: 'Body text without header', props: CARD_CONTENT_ONLY as unknown as Record<string, unknown>, runtime: {} },
+  ],
 };
 
 export const DEFAULT_DEMO = PRIMITIVE_DEMOS['data-grid'];

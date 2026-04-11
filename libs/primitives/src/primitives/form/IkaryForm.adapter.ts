@@ -25,7 +25,7 @@ export function buildIkaryFormViewModel(input: BuildIkaryFormViewModelInput): Ik
       autosave: resolveAutosave(mode, input.presentation.autosave),
       actionLabels: resolveActionLabels(mode, input.presentation.actionLabels),
 
-      sections: input.presentation.sections,
+      sections: input.presentation.sections ?? [],
 
       reviewRequired: input.presentation.reviewRequired ?? false,
       readonly: input.presentation.readonly ?? false,

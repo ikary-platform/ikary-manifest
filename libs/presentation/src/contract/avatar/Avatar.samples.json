@@ -1,0 +1,7 @@
+[
+  { "fallback": "JD" },
+  { "fallback": "AB", "size": "sm" },
+  { "fallback": "XY", "size": "lg" },
+  { "src": "https://github.com/shadcn.png", "alt": "shadcn", "fallback": "CN" },
+  { "fallback": "MK", "size": "md" }
+]

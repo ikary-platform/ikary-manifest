@@ -39,16 +39,16 @@ export function Toggle({
         aria-hidden="true"
         className={[
           'relative inline-flex h-6 w-10 items-center rounded-full border border-transparent transition-colors',
-          'bg-gray-300 dark:bg-gray-700',
-          'peer-checked:bg-blue-600 dark:peer-checked:bg-blue-500',
-          'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500/40',
+          'bg-input',
+          'peer-checked:bg-primary',
+          'peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background',
           'peer-disabled:cursor-not-allowed peer-disabled:opacity-60',
-          invalid ? 'ring-1 ring-red-400 dark:ring-red-700' : '',
+          invalid ? 'ring-1 ring-destructive' : '',
         ]
           .filter(Boolean)
           .join(' ')}
       >
-        <span className="ml-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-4" />
+        <span className="ml-0.5 h-4 w-4 rounded-full bg-background shadow-sm transition-transform peer-checked:translate-x-4" />
       </span>
     </span>
   );
@@ -60,7 +60,7 @@ export function Toggle({
   return (
     <label htmlFor={id} className="inline-flex items-center gap-2">
       {control}
-      <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
+      <span className="text-sm text-foreground">{label}</span>
     </label>
   );
 }

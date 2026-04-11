@@ -1,0 +1,11 @@
+[
+  { "title": "Project Alpha", "description": "Active · 3 contributors" },
+  {
+    "title": "Invoice #4821",
+    "description": "Due 2026-04-30",
+    "content": "Total amount: $1,250.00",
+    "footer": "Pay now"
+  },
+  { "content": "No configuration needed. Defaults are applied automatically." },
+  { "title": "Notifications", "description": "Manage how you receive alerts." }
+]

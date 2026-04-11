@@ -91,6 +91,15 @@ When you run `ikary local start <manifest-path>`, three services start on the fo
 | 4501 | Data API       |
 | 4502 | MCP Server     |
 
+## Developer Tool Ports
+
+Internal developer tools run on the following fixed ports:
+
+| Port | Tool | Command |
+| ---- | ---- | ------- |
+| 4504 | Cell Playground (`apps/cell-playground`) | `pnpm --filter @ikary/cell-playground dev` |
+| 4505 | Docs Playground (`docs/playground-app`) | `pnpm --filter @ikary/playground dev` |
+
 ## How Manifests Work
 
 YAML is the authoring format. The processing pipeline:

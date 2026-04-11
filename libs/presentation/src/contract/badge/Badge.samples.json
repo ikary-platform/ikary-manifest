@@ -1,0 +1,7 @@
+[
+  { "label": "New" },
+  { "label": "Beta", "variant": "secondary" },
+  { "label": "Error", "variant": "destructive" },
+  { "label": "Draft", "variant": "outline" },
+  { "label": "Active", "variant": "default" }
+]
