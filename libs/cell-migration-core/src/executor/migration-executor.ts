@@ -58,7 +58,8 @@ export class MigrationExecutor {
         for (const file of version.files) {
           const sqlText = readFileSync(file.absolutePath, 'utf8');
           const stripped = sqlText.replace(/--.*$/gm, '');
-          const statements = splitStatements(stripped);
+          const statements = splitStatements(stripped)
+            .filter((s) => !/^(BEGIN|COMMIT|ROLLBACK)$/i.test(s));
           for (const statement of statements) {
             await sql.raw(statement).execute(trx as any);
           }
