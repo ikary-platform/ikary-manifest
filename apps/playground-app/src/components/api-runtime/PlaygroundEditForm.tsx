@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ResolvedCreateField } from '@ikary/engine';
@@ -51,8 +51,21 @@ export function PlaygroundEditForm({ fields }: PlaygroundEditFormProps) {
     defaultValues,
   });
 
+  // Reset the form with fresh fake defaults whenever the entity changes so that
+  // switching entities in the sidebar always shows pre-populated data for the
+  // newly selected entity rather than stale values from the previous one.
+  useEffect(() => {
+    setSubmittedData(null);
+    reset(defaultValues);
+  }, [defaultValues, reset]);
+
   function onSubmit(data: Record<string, unknown>) {
     setSubmittedData(data);
+  }
+
+  function handleEdit() {
+    setSubmittedData(null);
+    reset(defaultValues);
   }
 
   if (fields.length === 0) {
@@ -78,7 +91,7 @@ export function PlaygroundEditForm({ fields }: PlaygroundEditFormProps) {
         </pre>
         <button
           type="button"
-          onClick={() => { setSubmittedData(null); reset(defaultValues); }}
+          onClick={handleEdit}
           className="text-xs text-blue-600 hover:underline"
         >
           Edit form
@@ -88,9 +101,7 @@ export function PlaygroundEditForm({ fields }: PlaygroundEditFormProps) {
   }
 
   return (
-    // key resets the form when fields change (entity definition edited)
     <form
-      key={fields.map((f) => f.key).join(',')}
       onSubmit={handleSubmit(onSubmit)}
       noValidate
       className="space-y-4"

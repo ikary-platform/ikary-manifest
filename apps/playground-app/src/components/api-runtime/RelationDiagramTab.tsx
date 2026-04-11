@@ -59,8 +59,9 @@ function buildDiagramData(
   const entityMap = new Map<string, DiagramEntityDef>();
   const connectors: ConnectorDef[] = [];
 
-  // Build virtual FK fields for belongs_to / self — rel.key acts as the DOM
-  // anchor so the SVG path has something to attach to.
+  // Build virtual FK fields for belongs_to / self / polymorphic — rel.key (or
+  // the relation's configured id/type field) acts as the DOM anchor so the SVG
+  // path has something to attach to.
   const fkFields: DiagramField[] = [];
   for (const rel of relations) {
     if (rel.relation === 'belongs_to') {
@@ -72,10 +73,13 @@ function buildDiagramData(
       });
     } else if (rel.relation === 'self') {
       fkFields.push({ key: rel.key, isFK: true, isPK: false, label: rel.key });
+    } else if (rel.relation === 'polymorphic') {
+      // Use the relation's configured idField / typeField rather than hardcoded
+      // 'target_id' / 'target_type' so the diagram is accurate for any column name.
+      fkFields.push({ key: rel.idField, isFK: true, isPK: false, label: rel.idField });
+      fkFields.push({ key: rel.typeField, isFK: false, isPK: false, label: rel.typeField });
     }
   }
-
-  const hasPolymorphic = relations.some((r) => r.relation === 'polymorphic');
 
   const visibleFields = (entity.fields ?? [])
     .filter((f) => f.list?.visible)
@@ -87,11 +91,6 @@ function buildDiagramData(
     ...fkFields,
     ...visibleFields.filter((f) => !fkFields.some((fk) => fk.key === f.key)),
   ];
-
-  if (hasPolymorphic) {
-    primaryFields.push({ key: 'target_id', isFK: true, isPK: false, label: 'target_id' });
-    primaryFields.push({ key: 'target_type', isFK: false, isPK: false, label: 'target_type' });
-  }
 
   entityMap.set(entity.key, {
     key: entity.key,
@@ -179,7 +178,10 @@ function buildDiagramData(
         relationType: 'self',
       });
     } else if (rel.relation === 'polymorphic') {
-      const stubKey = '__any__';
+      // Each polymorphic relation may target a different set of entities; use
+      // the idField as part of the stub key so multiple polymorphic relations
+      // on the same entity each get their own stub card.
+      const stubKey = `__polymorphic_${rel.idField}__`;
       if (!entityMap.has(stubKey)) {
         entityMap.set(stubKey, {
           key: stubKey,
@@ -192,7 +194,7 @@ function buildDiagramData(
       }
       connectors.push({
         sourceEntityKey: entity.key,
-        sourceFieldKey: 'target_id',
+        sourceFieldKey: rel.idField,
         targetEntityKey: stubKey,
         targetFieldKey: 'id',
         relationType: 'polymorphic',
