@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { MigrationTracker, SCHEMA_VERSIONS_TABLE } from './migration-tracker.js';
+
+const TEST_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
 
 function createDb(): DatabaseService {
   return new DatabaseService(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: TEST_DB_URL }),
   );
 }
 
@@ -18,6 +21,10 @@ describe('MigrationTracker', () => {
   });
 
   afterEach(async () => {
+    // Clean up tracking table between tests
+    try {
+      await sql`DROP TABLE IF EXISTS ${sql.ref(SCHEMA_VERSIONS_TABLE)}`.execute(db.db);
+    } catch { /* ignore */ }
     await db.destroy();
   });
 

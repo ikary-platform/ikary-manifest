@@ -4,7 +4,7 @@ import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
 import type { CellRuntimeDatabase } from '../db/schema.js';
 import type { FieldType } from '../shared/field-type.schema.js';
 
-export function fieldTypeToSql(type: FieldType, isPostgres: boolean): string {
+export function fieldTypeToSql(type: FieldType): string {
   switch (type) {
     case 'string':
     case 'text':
@@ -13,11 +13,11 @@ export function fieldTypeToSql(type: FieldType, isPostgres: boolean): string {
     case 'datetime':
       return 'TEXT';
     case 'number':
-      return 'NUMERIC';
+      return 'DOUBLE PRECISION';
     case 'boolean':
       return 'BOOLEAN';
     case 'object':
-      return isPostgres ? 'JSONB' : 'TEXT';
+      return 'JSONB';
     default:
       return 'TEXT';
   }
@@ -32,46 +32,24 @@ export function isDuplicateColumnError(msg: string): boolean {
 }
 
 export class EntitySchemaManager {
-  private readonly isPostgres: boolean;
-
-  constructor(private readonly dbService: DatabaseService<CellRuntimeDatabase>) {
-    this.isPostgres = !dbService.isSqlite;
-  }
+  constructor(private readonly dbService: DatabaseService<CellRuntimeDatabase>) {}
 
   async ensureSystemTables(): Promise<void> {
-    if (this.isPostgres) {
-      await sql`
-        CREATE TABLE IF NOT EXISTS audit_log (
-          id SERIAL PRIMARY KEY,
-          entity_key TEXT NOT NULL,
-          entity_id TEXT NOT NULL,
-          event_type TEXT NOT NULL,
-          resource_version INTEGER NOT NULL,
-          change_kind TEXT NOT NULL,
-          snapshot TEXT NOT NULL,
-          diff TEXT,
-          actor_id TEXT,
-          request_id TEXT,
-          occurred_at TIMESTAMPTZ NOT NULL
-        )
-      `.execute(this.dbService.db);
-    } else {
-      await sql`
-        CREATE TABLE IF NOT EXISTS audit_log (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          entity_key TEXT NOT NULL,
-          entity_id TEXT NOT NULL,
-          event_type TEXT NOT NULL,
-          resource_version INTEGER NOT NULL,
-          change_kind TEXT NOT NULL,
-          snapshot TEXT NOT NULL,
-          diff TEXT,
-          actor_id TEXT,
-          request_id TEXT,
-          occurred_at TEXT NOT NULL
-        )
-      `.execute(this.dbService.db);
-    }
+    await sql`
+      CREATE TABLE IF NOT EXISTS audit_log (
+        id SERIAL PRIMARY KEY,
+        entity_key TEXT NOT NULL,
+        entity_id TEXT NOT NULL,
+        event_type TEXT NOT NULL,
+        resource_version INTEGER NOT NULL,
+        change_kind TEXT NOT NULL,
+        snapshot TEXT NOT NULL,
+        diff TEXT,
+        actor_id TEXT,
+        request_id TEXT,
+        occurred_at TIMESTAMPTZ NOT NULL
+      )
+    `.execute(this.dbService.db);
   }
 
   async initFromManifest(manifest: CellManifestV1): Promise<void> {
@@ -84,40 +62,27 @@ export class EntitySchemaManager {
     const table = tableName(entity.key);
 
     const userColumns = (entity.fields ?? [])
-      .map((f) => `${f.key} ${fieldTypeToSql(f.type as FieldType, this.isPostgres)}`)
+      .map((f) => `${f.key} ${fieldTypeToSql(f.type as FieldType)}`)
       .join(', ');
 
     const extra = userColumns ? `, ${userColumns}` : '';
 
-    if (this.isPostgres) {
-      await sql.raw(`
-        CREATE TABLE IF NOT EXISTS ${table} (
-          id TEXT NOT NULL PRIMARY KEY,
-          version INTEGER NOT NULL DEFAULT 1,
-          created_at TIMESTAMPTZ NOT NULL,
-          updated_at TIMESTAMPTZ NOT NULL,
-          deleted_at TIMESTAMPTZ
-          ${extra}
-        )
-      `).execute(this.dbService.db);
-    } else {
-      await sql.raw(`
-        CREATE TABLE IF NOT EXISTS ${table} (
-          id TEXT NOT NULL PRIMARY KEY,
-          version INTEGER NOT NULL DEFAULT 1,
-          created_at TEXT NOT NULL,
-          updated_at TEXT NOT NULL,
-          deleted_at TEXT
-          ${extra}
-        )
-      `).execute(this.dbService.db);
-    }
+    await sql.raw(`
+      CREATE TABLE IF NOT EXISTS ${table} (
+        id TEXT NOT NULL PRIMARY KEY,
+        version INTEGER NOT NULL DEFAULT 1,
+        created_at TIMESTAMPTZ NOT NULL,
+        updated_at TIMESTAMPTZ NOT NULL,
+        deleted_at TIMESTAMPTZ
+        ${extra}
+      )
+    `).execute(this.dbService.db);
 
     for (const field of entity.fields ?? []) {
       await this.addColumnIfMissing(
         table,
         field.key,
-        fieldTypeToSql(field.type as FieldType, this.isPostgres),
+        fieldTypeToSql(field.type as FieldType),
       );
     }
   }

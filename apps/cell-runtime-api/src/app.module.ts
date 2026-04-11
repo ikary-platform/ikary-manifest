@@ -41,7 +41,7 @@ function resolveMigrationsRoot(packageName: string): string {
   }
 }
 
-const dbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
+const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
 
 @Module({
   imports: [

@@ -9,11 +9,12 @@ const CELL1 = '00000000-0000-0000-0000-000000000003';
 
 async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>> {
   const db = new DatabaseService<SystemLogDatabaseSchema>(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test' }),
   );
   await sql
     .raw(
-      `CREATE TABLE IF NOT EXISTS log_settings (
+      `DROP TABLE IF EXISTS log_settings;
+       CREATE TABLE log_settings (
         id TEXT PRIMARY KEY,
         tenant_id TEXT NOT NULL,
         workspace_id TEXT,
@@ -21,8 +22,8 @@ async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>>
         scope TEXT NOT NULL,
         log_level TEXT NOT NULL DEFAULT 'normal',
         version INTEGER NOT NULL DEFAULT 1,
-        created_at TEXT NOT NULL DEFAULT (datetime('now')),
-        updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+        created_at TEXT NOT NULL DEFAULT NOW(),
+        updated_at TEXT NOT NULL DEFAULT NOW(),
         UNIQUE (tenant_id, workspace_id, cell_id)
       )`,
     )
@@ -41,6 +42,7 @@ describe('LogSettingsRepository', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
+    try { await sql.raw('DROP TABLE IF EXISTS log_settings').execute(db.db); } catch { /* ignore */ }
     await db.destroy();
   });
 

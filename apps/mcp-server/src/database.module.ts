@@ -26,7 +26,7 @@ function resolveSystemLogMigrationsRoot(): string {
     {
       provide: DatabaseService,
       useFactory: async (): Promise<DatabaseService> => {
-        const rawDbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/mcp-server.db`;
+        const rawDbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
         const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
         const dbService = new DatabaseService(dbOptions);
 

@@ -4,6 +4,44 @@ import type { DatabaseService } from '@ikary/system-db-core';
 import { SCHEMA_VERSIONS_TABLE } from '../tracker/migration-tracker.js';
 import type { MigrationVersion } from '../shared/migration-version.schema.js';
 
+/**
+ * Split SQL text into individual statements, respecting PostgreSQL
+ * dollar-quoted strings (`$$ ... $$` or `$tag$ ... $tag$`).
+ */
+export function splitStatements(text: string): string[] {
+  const results: string[] = [];
+  let current = '';
+  let i = 0;
+  while (i < text.length) {
+    if (text[i] === '$') {
+      // Try to match a dollar-quote tag: $tag$ or $$
+      const tagMatch = text.slice(i).match(/^(\$[a-zA-Z0-9_]*\$)/);
+      if (tagMatch) {
+        const tag = tagMatch[1]!;
+        const endIdx = text.indexOf(tag, i + tag.length);
+        if (endIdx !== -1) {
+          current += text.slice(i, endIdx + tag.length);
+          i = endIdx + tag.length;
+          continue;
+        }
+      }
+      current += text[i];
+      i++;
+    } else if (text[i] === ';') {
+      const trimmed = current.trim();
+      if (trimmed.length > 0) results.push(trimmed);
+      current = '';
+      i++;
+    } else {
+      current += text[i];
+      i++;
+    }
+  }
+  const trimmed = current.trim();
+  if (trimmed.length > 0) results.push(trimmed);
+  return results;
+}
+
 export class MigrationExecutor {
   constructor(private readonly dbService: DatabaseService) {}
 
@@ -20,16 +58,13 @@ export class MigrationExecutor {
         for (const file of version.files) {
           const sqlText = readFileSync(file.absolutePath, 'utf8');
           const stripped = sqlText.replace(/--.*$/gm, '');
-          const statements = stripped
-            .split(';')
-            .map((s) => s.trim())
-            .filter((s) => s.length > 0);
+          const statements = splitStatements(stripped)
+            .filter((s) => !/^(BEGIN|COMMIT|ROLLBACK)$/i.test(s));
           for (const statement of statements) {
             await sql.raw(statement).execute(trx as any);
           }
         }
-        /* v8 ignore next */
-        const appliedAt = this.dbService.isSqlite ? new Date().toISOString() : new Date();
+        const appliedAt = new Date();
         await (trx as any)
           .insertInto(SCHEMA_VERSIONS_TABLE)
           .values({

@@ -18,16 +18,12 @@ export class DatabaseService extends CoreDatabaseService<AuthDatabaseSchema> imp
     await this.ping();
   }
 
-  /** Returns a date value compatible with the current dialect (ISO string for SQLite, Date for PG). */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  now(): any {
-    return this.isSqlite ? new Date().toISOString() : new Date();
+  now(): Date {
+    return new Date();
   }
 
-  /** Returns a boolean value compatible with the current dialect (0/1 for SQLite, true/false for PG). */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  bool(value: boolean): any {
-    return this.isSqlite ? (value ? 1 : 0) : value;
+  bool(value: boolean): boolean {
+    return value;
   }
 }
 

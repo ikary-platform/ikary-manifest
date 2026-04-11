@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager } from './entity-schema-manager.js';
 import { EntityRepository } from './entity-repository.js';
 import { EntityService } from './entity-service.js';
@@ -7,6 +7,9 @@ import { AuditService } from '../audit/audit-service.js';
 import { EntityNotFoundError, VersionConflictError } from '../errors.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
 import type { CellManifestV1 } from '@ikary/contract';
+
+const TEST_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
 
 const MANIFEST = {
   spec: {
@@ -29,8 +32,12 @@ describe('EntityService', () => {
 
   beforeEach(async () => {
     dbService = new DatabaseService<CellRuntimeDatabase>(
-      databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+      databaseConnectionOptionsSchema.parse({ connectionString: TEST_DB_URL }),
     );
+    // Drop existing tables from prior test runs
+    for (const t of ['entity_order', 'audit_log']) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${t}`).execute(dbService.db); } catch { /* ignore */ }
+    }
     const manager = new EntitySchemaManager(dbService);
     await manager.ensureSystemTables();
     await manager.initFromManifest(MANIFEST);
@@ -40,6 +47,9 @@ describe('EntityService', () => {
   });
 
   afterEach(async () => {
+    for (const t of ['entity_order', 'audit_log']) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${t}`).execute(dbService.db); } catch { /* ignore */ }
+    }
     await dbService.destroy();
   });
 
@@ -171,8 +181,6 @@ describe('EntityService', () => {
     });
   });
 
-  // ── computeDiff (tested via update) ──────────────────────────────────────
-
   // ── logger integration ────────────────────────────────────────────────────
 
   describe('optional logger', () => {
@@ -206,18 +214,14 @@ describe('EntityService', () => {
       const audit = await service.getAuditLog('order', id);
       const diff = JSON.parse(audit[1]!.diff!);
       expect(diff['status']).toBeDefined();
-      // The 'before' value for a new field is null (SQLite stores null for missing columns)
     });
 
     it('same value in before and after does NOT appear in diff', async () => {
       const record = await service.create('order', { customer: 'K', total: 5 });
       const id = record['id'] as string;
-      // Update only 'total', keeping 'customer' the same
       await service.update('order', id, { total: 99 });
       const audit = await service.getAuditLog('order', id);
       const diff = JSON.parse(audit[1]!.diff!);
-      // customer is unchanged — it should not be in the diff
-      // (version, updated_at WILL be in diff since they always change)
       expect(diff['total']).toBeDefined();
     });
   });

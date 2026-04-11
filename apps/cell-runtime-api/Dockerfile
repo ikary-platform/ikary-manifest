@@ -1,5 +1,4 @@
 FROM node:20-slim AS base
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 WORKDIR /app
 
@@ -47,9 +46,6 @@ COPY --from=build /app/apps/cell-runtime-api/dist ./apps/cell-runtime-api/dist
 COPY --from=build /app/libs/cell-runtime-core/migrations ./libs/cell-runtime-core/migrations
 COPY --from=build /app/libs/system-auth/migrations ./libs/system-auth/migrations
 COPY --from=build /app/libs/system-log-core/migrations ./libs/system-log-core/migrations
-
-RUN mkdir -p /data
-VOLUME ["/data"]
 
 EXPOSE 4501
 ENV PORT=4501

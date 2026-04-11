@@ -13,7 +13,7 @@ These rules define how every new `libs/*` package must be designed and delivered
 
 - Language: TypeScript (strict mode).
 - Backend integration target: NestJS.
-- Database: PostgreSQL (production) or SQLite (local/testing) — both accessed via `@ikary/system-db-core`.
+- Database: PostgreSQL — accessed via `@ikary/system-db-core`.
 - Validation: Zod for external inputs and configuration.
 - Migrations: raw SQL files only (no ORM-generated migrations).
 - Runtime persistence: Kysely for backend data access (through `@ikary/system-db-core`).

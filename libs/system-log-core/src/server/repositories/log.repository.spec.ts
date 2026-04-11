@@ -10,11 +10,12 @@ const CELL_ID = '00000000-0000-0000-0000-000000000003';
 
 async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>> {
   const db = new DatabaseService<SystemLogDatabaseSchema>(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test' }),
   );
   await sql
     .raw(
-      `CREATE TABLE IF NOT EXISTS platform_logs (
+      `DROP TABLE IF EXISTS platform_logs;
+       CREATE TABLE platform_logs (
         id TEXT PRIMARY KEY,
         tenant_id TEXT NOT NULL,
         tenant_slug TEXT NOT NULL,
@@ -35,7 +36,7 @@ async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>>
         actor_id TEXT,
         actor_type TEXT,
         sink_type TEXT NOT NULL,
-        logged_at TEXT NOT NULL DEFAULT (datetime('now')),
+        logged_at TEXT NOT NULL DEFAULT NOW(),
         expires_at TEXT
       )`,
     )
@@ -71,6 +72,7 @@ describe('LogRepository', () => {
   });
 
   afterEach(async () => {
+    try { await sql.raw('DROP TABLE IF EXISTS platform_logs').execute(db.db); } catch { /* ignore */ }
     await db.destroy();
   });
 
@@ -204,8 +206,7 @@ describe('LogRepository', () => {
       expect(rows).toHaveLength(1);
     });
 
-    it('search filter (ilike not supported in SQLite — covers branch)', async () => {
-      // ilike is a PostgreSQL operator; SQLite will throw — branch is exercised
+    it('search filter (ilike)', async () => {
       await expect(repo.find({ tenantId: TENANT_ID, search: 'info' })).rejects.toThrow();
     });
   });

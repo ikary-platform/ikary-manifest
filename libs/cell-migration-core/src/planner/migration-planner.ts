@@ -16,7 +16,6 @@ export class MigrationPlanner {
   constructor(
     private readonly migrationsRoot: string,
     private readonly packageName: string,
-    private readonly isSqlite: boolean,
   ) {}
 
   buildPlan(appliedVersions: Set<string>, force = false): MigrationVersion[] {
@@ -52,26 +51,23 @@ export class MigrationPlanner {
     const byBase = new Map<string, { common?: string; dialectFile?: string }>();
 
     for (const fileName of allFiles) {
-      const isSqliteFile = fileName.endsWith('.sqlite.sql');
+      if (fileName.endsWith('.sqlite.sql')) continue;
       const isPgFile = fileName.endsWith('.pg.sql');
-      const isCommon = !isSqliteFile && !isPgFile;
 
-      const base = isSqliteFile
-        ? fileName.replace(/\.sqlite\.sql$/, '.sql')
-        : isPgFile
-          ? fileName.replace(/\.pg\.sql$/, '.sql')
-          : fileName;
+      const base = isPgFile
+        ? fileName.replace(/\.pg\.sql$/, '.sql')
+        : fileName;
 
       const entry = byBase.get(base) ?? {};
-      if (isCommon) entry.common = fileName;
-      else if (this.isSqlite && isSqliteFile) entry.dialectFile = fileName;
-      else if (!this.isSqlite && isPgFile) entry.dialectFile = fileName;
+      if (isPgFile) entry.dialectFile = fileName;
+      else entry.common = fileName;
       byBase.set(base, entry);
     }
 
     const selected: MigrationFile[] = [];
     for (const { common, dialectFile } of byBase.values()) {
       const fileName = dialectFile ?? common;
+      /* v8 ignore next */
       if (!fileName) continue;
       selected.push({ fileName, absolutePath: path.join(versionRoot, fileName) });
     }

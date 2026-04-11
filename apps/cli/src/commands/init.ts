@@ -20,15 +20,6 @@ import {
   generateGitignore,
 } from '../init/templates.js';
 import { getContainerRuntime } from '../utils/docker.js';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
-import { MigrationRunner } from '@ikary/cell-migration-core';
-import { createRequire } from 'node:module';
-
-function resolveMigrationsRoot(): string {
-  const req = createRequire(import.meta.url);
-  const pkgJson = req.resolve('@ikary/cell-runtime-core/package.json');
-  return resolve(pkgJson, '..', 'migrations');
-}
 
 interface PrereqResult {
   label: string;
@@ -151,48 +142,17 @@ export async function initCommand(projectName?: string): Promise<void> {
     fmt.newline();
     fmt.body(`  ${theme.accent('manifest.json')}          Cell Manifest`);
     fmt.body(`  ${theme.accent('CLAUDE.md')}              AI context for Claude Code`);
-    fmt.body(`  ${theme.accent('.gitignore')}             Excludes local.db and OS files`);
+    fmt.body(`  ${theme.accent('.gitignore')}             Excludes OS files`);
     fmt.body(`  ${theme.accent('.claude/commands/')}       /ikary-add-entity  /ikary-validate  /ikary-bootstrap`);
     fmt.body(`  ${''.padEnd(25)}  /ikary-browse-primitives  /ikary-create-primitive  /ikary-update-primitive`);
     if (options.aiTool === 'claude-code') {
       fmt.body(`  ${theme.accent('.mcp.json')}              MCP server config`);
     }
 
-    // ── 4. Local database setup ─────────────────────────────────────────────
     fmt.newline();
-    const dbSpinner = fmt.createSpinner('Setting up local database...');
-    dbSpinner.start();
+    fmt.body(`  Database will be created automatically when you run ${theme.accent('ikary local start')}`);
 
-    const dbPath = join(projectDir, 'local.db');
-    const dbUrl = `sqlite://${dbPath}`;
-
-    try {
-      const dbService = new DatabaseService(
-        databaseConnectionOptionsSchema.parse({ connectionString: dbUrl }),
-      );
-      const runner = new MigrationRunner(dbService, {
-        packageName: '@ikary/cell-runtime-core',
-        migrationsRoot: resolveMigrationsRoot(),
-      });
-      const result = await runner.migrate();
-      await dbService.destroy();
-
-      dbSpinner.succeed(
-        theme.success(
-          result.applied > 0
-            ? `Database ready — applied ${result.applied} migration(s) → local.db`
-            : 'Database already up to date → local.db',
-        ),
-      );
-    } catch (dbErr) {
-      dbSpinner.warn(
-        theme.muted(
-          `Database setup skipped: ${dbErr instanceof Error ? dbErr.message : String(dbErr)}`,
-        ),
-      );
-    }
-
-    // ── 5. Next steps ───────────────────────────────────────────────────────
+    // ── 4. Next steps ───────────────────────────────────────────────────────
     fmt.section('Next steps');
     fmt.newline();
     fmt.body(`  ${theme.accent(`cd ${options.name}`)}`);

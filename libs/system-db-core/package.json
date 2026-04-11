@@ -1,7 +1,7 @@
 {
   "name": "@ikary/system-db-core",
   "version": "0.1.0",
-  "description": "Shared Kysely-based database foundation for IKARY backend libraries and apps. Supports PostgreSQL (production) and SQLite (local/testing).",
+  "description": "Shared Kysely-based database foundation for IKARY backend libraries and apps. Uses PostgreSQL via Kysely.",
   "license": "MIT",
   "type": "module",
   "microPackageKind": "server",
@@ -22,13 +22,11 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "better-sqlite3": "^11.0.0",
     "kysely": "^0.27.0",
     "pg": "^8.13.0",
     "zod": "^3.0.0"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^20.0.0",
     "@types/pg": "^8.11.0",
     "@vitest/coverage-v8": "^3.0.0",

@@ -9,11 +9,12 @@ const CELL1 = '00000000-0000-0000-0000-000000000003';
 
 async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>> {
   const db = new DatabaseService<SystemLogDatabaseSchema>(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test' }),
   );
   await sql
     .raw(
-      `CREATE TABLE IF NOT EXISTS log_sinks (
+      `DROP TABLE IF EXISTS log_sinks;
+       CREATE TABLE log_sinks (
         id TEXT PRIMARY KEY,
         tenant_id TEXT NOT NULL,
         workspace_id TEXT,
@@ -22,10 +23,10 @@ async function createTestDb(): Promise<DatabaseService<SystemLogDatabaseSchema>>
         sink_type TEXT NOT NULL,
         retention_hours INTEGER NOT NULL,
         config TEXT NOT NULL DEFAULT '{}',
-        is_enabled INTEGER NOT NULL DEFAULT 1,
+        is_enabled BOOLEAN NOT NULL DEFAULT true,
         version INTEGER NOT NULL DEFAULT 1,
-        created_at TEXT NOT NULL DEFAULT (datetime('now')),
-        updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+        created_at TEXT NOT NULL DEFAULT NOW(),
+        updated_at TEXT NOT NULL DEFAULT NOW()
       )`,
     )
     .execute(db.db);
@@ -43,6 +44,7 @@ describe('LogSinksRepository', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
+    try { await sql.raw('DROP TABLE IF EXISTS log_sinks').execute(db.db); } catch { /* ignore */ }
     await db.destroy();
   });
 
@@ -130,7 +132,7 @@ describe('LogSinksRepository', () => {
     it('creates a new sink with version=1 and is_enabled=true', async () => {
       const row = await insertSink();
       expect(row.version).toBe(1);
-      expect(row.is_enabled).toBe(1); // SQLite stores boolean as integer
+      expect(row.is_enabled).toBe(true);
       expect(row.sink_type).toBe('persistent');
       expect(row.retention_hours).toBe(72);
     });
@@ -165,7 +167,7 @@ describe('LogSinksRepository', () => {
         config: { endpoint: 'https://example.com' },
         expectedVersion: 1,
       });
-      // config is stored as JSON string in SQLite
+      // config is stored as JSON string
       expect(updated).toBeDefined();
     });
 

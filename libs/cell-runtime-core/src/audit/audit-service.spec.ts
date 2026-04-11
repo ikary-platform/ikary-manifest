@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager } from '../entity/entity-schema-manager.js';
 import { AuditService } from './audit-service.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
@@ -23,14 +23,16 @@ describe('AuditService', () => {
 
   beforeEach(async () => {
     dbService = new DatabaseService<CellRuntimeDatabase>(
-      databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+      databaseConnectionOptionsSchema.parse({ connectionString: process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test' }),
     );
+    try { await sql.raw('DROP TABLE IF EXISTS audit_log').execute(dbService.db); } catch { /* ignore */ }
     const manager = new EntitySchemaManager(dbService);
     await manager.ensureSystemTables();
     service = new AuditService(dbService);
   });
 
   afterEach(async () => {
+    try { await sql.raw('DROP TABLE IF EXISTS audit_log').execute(dbService.db); } catch { /* ignore */ }
     await dbService.destroy();
   });
 

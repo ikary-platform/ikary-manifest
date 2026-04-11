@@ -100,7 +100,7 @@ export function createProgram(): Command {
 
   local
     .command('reset-data')
-    .description('Delete the local SQLite data volume (stops the stack first)')
+    .description('Delete the local PostgreSQL data volume (stops the stack first)')
     .action(localResetDataCommand);
 
   const localDb = local.command('db').description('Database migration commands');
@@ -110,7 +110,7 @@ export function createProgram(): Command {
     .description('Apply pending database migrations')
     .option(
       '--database-url <url>',
-      'Database connection URL (default: DATABASE_URL env or sqlite://./local.db)',
+      'Database connection URL (default: DATABASE_URL env or postgres://ikary:ikary@localhost:5432/ikary)',
     )
     .option('--dry-run', 'Print pending migrations without applying them')
     .option('--force', 'Re-apply all migrations even if already tracked')

@@ -23,9 +23,9 @@ export default defineConfig([
       '@nestjs/swagger',
       '@modelcontextprotocol/sdk',
       'express',
+      'pg',
       'reflect-metadata',
       'rxjs',
-      'better-sqlite3',
     ],
   },
   {

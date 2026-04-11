@@ -282,8 +282,8 @@ Run \`ikary local start manifest.json\` to boot the full local stack:
 | MCP Server | http://localhost:${PORTS.MCP_SERVER}/mcp |
 
 The preview server hot-reloads when \`manifest.json\` changes.
-The data API persists records in a local SQLite database.
-Run \`ikary local stop\` to shut down. \`ikary local reset-data\` wipes the SQLite data.
+The data API persists records in a local PostgreSQL database (via Docker).
+Run \`ikary local stop\` to shut down. \`ikary local reset-data\` wipes the database.
 
 Quick preview (no Docker): \`ikary preview manifest.json\` opens a self-contained HTML file
 in the browser with mock data — no server needed.
@@ -553,11 +553,6 @@ to confirm the contract and component stay in sync.
 
 export function generateGitignore(): string {
   return [
-    '# Local database (created by ikary init and ikary local db migrate)',
-    'local.db',
-    'local.db-shm',
-    'local.db-wal',
-    '',
     '# OS / editor',
     '.DS_Store',
     '*.swp',

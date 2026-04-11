@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { databaseConnectionOptionsSchema } from './database.schema.js';
 
 describe('databaseConnectionOptionsSchema', () => {
-  it('accepts a valid SQLite memory connection string', () => {
+  it('accepts a valid PostgreSQL connection string with defaults', () => {
     const result = databaseConnectionOptionsSchema.parse({
-      connectionString: 'sqlite://:memory:',
+      connectionString: 'postgres://ikary:ikary@localhost:5433/ikary_test',
     });
-    expect(result.connectionString).toBe('sqlite://:memory:');
+    expect(result.connectionString).toBe('postgres://ikary:ikary@localhost:5433/ikary_test');
     expect(result.maxPoolSize).toBe(20);
     expect(result.ssl).toBe(false);
     expect(result.slowQueryThresholdMs).toBe(0);
@@ -21,7 +21,7 @@ describe('databaseConnectionOptionsSchema', () => {
 
   it('applies defaults for omitted optional fields', () => {
     const result = databaseConnectionOptionsSchema.parse({
-      connectionString: 'sqlite://:memory:',
+      connectionString: 'postgres://ikary:ikary@localhost:5433/ikary_test',
     });
     expect(result.maxPoolSize).toBe(20);
     expect(result.ssl).toBe(false);
@@ -53,7 +53,7 @@ describe('databaseConnectionOptionsSchema', () => {
   it('rejects maxPoolSize of 0 (must be positive)', () => {
     expect(() =>
       databaseConnectionOptionsSchema.parse({
-        connectionString: 'sqlite://:memory:',
+        connectionString: 'postgres://ikary:ikary@localhost:5433/ikary_test',
         maxPoolSize: 0,
       }),
     ).toThrow();
@@ -62,7 +62,7 @@ describe('databaseConnectionOptionsSchema', () => {
   it('rejects a non-integer maxPoolSize', () => {
     expect(() =>
       databaseConnectionOptionsSchema.parse({
-        connectionString: 'sqlite://:memory:',
+        connectionString: 'postgres://ikary:ikary@localhost:5433/ikary_test',
         maxPoolSize: 1.5,
       }),
     ).toThrow();
@@ -71,7 +71,7 @@ describe('databaseConnectionOptionsSchema', () => {
   it('rejects a negative slowQueryThresholdMs', () => {
     expect(() =>
       databaseConnectionOptionsSchema.parse({
-        connectionString: 'sqlite://:memory:',
+        connectionString: 'postgres://ikary:ikary@localhost:5433/ikary_test',
         slowQueryThresholdMs: -1,
       }),
     ).toThrow();
