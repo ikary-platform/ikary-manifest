@@ -34,6 +34,7 @@ export function PlaygroundCreateForm({ fields }: PlaygroundCreateFormProps) {
 
   function handleEdit() {
     setSubmittedData(null);
+    reset(defaultValues);
   }
 
   if (fields.length === 0) {
@@ -59,7 +60,7 @@ export function PlaygroundCreateForm({ fields }: PlaygroundCreateFormProps) {
         </pre>
         <button
           type="button"
-          onClick={() => { setSubmittedData(null); reset(defaultValues); }}
+          onClick={handleEdit}
           className="text-xs text-blue-600 hover:underline"
         >
           Edit form
