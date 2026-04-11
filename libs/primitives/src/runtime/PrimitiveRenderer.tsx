@@ -14,11 +14,24 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-class PrimitiveErrorBoundary extends Component<{ primitiveKey: string; children: ReactNode }, ErrorBoundaryState> {
+class PrimitiveErrorBoundary extends Component<
+  { primitiveKey: string; resetKey: unknown; children: ReactNode },
+  ErrorBoundaryState
+> {
   state: ErrorBoundaryState = { error: null };
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { error };
+  }
+
+  static getDerivedStateFromProps(
+    nextProps: { primitiveKey: string; resetKey: unknown },
+    prevState: ErrorBoundaryState & { _lastResetKey?: unknown },
+  ): Partial<ErrorBoundaryState & { _lastResetKey: unknown }> | null {
+    if (prevState._lastResetKey !== nextProps.resetKey) {
+      return { error: null, _lastResetKey: nextProps.resetKey };
+    }
+    return null;
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -97,7 +110,7 @@ export function PrimitiveRenderer({ primitive, version, props = {}, runtime, chi
   const PrimitiveComponent = definition.component;
 
   return (
-    <PrimitiveErrorBoundary primitiveKey={primitive}>
+    <PrimitiveErrorBoundary primitiveKey={primitive} resetKey={resolvedProps}>
       <PrimitiveComponent {...(resolvedProps as object)}>{children}</PrimitiveComponent>
     </PrimitiveErrorBoundary>
   );
