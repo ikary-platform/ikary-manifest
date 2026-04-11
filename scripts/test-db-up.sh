@@ -22,7 +22,14 @@ docker run -d \
   postgres:17-alpine
 
 echo "Waiting for PostgreSQL to be ready..."
+RETRIES=0
+MAX_RETRIES=30
 until docker exec "$CONTAINER_NAME" pg_isready -U ikary -q 2>/dev/null; do
+  RETRIES=$((RETRIES + 1))
+  if [ "$RETRIES" -ge "$MAX_RETRIES" ]; then
+    echo "ERROR: PostgreSQL did not become ready within $MAX_RETRIES attempts." >&2
+    exit 1
+  fi
   sleep 0.5
 done
 
