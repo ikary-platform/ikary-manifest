@@ -67,6 +67,7 @@ export class MigrationPlanner {
     const selected: MigrationFile[] = [];
     for (const { common, dialectFile } of byBase.values()) {
       const fileName = dialectFile ?? common;
+      /* v8 ignore next */
       if (!fileName) continue;
       selected.push({ fileName, absolutePath: path.join(versionRoot, fileName) });
     }

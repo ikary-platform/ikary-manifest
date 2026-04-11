@@ -13,7 +13,7 @@ export function fieldTypeToSql(type: FieldType): string {
     case 'datetime':
       return 'TEXT';
     case 'number':
-      return 'NUMERIC';
+      return 'DOUBLE PRECISION';
     case 'boolean':
       return 'BOOLEAN';
     case 'object':

@@ -43,7 +43,7 @@ describe('fieldTypeToSql', () => {
     ['enum', 'TEXT'],
     ['date', 'TEXT'],
     ['datetime', 'TEXT'],
-    ['number', 'NUMERIC'],
+    ['number', 'DOUBLE PRECISION'],
     ['boolean', 'BOOLEAN'],
     ['object', 'JSONB'],
   ];
