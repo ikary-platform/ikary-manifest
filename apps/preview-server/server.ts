@@ -31,7 +31,7 @@ app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHea
 // Serve static Vite build (index: false so / falls through to the SPA route
 // which injects runtime config into the HTML).
 // server.js lives in the same dist/ dir as the Vite output.
-app.use(express.static(__dirname, { index: false }));
+app.use(express.static(__dirname, { index: false, dotfiles: 'deny' }));
 
 // Health check
 app.get('/health', (_req: express.Request, res: express.Response) => res.json({ status: 'ok' }));
