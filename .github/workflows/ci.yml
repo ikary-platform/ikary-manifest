@@ -56,6 +56,20 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ikary
+          POSTGRES_PASSWORD: ikary
+          POSTGRES_DB: ikary_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U ikary"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -71,12 +85,28 @@ jobs:
       - run: pnpm run build
 
       - run: pnpm coverage:system-db-core
+        env:
+          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
   coverage-cell-migration-core:
     name: Coverage — cell-migration-core
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ikary
+          POSTGRES_PASSWORD: ikary
+          POSTGRES_DB: ikary_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U ikary"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -92,12 +122,28 @@ jobs:
       - run: pnpm run build
 
       - run: pnpm coverage:cell-migration-core
+        env:
+          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
   coverage-cell-runtime-core:
     name: Coverage — cell-runtime-core
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ikary
+          POSTGRES_PASSWORD: ikary
+          POSTGRES_DB: ikary_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U ikary"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -113,6 +159,8 @@ jobs:
       - run: pnpm run build
 
       - run: pnpm coverage:cell-runtime-core
+        env:
+          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
   e2e:
     name: E2E — MCP Server & API
@@ -120,6 +168,20 @@ jobs:
     permissions:
       contents: read
       actions: write
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: ikary
+          POSTGRES_PASSWORD: ikary
+          POSTGRES_DB: ikary_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U ikary"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
 
@@ -136,6 +198,8 @@ jobs:
 
       - name: Start MCP server
         run: pnpm --filter @ikary/mcp-server start &
+        env:
+          DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:4502/api/schemas/manifest --timeout 30000
@@ -155,6 +219,8 @@ jobs:
 
       - name: Run local stack E2E tests
         run: pnpm --filter @ikary/local-stack-e2e test
+        env:
+          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
       - name: Upload local stack E2E results
         uses: actions/upload-artifact@v4
