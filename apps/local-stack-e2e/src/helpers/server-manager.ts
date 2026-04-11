@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'node:child_process';
+import { spawn, execSync, type ChildProcess } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 
@@ -67,8 +67,23 @@ function spawnServer(
   return { proc, stop };
 }
 
+/**
+ * Drop and recreate all tables so each test file starts with a clean database.
+ * This avoids "constraint already exists" errors when cell-runtime-api re-runs
+ * migrations across multiple test files sharing the same PostgreSQL database.
+ */
+function resetDatabase(): void {
+  try {
+    execSync(
+      `node -e "const{Pool}=require('pg');const p=new Pool({connectionString:'${E2E_DB_URL}'});p.query(\\"DROP SCHEMA public CASCADE; CREATE SCHEMA public;\\").then(()=>p.end())"`,
+      { timeout: 5_000, stdio: 'ignore' },
+    );
+  } catch { /* ignore — database may not exist yet */ }
+}
+
 /** Spawn cell-runtime-api on the E2E port with the test PostgreSQL database. */
 export async function startApiServer(manifestPath: string): Promise<ServerHandle> {
+  resetDatabase();
   const { stop } = spawnServer(API_SERVER_PATH, {
     IKARY_MANIFEST_PATH: manifestPath,
     DATABASE_URL: E2E_DB_URL,
