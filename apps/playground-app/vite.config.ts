@@ -48,7 +48,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../../docs/public/playground',
+    outDir: '../../apps/docs/public/playground',
     emptyOutDir: true,
   },
   optimizeDeps: {

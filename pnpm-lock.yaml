@@ -388,6 +388,79 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
+  apps/playground-app:
+    dependencies:
+      '@ikary/contract':
+        specifier: workspace:*
+        version: link:../../libs/contract
+      '@ikary/engine':
+        specifier: workspace:*
+        version: link:../../libs/engine
+      '@ikary/presentation':
+        specifier: workspace:*
+        version: link:../../libs/presentation
+      '@ikary/primitive-studio':
+        specifier: workspace:*
+        version: link:../../libs/primitive-studio
+      '@ikary/primitives':
+        specifier: workspace:*
+        version: link:../../libs/primitives
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.96.1(react@19.2.4)
+      lucide-react:
+        specifier: ^1.8.0
+        version: 1.8.0(react@19.2.4)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+      react-markdown:
+        specifier: ^9.0.0
+        version: 9.1.0(@types/react@19.2.14)(react@19.2.4)
+      react-router-dom:
+        specifier: ^6.30.1
+        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.1
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.0
+        version: 0.5.19(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3))
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.27(postcss@8.5.8)
+      postcss:
+        specifier: ^8.5.3
+        version: 8.5.8
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3)
+
   apps/preview-server:
     dependencies:
       '@ikary/contract':
@@ -463,79 +536,6 @@ importers:
       tsup:
         specifier: ^8.0.2
         version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vite:
-        specifier: ^6.0.0
-        version: 6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3)
-
-  docs/playground-app:
-    dependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/presentation':
-        specifier: workspace:*
-        version: link:../../libs/presentation
-      '@ikary/primitive-studio':
-        specifier: workspace:*
-        version: link:../../libs/primitive-studio
-      '@ikary/primitives':
-        specifier: workspace:*
-        version: link:../../libs/primitives
-      '@tanstack/react-query':
-        specifier: ^5.0.0
-        version: 5.96.1(react@19.2.4)
-      lucide-react:
-        specifier: ^1.8.0
-        version: 1.8.0(react@19.2.4)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-      react-markdown:
-        specifier: ^9.0.0
-        version: 9.1.0(@types/react@19.2.14)(react@19.2.4)
-      react-router-dom:
-        specifier: ^6.30.1
-        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      remark-gfm:
-        specifier: ^4.0.0
-        version: 4.0.1
-      zod:
-        specifier: ^3.23.8
-        version: 3.25.76
-    devDependencies:
-      '@tailwindcss/typography':
-        specifier: ^0.5.0
-        version: 0.5.19(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3))
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.27(postcss@8.5.8)
-      postcss:
-        specifier: ^8.5.3
-        version: 8.5.8
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
       typescript:
         specifier: ^5.5.3
         version: 5.9.3

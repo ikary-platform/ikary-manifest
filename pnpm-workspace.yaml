@@ -2,4 +2,3 @@ packages:
   - 'libs/*'
   - 'runtime-api/node/*'
   - 'apps/*'
-  - 'docs/playground-app'

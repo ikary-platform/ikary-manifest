@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
-const CLI_VERSION: string = (require('../../apps/cli/package.json') as { version: string }).version;
+const CLI_VERSION: string = (require('../../../apps/cli/package.json') as { version: string }).version;
 
 const MIME: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -69,7 +69,7 @@ export default defineConfig({
         name: 'serve-repo-root',
         enforce: 'pre',
         configureServer(server) {
-          const repoRoot = path.resolve(__dirname, '../..');
+          const repoRoot = path.resolve(__dirname, '../../..');
           server.middlewares.use('/repo', (req, res, next) => {
             const rel = decodeURIComponent((req.url ?? '/').replace(/^\//, ''));
             const filePath = path.join(repoRoot, rel);
@@ -239,7 +239,7 @@ export default defineConfig({
 
     editLink: {
       pattern:
-        'https://github.com/ikary-platform/ikary-manifest/edit/main/docs/:path',
+        'https://github.com/ikary-platform/ikary-manifest/edit/main/apps/docs/:path',
       text: 'Edit this page on GitHub',
     },
 
