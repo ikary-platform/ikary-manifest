@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { MigrationTracker, SCHEMA_VERSIONS_TABLE } from '../tracker/migration-tracker.js';
-import { MigrationExecutor } from './migration-executor.js';
+import { MigrationExecutor, splitStatements } from './migration-executor.js';
 import type { MigrationVersion } from '../shared/migration-version.schema.js';
 
 const TEST_DB_URL =
@@ -166,5 +166,45 @@ describe('MigrationExecutor', () => {
 
   it('verifies SCHEMA_VERSIONS_TABLE constant', () => {
     expect(SCHEMA_VERSIONS_TABLE).toBe('ikary_schema_versions');
+  });
+});
+
+describe('splitStatements', () => {
+  it('splits simple statements by semicolons', () => {
+    expect(splitStatements('SELECT 1; SELECT 2;')).toEqual(['SELECT 1', 'SELECT 2']);
+  });
+
+  it('ignores empty segments', () => {
+    expect(splitStatements('SELECT 1;; ;')).toEqual(['SELECT 1']);
+  });
+
+  it('handles trailing content without semicolon', () => {
+    expect(splitStatements('SELECT 1')).toEqual(['SELECT 1']);
+  });
+
+  it('preserves dollar-quoted blocks containing semicolons', () => {
+    const input = "CREATE FUNCTION f() RETURNS void AS $$ BEGIN RAISE NOTICE 'a;b'; END; $$ LANGUAGE plpgsql; SELECT 1;";
+    const result = splitStatements(input);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toContain('$$');
+    expect(result[1]).toBe('SELECT 1');
+  });
+
+  it('preserves tagged dollar-quoted blocks', () => {
+    const input = "CREATE FUNCTION f() RETURNS void AS $fn$ BEGIN NULL; END; $fn$ LANGUAGE plpgsql; SELECT 2;";
+    const result = splitStatements(input);
+    expect(result).toHaveLength(2);
+    expect(result[0]).toContain('$fn$');
+  });
+
+  it('handles dollar sign that is not a quote tag', () => {
+    const input = "SELECT $1; SELECT 2;";
+    const result = splitStatements(input);
+    expect(result).toHaveLength(2);
+  });
+
+  it('returns empty array for empty input', () => {
+    expect(splitStatements('')).toEqual([]);
+    expect(splitStatements('   ')).toEqual([]);
   });
 });

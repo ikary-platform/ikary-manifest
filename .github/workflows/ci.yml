@@ -196,10 +196,15 @@ jobs:
 
       - run: pnpm run build
 
+      - name: Create E2E databases
+        run: |
+          PGPASSWORD=ikary psql -h localhost -p 5433 -U ikary -d ikary_test -c "CREATE DATABASE ikary_mcp_e2e;"
+          PGPASSWORD=ikary psql -h localhost -p 5433 -U ikary -d ikary_test -c "CREATE DATABASE ikary_local_e2e;"
+
       - name: Start MCP server
         run: pnpm --filter @ikary/mcp-server start &
         env:
-          DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
+          DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_mcp_e2e
 
       - name: Wait for server to be ready
         run: npx wait-on http://localhost:4502/api/schemas/manifest --timeout 30000
@@ -220,7 +225,7 @@ jobs:
       - name: Run local stack E2E tests
         run: pnpm --filter @ikary/local-stack-e2e test
         env:
-          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
+          TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_local_e2e
 
       - name: Upload local stack E2E results
         uses: actions/upload-artifact@v4

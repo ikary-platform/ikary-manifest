@@ -8,7 +8,7 @@ import type { MigrationVersion } from '../shared/migration-version.schema.js';
  * Split SQL text into individual statements, respecting PostgreSQL
  * dollar-quoted strings (`$$ ... $$` or `$tag$ ... $tag$`).
  */
-function splitStatements(text: string): string[] {
+export function splitStatements(text: string): string[] {
   const results: string[] = [];
   let current = '';
   let i = 0;
