@@ -17,8 +17,9 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { EntityService, EntityRuntimeContext } from '@ikary/cell-runtime-core';
+import type { AuditLogRow } from '@ikary/cell-runtime-core';
 import { EntityNotFoundError, VersionConflictError } from '@ikary/cell-runtime-core';
-import { JwtAuthGuard, AuditInterceptor, type CurrentAuthValue } from '@ikary/system-auth';
+import { JwtAuthGuard, AuditInterceptor, UserService, type CurrentAuthValue } from '@ikary/system-auth';
 
 @ApiTags('entities')
 @UseGuards(JwtAuthGuard)
@@ -27,6 +28,7 @@ import { JwtAuthGuard, AuditInterceptor, type CurrentAuthValue } from '@ikary/sy
 export class EntityController {
   constructor(
     @Inject('ENTITY_SERVICE') private readonly entityService: EntityService,
+    @Inject(UserService) private readonly userService: UserService,
   ) {}
 
   private buildCtx(request: { auth?: CurrentAuthValue; headers?: Record<string, string | string[] | undefined> }): EntityRuntimeContext {
@@ -127,7 +129,33 @@ export class EntityController {
   @Get(':id/audit')
   @ApiOperation({ summary: 'Get audit log for an entity record' })
   async audit(@Param('entityKey') entityKey: string, @Param('id') id: string) {
-    return this.entityService.getAuditLog(entityKey, id);
+    const rows = await this.entityService.getAuditLog(entityKey, id);
+
+    // Resolve actor emails for all distinct actor_ids
+    const actorIds = [...new Set(rows.map((r: AuditLogRow) => r.actor_id).filter(Boolean))] as string[];
+    const emailMap = new Map<string, string>();
+    for (const actorId of actorIds) {
+      try {
+        const user = await this.userService.findById(actorId);
+        if (user?.email) emailMap.set(actorId, user.email);
+      } catch {
+        // user lookup failed — skip
+      }
+    }
+
+    return rows.map((r: AuditLogRow) => ({
+      id: String(r.id),
+      eventType: r.event_type,
+      resourceVersion: r.resource_version,
+      actorId: r.actor_id ?? null,
+      actorType: r.actor_id ? 'user' : 'system',
+      actorEmail: r.actor_id ? (emailMap.get(r.actor_id) ?? null) : null,
+      changeKind: r.change_kind,
+      snapshot: typeof r.snapshot === 'string' ? JSON.parse(r.snapshot) : r.snapshot,
+      diff: r.diff ? (typeof r.diff === 'string' ? JSON.parse(r.diff) : r.diff) : null,
+      occurredAt: r.occurred_at,
+      requestId: r.request_id ?? null,
+    }));
   }
 
   @Post(':id/rollback')
