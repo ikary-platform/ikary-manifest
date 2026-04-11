@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './Calendar';
@@ -26,7 +26,12 @@ export function DateInput({
   const selectedDate = resolvedValue ? parseISODate(resolvedValue) : undefined;
 
   function handleSelect(date: Date | undefined) {
-    if (!date) return;
+    if (!date) {
+      if (value === undefined) setInternalValue(undefined);
+      onValueChange?.(undefined);
+      setOpen(false);
+      return;
+    }
     const iso = toISODate(date);
     if (value === undefined) setInternalValue(iso);
     onValueChange?.(iso);

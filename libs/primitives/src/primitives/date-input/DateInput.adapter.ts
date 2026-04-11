@@ -5,7 +5,7 @@ export type BuildDateInputViewModelInput = {
   presentation: DateInputPresentation;
   value?: string;
   describedBy?: string;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string | undefined) => void;
   onBlur?: () => void;
 };
 
