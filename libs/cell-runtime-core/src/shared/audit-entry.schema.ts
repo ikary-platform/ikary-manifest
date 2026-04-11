@@ -11,5 +11,7 @@ export const auditEntrySchema = z.object({
   changeKind: changeKindSchema,
   snapshot: z.record(z.unknown()),
   diff: z.record(z.unknown()).nullable().optional(),
+  actorId: z.string().nullable().optional(),
+  requestId: z.string().nullable().optional(),
 });
 export type AuditEntry = z.infer<typeof auditEntrySchema>;

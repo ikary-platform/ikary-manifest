@@ -29,8 +29,9 @@ const port = process.env.PORT ?? 3000;
 
 app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false }));
 
-// Serve static Vite build
-app.use(express.static(join(__dirname, 'dist')));
+// Serve static Vite build (index: false so / falls through to the SPA route
+// which injects runtime config into the HTML)
+app.use(express.static(join(__dirname, 'dist'), { index: false }));
 
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
@@ -73,9 +74,31 @@ watch(manifestPath, () => {
   }
 });
 
+// ── Runtime config injection ─────────────────────────────────────────────────
+const runtimeConfig = JSON.stringify({
+  dataApiUrl: process.env.VITE_DATA_API_URL ?? undefined,
+});
+const configScript = `<script>window.__IKARY_CONFIG__=${runtimeConfig}</script>`;
+
+let indexHtml = null;
+function getIndexHtml() {
+  if (!indexHtml) {
+    const htmlPath = join(__dirname, 'dist', 'index.html');
+    try {
+      const raw = readFileSync(htmlPath, 'utf-8');
+      indexHtml = raw.replace('</head>', `${configScript}\n</head>`);
+    } catch {
+      // dist/ may not exist during development or E2E tests — return a minimal shell
+      indexHtml = `<!doctype html><html><head>${configScript}</head><body><div id="root"></div></body></html>`;
+    }
+  }
+  return indexHtml;
+}
+
 // SPA fallback (Express 5 requires named wildcards)
 app.get('/{*splat}', (_req, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'));
+  res.setHeader('Content-Type', 'text/html');
+  res.send(getIndexHtml());
 });
 
 createServer(app).listen(port, () => {

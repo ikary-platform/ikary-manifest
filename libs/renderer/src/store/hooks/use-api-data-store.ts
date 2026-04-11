@@ -107,6 +107,19 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
   const [requestedEntity, setRequestedEntity] = useState<string | null>(null);
   const [requestedRecordId, setRequestedRecordId] = useState<string | null>(null);
 
+  // Sync the initial effectiveEntity to the adapter on mount.
+  // Without this, the first entity in the manifest never triggers
+  // adapter.setActiveEntity because getRows() matches effectiveEntity
+  // directly and never sets requestedEntity.
+  const entities = manifest.spec.entities ?? [];
+  const initialEntityKey = entities[0]?.key ?? '';
+
+  useEffect(() => {
+    if (initialEntityKey && activeEntity === null) {
+      adapter.setActiveEntity(initialEntityKey);
+    }
+  }, [initialEntityKey, activeEntity, adapter]);
+
   // Sync requested → active via useEffect (avoids setState-during-render)
   useEffect(() => {
     if (requestedEntity !== null && requestedEntity !== activeEntity) {
@@ -124,8 +137,7 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
     }
   }, [requestedRecordId, activeRecordId, requestedEntity, adapter]);
 
-  const entities = manifest.spec.entities ?? [];
-  const effectiveEntity = activeEntity ?? entities[0]?.key ?? '';
+  const effectiveEntity = activeEntity ?? initialEntityKey;
 
   return useMemo<CellDataStore>(() => {
     return {
@@ -178,9 +190,11 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
         patch: Record<string, unknown>,
       ): Promise<Record<string, unknown> | undefined> {
         const version = Number(patch['_version'] ?? patch['expectedVersion'] ?? 1);
+        // Strip internal meta fields — the API doesn't accept them as column data
+        const { _version, _createdAt, _createdBy, _updatedAt, _updatedBy, expectedVersion: _ev, ...data } = patch;
         const result = await adapter.updateAsync({
           id,
-          data: patch,
+          data,
           expectedVersion: version,
         });
         return result?.data as Record<string, unknown> | undefined;
@@ -205,8 +219,9 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
           return [];
         }
 
-        if (!adapter.auditData?.data) return [];
-        return adapter.auditData.data.map(mapAuditToVersion).sort((a, b) => b.version - a.version);
+        const auditEntries = adapter.auditData?.data;
+        if (!Array.isArray(auditEntries)) return [];
+        return auditEntries.map(mapAuditToVersion).sort((a, b) => b.version - a.version);
       },
 
       getAuditEvents(entityKey: string, id: string): AuditEvent[] {
@@ -218,8 +233,9 @@ export function useCreateApiDataStore(manifest: CellManifestV1, adapter: EntityA
           return [];
         }
 
-        if (!adapter.auditData?.data) return [];
-        return adapter.auditData.data
+        const auditEntries = adapter.auditData?.data;
+        if (!Array.isArray(auditEntries)) return [];
+        return auditEntries
           .map((e) => mapAuditEntry(e, entityKey, id))
           .sort((a, b) => b.version - a.version);
       },

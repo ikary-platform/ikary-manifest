@@ -9,7 +9,7 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { createServer } from 'node:http';
-import { watch } from 'node:fs';
+import { readFileSync, watch } from 'node:fs';
 import { join } from 'node:path';
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
@@ -28,8 +28,10 @@ const port = process.env.PORT ?? 4500;
 
 app.use(rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false }));
 
-// Serve static Vite build (server.js lives in the same dist/ dir as the Vite output)
-app.use(express.static(__dirname));
+// Serve static Vite build (index: false so / falls through to the SPA route
+// which injects runtime config into the HTML).
+// server.js lives in the same dist/ dir as the Vite output.
+app.use(express.static(__dirname, { index: false, dotfiles: 'deny' }));
 
 // Health check
 app.get('/health', (_req: express.Request, res: express.Response) => res.json({ status: 'ok' }));
@@ -72,9 +74,64 @@ watch(manifestPath, () => {
   }
 });
 
+// ── Runtime config injection ─────────────────────────────────────────────────
+// Vite replaces import.meta.env.VITE_* at build time, but in Docker the env
+// var is only available at runtime.  We inject it into the HTML as a global so
+// the client bundle can read it without a rebuild.
+const dataApiUrl = process.env.VITE_DATA_API_URL ?? undefined;
+const internalApiUrl = process.env.DATA_API_URL ?? dataApiUrl;
+
+let cachedAuthToken: string | undefined;
+
+async function fetchPreviewToken(): Promise<string | undefined> {
+  if (cachedAuthToken) return cachedAuthToken;
+  if (!internalApiUrl) return undefined;
+
+  try {
+    const res = await fetch(`${internalApiUrl}/auth/preview-token`);
+    if (res.ok) {
+      const data = (await res.json()) as { token?: string };
+      cachedAuthToken = data.token;
+      return cachedAuthToken;
+    }
+    console.warn(`[preview-server] Failed to fetch preview token: ${res.status}`);
+  } catch (err) {
+    console.warn('[preview-server] Could not reach cell-runtime-api for preview token:', err instanceof Error ? err.message : err);
+  }
+  return undefined;
+}
+
+function buildConfigScript(authToken?: string): string {
+  const runtimeConfig = JSON.stringify({
+    dataApiUrl,
+    authToken,
+  });
+  return `<script>window.__IKARY_CONFIG__=${runtimeConfig}</script>`;
+}
+
+let rawIndexHtml: string | null = null;
+function getRawIndexHtml(): string {
+  if (!rawIndexHtml) {
+    const htmlPath = join(__dirname, 'index.html');
+    try {
+      rawIndexHtml = readFileSync(htmlPath, 'utf-8');
+    } catch {
+      rawIndexHtml = '<!doctype html><html><head></head><body><div id="root"></div></body></html>';
+    }
+  }
+  return rawIndexHtml;
+}
+
+async function getIndexHtml(): Promise<string> {
+  const authToken = await fetchPreviewToken();
+  const configScript = buildConfigScript(authToken);
+  return getRawIndexHtml().replace('</head>', `${configScript}\n</head>`);
+}
+
 // SPA fallback (Express 5 requires named wildcards)
-app.get('/{*splat}', (_req: express.Request, res: express.Response) => {
-  res.sendFile(join(__dirname, 'index.html'));
+app.get('/{*splat}', async (_req: express.Request, res: express.Response) => {
+  res.setHeader('Content-Type', 'text/html');
+  res.send(await getIndexHtml());
 });
 
 createServer(app).listen(port, () => {

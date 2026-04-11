@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { Module } from '@nestjs/common';
 import { EntityController } from './entity/entity.controller.js';
 import { HealthController } from './health/health.controller.js';
+import { PreviewAuthController } from './preview/preview-auth.controller.js';
+import { PreviewBootstrapService } from './preview/preview-bootstrap.service.js';
 import { RUNTIME_CONTEXT_TOKEN } from './runtime-context.js';
 import {
   EntitySchemaManager,
@@ -17,6 +19,10 @@ import { MigrationRunner } from '@ikary/cell-migration-core';
 import { loadManifestFromFile } from '@ikary/loader';
 import { compileCellApp, isValidationResult } from '@ikary/engine';
 import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
+import {
+  AuthModule,
+  AuthAuditService,
+} from '@ikary/system-auth';
 import { DatabaseModule } from './database.module.js';
 import type { RuntimeContext } from './runtime-context.js';
 
@@ -35,6 +41,8 @@ function resolveMigrationsRoot(packageName: string): string {
   }
 }
 
+const dbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
+
 @Module({
   imports: [
     DatabaseModule,
@@ -43,8 +51,42 @@ function resolveMigrationsRoot(packageName: string): string {
       service: 'cell-runtime-api',
       pretty: true,
     }),
+    AuthModule.register({
+      database: {
+        connectionString: dbUrl,
+        ssl: false,
+        maxPoolSize: 5,
+      },
+      jwt: {
+        accessTokenSecret: process.env['AUTH_ACCESS_TOKEN_SECRET'] ?? 'ikary-preview-access-secret-key-0',
+        refreshTokenSecret: process.env['AUTH_REFRESH_TOKEN_SECRET'] ?? 'ikary-preview-refresh-secret-key0',
+        tokenHashSecret: process.env['AUTH_TOKEN_HASH_SECRET'] ?? 'ikary-preview-hash-secret-key-000',
+        accessTokenTtlSeconds: 3600,
+        refreshTokenTtlSeconds: 86_400 * 14,
+        issuer: 'ikary-preview',
+        audience: 'ikary-preview',
+      },
+      cookie: {
+        domain: process.env['AUTH_COOKIE_DOMAIN'] ?? 'localhost',
+        secure: false,
+      },
+      classic: {
+        enabled: true,
+        signup: false,
+        resetPassword: false,
+        magicLink: false,
+        emailVerification: 'code',
+        requireEmailVerification: false,
+        passwordMinLength: 8,
+        verificationCodeLength: 6,
+        verificationTokenTtlMinutes: 20,
+        resetPasswordTtlMinutes: 30,
+        magicLinkTtlMinutes: 15,
+      },
+      extraExports: [AuthAuditService],
+    }),
   ],
-  controllers: [HealthController, EntityController],
+  controllers: [HealthController, EntityController, PreviewAuthController],
   providers: [
     {
       provide: RUNTIME_CONTEXT_TOKEN,
@@ -87,6 +129,13 @@ function resolveMigrationsRoot(packageName: string): string {
         );
         await logMigrations.migrate();
 
+        const authMigrations = new MigrationRunner(
+          dbService,
+          { packageName: '@ikary/system-auth', migrationsRoot: resolveMigrationsRoot('@ikary/system-auth') },
+          migrationLog,
+        );
+        await authMigrations.migrate();
+
         const schemaManager = new EntitySchemaManager(dbService);
         await schemaManager.initFromManifest(compiled as any);
 
@@ -107,6 +156,7 @@ function resolveMigrationsRoot(packageName: string): string {
       },
       inject: [RUNTIME_CONTEXT_TOKEN, LogService],
     },
+    PreviewBootstrapService,
   ],
 })
 export class AppModule {}

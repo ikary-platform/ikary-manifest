@@ -6,7 +6,7 @@ node_modules
 .github
 docs
 runtime-api
-libs/data
+libs/data/coverage
 libs/contract/coverage
 libs/engine/coverage
 libs/loader/coverage

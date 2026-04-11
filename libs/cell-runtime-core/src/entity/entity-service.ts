@@ -3,6 +3,7 @@ import type { EntityRepository } from './entity-repository.js';
 import type { ListOptionsInput, ListResult } from '../shared/list-options.schema.js';
 import type { AuditService } from '../audit/audit-service.js';
 import type { AuditLogRow } from '../db/schema.js';
+import type { EntityRuntimeContext } from './entity-runtime-context.js';
 import { EntityNotFoundError } from '../errors.js';
 
 function computeDiff(
@@ -43,6 +44,7 @@ export class EntityService {
   async create(
     entityKey: string,
     data: Record<string, unknown>,
+    ctx?: EntityRuntimeContext,
   ): Promise<Record<string, unknown>> {
     const id = (data.id as string | undefined) ?? randomUUID();
     const record = await this.repository.insert(entityKey, { ...data, id });
@@ -54,6 +56,8 @@ export class EntityService {
       resourceVersion: 1,
       changeKind: 'snapshot',
       snapshot: record,
+      actorId: ctx?.actorId,
+      requestId: ctx?.requestId,
     });
 
     this.logger?.log('Entity created', { operation: 'entity.create', entityKey, entityId: id });
@@ -66,6 +70,7 @@ export class EntityService {
     id: string,
     patch: Record<string, unknown>,
     expectedVersion?: number,
+    ctx?: EntityRuntimeContext,
   ): Promise<Record<string, unknown>> {
     const before = await this.repository.findById(entityKey, id);
     if (!before) throw new EntityNotFoundError(entityKey, id);
@@ -80,6 +85,8 @@ export class EntityService {
       changeKind: 'patch',
       snapshot: after,
       diff: computeDiff(before, after),
+      actorId: ctx?.actorId,
+      requestId: ctx?.requestId,
     });
 
     this.logger?.log('Entity updated', { operation: 'entity.update', entityKey, entityId: id });
@@ -91,6 +98,7 @@ export class EntityService {
     entityKey: string,
     id: string,
     expectedVersion?: number,
+    ctx?: EntityRuntimeContext,
   ): Promise<void> {
     const record = await this.repository.findById(entityKey, id);
     if (!record) throw new EntityNotFoundError(entityKey, id);
@@ -104,6 +112,8 @@ export class EntityService {
       resourceVersion: (record.version as number) + 1,
       changeKind: 'snapshot',
       snapshot: { ...record, deleted_at: new Date().toISOString() },
+      actorId: ctx?.actorId,
+      requestId: ctx?.requestId,
     });
 
     this.logger?.log('Entity deleted', { operation: 'entity.delete', entityKey, entityId: id });
@@ -114,6 +124,7 @@ export class EntityService {
     id: string,
     targetVersion: number,
     expectedVersion?: number,
+    ctx?: EntityRuntimeContext,
   ): Promise<Record<string, unknown>> {
     const current = await this.repository.findById(entityKey, id);
     if (!current) throw new EntityNotFoundError(entityKey, id);
@@ -136,6 +147,8 @@ export class EntityService {
       changeKind: 'rollback',
       snapshot: restored,
       diff: computeDiff(current, restored),
+      actorId: ctx?.actorId,
+      requestId: ctx?.requestId,
     });
 
     this.logger?.log('Entity rolled back', { operation: 'entity.rollback', entityKey, entityId: id, targetVersion });

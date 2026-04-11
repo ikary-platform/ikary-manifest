@@ -1,14 +1,6 @@
 import { useMemo } from 'react';
 import type { ComponentType, ReactNode } from 'react';
-import {
-  MemoryRouter,
-  Routes,
-  Route,
-  Navigate,
-  UNSAFE_LocationContext,
-  UNSAFE_NavigationContext,
-  UNSAFE_RouteContext,
-} from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import type { CellManifestV1 } from '@ikary/contract';
 import { ShellLayout } from './shell-layout';
 import { PageRenderer } from './page-renderer';
@@ -104,22 +96,14 @@ function CellAppRendererInner({
       }}
     >
       <style dangerouslySetInnerHTML={{ __html: CELL_CSS_VARS + CELL_RUNTIME_CSS }} />
-      <UNSAFE_RouteContext.Provider value={{ outlet: null, matches: [], isDataRoute: false }}>
-        <UNSAFE_LocationContext.Provider value={null as any}>
-          <UNSAFE_NavigationContext.Provider value={null as any}>
-            <MemoryRouter initialEntries={[landingPath]}>
-              <Routes>
-                <Route element={<ShellLayout manifest={manifest} />}>
-                  {routes.map((route) => (
-                    <Route key={route.pageKey} path={route.path} element={<PageRenderer page={route.page} />} />
-                  ))}
-                  <Route path="*" element={<Navigate to={landingPath} replace />} />
-                </Route>
-              </Routes>
-            </MemoryRouter>
-          </UNSAFE_NavigationContext.Provider>
-        </UNSAFE_LocationContext.Provider>
-      </UNSAFE_RouteContext.Provider>
+      <Routes>
+        <Route element={<ShellLayout manifest={manifest} />}>
+          {routes.map((route) => (
+            <Route key={route.pageKey} path={route.path} element={<PageRenderer page={route.page} />} />
+          ))}
+          <Route path="*" element={<Navigate to={landingPath} replace />} />
+        </Route>
+      </Routes>
     </CellRuntimeContext.Provider>
   );
 }

@@ -5,6 +5,7 @@ export { EntityRepository } from './entity/entity-repository.js';
 export type { ListOptions, ListOptionsInput, ListResult } from './shared/list-options.schema.js';
 export { listOptionsSchema } from './shared/list-options.schema.js';
 export { EntityService, type EntityLogger } from './entity/entity-service.js';
+export type { EntityRuntimeContext } from './entity/entity-runtime-context.js';
 
 export { AuditService } from './audit/audit-service.js';
 export type { AuditEntry, ChangeKind } from './shared/audit-entry.schema.js';

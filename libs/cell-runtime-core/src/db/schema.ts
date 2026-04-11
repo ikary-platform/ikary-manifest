@@ -13,6 +13,8 @@ export interface AuditLogTable {
   change_kind: string;
   snapshot: string; // JSON
   diff: string | null; // JSON patch — null for creates
+  actor_id: string | null;
+  request_id: string | null;
   occurred_at: ColumnType<string, string, never>; // ISO-8601
 }
 

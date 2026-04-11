@@ -146,6 +146,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@ikary/contract': path.resolve(__dirname, `${LIBS}/contract/src/index.ts`),
+      '@ikary/data': path.resolve(__dirname, `${LIBS}/data/src/index.ts`),
       '@ikary/engine': path.resolve(__dirname, `${LIBS}/engine/src/index.ts`),
       '@ikary/presentation': path.resolve(__dirname, `${LIBS}/presentation/src/index.ts`),
       '@ikary/primitives/registry': path.resolve(__dirname, `${LIBS}/primitives/src/registry.ts`),

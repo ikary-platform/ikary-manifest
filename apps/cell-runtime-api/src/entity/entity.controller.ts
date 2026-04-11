@@ -11,17 +11,34 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Req,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { EntityService } from '@ikary/cell-runtime-core';
+import type { EntityService, EntityRuntimeContext } from '@ikary/cell-runtime-core';
+import type { AuditLogRow } from '@ikary/cell-runtime-core';
 import { EntityNotFoundError, VersionConflictError } from '@ikary/cell-runtime-core';
+import { JwtAuthGuard, AuditInterceptor, UserService, type CurrentAuthValue } from '@ikary/system-auth';
 
 @ApiTags('entities')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(AuditInterceptor)
 @Controller('entities/:entityKey/records')
 export class EntityController {
   constructor(
     @Inject('ENTITY_SERVICE') private readonly entityService: EntityService,
+    @Inject(UserService) private readonly userService: UserService,
   ) {}
+
+  private buildCtx(request: { auth?: CurrentAuthValue; headers?: Record<string, string | string[] | undefined> }): EntityRuntimeContext {
+    const rawRequestId = request.headers?.['x-request-id'];
+    const requestId = Array.isArray(rawRequestId) ? rawRequestId[0] : rawRequestId;
+    return {
+      actorId: request.auth?.userId,
+      requestId,
+    };
+  }
 
   @Get()
   @ApiOperation({ summary: 'List entity records' })
@@ -56,8 +73,8 @@ export class EntityController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an entity record' })
-  async create(@Param('entityKey') entityKey: string, @Body() body: Record<string, unknown>) {
-    return this.entityService.create(entityKey, body);
+  async create(@Param('entityKey') entityKey: string, @Body() body: Record<string, unknown>, @Req() req: any) {
+    return this.entityService.create(entityKey, body, this.buildCtx(req));
   }
 
   @Patch(':id')
@@ -66,10 +83,11 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Body() body: Record<string, unknown>,
+    @Req() req: any,
   ) {
     const { expectedVersion, ...patch } = body;
     try {
-      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined);
+      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined, this.buildCtx(req));
     } catch (err) {
       if (err instanceof VersionConflictError) {
         throw new HttpException(err.message, HttpStatus.CONFLICT);
@@ -88,12 +106,14 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Query('expectedVersion') expectedVersion?: string,
+    @Req() req?: any,
   ) {
     try {
       await this.entityService.delete(
         entityKey,
         id,
         expectedVersion !== undefined ? Number(expectedVersion) : undefined,
+        req ? this.buildCtx(req) : undefined,
       );
     } catch (err) {
       if (err instanceof VersionConflictError) {
@@ -109,7 +129,33 @@ export class EntityController {
   @Get(':id/audit')
   @ApiOperation({ summary: 'Get audit log for an entity record' })
   async audit(@Param('entityKey') entityKey: string, @Param('id') id: string) {
-    return this.entityService.getAuditLog(entityKey, id);
+    const rows = await this.entityService.getAuditLog(entityKey, id);
+
+    // Resolve actor emails for all distinct actor_ids
+    const actorIds = [...new Set(rows.map((r: AuditLogRow) => r.actor_id).filter(Boolean))] as string[];
+    const emailMap = new Map<string, string>();
+    for (const actorId of actorIds) {
+      try {
+        const user = await this.userService.findById(actorId);
+        if (user?.email) emailMap.set(actorId, user.email);
+      } catch {
+        // user lookup failed — skip
+      }
+    }
+
+    return rows.map((r: AuditLogRow) => ({
+      id: String(r.id),
+      eventType: r.event_type,
+      resourceVersion: r.resource_version,
+      actorId: r.actor_id ?? null,
+      actorType: r.actor_id ? 'user' : 'system',
+      actorEmail: r.actor_id ? (emailMap.get(r.actor_id) ?? null) : null,
+      changeKind: r.change_kind,
+      snapshot: typeof r.snapshot === 'string' ? JSON.parse(r.snapshot) : r.snapshot,
+      diff: r.diff ? (typeof r.diff === 'string' ? JSON.parse(r.diff) : r.diff) : null,
+      occurredAt: r.occurred_at,
+      requestId: r.request_id ?? null,
+    }));
   }
 
   @Post(':id/rollback')
@@ -118,6 +164,7 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Body() body: { targetVersion: number; expectedVersion?: number },
+    @Req() req: any,
   ) {
     try {
       return await this.entityService.rollback(
@@ -125,6 +172,7 @@ export class EntityController {
         id,
         body.targetVersion,
         body.expectedVersion,
+        this.buildCtx(req),
       );
     } catch (err) {
       if (err instanceof EntityNotFoundError) {

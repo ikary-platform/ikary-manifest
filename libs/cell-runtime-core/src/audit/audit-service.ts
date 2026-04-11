@@ -16,6 +16,8 @@ export class AuditService {
       change_kind: entry.changeKind,
       snapshot: JSON.stringify(entry.snapshot),
       diff: entry.diff ? JSON.stringify(entry.diff) : null,
+      actor_id: entry.actorId ?? null,
+      request_id: entry.requestId ?? null,
       occurred_at: new Date().toISOString(),
     };
 
