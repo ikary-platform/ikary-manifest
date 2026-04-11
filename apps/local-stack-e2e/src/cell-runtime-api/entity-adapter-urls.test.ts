@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { API_BASE, writeTestManifest, deleteTestManifest } from '../helpers/fixtures.js';
+import { API_BASE, writeTestManifest, deleteTestManifest, withAuth } from '../helpers/fixtures.js';
 import { startApiServer, type ServerHandle } from '../helpers/server-manager.js';
 
 /**
@@ -26,7 +26,7 @@ describe('cell-runtime-api — adapter URL contract', () => {
   it('POST /entities/item/records → 201 (valid entity key)', async () => {
     const res = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Correlation-ID': 'url-test-create' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json', 'X-Correlation-ID': 'url-test-create' }),
       body: JSON.stringify({ name: 'URL test', count: 1 }),
     });
     expect(res.status).toBe(201);
@@ -37,21 +37,21 @@ describe('cell-runtime-api — adapter URL contract', () => {
   it('POST /entities//records → 404 (empty entity key — the bug)', async () => {
     const res = await fetch(`${API_BASE}/entities//records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Should fail', count: 0 }),
     });
     expect(res.status).toBe(404);
   });
 
   it('GET /entities/item/records → 200 (list with valid entity key)', async () => {
-    const res = await fetch(`${API_BASE}/entities/item/records`);
+    const res = await fetch(`${API_BASE}/entities/item/records`, { headers: withAuth(handle.token) });
     expect(res.status).toBe(200);
     const body = await res.json() as { data: unknown[] };
     expect(Array.isArray(body.data)).toBe(true);
   });
 
   it('GET /entities//records → 404 (empty entity key)', async () => {
-    const res = await fetch(`${API_BASE}/entities//records`);
+    const res = await fetch(`${API_BASE}/entities//records`, { headers: withAuth(handle.token) });
     // Express collapses // into / so this hits a different route
     expect([404, 200]).toContain(res.status);
   });
@@ -59,10 +59,9 @@ describe('cell-runtime-api — adapter URL contract', () => {
   // ── PATCH requires entity key + record id ────────────────────────────────
 
   it('PATCH /entities/item/records/:id → 200 (valid)', async () => {
-    // Create first
     const createRes = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Patchable', count: 1 }),
     });
     const created = await createRes.json() as Record<string, unknown>;
@@ -70,7 +69,7 @@ describe('cell-runtime-api — adapter URL contract', () => {
 
     const res = await fetch(`${API_BASE}/entities/item/records/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Patched', expectedVersion: 1 }),
     });
     expect(res.status).toBe(200);
@@ -81,7 +80,7 @@ describe('cell-runtime-api — adapter URL contract', () => {
   it('DELETE /entities/item/records/:id → 204 (valid)', async () => {
     const createRes = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Deletable', count: 0 }),
     });
     const created = await createRes.json() as Record<string, unknown>;
@@ -89,6 +88,7 @@ describe('cell-runtime-api — adapter URL contract', () => {
 
     const res = await fetch(`${API_BASE}/entities/item/records/${id}`, {
       method: 'DELETE',
+      headers: withAuth(handle.token),
     });
     expect(res.status).toBe(204);
   });
@@ -98,13 +98,13 @@ describe('cell-runtime-api — adapter URL contract', () => {
   it('GET /entities/item/records/:id/audit → 200', async () => {
     const createRes = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Auditable', count: 5 }),
     });
     const created = await createRes.json() as Record<string, unknown>;
     const id = created['id'] as string;
 
-    const res = await fetch(`${API_BASE}/entities/item/records/${id}/audit`);
+    const res = await fetch(`${API_BASE}/entities/item/records/${id}/audit`, { headers: withAuth(handle.token) });
     expect(res.status).toBe(200);
     const body = await res.json() as unknown[];
     expect(body.length).toBeGreaterThanOrEqual(1);
@@ -113,10 +113,9 @@ describe('cell-runtime-api — adapter URL contract', () => {
   // ── Rollback URL ─────────────────────────────────────────────────────────
 
   it('POST /entities/item/records/:id/rollback → 200', async () => {
-    // Create + update to get version 2
     const createRes = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Rollbackable', count: 1 }),
     });
     const created = await createRes.json() as Record<string, unknown>;
@@ -124,13 +123,13 @@ describe('cell-runtime-api — adapter URL contract', () => {
 
     await fetch(`${API_BASE}/entities/item/records/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Changed', expectedVersion: 1 }),
     });
 
     const res = await fetch(`${API_BASE}/entities/item/records/${id}/rollback`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ targetVersion: 1, expectedVersion: 2 }),
     });
     expect([200, 201]).toContain(res.status);
@@ -141,10 +140,10 @@ describe('cell-runtime-api — adapter URL contract', () => {
   it('X-Correlation-ID header is accepted and does not cause errors', async () => {
     const res = await fetch(`${API_BASE}/entities/item/records`, {
       method: 'POST',
-      headers: {
+      headers: withAuth(handle.token, {
         'Content-Type': 'application/json',
         'X-Correlation-ID': 'e2e-adapter-test-corr-001',
-      },
+      }),
       body: JSON.stringify({ name: 'Correlated', count: 99 }),
     });
     expect(res.status).toBe(201);

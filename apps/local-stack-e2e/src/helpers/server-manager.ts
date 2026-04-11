@@ -1,6 +1,8 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
+import { unlinkSync, existsSync } from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +18,8 @@ const PREVIEW_PORT = 4510;
 
 export interface ServerHandle {
   manifestPath: string;
+  /** JWT token for authenticated requests (null if auth bootstrap failed). */
+  token: string | null;
   stop: () => Promise<void>;
 }
 
@@ -62,13 +66,23 @@ function spawnServer(
   return { proc, stop };
 }
 
-/** Spawn cell-runtime-api on port 4100 with an in-memory SQLite database. */
+/** Spawn cell-runtime-api on the E2E port with a temp SQLite file. */
 export async function startApiServer(manifestPath: string): Promise<ServerHandle> {
-  const { stop } = spawnServer(API_SERVER_PATH, {
+  // Use a temp file instead of :memory: so the app DB and auth DB share
+  // the same SQLite instance (each :memory: connection gets a separate DB).
+  const dbPath = join(tmpdir(), `ikary-e2e-${process.pid}-${Date.now()}.db`);
+  const dbUrl = `sqlite://${dbPath}`;
+
+  const { stop: rawStop } = spawnServer(API_SERVER_PATH, {
     IKARY_MANIFEST_PATH: manifestPath,
-    DATABASE_URL: 'sqlite://:memory:',
+    DATABASE_URL: dbUrl,
     PORT: String(API_PORT),
   });
+
+  const stop = async () => {
+    await rawStop();
+    if (existsSync(dbPath)) unlinkSync(dbPath);
+  };
 
   try {
     await waitForHttp(`http://localhost:${API_PORT}/health`);
@@ -77,7 +91,19 @@ export async function startApiServer(manifestPath: string): Promise<ServerHandle
     throw err;
   }
 
-  return { manifestPath, stop };
+  // Fetch preview token for authenticated E2E requests
+  let token: string | null = null;
+  try {
+    const res = await fetch(`http://localhost:${API_PORT}/auth/preview-token`);
+    if (res.ok) {
+      const data = (await res.json()) as { token?: string };
+      token = data.token ?? null;
+    }
+  } catch {
+    // auth bootstrap may have failed — tests that need auth will skip
+  }
+
+  return { manifestPath, token, stop };
 }
 
 /** Spawn preview-server on port 3001. */

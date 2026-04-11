@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { API_BASE, writeMultiEntityManifest, deleteTestManifest } from '../helpers/fixtures.js';
+import { API_BASE, writeMultiEntityManifest, deleteTestManifest, withAuth } from '../helpers/fixtures.js';
 import { startApiServer, type ServerHandle } from '../helpers/server-manager.js';
 
 /**
@@ -8,6 +8,8 @@ import { startApiServer, type ServerHandle } from '../helpers/server-manager.js'
  * preview UI creates records per entity, reads them back, edits, and deletes.
  */
 
+let handle: ServerHandle;
+
 function entityUrl(entityKey: string): string {
   return `${API_BASE}/entities/${entityKey}/records`;
 }
@@ -15,10 +17,10 @@ function entityUrl(entityKey: string): string {
 async function createRecord(entityKey: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
   const res = await fetch(entityUrl(entityKey), {
     method: 'POST',
-    headers: {
+    headers: withAuth(handle.token, {
       'Content-Type': 'application/json',
       'X-Correlation-ID': `e2e-${entityKey}-${Date.now()}`,
-    },
+    }),
     body: JSON.stringify(data),
   });
   expect(res.status).toBe(201);
@@ -26,13 +28,13 @@ async function createRecord(entityKey: string, data: Record<string, unknown>): P
 }
 
 async function getRecord(entityKey: string, id: string): Promise<{ status: number; body: Record<string, unknown> | null }> {
-  const res = await fetch(`${entityUrl(entityKey)}/${id}`);
+  const res = await fetch(`${entityUrl(entityKey)}/${id}`, { headers: withAuth(handle.token) });
   if (res.status === 404) return { status: 404, body: null };
   return { status: res.status, body: await res.json() as Record<string, unknown> };
 }
 
 async function listRecords(entityKey: string): Promise<{ data: Record<string, unknown>[]; total: number }> {
-  const res = await fetch(entityUrl(entityKey));
+  const res = await fetch(entityUrl(entityKey), { headers: withAuth(handle.token) });
   expect(res.status).toBe(200);
   return res.json() as Promise<{ data: Record<string, unknown>[]; total: number }>;
 }
@@ -40,10 +42,10 @@ async function listRecords(entityKey: string): Promise<{ data: Record<string, un
 async function updateRecord(entityKey: string, id: string, data: Record<string, unknown>): Promise<Record<string, unknown>> {
   const res = await fetch(`${entityUrl(entityKey)}/${id}`, {
     method: 'PATCH',
-    headers: {
+    headers: withAuth(handle.token, {
       'Content-Type': 'application/json',
       'X-Correlation-ID': `e2e-update-${entityKey}-${Date.now()}`,
-    },
+    }),
     body: JSON.stringify(data),
   });
   expect(res.status).toBe(200);
@@ -53,13 +55,12 @@ async function updateRecord(entityKey: string, id: string, data: Record<string, 
 async function deleteRecord(entityKey: string, id: string): Promise<number> {
   const res = await fetch(`${entityUrl(entityKey)}/${id}`, {
     method: 'DELETE',
-    headers: { 'X-Correlation-ID': `e2e-delete-${entityKey}-${Date.now()}` },
+    headers: withAuth(handle.token, { 'X-Correlation-ID': `e2e-delete-${entityKey}-${Date.now()}` }),
   });
   return res.status;
 }
 
 describe('multi-entity CRUD — account, contact, deal', () => {
-  let handle: ServerHandle;
   let manifestPath: string;
 
   beforeAll(async () => {
@@ -223,31 +224,25 @@ describe('multi-entity CRUD — account, contact, deal', () => {
       const account = await createRecord('account', { name: 'Isolated Corp', industry: 'Test', website: '' });
       const accountId = account['id'] as string;
 
-      // Should not appear in contacts or deals
       const { data: contacts } = await listRecords('contact');
       const { data: deals } = await listRecords('deal');
 
       expect(contacts.some((r) => r['id'] === accountId)).toBe(false);
       expect(deals.some((r) => r['id'] === accountId)).toBe(false);
 
-      // Cleanup
       await deleteRecord('account', accountId);
     });
 
     it('different entity keys have independent tables', async () => {
-      // Create a record in account
       const account = await createRecord('account', { name: 'Table Test', industry: 'X', website: '' });
       const accountId = account['id'] as string;
 
-      // Create a record in deal
       const deal = await createRecord('deal', { title: 'Table Test', amount: 0, stage: 'prospecting' });
       const dealId = deal['id'] as string;
 
-      // Fetching account ID from deals should fail
       const { status } = await getRecord('deal', accountId);
       expect(status).toBe(404);
 
-      // Cleanup
       await deleteRecord('account', accountId);
       await deleteRecord('deal', dealId);
     });

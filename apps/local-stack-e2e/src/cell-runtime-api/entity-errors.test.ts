@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { API_BASE, writeTestManifest, deleteTestManifest } from '../helpers/fixtures.js';
+import { API_BASE, writeTestManifest, deleteTestManifest, withAuth } from '../helpers/fixtures.js';
 import { startApiServer, type ServerHandle } from '../helpers/server-manager.js';
 
 const ITEMS_URL = `${API_BASE}/entities/item/records`;
@@ -19,38 +19,36 @@ describe('cell-runtime-api — entity error responses', () => {
   });
 
   it('GET by unknown id returns 404', async () => {
-    const res = await fetch(`${ITEMS_URL}/nonexistent-id`);
+    const res = await fetch(`${ITEMS_URL}/nonexistent-id`, { headers: withAuth(handle.token) });
     expect(res.status).toBe(404);
   });
 
   it('PATCH unknown id returns 404', async () => {
     const res = await fetch(`${ITEMS_URL}/nonexistent-id`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'X' }),
     });
     expect(res.status).toBe(404);
   });
 
   it('DELETE unknown id returns 404', async () => {
-    const res = await fetch(`${ITEMS_URL}/nonexistent-id`, { method: 'DELETE' });
+    const res = await fetch(`${ITEMS_URL}/nonexistent-id`, { method: 'DELETE', headers: withAuth(handle.token) });
     expect(res.status).toBe(404);
   });
 
   it('PATCH with wrong expectedVersion returns 409', async () => {
-    // Create a record first
     const createRes = await fetch(ITEMS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'Washer', count: 1 }),
     });
     const created = await createRes.json() as Record<string, unknown>;
     const id = created['id'] as string;
 
-    // Attempt PATCH with wrong expectedVersion
     const patchRes = await fetch(`${ITEMS_URL}/${id}`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: withAuth(handle.token, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({ name: 'X', expectedVersion: 999 }),
     });
     expect(patchRes.status).toBe(409);

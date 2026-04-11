@@ -104,3 +104,11 @@ export function writeMultiEntityManifest(): string {
 export function deleteTestManifest(path: string): void {
   if (existsSync(path)) unlinkSync(path);
 }
+
+/** Merge auth header into existing headers for E2E requests. */
+export function withAuth(token: string | null, headers?: Record<string, string>): Record<string, string> {
+  return {
+    ...(headers ?? {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}

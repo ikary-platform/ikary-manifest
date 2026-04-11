@@ -41,11 +41,13 @@ export class PreviewBootstrapService implements OnModuleInit {
         },
       });
     } catch (err) {
-      this.logger.error('Preview bootstrap failed', {
+      this.logger.error('Preview bootstrap failed — auth endpoints will be unavailable', {
         operation: 'preview.bootstrap',
         metadata: { error: err instanceof Error ? err.message : String(err) },
       });
-      throw err;
+      // Don't rethrow — the server should still start so that health checks
+      // and unauthenticated endpoints remain available.  Preview token will be
+      // null and GET /auth/preview-token will return 503.
     }
   }
 
