@@ -50,6 +50,8 @@ export class EntitySchemaManager {
           change_kind TEXT NOT NULL,
           snapshot TEXT NOT NULL,
           diff TEXT,
+          actor_id TEXT,
+          request_id TEXT,
           occurred_at TIMESTAMPTZ NOT NULL
         )
       `.execute(this.dbService.db);
@@ -64,6 +66,8 @@ export class EntitySchemaManager {
           change_kind TEXT NOT NULL,
           snapshot TEXT NOT NULL,
           diff TEXT,
+          actor_id TEXT,
+          request_id TEXT,
           occurred_at TEXT NOT NULL
         )
       `.execute(this.dbService.db);

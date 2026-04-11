@@ -1,0 +1,5 @@
+BEGIN;
+
+-- Reserved no-op slot for backward-compatible migration numbering.
+
+COMMIT;

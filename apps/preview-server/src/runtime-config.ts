@@ -9,6 +9,8 @@
 export interface IkaryRuntimeConfig {
   /** Base URL of the cell-runtime-api (e.g. "http://localhost:4000"). */
   dataApiUrl?: string;
+  /** Preview auth token (JWT) for authenticated API requests. */
+  authToken?: string;
 }
 
 declare global {

@@ -11,17 +11,32 @@ import {
   HttpException,
   HttpStatus,
   Inject,
+  Req,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import type { EntityService } from '@ikary/cell-runtime-core';
+import type { EntityService, EntityRuntimeContext } from '@ikary/cell-runtime-core';
 import { EntityNotFoundError, VersionConflictError } from '@ikary/cell-runtime-core';
+import { JwtAuthGuard, AuditInterceptor, type CurrentAuthValue } from '@ikary/system-auth';
 
 @ApiTags('entities')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(AuditInterceptor)
 @Controller('entities/:entityKey/records')
 export class EntityController {
   constructor(
     @Inject('ENTITY_SERVICE') private readonly entityService: EntityService,
   ) {}
+
+  private buildCtx(request: { auth?: CurrentAuthValue; headers?: Record<string, string | string[] | undefined> }): EntityRuntimeContext {
+    const rawRequestId = request.headers?.['x-request-id'];
+    const requestId = Array.isArray(rawRequestId) ? rawRequestId[0] : rawRequestId;
+    return {
+      actorId: request.auth?.userId,
+      requestId,
+    };
+  }
 
   @Get()
   @ApiOperation({ summary: 'List entity records' })
@@ -56,8 +71,8 @@ export class EntityController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an entity record' })
-  async create(@Param('entityKey') entityKey: string, @Body() body: Record<string, unknown>) {
-    return this.entityService.create(entityKey, body);
+  async create(@Param('entityKey') entityKey: string, @Body() body: Record<string, unknown>, @Req() req: any) {
+    return this.entityService.create(entityKey, body, this.buildCtx(req));
   }
 
   @Patch(':id')
@@ -66,10 +81,11 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Body() body: Record<string, unknown>,
+    @Req() req: any,
   ) {
     const { expectedVersion, ...patch } = body;
     try {
-      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined);
+      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined, this.buildCtx(req));
     } catch (err) {
       if (err instanceof VersionConflictError) {
         throw new HttpException(err.message, HttpStatus.CONFLICT);
@@ -88,12 +104,14 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Query('expectedVersion') expectedVersion?: string,
+    @Req() req?: any,
   ) {
     try {
       await this.entityService.delete(
         entityKey,
         id,
         expectedVersion !== undefined ? Number(expectedVersion) : undefined,
+        req ? this.buildCtx(req) : undefined,
       );
     } catch (err) {
       if (err instanceof VersionConflictError) {
@@ -118,6 +136,7 @@ export class EntityController {
     @Param('entityKey') entityKey: string,
     @Param('id') id: string,
     @Body() body: { targetVersion: number; expectedVersion?: number },
+    @Req() req: any,
   ) {
     try {
       return await this.entityService.rollback(
@@ -125,6 +144,7 @@ export class EntityController {
         id,
         body.targetVersion,
         body.expectedVersion,
+        this.buildCtx(req),
       );
     } catch (err) {
       if (err instanceof EntityNotFoundError) {

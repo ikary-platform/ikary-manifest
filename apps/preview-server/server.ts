@@ -78,30 +78,60 @@ watch(manifestPath, () => {
 // Vite replaces import.meta.env.VITE_* at build time, but in Docker the env
 // var is only available at runtime.  We inject it into the HTML as a global so
 // the client bundle can read it without a rebuild.
-const runtimeConfig = JSON.stringify({
-  dataApiUrl: process.env.VITE_DATA_API_URL ?? undefined,
-});
-const configScript = `<script>window.__IKARY_CONFIG__=${runtimeConfig}</script>`;
+const dataApiUrl = process.env.VITE_DATA_API_URL ?? undefined;
+const internalApiUrl = process.env.DATA_API_URL ?? dataApiUrl;
 
-let indexHtml: string | null = null;
-function getIndexHtml(): string {
-  if (!indexHtml) {
+let cachedAuthToken: string | undefined;
+
+async function fetchPreviewToken(): Promise<string | undefined> {
+  if (cachedAuthToken) return cachedAuthToken;
+  if (!internalApiUrl) return undefined;
+
+  try {
+    const res = await fetch(`${internalApiUrl}/auth/preview-token`);
+    if (res.ok) {
+      const data = (await res.json()) as { token?: string };
+      cachedAuthToken = data.token;
+      return cachedAuthToken;
+    }
+    console.warn(`[preview-server] Failed to fetch preview token: ${res.status}`);
+  } catch (err) {
+    console.warn('[preview-server] Could not reach cell-runtime-api for preview token:', err instanceof Error ? err.message : err);
+  }
+  return undefined;
+}
+
+function buildConfigScript(authToken?: string): string {
+  const runtimeConfig = JSON.stringify({
+    dataApiUrl,
+    authToken,
+  });
+  return `<script>window.__IKARY_CONFIG__=${runtimeConfig}</script>`;
+}
+
+let rawIndexHtml: string | null = null;
+function getRawIndexHtml(): string {
+  if (!rawIndexHtml) {
     const htmlPath = join(__dirname, 'index.html');
     try {
-      const raw = readFileSync(htmlPath, 'utf-8');
-      indexHtml = raw.replace('</head>', `${configScript}\n</head>`);
+      rawIndexHtml = readFileSync(htmlPath, 'utf-8');
     } catch {
-      // Fallback when dist has not been built yet
-      indexHtml = `<!doctype html><html><head>${configScript}</head><body><div id="root"></div></body></html>`;
+      rawIndexHtml = '<!doctype html><html><head></head><body><div id="root"></div></body></html>';
     }
   }
-  return indexHtml;
+  return rawIndexHtml;
+}
+
+async function getIndexHtml(): Promise<string> {
+  const authToken = await fetchPreviewToken();
+  const configScript = buildConfigScript(authToken);
+  return getRawIndexHtml().replace('</head>', `${configScript}\n</head>`);
 }
 
 // SPA fallback (Express 5 requires named wildcards)
-app.get('/{*splat}', (_req: express.Request, res: express.Response) => {
+app.get('/{*splat}', async (_req: express.Request, res: express.Response) => {
   res.setHeader('Content-Type', 'text/html');
-  res.send(getIndexHtml());
+  res.send(await getIndexHtml());
 });
 
 createServer(app).listen(port, () => {

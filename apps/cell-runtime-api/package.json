@@ -16,6 +16,7 @@
     "@ikary/engine": "workspace:*",
     "@ikary/loader": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
+    "@ikary/system-auth": "workspace:*",
     "@ikary/system-log-core": "workspace:*",
     "@nestjs/common": "^11.1.0",
     "@nestjs/core": "^11.1.0",

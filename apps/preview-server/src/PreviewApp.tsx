@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const { dataApiUrl } = getRuntimeConfig();
+const { dataApiUrl, authToken } = getRuntimeConfig();
 const dataMode = dataApiUrl ? 'live' : 'mock';
 
 function LiveRenderer({ manifest }: { manifest: CellManifestV1 }) {
@@ -65,7 +65,7 @@ export function PreviewApp() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         {dataMode === 'live' && dataApiUrl ? (
-          <CellApiProvider apiBase={dataApiUrl} getToken={() => null}>
+          <CellApiProvider apiBase={dataApiUrl} getToken={() => authToken ?? null}>
             <DataHooksProvider value={dataHooks}>
               <Routes>
                 <Route path="/__primitive-studio/*" element={<PreviewPrimitiveStudio />} />
