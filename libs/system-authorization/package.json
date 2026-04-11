@@ -1,0 +1,54 @@
+{
+  "name": "@ikary/system-authorization",
+  "version": "0.1.0",
+  "description": "Composable multi-tenant authorization library for NestJS and PostgreSQL",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "migrations",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --dts --clean --external @ikary/system-db-core",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "migrate": "tsx scripts/migrate.ts"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "@nestjs/core": "^10.0.0 || ^11.0.0",
+    "reflect-metadata": "^0.2.0"
+  },
+  "dependencies": {
+    "@ikary/system-db-core": "workspace:*",
+    "@nestjs/common": "^11.1.15",
+    "@nestjs/core": "^11.1.15",
+    "kysely": "^0.27.0",
+    "pg": "^8.13.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "uuid": "^11.0.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/pg": "^8.11.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "tsup": "^8.0.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "microPackageKind": "server",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  }
+}

@@ -885,6 +885,58 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  libs/system-authorization:
+    dependencies:
+      '@ikary/system-db-core':
+        specifier: workspace:*
+        version: link:../system-db-core
+      '@nestjs/common':
+        specifier: ^11.1.15
+        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.1.15
+        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.18)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      kysely:
+        specifier: ^0.27.0
+        version: 0.27.6
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      uuid:
+        specifier: ^11.0.5
+        version: 11.1.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
+      '@types/pg':
+        specifier: ^8.11.0
+        version: 8.20.0
+      '@vitest/coverage-v8':
+        specifier: ^3.0.0
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@1.21.7)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@1.21.7)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
   libs/system-db-core:
     dependencies:
       kysely:
