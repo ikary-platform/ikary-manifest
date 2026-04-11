@@ -21,21 +21,20 @@ function runCli(args: string[]): ReturnType<typeof spawnSync> {
 
 describe('ikary local db — migration commands', () => {
   beforeEach(() => {
-    // Drop tables from prior runs to ensure clean state
+    // Drop all tables from prior runs to ensure clean state
     spawnSync('node', ['-e', `
       const { Pool } = require('pg');
       const pool = new Pool({ connectionString: '${TEST_DB_URL}' });
-      pool.query('DROP TABLE IF EXISTS audit_log, ikary_schema_versions CASCADE')
+      pool.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
         .then(() => pool.end());
     `], { encoding: 'utf8', timeout: 5_000 });
   });
 
   afterEach(() => {
-    // Clean up
     spawnSync('node', ['-e', `
       const { Pool } = require('pg');
       const pool = new Pool({ connectionString: '${TEST_DB_URL}' });
-      pool.query('DROP TABLE IF EXISTS audit_log, ikary_schema_versions CASCADE')
+      pool.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
         .then(() => pool.end());
     `], { encoding: 'utf8', timeout: 5_000 });
   });
@@ -63,6 +62,16 @@ describe('ikary local db — migration commands', () => {
   it('reset clears tracking so migrate re-applies', () => {
     runCli(['local', 'db', 'migrate', '--database-url', TEST_DB_URL]);
     runCli(['local', 'db', 'reset', '--yes', '--database-url', TEST_DB_URL]);
+
+    // Drop all tables so re-migrate starts from a clean schema
+    // (reset only clears tracking; actual DDL tables remain and
+    // constraint re-creation would fail without a clean slate).
+    spawnSync('node', ['-e', `
+      const { Pool } = require('pg');
+      const pool = new Pool({ connectionString: '${TEST_DB_URL}' });
+      pool.query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;')
+        .then(() => pool.end());
+    `], { encoding: 'utf8', timeout: 5_000 });
 
     const rerun = runCli(['local', 'db', 'migrate', '--database-url', TEST_DB_URL]);
     expect(rerun.status).toBe(0);
