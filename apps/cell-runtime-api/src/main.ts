@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('IKARY Cell Runtime API')
-    .setDescription('Local entity CRUD API for IKARY manifests. SQLite-backed, manifest-driven schema.')
+    .setDescription('Local entity CRUD API for IKARY manifests. PostgreSQL-backed, manifest-driven schema.')
     .setVersion('0.1.0')
     .addTag('entities', 'Entity record CRUD with versioning and audit log')
     .addTag('health', 'Health check')

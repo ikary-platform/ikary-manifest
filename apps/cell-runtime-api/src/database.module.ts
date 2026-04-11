@@ -7,7 +7,7 @@ import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-
     {
       provide: DatabaseService,
       useFactory: (): DatabaseService => {
-        const rawDbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db`;
+        const rawDbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
         const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
         return new DatabaseService(dbOptions);
       },

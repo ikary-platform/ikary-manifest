@@ -1,8 +1,6 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
-import { tmpdir } from 'node:os';
-import { unlinkSync, existsSync } from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,6 +13,9 @@ const PREVIEW_SERVER_PATH = join(REPO_ROOT, 'apps/preview-server/server.mjs');
 
 const API_PORT = 4511;
 const PREVIEW_PORT = 4510;
+
+const E2E_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
 
 export interface ServerHandle {
   manifestPath: string;
@@ -66,23 +67,13 @@ function spawnServer(
   return { proc, stop };
 }
 
-/** Spawn cell-runtime-api on the E2E port with a temp SQLite file. */
+/** Spawn cell-runtime-api on the E2E port with the test PostgreSQL database. */
 export async function startApiServer(manifestPath: string): Promise<ServerHandle> {
-  // Use a temp file instead of :memory: so the app DB and auth DB share
-  // the same SQLite instance (each :memory: connection gets a separate DB).
-  const dbPath = join(tmpdir(), `ikary-e2e-${process.pid}-${Date.now()}.db`);
-  const dbUrl = `sqlite://${dbPath}`;
-
-  const { stop: rawStop } = spawnServer(API_SERVER_PATH, {
+  const { stop } = spawnServer(API_SERVER_PATH, {
     IKARY_MANIFEST_PATH: manifestPath,
-    DATABASE_URL: dbUrl,
+    DATABASE_URL: E2E_DB_URL,
     PORT: String(API_PORT),
   });
-
-  const stop = async () => {
-    await rawStop();
-    if (existsSync(dbPath)) unlinkSync(dbPath);
-  };
 
   try {
     await waitForHttp(`http://localhost:${API_PORT}/health`);

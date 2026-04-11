@@ -2,9 +2,8 @@ import { z } from 'zod';
 
 export const databaseConnectionOptionsSchema = z.object({
   /**
-   * Connection string with dialect prefix.
-   * - SQLite (local/testing): `sqlite://:memory:` or `sqlite:///abs/path/to/db.sqlite`
-   * - PostgreSQL (production): `postgres://user:pass@host:5432/db`
+   * PostgreSQL connection string.
+   * Example: `postgres://user:pass@host:5432/db`
    */
   connectionString: z.string().min(1),
   maxPoolSize: z.number().int().positive().default(20),

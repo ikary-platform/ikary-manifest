@@ -13,4 +13,5 @@ export const PORTS = {
   PREVIEW:    4500,
   DATA_API:   4501,
   MCP_SERVER: 4502,
+  POSTGRES:   5432,
 } as const;

@@ -33,7 +33,7 @@ ikary local start <manifest>   # Start preview server + data API + MCP server
 ikary local stop               # Stop the stack
 ikary local status             # Show container status
 ikary local logs [service]     # Stream logs (-f to follow)
-ikary local reset-data         # Clear the local SQLite volume
+ikary local reset-data         # Clear the local PostgreSQL volume
 ikary local db migrate         # Run pending database migrations
 ```
 

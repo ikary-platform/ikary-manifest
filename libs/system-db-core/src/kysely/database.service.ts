@@ -8,10 +8,8 @@ export class DatabaseService<DB extends object = Record<string, never>>
   implements KyselyDatabaseProvider<DB>
 {
   readonly db: Kysely<DB>;
-  readonly isSqlite: boolean;
 
   constructor(options: DatabaseConnectionOptions) {
-    this.isSqlite = options.connectionString.startsWith('sqlite://');
     this.db = new Kysely<DB>({
       dialect: createDialect(options),
       ...(options.slowQueryThresholdMs > 0

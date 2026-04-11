@@ -12,12 +12,15 @@ describe('applyPagination', () => {
   let db: DatabaseService<TestDb>;
 
   beforeEach(async () => {
-    db = new DatabaseService<TestDb>({ connectionString: 'sqlite://:memory:', maxPoolSize: 1, ssl: false, slowQueryThresholdMs: 0 });
-    await sql`CREATE TABLE items (id INTEGER PRIMARY KEY, name TEXT)`.execute(db.db);
-    await sql`INSERT INTO items VALUES (1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')`.execute(db.db);
+    const testUrl = process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
+    db = new DatabaseService<TestDb>({ connectionString: testUrl, maxPoolSize: 1, ssl: false, slowQueryThresholdMs: 0 });
+    await sql`DROP TABLE IF EXISTS items`.execute(db.db);
+    await sql`CREATE TABLE items (id SERIAL PRIMARY KEY, name TEXT)`.execute(db.db);
+    await sql`INSERT INTO items (id, name) VALUES (1, 'a'), (2, 'b'), (3, 'c'), (4, 'd'), (5, 'e')`.execute(db.db);
   });
 
   afterEach(async () => {
+    await sql`DROP TABLE IF EXISTS items`.execute(db.db);
     await db.destroy();
   });
 

@@ -26,25 +26,25 @@ describe('MigrationPlanner', () => {
   });
 
   it('returns empty plan when migrationsRoot does not exist', () => {
-    const planner = new MigrationPlanner('/nonexistent/path', '@ikary/test', true);
+    const planner = new MigrationPlanner('/nonexistent/path', '@ikary/test');
     expect(planner.buildPlan(new Set())).toEqual([]);
   });
 
   it('returns empty plan when migrationsRoot has no version dirs', () => {
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     expect(planner.buildPlan(new Set())).toEqual([]);
   });
 
   it('returns empty plan when version dir has no .sql files', () => {
     mkdirSync(join(migrationsRoot, 'v0.1.0'));
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     expect(planner.buildPlan(new Set())).toHaveLength(0);
   });
 
   it('ignores non-semver directories', () => {
     mkdirSync(join(migrationsRoot, 'not-a-version'));
     mkdirSync(join(migrationsRoot, 'migrations'));
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     expect(planner.buildPlan(new Set())).toHaveLength(0);
   });
 
@@ -52,7 +52,7 @@ describe('MigrationPlanner', () => {
     const v = join(migrationsRoot, 'v0.1.0');
     mkdirSync(v);
     writeSql(v, '001-create-table.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan).toHaveLength(1);
     expect(plan[0]?.version).toBe('0.1.0');
@@ -65,7 +65,7 @@ describe('MigrationPlanner', () => {
       mkdirSync(dir);
       writeSql(dir, '001.sql');
     }
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan.map((p) => p.version)).toEqual(['0.1.0', '0.2.0', '1.0.0', '2.0.0']);
   });
@@ -76,7 +76,7 @@ describe('MigrationPlanner', () => {
       mkdirSync(dir);
       writeSql(dir, '001.sql');
     }
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan.map((p) => p.version)).toEqual(['0.1.0', '0.1.1', '0.1.2']);
   });
@@ -87,7 +87,7 @@ describe('MigrationPlanner', () => {
       mkdirSync(dir);
       writeSql(dir, '001.sql');
     }
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set(['0.1.0']));
     expect(plan).toHaveLength(1);
     expect(plan[0]?.version).toBe('1.0.0');
@@ -99,55 +99,35 @@ describe('MigrationPlanner', () => {
       mkdirSync(dir);
       writeSql(dir, '001.sql');
     }
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set(['0.1.0', '1.0.0']), true);
     expect(plan).toHaveLength(2);
   });
 
-  it('prefers .sqlite.sql over common .sql for SQLite dialect', () => {
-    const v = join(migrationsRoot, 'v0.1.0');
-    mkdirSync(v);
-    writeSql(v, '001-create.sql', 'SELECT 1; -- common');
-    writeSql(v, '001-create.sqlite.sql', 'SELECT 2; -- sqlite');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
-    const plan = planner.buildPlan(new Set());
-    expect(plan[0]?.files[0]?.fileName).toBe('001-create.sqlite.sql');
-  });
-
-  it('prefers .pg.sql over common .sql for PostgreSQL dialect', () => {
+  it('prefers .pg.sql over common .sql', () => {
     const v = join(migrationsRoot, 'v0.1.0');
     mkdirSync(v);
     writeSql(v, '001-create.sql', 'SELECT 1; -- common');
     writeSql(v, '001-create.pg.sql', 'SELECT 2; -- pg');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', false);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan[0]?.files[0]?.fileName).toBe('001-create.pg.sql');
   });
 
-  it('falls back to common .sql when no dialect-specific file exists', () => {
+  it('falls back to common .sql when no .pg.sql file exists', () => {
     const v = join(migrationsRoot, 'v0.1.0');
     mkdirSync(v);
     writeSql(v, '001-create.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', false);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan[0]?.files[0]?.fileName).toBe('001-create.sql');
   });
 
-  it('ignores .pg.sql files when using SQLite dialect', () => {
-    const v = join(migrationsRoot, 'v0.1.0');
-    mkdirSync(v);
-    writeSql(v, '001-create.pg.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
-    const plan = planner.buildPlan(new Set());
-    // No common or sqlite file — version is skipped
-    expect(plan).toHaveLength(0);
-  });
-
-  it('ignores .sqlite.sql files when using PostgreSQL dialect', () => {
+  it('ignores .sqlite.sql files', () => {
     const v = join(migrationsRoot, 'v0.1.0');
     mkdirSync(v);
     writeSql(v, '001-create.sqlite.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', false);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan).toHaveLength(0);
   });
@@ -158,7 +138,7 @@ describe('MigrationPlanner', () => {
     writeSql(v, '003-c.sql');
     writeSql(v, '001-a.sql');
     writeSql(v, '002-b.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan[0]?.files.map((f) => f.fileName)).toEqual(['001-a.sql', '002-b.sql', '003-c.sql']);
   });
@@ -167,7 +147,7 @@ describe('MigrationPlanner', () => {
     const v = join(migrationsRoot, 'v0.1.0');
     mkdirSync(v);
     writeSql(v, '001.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/cell-runtime-core', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/cell-runtime-core');
     const plan = planner.buildPlan(new Set());
     expect(plan[0]?.packageName).toBe('@ikary/cell-runtime-core');
   });
@@ -176,7 +156,7 @@ describe('MigrationPlanner', () => {
     const v = join(migrationsRoot, 'v1.2.3');
     mkdirSync(v);
     writeSql(v, '001.sql');
-    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test', true);
+    const planner = new MigrationPlanner(migrationsRoot, '@ikary/test');
     const plan = planner.buildPlan(new Set());
     expect(plan[0]?.versionDir).toBe('v1.2.3');
   });

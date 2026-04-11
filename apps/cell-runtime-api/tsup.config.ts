@@ -15,7 +15,6 @@ export default defineConfig({
     'express',
     'reflect-metadata',
     'rxjs',
-    'better-sqlite3',
     'kysely',
     'pg',
   ],

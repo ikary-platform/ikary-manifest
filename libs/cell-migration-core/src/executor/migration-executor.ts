@@ -28,8 +28,7 @@ export class MigrationExecutor {
             await sql.raw(statement).execute(trx as any);
           }
         }
-        /* v8 ignore next */
-        const appliedAt = this.dbService.isSqlite ? new Date().toISOString() : new Date();
+        const appliedAt = new Date();
         await (trx as any)
           .insertInto(SCHEMA_VERSIONS_TABLE)
           .values({

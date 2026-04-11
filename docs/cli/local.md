@@ -43,7 +43,7 @@ Services:
   MCP Server  http://localhost:4502/mcp
 ```
 
-The preview server hot-reloads when `manifest.json` changes. Entity records persist in a local SQLite database between restarts.
+The preview server hot-reloads when `manifest.json` changes. Entity records persist in a local PostgreSQL database between restarts.
 
 ---
 
@@ -86,7 +86,7 @@ ikary local logs mcp      # MCP server only
 
 ## `ikary local reset-data`
 
-Deletes the local SQLite data volume. Stops the stack first if it is running.
+Deletes the local PostgreSQL data volume. Stops the stack first if it is running.
 
 ```bash
 ikary local reset-data

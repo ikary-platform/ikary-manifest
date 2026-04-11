@@ -1,7 +1,7 @@
 {
   "name": "@ikary/cell-migration-core",
   "version": "0.1.0",
-  "description": "File-based database migration engine for IKARY local stack. Supports SQLite and PostgreSQL via system-db-core.",
+  "description": "File-based database migration engine for IKARY local stack. Uses PostgreSQL via system-db-core.",
   "license": "MIT",
   "type": "module",
   "microPackageKind": "server",

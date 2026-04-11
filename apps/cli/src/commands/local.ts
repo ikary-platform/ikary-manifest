@@ -70,6 +70,7 @@ export async function localStartCommand(
       { port: PORTS.PREVIEW,    name: `Preview   (${PORTS.PREVIEW})` },
       { port: PORTS.DATA_API,   name: `Data API  (${PORTS.DATA_API})` },
       { port: PORTS.MCP_SERVER, name: `MCP Server(${PORTS.MCP_SERVER})` },
+      { port: PORTS.POSTGRES,   name: `PostgreSQL(${PORTS.POSTGRES})` },
     ].map(async ({ port, name }) => ({ port, name, inUse: await isPortInUse(port) })),
   );
   for (const { name, inUse } of portChecks) {
@@ -243,7 +244,7 @@ export async function localResetDataCommand(_options: Record<string, unknown>): 
     return;
   }
 
-  const { code, stderr } = await runVolumeRm('ikary-local-data');
+  const { code, stderr } = await runVolumeRm('ikary-local-pgdata');
 
   if (code !== 0 && !stderr.includes('no such volume')) {
     spinner.fail(theme.error('Failed to remove data volume'));

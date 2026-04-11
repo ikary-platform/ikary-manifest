@@ -153,7 +153,7 @@ describe('LogIngestionService', () => {
     );
   });
 
-  it('fires fetch for external sink when config is a JSON string (SQLite storage)', async () => {
+  it('fires fetch for external sink when config is a JSON string', async () => {
     mockSinksService.getEnabledSinks.mockResolvedValue([
       makeSink({
         sink_type: 'external',

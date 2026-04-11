@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager } from './entity-schema-manager.js';
 import { EntityRepository } from './entity-repository.js';
 import { EntityNotFoundError, VersionConflictError } from '../errors.js';
@@ -26,8 +26,11 @@ describe('EntityRepository', () => {
 
   beforeEach(async () => {
     dbService = new DatabaseService<CellRuntimeDatabase>(
-      databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+      databaseConnectionOptionsSchema.parse({ connectionString: process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test' }),
     );
+    for (const t of ['entity_item', 'audit_log']) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${t}`).execute(dbService.db); } catch { /* ignore */ }
+    }
     const manager = new EntitySchemaManager(dbService);
     await manager.ensureSystemTables();
     await manager.initFromManifest(MANIFEST);
@@ -35,6 +38,9 @@ describe('EntityRepository', () => {
   });
 
   afterEach(async () => {
+    for (const t of ['entity_item', 'audit_log']) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${t}`).execute(dbService.db); } catch { /* ignore */ }
+    }
     await dbService.destroy();
   });
 

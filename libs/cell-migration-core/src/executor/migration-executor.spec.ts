@@ -2,14 +2,17 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { MigrationTracker, SCHEMA_VERSIONS_TABLE } from '../tracker/migration-tracker.js';
 import { MigrationExecutor } from './migration-executor.js';
 import type { MigrationVersion } from '../shared/migration-version.schema.js';
 
+const TEST_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
+
 function createDb(): DatabaseService {
   return new DatabaseService(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: TEST_DB_URL }),
   );
 }
 
@@ -18,6 +21,9 @@ function makeTmpDir(): string {
   mkdirSync(dir, { recursive: true });
   return dir;
 }
+
+// Track tables created by tests for cleanup
+const createdTables: string[] = [];
 
 describe('MigrationExecutor', () => {
   let db: DatabaseService;
@@ -31,9 +37,15 @@ describe('MigrationExecutor', () => {
     await tracker.bootstrap();
     executor = new MigrationExecutor(db);
     tmpDir = makeTmpDir();
+    createdTables.length = 0;
   });
 
   afterEach(async () => {
+    // Clean up tables created by tests
+    for (const table of createdTables) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${table}`).execute(db.db); } catch { /* ignore */ }
+    }
+    try { await sql`DROP TABLE IF EXISTS ${sql.ref(SCHEMA_VERSIONS_TABLE)}`.execute(db.db); } catch { /* ignore */ }
     await db.destroy();
     rmSync(tmpDir, { recursive: true, force: true });
   });
@@ -48,8 +60,9 @@ describe('MigrationExecutor', () => {
   }
 
   it('applies SQL from file and creates the table', async () => {
+    createdTables.push('test_exec');
     const version = makeVersion('0.1.0', [
-      { name: '001-create.sql', content: 'CREATE TABLE test_exec (id INTEGER PRIMARY KEY);' },
+      { name: '001-create.sql', content: 'CREATE TABLE test_exec (id SERIAL PRIMARY KEY);' },
     ]);
     await executor.execute([version]);
 
@@ -58,8 +71,9 @@ describe('MigrationExecutor', () => {
   });
 
   it('records version in ikary_schema_versions after apply', async () => {
+    createdTables.push('test_record');
     const version = makeVersion('0.1.0', [
-      { name: '001.sql', content: 'CREATE TABLE test_record (id INTEGER PRIMARY KEY);' },
+      { name: '001.sql', content: 'CREATE TABLE test_record (id SERIAL PRIMARY KEY);' },
     ]);
     await executor.execute([version]);
 
@@ -69,7 +83,7 @@ describe('MigrationExecutor', () => {
 
   it('dryRun=true increments count but does not apply SQL', async () => {
     const version = makeVersion('0.1.0', [
-      { name: '001.sql', content: 'CREATE TABLE test_dry (id INTEGER PRIMARY KEY);' },
+      { name: '001.sql', content: 'CREATE TABLE test_dry (id SERIAL PRIMARY KEY);' },
     ]);
     const result = await executor.execute([version], true);
     expect(result.applied).toBe(1);
@@ -79,9 +93,10 @@ describe('MigrationExecutor', () => {
   });
 
   it('applies multiple SQL files in order within one version', async () => {
+    createdTables.push('multi_a', 'multi_b');
     const version = makeVersion('0.1.0', [
-      { name: '001-a.sql', content: 'CREATE TABLE multi_a (id INTEGER PRIMARY KEY);' },
-      { name: '002-b.sql', content: 'CREATE TABLE multi_b (id INTEGER PRIMARY KEY);' },
+      { name: '001-a.sql', content: 'CREATE TABLE multi_a (id SERIAL PRIMARY KEY);' },
+      { name: '002-b.sql', content: 'CREATE TABLE multi_b (id SERIAL PRIMARY KEY);' },
     ]);
     await executor.execute([version]);
 
@@ -92,11 +107,12 @@ describe('MigrationExecutor', () => {
   });
 
   it('applies multiple versions in sequence', async () => {
+    createdTables.push('seq_v1', 'seq_v2');
     const v1 = makeVersion('0.1.0', [
-      { name: '001-v1.sql', content: 'CREATE TABLE seq_v1 (id INTEGER PRIMARY KEY);' },
+      { name: '001-v1.sql', content: 'CREATE TABLE seq_v1 (id SERIAL PRIMARY KEY);' },
     ]);
     const v2 = makeVersion('1.0.0', [
-      { name: '001-v2.sql', content: 'CREATE TABLE seq_v2 (id INTEGER PRIMARY KEY);' },
+      { name: '001-v2.sql', content: 'CREATE TABLE seq_v2 (id SERIAL PRIMARY KEY);' },
     ]);
     const result = await executor.execute([v1, v2]);
     expect(result.applied).toBe(2);
@@ -117,9 +133,10 @@ describe('MigrationExecutor', () => {
   });
 
   it('returns correct applied count', async () => {
+    createdTables.push('cnt_a', 'cnt_b');
     const versions = [
-      makeVersion('0.1.0', [{ name: '001-cnt-a.sql', content: 'CREATE TABLE cnt_a (id INTEGER PRIMARY KEY);' }]),
-      makeVersion('1.0.0', [{ name: '001-cnt-b.sql', content: 'CREATE TABLE cnt_b (id INTEGER PRIMARY KEY);' }]),
+      makeVersion('0.1.0', [{ name: '001-cnt-a.sql', content: 'CREATE TABLE cnt_a (id SERIAL PRIMARY KEY);' }]),
+      makeVersion('1.0.0', [{ name: '001-cnt-b.sql', content: 'CREATE TABLE cnt_b (id SERIAL PRIMARY KEY);' }]),
     ];
     const result = await executor.execute(versions);
     expect(result.applied).toBe(2);
@@ -131,11 +148,12 @@ describe('MigrationExecutor', () => {
   });
 
   it('applies multi-statement SQL files (multiple DDL statements per file)', async () => {
+    createdTables.push('multi_stmt');
     const version = makeVersion('0.1.0', [
       {
         name: '001-multi.sql',
         content: [
-          'CREATE TABLE multi_stmt (id INTEGER PRIMARY KEY);',
+          'CREATE TABLE multi_stmt (id SERIAL PRIMARY KEY);',
           'CREATE INDEX IF NOT EXISTS idx_multi_stmt ON multi_stmt (id);',
         ].join('\n'),
       },

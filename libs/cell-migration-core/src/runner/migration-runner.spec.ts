@@ -2,13 +2,16 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { MigrationRunner } from './migration-runner.js';
-import { MigrationTracker } from '../tracker/migration-tracker.js';
+import { MigrationTracker, SCHEMA_VERSIONS_TABLE } from '../tracker/migration-tracker.js';
+
+const TEST_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
 
 function createDb(): DatabaseService {
   return new DatabaseService(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: TEST_DB_URL }),
   );
 }
 
@@ -23,13 +26,13 @@ function seedMigrationsDir(root: string): void {
   mkdirSync(v);
   writeFileSync(
     join(v, '001-create-test-table.sql'),
-    'CREATE TABLE IF NOT EXISTS runner_test (id INTEGER PRIMARY KEY);',
+    'CREATE TABLE IF NOT EXISTS runner_test (id SERIAL PRIMARY KEY);',
   );
   const v2 = join(root, 'v1.0.0');
   mkdirSync(v2);
   writeFileSync(
     join(v2, '001-create-second.sql'),
-    'CREATE TABLE IF NOT EXISTS runner_second (id INTEGER PRIMARY KEY);',
+    'CREATE TABLE IF NOT EXISTS runner_second (id SERIAL PRIMARY KEY);',
   );
 }
 
@@ -49,6 +52,11 @@ describe('MigrationRunner', () => {
   });
 
   afterEach(async () => {
+    // Clean up tables created by tests
+    for (const table of ['runner_test', 'runner_second']) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${table}`).execute(db.db); } catch { /* ignore */ }
+    }
+    try { await sql`DROP TABLE IF EXISTS ${sql.ref(SCHEMA_VERSIONS_TABLE)}`.execute(db.db); } catch { /* ignore */ }
     await db.destroy();
     rmSync(migrationsRoot, { recursive: true, force: true });
   });

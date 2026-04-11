@@ -1,12 +1,15 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager, tableName, fieldTypeToSql, isDuplicateColumnError } from './entity-schema-manager.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
 import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
 
+const TEST_DB_URL =
+  process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';
+
 function makeDbService(): DatabaseService<CellRuntimeDatabase> {
   return new DatabaseService<CellRuntimeDatabase>(
-    databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
+    databaseConnectionOptionsSchema.parse({ connectionString: TEST_DB_URL }),
   );
 }
 
@@ -23,10 +26,18 @@ function makeEntity(key = 'item', extra: Partial<EntityDefinition> = {}): Entity
   } as EntityDefinition;
 }
 
+async function tableExists(db: DatabaseService<CellRuntimeDatabase>, name: string): Promise<boolean> {
+  const rows = await sql`
+    SELECT table_name FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = ${name}
+  `.execute(db.db);
+  return rows.rows.length > 0;
+}
+
 // ── fieldTypeToSql ────────────────────────────────────────────────────────
 
 describe('fieldTypeToSql', () => {
-  const sqliteCases: Array<[string, string]> = [
+  const cases: Array<[string, string]> = [
     ['string', 'TEXT'],
     ['text', 'TEXT'],
     ['enum', 'TEXT'],
@@ -34,21 +45,17 @@ describe('fieldTypeToSql', () => {
     ['datetime', 'TEXT'],
     ['number', 'NUMERIC'],
     ['boolean', 'BOOLEAN'],
-    ['object', 'TEXT'],
+    ['object', 'JSONB'],
   ];
 
-  for (const [type, expected] of sqliteCases) {
-    it(`maps "${type}" → "${expected}" for SQLite`, () => {
-      expect(fieldTypeToSql(type as any, false)).toBe(expected);
+  for (const [type, expected] of cases) {
+    it(`maps "${type}" → "${expected}"`, () => {
+      expect(fieldTypeToSql(type as any)).toBe(expected);
     });
   }
 
-  it('maps "object" → "JSONB" for Postgres', () => {
-    expect(fieldTypeToSql('object', true)).toBe('JSONB');
-  });
-
   it('falls back to "TEXT" for an unknown type (default branch)', () => {
-    expect(fieldTypeToSql('xyz' as any, false)).toBe('TEXT');
+    expect(fieldTypeToSql('xyz' as any)).toBe('TEXT');
   });
 });
 
@@ -67,7 +74,7 @@ describe('isDuplicateColumnError', () => {
     expect(isDuplicateColumnError('column "name" of relation "t" already exists')).toBe(true);
   });
 
-  it('returns true for "duplicate column" message (SQLite style)', () => {
+  it('returns true for "duplicate column" message', () => {
     expect(isDuplicateColumnError('duplicate column name: status')).toBe(true);
   });
 
@@ -81,81 +88,77 @@ describe('isDuplicateColumnError', () => {
 describe('EntitySchemaManager', () => {
   let dbService: DatabaseService<CellRuntimeDatabase>;
   let manager: EntitySchemaManager;
+  const tablesToClean: string[] = [];
 
   beforeEach(() => {
     dbService = makeDbService();
     manager = new EntitySchemaManager(dbService);
+    tablesToClean.length = 0;
   });
 
   afterEach(async () => {
+    for (const t of tablesToClean) {
+      try { await sql.raw(`DROP TABLE IF EXISTS ${t}`).execute(dbService.db); } catch { /* ignore */ }
+    }
     await dbService.destroy();
   });
 
   it('ensureSystemTables() creates audit_log', async () => {
+    tablesToClean.push('audit_log');
     await manager.ensureSystemTables();
-    const rows = await (dbService.db as any)
-      .selectFrom('sqlite_master')
-      .where('type', '=', 'table')
-      .where('name', '=', 'audit_log')
-      .selectAll()
-      .execute();
-    expect(rows.length).toBe(1);
+    expect(await tableExists(dbService, 'audit_log')).toBe(true);
   });
 
   it('ensureSystemTables() is idempotent (no error on second call)', async () => {
+    tablesToClean.push('audit_log');
     await manager.ensureSystemTables();
     await expect(manager.ensureSystemTables()).resolves.not.toThrow();
   });
 
   it('initFromManifest() creates entity table', async () => {
+    tablesToClean.push('entity_product');
     const manifest = {
       spec: { entities: [makeEntity('product')] },
     } as unknown as CellManifestV1;
 
     await manager.initFromManifest(manifest);
-
-    const rows = await (dbService.db as any)
-      .selectFrom('sqlite_master')
-      .where('type', '=', 'table')
-      .where('name', '=', 'entity_product')
-      .selectAll()
-      .execute();
-    expect(rows.length).toBe(1);
+    expect(await tableExists(dbService, 'entity_product')).toBe(true);
   });
 
   it('entity table has system columns', async () => {
+    tablesToClean.push('entity_widget');
     await manager.ensureEntityTable(makeEntity('widget'));
-    const rows = await (dbService.db as any)
-      .selectFrom('sqlite_master')
-      .where('type', '=', 'table')
-      .where('name', '=', 'entity_widget')
-      .selectAll()
-      .execute();
-    const sql = rows[0].sql as string;
-    expect(sql).toContain('id');
-    expect(sql).toContain('version');
-    expect(sql).toContain('created_at');
-    expect(sql).toContain('updated_at');
-    expect(sql).toContain('deleted_at');
+
+    const cols = await sql`
+      SELECT column_name FROM information_schema.columns
+      WHERE table_schema = 'public' AND table_name = 'entity_widget'
+    `.execute(dbService.db);
+    const colNames = (cols.rows as Array<{ column_name: string }>).map((r) => r.column_name);
+    expect(colNames).toContain('id');
+    expect(colNames).toContain('version');
+    expect(colNames).toContain('created_at');
+    expect(colNames).toContain('updated_at');
+    expect(colNames).toContain('deleted_at');
   });
 
   it('entity table has user-defined field columns', async () => {
-    await manager.ensureEntityTable(makeEntity('widget'));
-    const rows = await (dbService.db as any)
-      .selectFrom('sqlite_master')
-      .where('name', '=', 'entity_widget')
-      .selectAll()
-      .execute();
-    const ddl = rows[0].sql as string;
-    expect(ddl).toContain('name');
-    expect(ddl).toContain('count');
+    tablesToClean.push('entity_widget2');
+    await manager.ensureEntityTable(makeEntity('widget2'));
+
+    const cols = await sql`
+      SELECT column_name FROM information_schema.columns
+      WHERE table_schema = 'public' AND table_name = 'entity_widget2'
+    `.execute(dbService.db);
+    const colNames = (cols.rows as Array<{ column_name: string }>).map((r) => r.column_name);
+    expect(colNames).toContain('name');
+    expect(colNames).toContain('count');
   });
 
   it('additive migration: new field is added without error', async () => {
+    tablesToClean.push('entity_thing');
     const entity = makeEntity('thing');
     await manager.ensureEntityTable(entity);
 
-    // Add a new field
     const updated = { ...entity, fields: [...entity.fields!, { key: 'status', type: 'string', name: 'Status' }] };
     await expect(manager.ensureEntityTable(updated as any)).resolves.not.toThrow();
   });
@@ -170,24 +173,9 @@ describe('EntitySchemaManager', () => {
     await expect(manager.initFromManifest(manifest)).resolves.not.toThrow();
   });
 
-  it('Postgres path (isPostgres=true) runs DDL without error on SQLite', async () => {
-    // SQLite accepts TIMESTAMPTZ/JSONB as TEXT affinity — this exercises the postgres branches
-    const pgDbService = new DatabaseService<CellRuntimeDatabase>(
-      databaseConnectionOptionsSchema.parse({ connectionString: 'sqlite://:memory:' }),
-    );
-    // Force isPostgres by monkey-patching isSqlite
-    Object.defineProperty(pgDbService, 'isSqlite', { value: false });
-    const pgManager = new EntitySchemaManager(pgDbService);
-
-    await expect(pgManager.ensureSystemTables()).resolves.not.toThrow();
-    await expect(pgManager.ensureEntityTable(makeEntity('pgtest'))).resolves.not.toThrow();
-    await pgDbService.destroy();
-  });
-
   it('addColumnIfMissing re-throws non-duplicate errors', async () => {
-    // Use a non-existent table to trigger an error that is not a duplicate-column error
+    tablesToClean.push('audit_log');
     await manager.ensureSystemTables();
-    // Access private method via cast
     const privManager = manager as any;
     await expect(
       privManager.addColumnIfMissing('nonexistent_table', 'col', 'TEXT'),
@@ -195,15 +183,9 @@ describe('EntitySchemaManager', () => {
   });
 
   it('ensureEntityTable creates table for entity with undefined fields', async () => {
-    // entity.fields ?? [] — covers the null-coalescing branch and empty userColumns branch
+    tablesToClean.push('entity_bare');
     const noFieldEntity = { key: 'bare', name: 'Bare', pluralName: 'Bares' } as any;
     await expect(manager.ensureEntityTable(noFieldEntity)).resolves.not.toThrow();
-    const rows = await (dbService.db as any)
-      .selectFrom('sqlite_master')
-      .where('type', '=', 'table')
-      .where('name', '=', 'entity_bare')
-      .selectAll()
-      .execute();
-    expect(rows.length).toBe(1);
+    expect(await tableExists(dbService, 'entity_bare')).toBe(true);
   });
 });

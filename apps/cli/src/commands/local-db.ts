@@ -12,7 +12,7 @@ function resolveMigrationsRoot(): string {
 }
 
 function getDbUrl(override?: string): string {
-  return override ?? process.env['DATABASE_URL'] ?? 'sqlite://./local.db';
+  return override ?? process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
 }
 
 function createRunnerAndDb(dbUrl: string): { runner: MigrationRunner; dbService: DatabaseService } {

@@ -5,7 +5,7 @@ import type { SystemLogDatabaseSchema } from '@ikary/system-log-core/server';
 
 export const RUNTIME_CONTEXT_TOKEN = 'RUNTIME_CONTEXT';
 
-/** Combined DB schema: entity tables + log tables, shared by the same SQLite/PG instance. */
+/** Combined DB schema: entity tables + log tables, shared by the same PostgreSQL instance. */
 export type AppDatabase = CellRuntimeDatabase & SystemLogDatabaseSchema;
 
 export interface RuntimeContext {

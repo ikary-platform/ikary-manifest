@@ -25,8 +25,7 @@ export class MigrationRunner {
     const planner = new MigrationPlanner(
       this.options.migrationsRoot,
       this.options.packageName,
-      this.dbService.isSqlite,
-    );
+          );
     const plan = planner.buildPlan(applied, opts?.force ?? false);
     const executor = new MigrationExecutor(this.dbService);
     const result = await executor.execute(plan, opts?.dryRun ?? false);
@@ -51,8 +50,7 @@ export class MigrationRunner {
     const planner = new MigrationPlanner(
       this.options.migrationsRoot,
       this.options.packageName,
-      this.dbService.isSqlite,
-    );
+          );
     const allPlan = planner.buildPlan(new Set(), false);
 
     return {
