@@ -61,7 +61,7 @@ const dbUrl = process.env['DATABASE_URL'] ?? `sqlite://${process.cwd()}/local.db
         accessTokenSecret: process.env['AUTH_ACCESS_TOKEN_SECRET'] ?? 'ikary-preview-access-secret-key-0',
         refreshTokenSecret: process.env['AUTH_REFRESH_TOKEN_SECRET'] ?? 'ikary-preview-refresh-secret-key0',
         tokenHashSecret: process.env['AUTH_TOKEN_HASH_SECRET'] ?? 'ikary-preview-hash-secret-key-000',
-        accessTokenTtlSeconds: 86_400,
+        accessTokenTtlSeconds: 3600,
         refreshTokenTtlSeconds: 86_400 * 14,
         issuer: 'ikary-preview',
         audience: 'ikary-preview',
