@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { ConflictException, Inject, Injectable, Optional, UnprocessableEntityException } from '@nestjs/common';
 import { z } from 'zod';
 import { AuthConfigService } from '../../config/auth-config.service';
@@ -138,9 +139,11 @@ export class AuthProvisioningService {
 
         await this.ensureTenantMembership(target.tenantId, user.id, client);
       } else {
+        const tenantId = randomUUID();
         const tenant = await client
           .insertInto('tenants')
           .values({
+            id: tenantId,
             name: parsed.workspaceName!,
             slug: parsed.workspaceSlug!,
             status: 'ACTIVE',
@@ -263,6 +266,7 @@ export class AuthProvisioningService {
     await client
       .insertInto('tenant_members')
       .values({
+        id: randomUUID(),
         tenant_id: tenantId,
         user_id: userId,
         status: 'active',

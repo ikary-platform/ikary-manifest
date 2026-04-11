@@ -83,7 +83,7 @@ export class AuthRepository {
     await this.executor(client)
       .updateTable('refresh_tokens')
       .set({
-        revoked_at: new Date(),
+        revoked_at: this.db.now(),
         replaced_by_jti: input.replacedByJti ?? null,
       })
       .where('id', '=', input.tokenId)
@@ -96,7 +96,7 @@ export class AuthRepository {
   ): Promise<void> {
     await this.executor(client)
       .updateTable('refresh_tokens')
-      .set({ revoked_at: new Date() })
+      .set({ revoked_at: this.db.now() })
       .where('tenant_id', '=', input.tenantId)
       .where('workspace_id', '=', input.workspaceId)
       .where('user_id', '=', input.userId)
@@ -110,7 +110,7 @@ export class AuthRepository {
   ): Promise<void> {
     await this.executor(client)
       .updateTable('email_verification_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('workspace_id', '=', input.workspaceId)
       .where('user_id', '=', input.userId)
       .where('consumed_at', 'is', null)
@@ -175,7 +175,7 @@ export class AuthRepository {
   async consumeEmailVerificationToken(tokenId: string, client?: Queryable<AuthDatabaseSchema>): Promise<void> {
     await this.executor(client)
       .updateTable('email_verification_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('id', '=', tokenId)
       .execute();
   }
@@ -186,7 +186,7 @@ export class AuthRepository {
   ): Promise<void> {
     await this.executor(client)
       .updateTable('password_reset_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('workspace_id', '=', input.workspaceId)
       .where('user_id', '=', input.userId)
       .where('consumed_at', 'is', null)
@@ -235,7 +235,7 @@ export class AuthRepository {
   async consumePasswordResetToken(tokenId: string, client?: Queryable<AuthDatabaseSchema>): Promise<void> {
     await this.executor(client)
       .updateTable('password_reset_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('id', '=', tokenId)
       .execute();
   }
@@ -246,7 +246,7 @@ export class AuthRepository {
   ): Promise<void> {
     await this.executor(client)
       .updateTable('magic_link_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('workspace_id', '=', input.workspaceId)
       .where('user_id', '=', input.userId)
       .where('consumed_at', 'is', null)
@@ -294,7 +294,7 @@ export class AuthRepository {
   async consumeMagicLinkToken(tokenId: string, client?: Queryable<AuthDatabaseSchema>): Promise<void> {
     await this.executor(client)
       .updateTable('magic_link_tokens')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('id', '=', tokenId)
       .execute();
   }

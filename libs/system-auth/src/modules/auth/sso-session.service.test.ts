@@ -30,6 +30,8 @@ function makeDb(opts: { selectRow?: unknown } = {}) {
       selectFrom: vi.fn().mockReturnValue(chain),
       updateTable: vi.fn().mockReturnValue(chain),
     },
+    now: () => new Date(),
+    bool: (v: boolean) => v,
   };
   return { db, chain };
 }

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import type { Queryable } from '@ikary/system-db-core';
 import { DatabaseService } from '../../database/database.service';
@@ -26,7 +27,7 @@ export class UserRepository {
           'email_verified_at',
           'deleted_at',
         ])
-        .where('email', 'ilike', email)
+        .where('email', 'like', email)
         .executeTakeFirst()) ?? null
     );
   }
@@ -57,10 +58,11 @@ export class UserRepository {
     return this.executor(client)
       .insertInto('users')
       .values({
+        id: randomUUID(),
         email: params.email.toLowerCase(),
         password_hash: params.passwordHash,
-        is_email_verified: false,
-        is_system_admin: params.isSystemAdmin ?? false,
+        is_email_verified: this.db.bool(false),
+        is_system_admin: this.db.bool(params.isSystemAdmin ?? false),
       })
       .returning([
         'id',
@@ -80,7 +82,7 @@ export class UserRepository {
       .updateTable('users')
       .set({
         password_hash: passwordHash,
-        updated_at: new Date(),
+        updated_at: this.db.now(),
       })
       .where('id', '=', userId)
       .execute();
@@ -90,9 +92,9 @@ export class UserRepository {
     await this.executor(client)
       .updateTable('users')
       .set({
-        is_email_verified: true,
-        email_verified_at: new Date(),
-        updated_at: new Date(),
+        is_email_verified: this.db.bool(true),
+        email_verified_at: this.db.now(),
+        updated_at: this.db.now(),
       })
       .where('id', '=', userId)
       .execute();
@@ -102,8 +104,8 @@ export class UserRepository {
     await this.executor(client)
       .updateTable('users')
       .set({
-        last_login_at: new Date(),
-        updated_at: new Date(),
+        last_login_at: this.db.now(),
+        updated_at: this.db.now(),
       })
       .where('id', '=', userId)
       .execute();
@@ -113,8 +115,8 @@ export class UserRepository {
     await this.executor(client)
       .updateTable('users')
       .set({
-        is_system_admin: isSystemAdmin,
-        updated_at: new Date(),
+        is_system_admin: this.db.bool(isSystemAdmin),
+        updated_at: this.db.now(),
       })
       .where('id', '=', userId)
       .execute();

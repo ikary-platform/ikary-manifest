@@ -174,7 +174,7 @@ export class WorkspaceInvitationService {
     return this.db.withTransaction(async (client) => {
       // 1. Validate token
       const invitation = await this.invitations.findPendingByTokenHash(tokenHash, client);
-      if (!invitation || invitation.expires_at < new Date()) {
+      if (!invitation || invitation.expires_at < this.db.now()) {
         throw new UnauthorizedException('Invitation token is invalid or expired.');
       }
 
@@ -202,7 +202,7 @@ export class WorkspaceInvitationService {
         const passwordHash = await this.hashService.hashPassword(parsed.password);
         await client
           .updateTable('users')
-          .set({ password_hash: passwordHash, is_email_verified: true })
+          .set({ password_hash: passwordHash, is_email_verified: this.db.bool(true) })
           .where('id', '=', invitation.invitee_user_id)
           .execute();
       }
@@ -307,7 +307,7 @@ export class WorkspaceInvitationService {
       if (invitation.workspace_member_id) {
         await client
           .updateTable('workspace_members')
-          .set({ deleted_at: new Date() })
+          .set({ deleted_at: this.db.now() })
           .where('id', '=', invitation.workspace_member_id)
           .execute();
       }

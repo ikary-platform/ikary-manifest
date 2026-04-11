@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import type { Queryable } from '@ikary/system-db-core';
 import { DatabaseService } from '../../database/database.service';
@@ -19,6 +20,7 @@ export class WorkspaceRepository {
     return this.executor(client)
       .insertInto('workspaces')
       .values({
+        id: randomUUID(),
         tenant_id: params.tenantId,
         name: params.name,
         slug: params.slug.toLowerCase(),
@@ -44,7 +46,7 @@ export class WorkspaceRepository {
       (await this.executor(client)
         .selectFrom('workspaces')
         .select(['id', 'tenant_id', 'name', 'slug', 'description', 'created_by_user_id', 'deleted_at'])
-        .where('slug', 'ilike', slug)
+        .where('slug', 'like', slug)
         .executeTakeFirst()) ?? null
     );
   }

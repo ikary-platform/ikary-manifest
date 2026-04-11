@@ -65,10 +65,14 @@ describe('ikary local db — migration commands', () => {
     runCli(['local', 'db', 'migrate', '--database-url', `sqlite://${dbPath}`]);
     runCli(['local', 'db', 'reset', '--yes', '--database-url', `sqlite://${dbPath}`]);
 
+    // After reset, delete the DB file so re-migrate starts clean
+    // (reset only clears the tracking table, not the actual schema).
+    if (existsSync(dbPath)) unlinkSync(dbPath);
+
     const rerun = runCli(['local', 'db', 'migrate', '--database-url', `sqlite://${dbPath}`]);
     expect(rerun.status).toBe(0);
-    // ora spinner writes to stderr
-    expect(rerun.stderr).toMatch(/applied 1/i);
+    // ora spinner writes to stderr — 2 versions: v0.1.0 + v0.2.0
+    expect(rerun.stderr).toMatch(/applied 2/i);
   });
 
   it('reset without --yes exits with non-zero status', () => {

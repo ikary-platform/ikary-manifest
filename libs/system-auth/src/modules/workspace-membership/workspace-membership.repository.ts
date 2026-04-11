@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { Inject, Injectable } from '@nestjs/common';
 import type { Queryable } from '@ikary/system-db-core';
 import { DatabaseService } from '../../database/database.service';
@@ -19,6 +20,7 @@ export class WorkspaceMembershipRepository {
     return this.executor(client)
       .insertInto('workspace_members')
       .values({
+        id: randomUUID(),
         tenant_id: params.tenantId,
         workspace_id: params.workspaceId,
         user_id: params.userId,
@@ -108,7 +110,7 @@ export class WorkspaceMembershipRepository {
   ): Promise<void> {
     await this.executor(client)
       .updateTable('workspace_members')
-      .set({ deleted_at: new Date() })
+      .set({ deleted_at: this.db.now() })
       .where('id', '=', id)
       .where('workspace_id', '=', workspaceId)
       .where('tenant_id', '=', tenantId)

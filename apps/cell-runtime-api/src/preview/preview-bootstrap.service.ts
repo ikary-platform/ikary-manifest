@@ -17,7 +17,7 @@ export class PreviewBootstrapService implements OnModuleInit {
     try {
       this.previewUser = await this.provisioning.provisionClassicUser({
         email: 'admin@ikary.local',
-        password: 'preview',
+        password: 'preview!0',
         workspaceName: 'Preview',
         workspaceSlug: 'preview',
         markEmailVerified: true,

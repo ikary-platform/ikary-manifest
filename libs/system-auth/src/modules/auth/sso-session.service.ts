@@ -67,7 +67,7 @@ export class SsoSessionService {
 
     if (!row) return null;
     if (row.revoked_at !== null) return null;
-    if (row.expires_at < new Date()) return null;
+    if (row.expires_at < this.db.now()) return null;
 
     return {
       userId: row.user_id,
@@ -112,7 +112,7 @@ export class SsoSessionService {
 
     await this.db.db
       .updateTable('sso_sessions')
-      .set({ revoked_at: new Date() })
+      .set({ revoked_at: this.db.now() })
       .where('token_hash', '=', tokenHash)
       .where('revoked_at', 'is', null)
       .execute();
@@ -125,7 +125,7 @@ export class SsoSessionService {
   async revokeAllUserSessions(userId: string, tenantId: string): Promise<void> {
     await this.db.db
       .updateTable('sso_sessions')
-      .set({ revoked_at: new Date() })
+      .set({ revoked_at: this.db.now() })
       .where('user_id', '=', userId)
       .where('tenant_id', '=', tenantId)
       .where('revoked_at', 'is', null)

@@ -97,7 +97,7 @@ export class WorkspaceInvitationRepository {
   async consume(id: string, client?: Queryable<AuthDatabaseSchema>): Promise<void> {
     await this.executor(client)
       .updateTable('workspace_invitations')
-      .set({ status: 'accepted', consumed_at: new Date() })
+      .set({ status: 'accepted', consumed_at: this.db.now() })
       .where('id', '=', id)
       .execute();
   }
@@ -116,7 +116,7 @@ export class WorkspaceInvitationRepository {
       .updateTable('workspace_invitations')
       .set({ status: 'expired' })
       .where('status', '=', 'pending')
-      .where('expires_at', '<', new Date())
+      .where('expires_at', '<', this.db.now())
       .executeTakeFirst();
     return Number(result.numUpdatedRows);
   }

@@ -8,7 +8,7 @@ export class SignupRequestRepository {
   async invalidateForEmail(email: string, client?: Queryable): Promise<void> {
     await (client ?? this.db.db)
       .updateTable('signup_requests')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('email', '=', email.toLowerCase())
       .where('consumed_at', 'is', null)
       .execute();
@@ -35,14 +35,14 @@ export class SignupRequestRepository {
       .where('email', '=', email.toLowerCase())
       .where('code_hash', '=', codeHash)
       .where('consumed_at', 'is', null)
-      .where('expires_at', '>', new Date())
+      .where('expires_at', '>', this.db.now())
       .executeTakeFirst();
   }
 
   async consume(id: string, client?: Queryable): Promise<void> {
     await (client ?? this.db.db)
       .updateTable('signup_requests')
-      .set({ consumed_at: new Date() })
+      .set({ consumed_at: this.db.now() })
       .where('id', '=', id)
       .execute();
   }

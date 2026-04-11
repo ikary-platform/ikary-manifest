@@ -182,7 +182,7 @@ export class ClassicAuthProvider implements AuthProvider {
       const tenant = await this.db.db
         .selectFrom('tenants')
         .select(['id', 'user_login_enabled'])
-        .where('slug', 'ilike', payload.tenantSlug)
+        .where('slug', 'like', payload.tenantSlug)
         .where('deleted_at', 'is', null)
         .where('status', '=', 'ACTIVE')
         .executeTakeFirst();
@@ -252,7 +252,7 @@ export class ClassicAuthProvider implements AuthProvider {
         client,
       );
 
-      if (!stored || stored.revoked_at || stored.expires_at < new Date()) {
+      if (!stored || stored.revoked_at || stored.expires_at < this.db.now()) {
         throw new UnauthorizedException('Refresh token is invalid.');
       }
 
@@ -389,7 +389,7 @@ export class ClassicAuthProvider implements AuthProvider {
       tokenHash,
     });
 
-    if (!token || token.expires_at < new Date()) {
+    if (!token || token.expires_at < this.db.now()) {
       throw new UnauthorizedException('Reset token is invalid or expired.');
     }
 
@@ -472,7 +472,7 @@ export class ClassicAuthProvider implements AuthProvider {
         : undefined,
     });
 
-    if (!token || token.expires_at < new Date()) {
+    if (!token || token.expires_at < this.db.now()) {
       throw new UnauthorizedException('Verification token is invalid or expired.');
     }
 
@@ -545,7 +545,7 @@ export class ClassicAuthProvider implements AuthProvider {
       tokenHash,
     });
 
-    if (!token || token.expires_at < new Date()) {
+    if (!token || token.expires_at < this.db.now()) {
       throw new UnauthorizedException('Magic link is invalid or expired.');
     }
 

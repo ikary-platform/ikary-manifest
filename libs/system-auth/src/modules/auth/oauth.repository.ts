@@ -61,13 +61,13 @@ export class OAuthRepository {
         .where('state_hash', '=', stateHash)
         .where('provider', '=', provider)
         .where('consumed_at', 'is', null)
-        .where('expires_at', '>', new Date())
+        .where('expires_at', '>', this.db.now())
         .executeTakeFirst()) ?? null
     );
   }
 
   async consumeStateToken(id: string): Promise<void> {
-    await this.db.db.updateTable('oauth_state_tokens').set({ consumed_at: new Date() }).where('id', '=', id).execute();
+    await this.db.db.updateTable('oauth_state_tokens').set({ consumed_at: this.db.now() }).where('id', '=', id).execute();
   }
 
   async findOAuthAccount(

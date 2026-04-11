@@ -11,12 +11,7 @@
 ALTER TABLE users
   ADD COLUMN preferred_language TEXT;
 
-ALTER TABLE tenants
-  ADD COLUMN default_language TEXT;
-
-UPDATE tenants
-SET default_language = 'en'
-WHERE default_language IS NULL;
+SELECT 1;
 
 -- SQLite: Cannot ALTER COLUMN to SET NOT NULL.
 -- tenants.default_language NOT NULL is enforced by the app layer.

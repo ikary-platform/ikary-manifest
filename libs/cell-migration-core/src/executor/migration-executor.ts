@@ -19,7 +19,8 @@ export class MigrationExecutor {
       await this.dbService.withTransaction(async (trx) => {
         for (const file of version.files) {
           const sqlText = readFileSync(file.absolutePath, 'utf8');
-          const statements = sqlText
+          const stripped = sqlText.replace(/--.*$/gm, '');
+          const statements = stripped
             .split(';')
             .map((s) => s.trim())
             .filter((s) => s.length > 0);
