@@ -208,6 +208,16 @@ export type {
   BulkCommandBarVariant,
   BulkCommandBarViewProps,
 } from './primitives/bulk-command-bar/BulkCommandBar.types';
+export { Tabs } from './primitives/tabs/Tabs';
+export { buildTabsViewModel, type BuildTabsViewModelInput } from './primitives/tabs/Tabs.adapter';
+export { resolveTabs, type TabsResolverRuntime } from './primitives/tabs/Tabs.resolver';
+export type {
+  TabsOverflowMode,
+  TabsResponsiveBreakpoint,
+  TabsResolvedItem,
+  TabsVariant,
+  TabsViewProps,
+} from './primitives/tabs/Tabs.types';
 export { CardList } from './primitives/card-list/CardList';
 export type {
   CardListActionIntent,
@@ -288,6 +298,47 @@ export { DateInput } from './primitives/date-input/DateInput';
 export { buildDateInputViewModel, type BuildDateInputViewModelInput } from './primitives/date-input/DateInput.adapter';
 export { resolveDateInput, type DateInputResolverRuntime } from './primitives/date-input/DateInput.resolver';
 export type { DateInputViewProps } from './primitives/date-input/DateInput.types';
+
+export { Badge } from './primitives/badge/Badge';
+export { buildBadgeViewModel, type BuildBadgeViewModelInput } from './primitives/badge/Badge.adapter';
+export { resolveBadge, type BadgeResolverRuntime } from './primitives/badge/Badge.resolver';
+export type { BadgeVariant, BadgeViewProps } from './primitives/badge/Badge.types';
+export { Separator } from './primitives/separator/Separator';
+export { buildSeparatorViewModel, type BuildSeparatorViewModelInput } from './primitives/separator/Separator.adapter';
+export { resolveSeparator, type SeparatorResolverRuntime } from './primitives/separator/Separator.resolver';
+export type { SeparatorOrientation, SeparatorViewProps } from './primitives/separator/Separator.types';
+export { Label } from './primitives/label/Label';
+export { buildLabelViewModel, type BuildLabelViewModelInput } from './primitives/label/Label.adapter';
+export { resolveLabel, type LabelResolverRuntime } from './primitives/label/Label.resolver';
+export type { LabelViewProps } from './primitives/label/Label.types';
+export { Button } from './primitives/button/Button';
+export { buildButtonViewModel, type BuildButtonViewModelInput } from './primitives/button/Button.adapter';
+export { resolveButton, type ButtonResolverRuntime } from './primitives/button/Button.resolver';
+export type { ButtonVariant, ButtonSize, ButtonType, ButtonViewProps } from './primitives/button/Button.types';
+export { Alert } from './primitives/alert/Alert';
+export { buildAlertViewModel, type BuildAlertViewModelInput } from './primitives/alert/Alert.adapter';
+export { resolveAlert, type AlertResolverRuntime } from './primitives/alert/Alert.resolver';
+export type { AlertVariant, AlertViewProps } from './primitives/alert/Alert.types';
+export { Progress } from './primitives/progress/Progress';
+export { buildProgressViewModel, type BuildProgressViewModelInput } from './primitives/progress/Progress.adapter';
+export { resolveProgress, type ProgressResolverRuntime } from './primitives/progress/Progress.resolver';
+export type { ProgressViewProps } from './primitives/progress/Progress.types';
+export { Skeleton } from './primitives/skeleton/Skeleton';
+export { buildSkeletonViewModel, type BuildSkeletonViewModelInput } from './primitives/skeleton/Skeleton.adapter';
+export { resolveSkeleton, type SkeletonResolverRuntime } from './primitives/skeleton/Skeleton.resolver';
+export type { SkeletonViewProps } from './primitives/skeleton/Skeleton.types';
+export { Avatar } from './primitives/avatar/Avatar';
+export { buildAvatarViewModel, type BuildAvatarViewModelInput } from './primitives/avatar/Avatar.adapter';
+export { resolveAvatar, type AvatarResolverRuntime } from './primitives/avatar/Avatar.resolver';
+export type { AvatarSize, AvatarViewProps } from './primitives/avatar/Avatar.types';
+export { Breadcrumb } from './primitives/breadcrumb/Breadcrumb';
+export { buildBreadcrumbViewModel, type BuildBreadcrumbViewModelInput } from './primitives/breadcrumb/Breadcrumb.adapter';
+export { resolveBreadcrumb, type BreadcrumbResolverRuntime } from './primitives/breadcrumb/Breadcrumb.resolver';
+export type { BreadcrumbSeparator, BreadcrumbItemView, BreadcrumbViewProps } from './primitives/breadcrumb/Breadcrumb.types';
+export { Card } from './primitives/card/Card';
+export { buildCardViewModel, type BuildCardViewModelInput } from './primitives/card/Card.adapter';
+export { resolveCard, type CardResolverRuntime } from './primitives/card/Card.resolver';
+export type { CardViewProps } from './primitives/card/Card.types';
 
 // New query contracts
 export type { FilterOperator, FilterRule, FilterGroup } from './query/shared/filters';

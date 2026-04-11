@@ -1,0 +1,7 @@
+[
+  { "value": 0 },
+  { "value": 35, "label": "Upload progress" },
+  { "value": 75, "showValue": true },
+  { "value": 100, "label": "Complete", "showValue": true },
+  { "label": "Loading…" }
+]

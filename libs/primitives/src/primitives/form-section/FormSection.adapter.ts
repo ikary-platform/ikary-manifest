@@ -39,7 +39,7 @@ export function buildFormSectionViewModel(input: BuildFormSectionViewModelInput)
     description: input.presentation.description,
 
     layout: input.presentation.layout ?? 'stack',
-    fields: input.presentation.fields.map((field) =>
+    fields: (input.presentation.fields ?? []).map((field) =>
       resolveField(field, input, {
         readonly,
         disabled,

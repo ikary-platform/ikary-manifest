@@ -1,0 +1,6 @@
+[
+  { "title": "Heads up!", "description": "You can change your account settings in the preferences page." },
+  { "variant": "destructive", "title": "Error", "description": "Your session has expired. Please log in again." },
+  { "title": "Deployment complete" },
+  { "variant": "default", "description": "Background sync is running. Changes may take a moment to appear." }
+]

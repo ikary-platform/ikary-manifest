@@ -87,7 +87,7 @@ export function FormField(props: FormFieldViewProps) {
         invalid={props.message?.tone === 'error'}
         describedBy={props.describedBy}
         direction="vertical"
-        options={props.options.map((option) => ({
+        options={(props.options ?? []).map((option) => ({
           value: option.value,
           label: option.label,
           disabled: option.disabled,

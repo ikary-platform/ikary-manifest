@@ -1,0 +1,9 @@
+[
+  { "label": "Save changes" },
+  { "label": "Delete", "variant": "destructive" },
+  { "label": "Cancel", "variant": "outline" },
+  { "label": "Import", "variant": "secondary" },
+  { "label": "Learn more", "variant": "link" },
+  { "label": "Saving…", "loading": true },
+  { "label": "Submit", "buttonType": "submit", "size": "lg" }
+]

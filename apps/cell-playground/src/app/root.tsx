@@ -1,14 +1,10 @@
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { LaunchpadPage } from '../pages/launchpad-page';
 import { BuilderPage } from '../pages/builder-page';
-import { RuntimePage } from '../pages/runtime-page';
-import { PrimitiveStudioPage } from '../pages/primitive-studio-page';
 import { StudioPage } from '../pages/studio-page';
 import {
   resolveBlock,
   resolveLegacyMode,
-  resolveRuntimeSlug,
-  resolvePrimitiveStudioSlug,
   toBlockPath,
   toTabPath,
 } from '../features/launchpad/launchpad-routes';
@@ -65,49 +61,6 @@ function DataBlockRoute() {
   return <BuilderPage mode={resolved.destination.mode} onBack={() => navigate(toTabPath('data'))} />;
 }
 
-function PrimitivesBlockRoute() {
-  const { blockSlug } = useParams<{ blockSlug: string }>();
-
-  if (!blockSlug) {
-    return <Navigate to={toTabPath('primitives')} replace />;
-  }
-
-  const resolved = resolvePrimitiveStudioSlug(blockSlug);
-  if (!resolved) {
-    return <Navigate to={toTabPath('primitives')} replace />;
-  }
-
-  if (blockSlug !== resolved.block.slug) {
-    return <Navigate to={toBlockPath('primitives', resolved.block.slug)} replace />;
-  }
-
-  return (
-    <PrimitiveStudioPage
-      key={resolved.primitiveKey}
-      primitiveKey={resolved.primitiveKey}
-      backPath={toTabPath('primitives')}
-    />
-  );
-}
-
-function RuntimeBlockRoute() {
-  const { blockSlug } = useParams<{ blockSlug: string }>();
-
-  if (!blockSlug) {
-    return <Navigate to={toTabPath('primitives')} replace />;
-  }
-
-  const resolved = resolveRuntimeSlug(blockSlug);
-  if (!resolved) {
-    return <Navigate to={toTabPath('primitives')} replace />;
-  }
-
-  if (blockSlug !== resolved.block.slug) {
-    return <Navigate to={toBlockPath('primitives', resolved.block.slug)} replace />;
-  }
-
-  return <RuntimePage key={resolved.primitive} primitive={resolved.primitive} backPath={toTabPath('primitives')} />;
-}
 
 function LegacyModeRoute() {
   const { mode } = useParams<{ mode: string }>();
@@ -148,14 +101,14 @@ export function Root() {
 
       <Route path="/views" element={<LaunchpadPage tab="views" />} />
       <Route path="/data" element={<LaunchpadPage tab="data" />} />
-      <Route path="/primitives" element={<LaunchpadPage tab="primitives" />} />
+      <Route path="/primitives" element={<Navigate to={toTabPath('views')} replace />} />
       <Route path="/schemas" element={<LaunchpadPage tab="schemas" />} />
 
       <Route path="/views/:blockSlug" element={<ViewsBlockRoute />} />
       <Route path="/data/:blockSlug" element={<DataBlockRoute />} />
-      <Route path="/primitives/:blockSlug" element={<PrimitivesBlockRoute />} />
-      <Route path="/runtime" element={<Navigate to={toTabPath('primitives')} replace />} />
-      <Route path="/runtime/:blockSlug" element={<RuntimeBlockRoute />} />
+      <Route path="/primitives/:blockSlug" element={<Navigate to={toTabPath('views')} replace />} />
+      <Route path="/runtime" element={<Navigate to={toTabPath('views')} replace />} />
+      <Route path="/runtime/:blockSlug" element={<Navigate to={toTabPath('views')} replace />} />
 
       <Route path="/:mode" element={<LegacyModeRoute />} />
       <Route path="*" element={<Navigate to={toTabPath('views')} replace />} />

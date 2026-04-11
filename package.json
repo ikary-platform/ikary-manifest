@@ -23,9 +23,9 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "pnpm playground:build && vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:dev": "vitepress dev apps/docs",
+    "docs:build": "pnpm playground:build && vitepress build apps/docs",
+    "docs:preview": "vitepress preview apps/docs",
     "capture-cli-output": "tsx scripts/capture-cli-output.ts"
   },
   "devDependencies": {

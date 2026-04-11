@@ -1,0 +1,24 @@
+[
+  {
+    "items": [
+      { "label": "Home", "href": "/" },
+      { "label": "Settings" }
+    ]
+  },
+  {
+    "items": [
+      { "label": "Home", "href": "/" },
+      { "label": "Projects", "href": "/projects" },
+      { "label": "Dashboard" }
+    ]
+  },
+  {
+    "items": [
+      { "label": "Home", "href": "/" },
+      { "label": "Users", "href": "/users" },
+      { "label": "Alice Smith", "href": "/users/alice" },
+      { "label": "Edit" }
+    ],
+    "separator": "chevron"
+  }
+]

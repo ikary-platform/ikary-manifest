@@ -1,0 +1,6 @@
+[
+  { "text": "Email address" },
+  { "text": "Full name", "htmlFor": "full-name" },
+  { "text": "Password", "htmlFor": "password", "required": true },
+  { "text": "Optional note" }
+]

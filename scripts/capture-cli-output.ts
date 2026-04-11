@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
-const snippetsDir = join(root, 'docs', 'snippets', 'cli');
+const snippetsDir = join(root, 'apps', 'docs', 'snippets', 'cli');
 const cli = join(root, 'apps', 'cli', 'dist', 'cli.js');
 
 // Build the CLI if the dist artifact is missing
@@ -55,7 +55,7 @@ console.log('Capturing CLI output snippets...\n');
 write('validate-success.txt', run('validate manifests/examples/minimal-manifest.yaml'));
 
 // validate — error
-write('validate-error.txt', run('validate docs/fixtures/invalid.json'));
+write('validate-error.txt', run('validate apps/docs/fixtures/invalid.json'));
 
 // compile — stdout (first 25 lines)
 const compileOut = run('compile manifests/examples/minimal-manifest.yaml --stdout');

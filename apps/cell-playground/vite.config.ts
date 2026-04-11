@@ -19,6 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       // cell-* aliases → actual ikary libs
+      '@ikary/presentation': path.resolve(__dirname, `${LIBS}/presentation/src/index.ts`),
       '@ikary/cell-contract-core': path.resolve(__dirname, `${LIBS}/contract/src/index.ts`),
       '@ikary/cell-contract-presentation': path.resolve(__dirname, `${LIBS}/presentation/src/index.ts`),
       '@ikary/cell-engine': path.resolve(__dirname, `${LIBS}/engine/src/index.ts`),

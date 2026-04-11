@@ -38,9 +38,8 @@ Ikary Manifest lets you define **entire business applications declaratively** us
 ikary-manifest/
   manifests/                 # Canonical YAML schemas + examples
   libs/                      # Core libraries (contract, loader, engine, renderer, etc.)
-  apps/                      # Executables and services (CLI, preview server, MCP server)
+  apps/                      # Executables, services, and sites (CLI, preview server, MCP server, docs)
   runtime-api/               # Runtime API generators/adapters
-  docs/                      # VitePress docs site
   decisions/                 # Architecture decision records and diagrams
 ```
 
@@ -91,6 +90,15 @@ When you run `ikary local start <manifest-path>`, three services start on the fo
 | 4501 | Data API       |
 | 4502 | MCP Server     |
 
+## Developer Tool Ports
+
+Internal developer tools run on the following fixed ports:
+
+| Port | Tool | Command |
+| ---- | ---- | ------- |
+| 4504 | Cell Playground (`apps/cell-playground`) | `pnpm --filter @ikary/cell-playground dev` |
+| 4505 | Docs Playground (`apps/playground-app`) | `pnpm --filter @ikary/playground dev` |
+
 ## How Manifests Work
 
 YAML is the authoring format. The processing pipeline:
@@ -135,14 +143,14 @@ All packages are framework-agnostic at the schema level. The `runtime-ui`, `rend
 
 Full documentation: **[ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest/)**
 
-- [Why Ikary Manifest](./docs/guide/why-ikary-manifest.md)
-- [CLI Guide](./docs/guide/cli.md)
-- [Architecture](./docs/guide/architecture.md)
-- [Manifest Format](./docs/guide/manifest-format.md)
-- [Runtime UI](./docs/guide/runtime-ui.md)
-- [Runtime API](./docs/guide/runtime-api.md)
-- [Entity Definition](./docs/reference/entity-definition.md)
-- [Entity Governance](./docs/reference/entity-governance.md)
+- [Why Ikary Manifest](./apps/docs/guide/why-ikary-manifest.md)
+- [CLI Guide](./apps/docs/guide/cli.md)
+- [Architecture](./apps/docs/guide/architecture.md)
+- [Manifest Format](./apps/docs/guide/manifest-format.md)
+- [Runtime UI](./apps/docs/guide/runtime-ui.md)
+- [Runtime API](./apps/docs/guide/runtime-api.md)
+- [Entity Definition](./apps/docs/reference/entity-definition.md)
+- [Entity Governance](./apps/docs/reference/entity-governance.md)
 
 ```bash
 pnpm docs:dev   # Run docs locally at localhost:5173
