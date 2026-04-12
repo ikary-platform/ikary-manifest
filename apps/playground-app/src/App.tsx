@@ -10,7 +10,7 @@ const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const TABS = [
   { label: 'App Runtime', path: '/app-runtime' },
-  { label: 'Contracts', path: '/contracts' },
+  { label: 'Schema', path: '/contracts' },
   { label: 'API Runtime', path: '/api-runtime' },
   { label: 'UI Runtime', path: '/ui-runtime' },
 ] as const;
@@ -64,11 +64,8 @@ export function App() {
               />
             </a>
 
-            {/* Push tabs + actions to the right */}
-            <div className="flex-1" />
-
             {/* Tab nav — styled as VitePress nav links */}
-            <nav className="flex items-center h-full" aria-label="Playground sections">
+            <nav className="flex items-center h-full mr-auto" aria-label="Playground sections">
               {TABS.map((t) => (
                 <button
                   key={t.path}
@@ -93,7 +90,7 @@ export function App() {
                 rel="noreferrer"
                 className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
               >
-                Documentation
+                Back to documentation
                 <ExternalLinkIcon />
               </a>
               <a
@@ -135,6 +132,7 @@ export function App() {
           <Routes>
             <Route path="/app-runtime" element={<AppRuntimeSection />} />
             <Route path="/contracts" element={<ContractsSection />} />
+            <Route path="/schema" element={<Navigate to="/contracts" replace />} />
             <Route path="/api-runtime" element={<ApiRuntimeSection />} />
             <Route path="/ui-runtime" element={<UIRuntimeSection />} />
             <Route path="*" element={<Navigate to="/app-runtime" replace />} />
