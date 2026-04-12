@@ -124,10 +124,15 @@ export default defineConfig({
     siteTitle: false,
 
     nav: [
-      { text: 'Guide', link: '/guide/why-ikary-manifest' },
+      { text: 'Tutorials', link: '/tutorials/start-here-10-minutes' },
+      { text: 'How-to', link: '/how-to/troubleshoot-local-stack' },
       { text: 'CLI', link: '/cli/' },
-      { text: 'Reference', link: '/reference/entity-definition' },
       { text: 'API', link: '/api/' },
+      { text: 'Reference', link: '/reference/entity-definition' },
+      { text: 'Explanation', link: '/guide/why-ikary-manifest' },
+      { text: 'SDKs', link: '/sdks/' },
+      { text: 'Deployment', link: '/deployment' },
+      { text: 'Releases', link: '/release-notes' },
       { text: 'Packages', link: '/packages/overview' },
       { text: 'Playground', link: '/playground' },
       {
@@ -143,6 +148,26 @@ export default defineConfig({
     ],
 
     sidebar: {
+      '/tutorials/': [
+        {
+          text: 'Tutorials',
+          items: [
+            { text: 'Start Here In 10 Minutes', link: '/tutorials/start-here-10-minutes' },
+            { text: 'Build A Mini CRM', link: '/tutorials/mini-crm' },
+          ],
+        },
+      ],
+
+      '/how-to/': [
+        {
+          text: 'How-to Guides',
+          items: [
+            { text: 'Troubleshoot Local Stack', link: '/how-to/troubleshoot-local-stack' },
+            { text: 'Deploy MCP Server', link: '/deployment' },
+          ],
+        },
+      ],
+
       '/cli/': [
         {
           text: 'CLI Reference',
@@ -158,7 +183,7 @@ export default defineConfig({
 
       '/guide/': [
         {
-          text: 'Introduction',
+          text: 'Explanation',
           items: [
             {
               text: 'Why IKARY Manifest',
@@ -168,7 +193,7 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Concepts',
+          text: 'System Concepts',
           items: [
             { text: 'Schema', link: '/guide/schema' },
             { text: 'Contract', link: '/guide/contract' },
@@ -189,11 +214,6 @@ export default defineConfig({
               text: 'Entity Definition',
               link: '/reference/entity-definition',
             },
-            {
-              text: 'Entity Governance',
-              link: '/reference/entity-governance',
-            },
-            { text: 'Entity Contract', link: '/reference/entity-contract' },
             { text: 'API Conventions', link: '/reference/api-conventions' },
             { text: 'YAML Schemas', link: '/reference/schemas' },
           ],
@@ -206,6 +226,14 @@ export default defineConfig({
             { text: 'Lifecycle & State Machine', link: '/reference/entity-lifecycle' },
             { text: 'Relationships', link: '/reference/entity-relations' },
             { text: 'Policies & Permissions', link: '/reference/entity-policies' },
+          ],
+        },
+        {
+          text: 'Adoption',
+          items: [
+            { text: 'Capability Matrix', link: '/reference/capability-matrix' },
+            { text: 'Compatibility Matrix', link: '/reference/compatibility-matrix' },
+            { text: 'Release Notes', link: '/release-notes' },
           ],
         },
       ],
@@ -236,6 +264,42 @@ export default defineConfig({
             { text: 'API Generation', link: '/packages/api-generation' },
             { text: 'UI Rendering', link: '/packages/ui-rendering' },
           ],
+        },
+      ],
+
+      '/sdks/': [
+        {
+          text: 'SDKs',
+          items: [
+            { text: 'Overview', link: '/sdks/' },
+            { text: 'Node SDK', link: '/sdks/node' },
+          ],
+        },
+      ],
+
+      '/advanced/': [
+        {
+          text: 'Advanced',
+          items: [
+            { text: 'Overview', link: '/advanced/' },
+            { text: 'Internal Contracts', link: '/advanced/internal-contracts' },
+            { text: 'Entity Governance Spec', link: '/reference/entity-governance' },
+            { text: 'Entity Contract Spec', link: '/reference/entity-contract' },
+          ],
+        },
+      ],
+
+      '/deployment': [
+        {
+          text: 'Operations',
+          items: [{ text: 'Deploy MCP Server', link: '/deployment' }],
+        },
+      ],
+
+      '/release-notes': [
+        {
+          text: 'Releases',
+          items: [{ text: 'Release Notes', link: '/release-notes' }],
         },
       ],
     },

@@ -101,8 +101,8 @@ Start the local stack and open the Primitive Studio:
 
 ```bash
 ikary local start manifest.json
-# then open:
-open http://localhost:4500/__primitive-studio
+# then open in your browser:
+# http://localhost:4500/__primitive-studio
 ```
 
 The Studio shows all custom primitives registered in `ikary-primitives.yaml`. Select a primitive to see:

@@ -40,9 +40,9 @@ This architecture separates the declarative description (what to render) from th
 | Package | Role |
 |---------|------|
 | `@ikary/presentation` | Zod schemas for 40+ UI primitive contracts |
-| `@ikary/runtime-ui` | React components, resolvers, adapters, and registry |
+| `@ikary/primitives` | React components, resolvers, adapters, and primitive registry |
 | `@ikary/renderer` | Top-level `CellAppRenderer` component |
-| `@ikary/data-runtime` | Data providers that implement the `EntityClient` interface |
+| `@ikary/data` | Data providers that implement the `EntityClient` interface |
 
 ## Related pages
 

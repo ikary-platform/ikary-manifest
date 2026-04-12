@@ -8,13 +8,12 @@ Version: 1.0
 Status: Canonical
 Scope: Platform-wide
 
-This document is the **canonical source of truth** for the IKARY Entity Definition JSON standard. All entity definitions stored in `domain-registry` and referenced by system-registry, actions, capabilities, and intents MUST conform to this standard.
+This document defines the canonical IKARY entity definition shape.
 
-Cross-references:
+For advanced governance and normalization contracts, see:
 
-- `entity-governance.md`: governance contract (audit, versioning, rollback)
-- `system/backend/1-ENTITY-CONTRACT.MD`: server-side entity contract
-- `system/DOMAIN-MODEL.MD`: domain hierarchy
+- [Micro Entity Governance Spec](/reference/entity-governance)
+- [Entity Schema Normalization Contract](/reference/entity-contract)
 
 ---
 

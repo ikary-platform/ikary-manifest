@@ -14,47 +14,55 @@ pnpm test
 
 1. Create a branch from `main`
 2. Make changes
-3. Run `pnpm test` and `pnpm typecheck`
+3. Run `pnpm test`, `pnpm typecheck`, and `pnpm docs:build` when docs are affected
 4. Open a pull request
 
-## Project structure
+## Repository layout
 
-```
+```text
 ikary-manifest/
-  manifests/       # YAML source of truth (schemas, entities, examples)
-  contracts/       # Schema, types, parsing, validation (Node.js)
-  runtime-api/     # Server-side REST API generation (NestJS)
-  ui/              # Client-side React rendering
-  apps/            # Standalone executables (CLI)
-  docs/            # Documentation (VitePress)
+  manifests/       # YAML source of truth (schemas and examples)
+  libs/            # Core TypeScript libraries
+  apps/            # Executables and services (CLI, runtime APIs, docs, playgrounds)
+  runtime-api/     # Runtime API support code
+  decisions/       # Architecture decision records
 ```
 
-## Packages
+## Documentation layout
 
-All TypeScript packages use:
+```text
+apps/docs/
+  index.md
+  guide/
+  cli/
+  api/
+  reference/
+  packages/
+  sdks/
+```
 
-- **pnpm** workspaces for dependency management
-- **Turbo** for build orchestration
-- **tsup** for bundling (ESM + CJS)
-- **Vitest** for testing
-- **Zod** for runtime validation
+## Package conventions
 
-## Guidelines
+- Use `pnpm` workspaces for dependency management
+- Use `turbo` for build orchestration
+- Use `tsup` for bundling when a package ships bundles
+- Use `vitest` for tests
+- Use Zod for runtime validation
 
-- Keep manifests as YAML; do not use JSON for authored content
+## Code conventions
+
+- Keep manifests as YAML for authored content
 - Entity keys, field keys, and relation keys must be `snake_case`
-- All TypeScript types are derived from Zod schemas (`z.infer`)
-- Contract package stays pure: no I/O, no framework dependencies
-- Tests are required for new validation rules and loader features
+- Derive TypeScript types from Zod schemas with `z.infer`
+- Keep contract packages pure: no filesystem access and no framework runtime dependencies
+- Add tests for new validation rules and loader behavior
 
-## Documentation
+## Docs commands
 
 ```bash
-pnpm docs:dev     # Start local dev server
-pnpm docs:build   # Build static site
+pnpm docs:dev
+pnpm docs:build
 ```
-
-Docs are markdown files in `docs/`. Edit them directly; VitePress handles the rest.
 
 ## License
 

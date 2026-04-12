@@ -2,11 +2,13 @@
 
 API generation reads a compiled manifest and produces REST API endpoints. Each entity in the manifest drives a set of CRUD routes.
 
-## Package
+## Current implementation
 
 ```text
-@ikary/generator-nest : NestJS module, controller, and service generator (in progress)
+@ikary/cell-runtime-api (app)
 ```
+
+The API runtime currently ships as an app in this monorepo. A standalone generation package is not published yet.
 
 ## What it generates
 
@@ -24,20 +26,13 @@ Role scopes from the manifest apply to each endpoint. A role with `actions: [rea
 
 Routes follow the [API Conventions](/reference/api-conventions).
 
-## Install
+## Run from the monorepo
 
 ```bash
-pnpm add @ikary/generator-nest
+pnpm --filter @ikary/cell-runtime-api dev
 ```
 
-## NestJS generator
-
-The NestJS generator reads a compiled manifest and produces NestJS modules, controllers, and services. It is in active development.
-
-```typescript
-// Usage will be documented as the package stabilises.
-import { generateNestApp } from '@ikary/generator-nest';
-```
+This starts the runtime API service for local development.
 
 ## Related pages
 

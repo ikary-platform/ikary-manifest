@@ -7,16 +7,16 @@ hero:
   tagline: AI should generate manifests, not code.
   actions:
     - theme: brand
-      text: Why IKARY Manifest
-      link: /guide/why-ikary-manifest
+      text: Start In 10 Minutes
+      link: /tutorials/start-here-10-minutes
     - theme: alt
-      text: Getting Started
-      link: /guide/cli
+      text: Build Mini CRM
+      link: /tutorials/mini-crm
     - theme: alt
-      text: Open Playground
-      link: /playground
+      text: CLI Reference
+      link: /cli/
     - theme: alt
-      text: API Reference
+      text: API And MCP
       link: /api/
 
 features:

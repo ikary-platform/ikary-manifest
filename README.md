@@ -61,7 +61,7 @@ ikary-manifest/
 ### Option A: Use the published CLI (fastest)
 
 ```bash
-npx ikary init
+npx @ikary/ikary init
 ```
 
 Then run:
@@ -118,9 +118,9 @@ flowchart TD
     L["loader<br/>YAML/JSON parsing + validation pipeline"]
     P["presentation<br/>UI primitive schemas"]
     E["engine<br/>compilation + derivation"]
-    R["runtime-ui<br/>primitives + registries + EntityClient"]
+    R["primitives<br/>component registry + resolvers + adapters"]
     RR["renderer<br/>CellAppRenderer + forms + grids"]
-    D["data-runtime<br/>data-binding providers"]
+    D["data<br/>data-binding providers"]
 
     C --> L
     C --> P
@@ -130,7 +130,7 @@ flowchart TD
     R --> D
 ```
 
-All packages are framework-agnostic at the schema level. The `runtime-ui`, `renderer`, and `data-runtime` packages use React.
+All packages are framework-agnostic at the schema level. The `primitives`, `renderer`, and `data` packages use React.
 
 ## Extensibility
 
@@ -141,7 +141,7 @@ All packages are framework-agnostic at the schema level. The `runtime-ui`, `rend
 
 ## Documentation
 
-Full documentation: **[ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest/)**
+Full documentation: **[documentation.ikary.co](https://documentation.ikary.co/)**
 
 - [Why Ikary Manifest](./apps/docs/guide/why-ikary-manifest.md)
 - [CLI Guide](./apps/docs/guide/cli.md)

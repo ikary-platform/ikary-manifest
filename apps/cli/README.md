@@ -5,7 +5,7 @@ CLI for generating, validating, compiling, and previewing IKARY Cell manifests.
 ## Install
 
 ```bash
-npx ikary init
+npx @ikary/ikary init
 ```
 
 Or install globally:
@@ -58,7 +58,7 @@ ikary setup ai --force         # Overwrite existing files
 
 ## Documentation
 
-Full documentation: [ikary-platform.github.io/ikary-manifest](https://ikary-platform.github.io/ikary-manifest)
+Full documentation: [documentation.ikary.co](https://documentation.ikary.co)
 
 ## License
 
