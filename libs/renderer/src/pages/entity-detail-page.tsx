@@ -1,6 +1,7 @@
 import { useParams, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { buildEntityListPath } from '@ikary/engine';
+import { useT } from '@ikary/system-localization/ui';
 import { useCellRuntime } from '../context/cell-runtime-context';
 import { useCellManifest } from '../context/cell-runtime-context';
 import { DetailHeader } from '../detail/detail-header';
@@ -25,6 +26,7 @@ export function EntityDetailPage({ entity }: CellPageRendererProps) {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
+  const t = useT();
 
   const record = dataStore.getOne(entity?.key ?? '', id ?? '');
   const resolvedEntity = entity ? resolveManifestEntity(manifest, entity.key) : undefined;
@@ -69,7 +71,7 @@ export function EntityDetailPage({ entity }: CellPageRendererProps) {
     return (
       <div className="p-6">
         <p className="text-sm text-muted-foreground mb-3">
-          {entity.name} not found (id: {id}).
+          {t('entity.detail.not_found', { entityName: entity.name, id })}
         </p>
         <button
           onClick={() => {
@@ -78,7 +80,7 @@ export function EntityDetailPage({ entity }: CellPageRendererProps) {
           }}
           className="text-sm text-primary hover:underline"
         >
-          &larr; Back to {entity.pluralName}
+          &larr; {t('entity.detail.back_link', { pluralName: entity.pluralName })}
         </button>
       </div>
     );

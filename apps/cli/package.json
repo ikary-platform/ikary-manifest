@@ -53,6 +53,7 @@
     "@ikary/cell-runtime-core": "workspace:*",
     "@ikary/primitive-contract": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
+    "@ikary/system-localization": "workspace:*",
     "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "commander": "^13.0.0",
