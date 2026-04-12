@@ -1,0 +1,287 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: crm_contacts
+  name: Contact Manager
+  version: "1.0.0"
+  description: "Full CRM contact manager: Contacts with company relation and lead→customer lifecycle, Companies, and Activity log."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: company
+      name: Company
+      pluralName: Companies
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: domain
+          name: Domain
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: acme.com
+        - key: industry
+          name: Industry
+          type: enum
+          enumValues: [technology, finance, healthcare, manufacturing, retail, other]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: employee_count
+          name: Employees
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: website
+          name: Website
+          type: string
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [prospect, customer, partner, churned]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: contacts
+          relation: has_many
+          entity: contact
+          foreignKey: company_id
+    - key: contact
+      name: Contact
+      pluralName: Contacts
+      fields:
+        - key: first_name
+          name: First Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: last_name
+          name: Last Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: name@example.com
+        - key: phone
+          name: Phone
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: job_title
+          name: Job Title
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [lead, qualified, customer, inactive]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: company_id
+          relation: belongs_to
+          entity: company
+          required: false
+      lifecycle:
+        field: status
+        initial: lead
+        states: [lead, qualified, customer, inactive]
+        transitions:
+          - key: qualify
+            from: lead
+            to: qualified
+            label: Qualify
+            event: contact.qualified
+          - key: convert
+            from: qualified
+            to: customer
+            label: Convert to Customer
+            event: contact.converted
+          - key: deactivate
+            from: [lead, qualified, customer]
+            to: inactive
+            label: Deactivate
+          - key: reactivate
+            from: inactive
+            to: lead
+            label: Reactivate
+    - key: activity
+      name: Activity
+      pluralName: Activities
+      fields:
+        - key: subject
+          name: Subject
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: type
+          name: Type
+          type: enum
+          enumValues: [call, email, meeting, note, task]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [planned, completed, cancelled]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: activity_date
+          name: Date
+          type: datetime
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Dashboard
+      path: /dashboard
+    - key: company_list
+      type: entity-list
+      title: Companies
+      path: /companies
+      entity: company
+    - key: company_detail
+      type: entity-detail
+      title: Company
+      path: /companies/:id
+      entity: company
+    - key: company_create
+      type: entity-create
+      title: New Company
+      path: /companies/new
+      entity: company
+    - key: contact_list
+      type: entity-list
+      title: Contacts
+      path: /contacts
+      entity: contact
+    - key: contact_detail
+      type: entity-detail
+      title: Contact
+      path: /contacts/:id
+      entity: contact
+    - key: contact_create
+      type: entity-create
+      title: New Contact
+      path: /contacts/new
+      entity: contact
+    - key: activity_list
+      type: entity-list
+      title: Activities
+      path: /activities
+      entity: activity
+    - key: activity_detail
+      type: entity-detail
+      title: Activity
+      path: /activities/:id
+      entity: activity
+    - key: activity_create
+      type: entity-create
+      title: New Activity
+      path: /activities/new
+      entity: activity
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: group
+        key: nav_crm
+        label: CRM
+        children:
+          - type: page
+            key: nav_contacts
+            pageKey: contact_list
+            label: Contacts
+          - type: page
+            key: nav_companies
+            pageKey: company_list
+            label: Companies
+          - type: page
+            key: nav_activities
+            pageKey: activity_list
+            label: Activities
+  roles:
+    - key: sales_rep
+      name: Sales Rep
+      scopes: ["contact.*", "company.*", "activity.*"]
+    - key: viewer
+      name: Viewer
+      scopes: [contact.list, contact.view, company.list, company.view, activity.list, activity.view]

@@ -1,0 +1,214 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: crm_support
+  name: Customer Support
+  version: "1.0.0"
+  description: Support desk with Customers and Tickets. Tickets have a full resolution lifecycle and priority classification.
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: customer
+      name: Customer
+      pluralName: Customers
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: name@company.com
+        - key: plan
+          name: Plan
+          type: enum
+          enumValues: [free, starter, pro, enterprise]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: contract_start
+          name: Contract Start
+          type: date
+          list:
+            visible: false
+          form:
+            visible: true
+      relations:
+        - key: tickets
+          relation: has_many
+          entity: ticket
+          foreignKey: customer_id
+    - key: ticket
+      name: Ticket
+      pluralName: Tickets
+      fields:
+        - key: subject
+          name: Subject
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          required: true
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: priority
+          name: Priority
+          type: enum
+          enumValues: [low, medium, high, critical]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: category
+          name: Category
+          type: enum
+          enumValues: [billing, technical, feature_request, bug, account]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [open, in_progress, on_hold, resolved, closed]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: assignee
+          name: Assignee
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: sla_deadline
+          name: SLA Deadline
+          type: datetime
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: resolution_notes
+          name: Resolution Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: customer_id
+          relation: belongs_to
+          entity: customer
+          required: true
+      lifecycle:
+        field: status
+        initial: open
+        states: [open, in_progress, on_hold, resolved, closed]
+        transitions:
+          - key: assign
+            from: open
+            to: in_progress
+            label: Assign
+          - key: hold
+            from: in_progress
+            to: on_hold
+            label: Put on Hold
+          - key: resume
+            from: on_hold
+            to: in_progress
+            label: Resume
+          - key: resolve
+            from: [in_progress, on_hold]
+            to: resolved
+            label: Resolve
+            guards: ["resolution_notes != null"]
+            event: ticket.resolved
+          - key: close
+            from: resolved
+            to: closed
+            label: Close
+          - key: reopen
+            from: [resolved, closed]
+            to: open
+            label: Reopen
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Support Dashboard
+      path: /dashboard
+    - key: ticket_list
+      type: entity-list
+      title: Tickets
+      path: /tickets
+      entity: ticket
+    - key: ticket_detail
+      type: entity-detail
+      title: Ticket
+      path: /tickets/:id
+      entity: ticket
+    - key: ticket_create
+      type: entity-create
+      title: New Ticket
+      path: /tickets/new
+      entity: ticket
+    - key: customer_list
+      type: entity-list
+      title: Customers
+      path: /customers
+      entity: customer
+    - key: customer_detail
+      type: entity-detail
+      title: Customer
+      path: /customers/:id
+      entity: customer
+    - key: customer_create
+      type: entity-create
+      title: New Customer
+      path: /customers/new
+      entity: customer
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_tickets
+        pageKey: ticket_list
+        label: Tickets
+      - type: page
+        key: nav_customers
+        pageKey: customer_list
+        label: Customers

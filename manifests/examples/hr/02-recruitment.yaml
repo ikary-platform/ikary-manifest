@@ -1,0 +1,333 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: hr_recruitment
+  name: Recruitment
+  version: "1.0.0"
+  description: "Full recruitment pipeline: Job Openings, Candidates, and Applications with a screening→hire/reject lifecycle."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: job_opening
+      name: Job Opening
+      pluralName: Job Openings
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: department
+          name: Department
+          type: string
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: type
+          name: Type
+          type: enum
+          enumValues: [full_time, part_time, contract, internship]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: location
+          name: Location
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, open, on_hold, filled, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: headcount
+          name: Headcount
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: target_start
+          name: Target Start
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: applications
+          relation: has_many
+          entity: application
+          foreignKey: job_opening_id
+    - key: candidate
+      name: Candidate
+      pluralName: Candidates
+      fields:
+        - key: first_name
+          name: First Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: last_name
+          name: Last Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: name@example.com
+        - key: phone
+          name: Phone
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: source
+          name: Source
+          type: enum
+          enumValues: [linkedin, referral, job_board, direct, agency]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: current_title
+          name: Current Title
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: years_experience
+          name: "Experience (yrs)"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: applications
+          relation: has_many
+          entity: application
+          foreignKey: candidate_id
+    - key: application
+      name: Application
+      pluralName: Applications
+      fields:
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [applied, screening, interview, offer, hired, rejected, withdrawn]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: applied_date
+          name: Applied Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: interview_date
+          name: Interview Date
+          type: datetime
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: offer_amount
+          name: Offer Amount
+          type: number
+          sensitive: pii
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: recruiter
+          name: Recruiter
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: rejection_reason
+          name: Rejection Reason
+          type: enum
+          enumValues: [not_qualified, overqualified, culture_fit, compensation, withdrew, position_cancelled]
+          list:
+            visible: false
+          form:
+            visible: true
+      relations:
+        - key: job_opening_id
+          relation: belongs_to
+          entity: job_opening
+          required: true
+        - key: candidate_id
+          relation: belongs_to
+          entity: candidate
+          required: true
+      lifecycle:
+        field: status
+        initial: applied
+        states: [applied, screening, interview, offer, hired, rejected, withdrawn]
+        transitions:
+          - key: screen
+            from: applied
+            to: screening
+            label: Start Screening
+          - key: invite_interview
+            from: screening
+            to: interview
+            label: Invite to Interview
+          - key: make_offer
+            from: interview
+            to: offer
+            label: Make Offer
+          - key: hire
+            from: offer
+            to: hired
+            label: Hire
+            event: application.hired
+          - key: reject
+            from: [screening, interview, offer]
+            to: rejected
+            label: Reject
+            event: application.rejected
+          - key: withdraw
+            from: [applied, screening, interview, offer]
+            to: withdrawn
+            label: Mark Withdrawn
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Recruitment Dashboard
+      path: /dashboard
+    - key: job_list
+      type: entity-list
+      title: Job Openings
+      path: /jobs
+      entity: job_opening
+    - key: job_detail
+      type: entity-detail
+      title: Job Opening
+      path: /jobs/:id
+      entity: job_opening
+    - key: job_create
+      type: entity-create
+      title: New Job Opening
+      path: /jobs/new
+      entity: job_opening
+    - key: candidate_list
+      type: entity-list
+      title: Candidates
+      path: /candidates
+      entity: candidate
+    - key: candidate_detail
+      type: entity-detail
+      title: Candidate
+      path: /candidates/:id
+      entity: candidate
+    - key: candidate_create
+      type: entity-create
+      title: New Candidate
+      path: /candidates/new
+      entity: candidate
+    - key: application_list
+      type: entity-list
+      title: Applications
+      path: /applications
+      entity: application
+    - key: application_detail
+      type: entity-detail
+      title: Application
+      path: /applications/:id
+      entity: application
+    - key: application_create
+      type: entity-create
+      title: New Application
+      path: /applications/new
+      entity: application
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: group
+        key: nav_pipeline
+        label: Pipeline
+        children:
+          - type: page
+            key: nav_applications
+            pageKey: application_list
+            label: Applications
+          - type: page
+            key: nav_candidates
+            pageKey: candidate_list
+            label: Candidates
+      - type: page
+        key: nav_jobs
+        pageKey: job_list
+        label: Job Openings

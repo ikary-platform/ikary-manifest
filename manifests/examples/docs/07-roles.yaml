@@ -1,0 +1,102 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_roles
+  name: Roles & Scopes
+  version: "1.0.0"
+  description: Three roles (admin, editor, viewer) with different scope sets on a single Document entity.
+spec:
+  mount:
+    mountPath: /
+    landingPage: document_list
+  entities:
+    - key: document
+      name: Document
+      pluralName: Documents
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: content
+          name: Content
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: category
+          name: Category
+          type: enum
+          enumValues: [policy, procedure, template, report]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: author
+          name: Author
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, review, approved, archived]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: published_at
+          name: Published
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+  pages:
+    - key: document_list
+      type: entity-list
+      title: Documents
+      path: /documents
+      entity: document
+    - key: document_detail
+      type: entity-detail
+      title: Document
+      path: /documents/:id
+      entity: document
+    - key: document_create
+      type: entity-create
+      title: New Document
+      path: /documents/new
+      entity: document
+  navigation:
+    items:
+      - type: page
+        key: nav_documents
+        pageKey: document_list
+        label: Documents
+  roles:
+    - key: admin
+      name: Administrator
+      description: Full access to all resources
+      scopes: ["*"]
+    - key: editor
+      name: Editor
+      description: Can view, create, and edit documents but not delete
+      scopes: [document.list, document.view, document.create, document.update]
+    - key: viewer
+      name: Viewer
+      description: Read-only access to approved documents
+      scopes: [document.list, document.view]

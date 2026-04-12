@@ -1,0 +1,65 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_minimal
+  name: Minimal Cell
+  version: "1.0.0"
+  description: "The smallest valid Cell Manifest: one entity, one list page, one detail page, one create page."
+spec:
+  mount:
+    mountPath: /
+    landingPage: note_list
+  entities:
+    - key: note
+      name: Note
+      pluralName: Notes
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: Note title
+        - key: content
+          name: Content
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, published, archived]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+  pages:
+    - key: note_list
+      type: entity-list
+      title: Notes
+      path: /notes
+      entity: note
+    - key: note_detail
+      type: entity-detail
+      title: Note
+      path: /notes/:id
+      entity: note
+    - key: note_create
+      type: entity-create
+      title: New Note
+      path: /notes/new
+      entity: note
+  navigation:
+    items:
+      - type: page
+        key: nav_note_list
+        pageKey: note_list
+        label: All Notes

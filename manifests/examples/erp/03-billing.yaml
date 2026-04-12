@@ -1,0 +1,227 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: erp_billing
+  name: Finance & Billing
+  version: "1.0.0"
+  description: "Billing module: Customers and Invoices with draft→sent→paid lifecycle, due dates, and an overdue computed field."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: customer
+      name: Customer
+      pluralName: Customers
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Billing Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: billing@company.com
+        - key: vat_number
+          name: VAT Number
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: payment_terms
+          name: "Payment Terms (days)"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: currency
+          name: Currency
+          type: enum
+          enumValues: [USD, EUR, GBP, JPY, CAD]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: invoices
+          relation: has_many
+          entity: invoice
+          foreignKey: customer_id
+      computed:
+        - key: outstanding_balance
+          name: Outstanding Balance
+          type: number
+          formulaType: aggregation
+          relation: invoices
+          operation: sum
+          field: total_amount
+          filter: 'status != "paid"'
+        - key: invoice_count
+          name: Invoice Count
+          type: number
+          formulaType: aggregation
+          relation: invoices
+          operation: count
+    - key: invoice
+      name: Invoice
+      pluralName: Invoices
+      fields:
+        - key: number
+          name: "Invoice #"
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: INV-2024-001
+        - key: subtotal
+          name: Subtotal
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: tax_rate
+          name: Tax Rate
+          type: number
+          form:
+            visible: true
+          list:
+            visible: false
+          helpText: "Decimal e.g. 0.20 for 20%"
+        - key: due_date
+          name: Due Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, sent, paid, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: paid_at
+          name: Paid At
+          type: date
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: customer_id
+          relation: belongs_to
+          entity: customer
+          required: true
+      computed:
+        - key: total_amount
+          name: Total
+          type: number
+          formulaType: expression
+          expression: "subtotal * (1 + tax_rate)"
+        - key: overdue
+          name: Overdue
+          type: boolean
+          formulaType: conditional
+          condition: 'due_date < now() and status == "sent"'
+          then: "true"
+          else: "false"
+      lifecycle:
+        field: status
+        initial: draft
+        states: [draft, sent, paid, cancelled]
+        transitions:
+          - key: send
+            from: draft
+            to: sent
+            label: Send to Customer
+            event: invoice.sent
+          - key: mark_paid
+            from: sent
+            to: paid
+            label: Mark as Paid
+            event: invoice.paid
+          - key: cancel
+            from: [draft, sent]
+            to: cancelled
+            label: Cancel
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Finance Dashboard
+      path: /dashboard
+    - key: invoice_list
+      type: entity-list
+      title: Invoices
+      path: /invoices
+      entity: invoice
+    - key: invoice_detail
+      type: entity-detail
+      title: Invoice
+      path: /invoices/:id
+      entity: invoice
+    - key: invoice_create
+      type: entity-create
+      title: New Invoice
+      path: /invoices/new
+      entity: invoice
+    - key: customer_list
+      type: entity-list
+      title: Customers
+      path: /customers
+      entity: customer
+    - key: customer_detail
+      type: entity-detail
+      title: Customer
+      path: /customers/:id
+      entity: customer
+    - key: customer_create
+      type: entity-create
+      title: New Customer
+      path: /customers/new
+      entity: customer
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_invoices
+        pageKey: invoice_list
+        label: Invoices
+      - type: page
+        key: nav_customers
+        pageKey: customer_list
+        label: Customers

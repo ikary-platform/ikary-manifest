@@ -1,0 +1,275 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: hr_leave
+  name: Leave Management
+  version: "1.0.0"
+  description: "Leave management: Employees, Leave Types (annual/sick/unpaid), and Leave Requests with manager approval workflow."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: hr_employee
+      name: Employee
+      pluralName: Employees
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: department
+          name: Department
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: manager_name
+          name: Manager
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: annual_leave_balance
+          name: Annual Leave Balance (days)
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: leave_requests
+          relation: has_many
+          entity: leave_request
+          foreignKey: employee_id
+    - key: leave_type
+      name: Leave Type
+      pluralName: Leave Types
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: Annual Leave
+        - key: code
+          name: Code
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: AL
+        - key: is_paid
+          name: Paid
+          type: boolean
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: max_days_per_year
+          name: Max Days/Year
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: requires_approval
+          name: Requires Approval
+          type: boolean
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+    - key: leave_request
+      name: Leave Request
+      pluralName: Leave Requests
+      fields:
+        - key: start_date
+          name: Start Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: end_date
+          name: End Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: days_requested
+          name: Days
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: reason
+          name: Reason
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [pending, approved, rejected, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: approved_by
+          name: Approved By
+          type: string
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: rejection_reason
+          name: Rejection Reason
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: employee_id
+          relation: belongs_to
+          entity: hr_employee
+          required: true
+        - key: leave_type_id
+          relation: belongs_to
+          entity: leave_type
+          required: true
+      lifecycle:
+        field: status
+        initial: pending
+        states: [pending, approved, rejected, cancelled]
+        transitions:
+          - key: approve
+            from: pending
+            to: approved
+            label: Approve
+            guards: ["approved_by != null"]
+            event: leave_request.approved
+          - key: reject
+            from: pending
+            to: rejected
+            label: Reject
+            event: leave_request.rejected
+          - key: cancel
+            from: [pending, approved]
+            to: cancelled
+            label: Cancel
+          - key: resubmit
+            from: rejected
+            to: pending
+            label: Resubmit
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Leave Dashboard
+      path: /dashboard
+    - key: leave_request_list
+      type: entity-list
+      title: Leave Requests
+      path: /leave-requests
+      entity: leave_request
+    - key: leave_request_detail
+      type: entity-detail
+      title: Leave Request
+      path: /leave-requests/:id
+      entity: leave_request
+    - key: leave_request_create
+      type: entity-create
+      title: New Request
+      path: /leave-requests/new
+      entity: leave_request
+    - key: employee_list
+      type: entity-list
+      title: Employees
+      path: /employees
+      entity: hr_employee
+    - key: employee_detail
+      type: entity-detail
+      title: Employee
+      path: /employees/:id
+      entity: hr_employee
+    - key: employee_create
+      type: entity-create
+      title: New Employee
+      path: /employees/new
+      entity: hr_employee
+    - key: leave_type_list
+      type: entity-list
+      title: Leave Types
+      path: /leave-types
+      entity: leave_type
+    - key: leave_type_detail
+      type: entity-detail
+      title: Leave Type
+      path: /leave-types/:id
+      entity: leave_type
+    - key: leave_type_create
+      type: entity-create
+      title: New Leave Type
+      path: /leave-types/new
+      entity: leave_type
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_leave_requests
+        pageKey: leave_request_list
+        label: Leave Requests
+      - type: group
+        key: nav_settings
+        label: Settings
+        children:
+          - type: page
+            key: nav_employees
+            pageKey: employee_list
+            label: Employees
+          - type: page
+            key: nav_leave_types
+            pageKey: leave_type_list
+            label: Leave Types

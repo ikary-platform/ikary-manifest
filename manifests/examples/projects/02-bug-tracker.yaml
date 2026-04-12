@@ -1,0 +1,162 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: proj_bugs
+  name: Bug Tracker
+  version: "1.0.0"
+  description: "Issue tracker for software teams. Issues are typed (bug/feature/improvement) with severity and a triage→resolve lifecycle."
+spec:
+  mount:
+    mountPath: /
+    landingPage: issue_list
+  entities:
+    - key: issue
+      name: Issue
+      pluralName: Issues
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          required: true
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: type
+          name: Type
+          type: enum
+          enumValues: [bug, feature, improvement, question, task]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: severity
+          name: Severity
+          type: enum
+          enumValues: [critical, high, medium, low]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [open, triaged, in_progress, resolved, closed, wont_fix]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: component
+          name: Component
+          type: string
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: assignee
+          name: Assignee
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: reporter
+          name: Reporter
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: version_found
+          name: Version Found
+          type: string
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: version_fixed
+          name: Version Fixed
+          type: string
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: steps_to_reproduce
+          name: Steps to Reproduce
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      lifecycle:
+        field: status
+        initial: open
+        states: [open, triaged, in_progress, resolved, closed, wont_fix]
+        transitions:
+          - key: triage
+            from: open
+            to: triaged
+            label: Triage
+          - key: assign
+            from: triaged
+            to: in_progress
+            label: Assign
+            guards: ["assignee != null"]
+          - key: resolve
+            from: in_progress
+            to: resolved
+            label: Resolve
+            event: issue.resolved
+          - key: close
+            from: resolved
+            to: closed
+            label: Close
+          - key: wont_fix
+            from: [open, triaged]
+            to: wont_fix
+            label: "Won't Fix"
+          - key: reopen
+            from: [resolved, closed]
+            to: open
+            label: Reopen
+            event: issue.reopened
+  pages:
+    - key: issue_list
+      type: entity-list
+      title: Issues
+      path: /issues
+      entity: issue
+    - key: issue_detail
+      type: entity-detail
+      title: Issue
+      path: /issues/:id
+      entity: issue
+    - key: issue_create
+      type: entity-create
+      title: New Issue
+      path: /issues/new
+      entity: issue
+  navigation:
+    items:
+      - type: page
+        key: nav_issues
+        pageKey: issue_list
+        label: Issues

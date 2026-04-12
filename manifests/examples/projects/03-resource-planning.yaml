@@ -1,0 +1,226 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: proj_resources
+  name: Resource Planning
+  version: "1.0.0"
+  description: "Resource planning: Teams, Projects, and Assignments (with allocated hours and role). Shows cross-entity linking."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: team
+      name: Team
+      pluralName: Teams
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: department
+          name: Department
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: capacity_hours
+          name: "Capacity (hrs/wk)"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: assignments
+          relation: has_many
+          entity: assignment
+          foreignKey: team_id
+    - key: resource_project
+      name: Project
+      pluralName: Projects
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: code
+          name: Code
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: PROJ-001
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [active, planned, completed, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: start_date
+          name: Start Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: end_date
+          name: End Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: budget_hours
+          name: "Budget (hrs)"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: assignments
+          relation: has_many
+          entity: assignment
+          foreignKey: project_id
+    - key: assignment
+      name: Assignment
+      pluralName: Assignments
+      fields:
+        - key: role
+          name: Role
+          type: enum
+          enumValues: [lead, developer, designer, analyst, tester, support]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: allocated_hours
+          name: "Allocated (hrs/wk)"
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: start_date
+          name: Start Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: end_date
+          name: End Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: team_id
+          relation: belongs_to
+          entity: team
+          required: true
+        - key: project_id
+          relation: belongs_to
+          entity: resource_project
+          required: true
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Resource Dashboard
+      path: /dashboard
+    - key: team_list
+      type: entity-list
+      title: Teams
+      path: /teams
+      entity: team
+    - key: team_detail
+      type: entity-detail
+      title: Team
+      path: /teams/:id
+      entity: team
+    - key: team_create
+      type: entity-create
+      title: New Team
+      path: /teams/new
+      entity: team
+    - key: project_list
+      type: entity-list
+      title: Projects
+      path: /projects
+      entity: resource_project
+    - key: project_detail
+      type: entity-detail
+      title: Project
+      path: /projects/:id
+      entity: resource_project
+    - key: project_create
+      type: entity-create
+      title: New Project
+      path: /projects/new
+      entity: resource_project
+    - key: assignment_list
+      type: entity-list
+      title: Assignments
+      path: /assignments
+      entity: assignment
+    - key: assignment_detail
+      type: entity-detail
+      title: Assignment
+      path: /assignments/:id
+      entity: assignment
+    - key: assignment_create
+      type: entity-create
+      title: New Assignment
+      path: /assignments/new
+      entity: assignment
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_teams
+        pageKey: team_list
+        label: Teams
+      - type: page
+        key: nav_projects
+        pageKey: project_list
+        label: Projects
+      - type: page
+        key: nav_assignments
+        pageKey: assignment_list
+        label: Assignments
