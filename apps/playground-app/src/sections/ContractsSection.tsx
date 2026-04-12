@@ -34,7 +34,7 @@ const CATEGORY_COLORS: Record<SchemaCategory | 'all', string> = {
 };
 
 const CATEGORY_DESCRIPTIONS: Record<SchemaCategory | 'all', string> = {
-  all: 'Show all contract categories',
+  all: 'Show all schema categories',
   entity: 'Core business object schemas: fields, relations, computed values, lifecycle, and events',
   manifest: 'Top-level manifest schemas: cell envelope, spec, app shell, mount, capabilities, navigation, and pages',
   policy: 'Access control schemas: scopes, action policies, entity policies, field policies, and roles',
@@ -140,7 +140,7 @@ export function ContractsSection() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search contracts…"
+            placeholder="Search schemas…"
             className="w-full rounded border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
         </div>
@@ -163,7 +163,7 @@ export function ContractsSection() {
         </div>
 
         {filtered.length === 0 && (
-          <p className="p-4 text-sm text-gray-400">No contracts match.</p>
+          <p className="p-4 text-sm text-gray-400">No schemas match.</p>
         )}
 
         <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
@@ -189,7 +189,7 @@ export function ContractsSection() {
         </ul>
 
         <div className="px-3 py-2 border-t border-gray-100 text-xs text-gray-400">
-          {filtered.length} of {CELL_SCHEMA_CATALOG.length} contracts
+          {filtered.length} of {CELL_SCHEMA_CATALOG.length} schemas
         </div>
       </aside>
 
@@ -251,7 +251,7 @@ export function ContractsSection() {
                   </div>
                 ) : (
                   <p className="mt-4 text-sm text-gray-400">
-                    No documentation available for this contract.
+                    No documentation available for this schema.
                   </p>
                 )}
               </>
