@@ -127,6 +127,40 @@ function manifestPlugin(): any {
           }
         });
       }
+
+      // Serve compiled locale bundles from the cell's `locales/` directory.
+      // Empty `{}` is returned when the file doesn't exist so the loader can
+      // still merge renderer defaults without errors.
+      server.middlewares.use(/^\/locales\/([a-z]{2}(?:-[A-Z]{2})?)\.json$/, (req: any, res: any) => {
+        const match = req.url?.match(/^\/locales\/([a-z]{2}(?:-[A-Z]{2})?)\.json/);
+        const locale = match?.[1];
+        res.setHeader('Content-Type', 'application/json');
+        if (!locale) {
+          res.end('{}');
+          return;
+        }
+        const localePath = path.join(projectDir(), 'locales', `${locale}.json`);
+        try {
+          if (fs.existsSync(localePath)) {
+            res.end(fs.readFileSync(localePath, 'utf-8'));
+            return;
+          }
+        } catch {
+          /* fall through to empty */
+        }
+        res.end('{}');
+      });
+
+      // Hot-reload locale changes — watch the cell's `locales/` directory
+      // and signal a full reload when any `.json` file changes.
+      const localesDir = path.join(projectDir(), 'locales');
+      if (fs.existsSync(localesDir)) {
+        fs.watch(localesDir, (_eventType, filename) => {
+          if (filename?.endsWith('.json')) {
+            server.ws.send({ type: 'full-reload' });
+          }
+        });
+      }
     },
   };
 }

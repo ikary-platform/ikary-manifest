@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildEntityDetailPath } from '@ikary/engine';
 import type { DataGridColumn } from '@ikary/presentation';
-import { useT } from '@ikary/system-localization/ui';
+import { useOptionalT } from '@ikary/system-localization/ui';
+import { messages as rendererEnMessages } from '../i18n/en';
 import { EntityCreateSheet } from '../sheets/EntityCreateSheet';
 import { CellDataGrid } from '../components/cell-data-grid';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
@@ -94,7 +95,7 @@ export function EntityListPage({ page, entity }: CellPageRendererProps) {
   const { dataStore, dataMode } = useCellRuntime();
   const manifest = useCellManifest();
   const { ListPageLayout, SearchInput, PaginationControls } = useUIComponents();
-  const t = useT();
+  const t = useOptionalT(rendererEnMessages);
   const [searchParams, setSearchParams] = useSearchParams();
   const [createOpen, setCreateOpen] = useState(false);
 

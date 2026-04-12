@@ -81,17 +81,24 @@ export async function localizeInitCommand(options: {
         contents: renderConfigTemplate(defaultLocale, supportedLocales),
         label: 'ikary.localization.config.ts',
       },
-      {
-        filePath: join(sourceDir, `${defaultLocale}.ts`),
-        contents: renderAppEnglishTemplate(),
-        label: `src/locales/${defaultLocale}.ts`,
-      },
-      {
-        filePath: join(overrideDir, `${defaultLocale}.ts`),
-        contents: renderOverrideTemplate(),
-        label: `src/locales/overrides/${defaultLocale}.ts`,
-      },
     ];
+
+    // Scaffold a source file + override for every supported locale so
+    // `ikary localize init --locales en,fr` produces a complete bootstrap.
+    // Non-default locales start from the override-shaped empty map since
+    // they typically begin life as translation targets.
+    for (const locale of supportedLocales) {
+      writes.push({
+        filePath: join(sourceDir, `${locale}.ts`),
+        contents: locale === defaultLocale ? renderAppEnglishTemplate() : renderOverrideTemplate(),
+        label: `src/locales/${locale}.ts`,
+      });
+      writes.push({
+        filePath: join(overrideDir, `${locale}.ts`),
+        contents: renderOverrideTemplate(),
+        label: `src/locales/overrides/${locale}.ts`,
+      });
+    }
 
     const written: string[] = [];
     for (const write of writes) {

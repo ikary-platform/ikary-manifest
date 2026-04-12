@@ -1,7 +1,8 @@
 import { useParams, useLocation, useNavigate, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { buildEntityListPath } from '@ikary/engine';
-import { useT } from '@ikary/system-localization/ui';
+import { useOptionalT } from '@ikary/system-localization/ui';
+import { messages as rendererEnMessages } from '../i18n/en';
 import { useCellRuntime } from '../context/cell-runtime-context';
 import { useCellManifest } from '../context/cell-runtime-context';
 import { DetailHeader } from '../detail/detail-header';
@@ -26,7 +27,7 @@ export function EntityDetailPage({ entity }: CellPageRendererProps) {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const t = useT();
+  const t = useOptionalT(rendererEnMessages);
 
   const record = dataStore.getOne(entity?.key ?? '', id ?? '');
   const resolvedEntity = entity ? resolveManifestEntity(manifest, entity.key) : undefined;
