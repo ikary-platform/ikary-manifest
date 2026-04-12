@@ -14,7 +14,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external @ikary/engine --external @ikary/primitives --external @tanstack/react-query --external react-hook-form --external @hookform/resolvers --external zod",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external @ikary/engine --external @ikary/primitives --external @ikary/system-localization --external @tanstack/react-query --external react-hook-form --external @hookform/resolvers --external react-intl --external zod",
     "build:standalone": "vite build --config vite.standalone.config.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -27,6 +27,7 @@
     "@ikary/engine": "workspace:*",
     "@ikary/presentation": "workspace:*",
     "@ikary/primitives": "workspace:*",
+    "@ikary/system-localization": "workspace:*",
     "react-hook-form": "^7.53.0",
     "zod": "^3.23.8"
   },
