@@ -1460,6 +1460,77 @@ describe('ChartCommonSchemas', () => {
   });
 });
 
+// ── validateChartDataKeys (cross-field refinement) ────────────────────────────
+
+describe('validateChartDataKeys cross-field validation', () => {
+  it('area-chart rejects data point missing the xKey field', () => {
+    const result = validateRuntimeAreaChartPresentation({
+      type: 'area-chart',
+      data: [{ revenue: 100 }],           // 'month' xKey is missing
+      xKey: 'month',
+      series: [{ dataKey: 'revenue', label: 'Revenue' }],
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('area-chart rejects data point missing a series dataKey field', () => {
+    const result = validateRuntimeAreaChartPresentation({
+      type: 'area-chart',
+      data: [{ month: 'Jan' }],           // 'revenue' dataKey is missing
+      xKey: 'month',
+      series: [{ dataKey: 'revenue', label: 'Revenue' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('bar-chart rejects data point missing a series dataKey', () => {
+    const result = validateRuntimeBarChartPresentation({
+      type: 'bar-chart',
+      data: [{ quarter: 'Q1' }],          // 'sales' dataKey missing
+      xKey: 'quarter',
+      series: [{ dataKey: 'sales', label: 'Sales' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('line-chart rejects data point missing the xKey', () => {
+    const result = validateRuntimeLineChartPresentation({
+      type: 'line-chart',
+      data: [{ users: 100 }],             // 'week' xKey missing
+      xKey: 'week',
+      series: [{ dataKey: 'users', label: 'Users' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('radar-chart rejects data point missing the default subject key', () => {
+    const result = validateRuntimeRadarChartPresentation({
+      type: 'radar-chart',
+      data: [
+        { score: 80 },                    // 'subject' key missing
+        { score: 70 },
+        { score: 60 },
+      ],
+      series: [{ dataKey: 'score', label: 'Score' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('radar-chart rejects data point missing a series dataKey', () => {
+    const result = validateRuntimeRadarChartPresentation({
+      type: 'radar-chart',
+      data: [
+        { subject: 'A' },                 // 'score' dataKey missing
+        { subject: 'B' },
+        { subject: 'C' },
+      ],
+      series: [{ dataKey: 'score', label: 'Score' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+});
+
 // ── AreaChart ────────────────────────────────────────────────────────────────
 
 describe('validateRuntimeAreaChartPresentation', () => {

@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ChartDataPointSchema, ChartSeriesSchema, ChartLegendPositionSchema } from '../chart-common/ChartCommonSchemas';
+import {
+  ChartDataPointSchema,
+  ChartSeriesSchema,
+  ChartLegendPositionSchema,
+  validateChartDataKeys,
+} from '../chart-common/ChartCommonSchemas';
 
 export const BarChartPresentationSchema = z
   .object({
@@ -18,6 +23,9 @@ export const BarChartPresentationSchema = z
     layout: z.enum(['horizontal', 'vertical']).optional().describe('Bar orientation (default "horizontal")'),
     radius: z.number().int().min(0).max(20).optional().describe('Corner radius of each bar in pixels (0–20)'),
   })
-  .strict();
+  .strict()
+  .superRefine((val, ctx) => {
+    validateChartDataKeys(val.data, val.xKey, val.series, ctx);
+  });
 
 export type BarChartPresentation = z.infer<typeof BarChartPresentationSchema>;

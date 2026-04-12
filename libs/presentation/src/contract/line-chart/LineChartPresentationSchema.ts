@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ChartDataPointSchema, ChartSeriesSchema, ChartLegendPositionSchema } from '../chart-common/ChartCommonSchemas';
+import {
+  ChartDataPointSchema,
+  ChartSeriesSchema,
+  ChartLegendPositionSchema,
+  validateChartDataKeys,
+} from '../chart-common/ChartCommonSchemas';
 
 export const LineChartPresentationSchema = z
   .object({
@@ -18,6 +23,9 @@ export const LineChartPresentationSchema = z
     showDots: z.boolean().optional().describe('Show a dot at each data point (default false)'),
     curved: z.boolean().optional().describe('Use a smooth monotone curve instead of straight lines'),
   })
-  .strict();
+  .strict()
+  .superRefine((val, ctx) => {
+    validateChartDataKeys(val.data, val.xKey, val.series, ctx);
+  });
 
 export type LineChartPresentation = z.infer<typeof LineChartPresentationSchema>;

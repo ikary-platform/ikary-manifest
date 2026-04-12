@@ -19,3 +19,34 @@ export const ChartSeriesSchema = z
 export type ChartLegendPosition = z.infer<typeof ChartLegendPositionSchema>;
 export type ChartDataPoint = z.infer<typeof ChartDataPointSchema>;
 export type ChartSeries = z.infer<typeof ChartSeriesSchema>;
+
+/**
+ * Cross-field refinement: validates that every data point contains the
+ * `xKey` column and all series `dataKey` columns. Call inside `.superRefine()`
+ * on Cartesian chart schemas (area, bar, line).
+ */
+export function validateChartDataKeys(
+  data: ChartDataPoint[],
+  xKey: string,
+  series: ChartSeries[],
+  ctx: z.RefinementCtx,
+): void {
+  data.forEach((point, i) => {
+    if (!(xKey in point)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['data', i],
+        message: `data[${i}] is missing the xKey field "${xKey}"`,
+      });
+    }
+    series.forEach((s) => {
+      if (!(s.dataKey in point)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['data', i],
+          message: `data[${i}] is missing series dataKey field "${s.dataKey}"`,
+        });
+      }
+    });
+  });
+}

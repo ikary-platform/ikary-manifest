@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ChartSeriesSchema } from '../chart-common/ChartCommonSchemas';
+import { ChartSeriesSchema, validateChartDataKeys } from '../chart-common/ChartCommonSchemas';
 
 export const RadarChartDataPointSchema = z
   .record(z.union([z.string(), z.number(), z.null()]))
@@ -18,7 +18,11 @@ export const RadarChartPresentationSchema = z
     showTooltip: z.boolean().optional().describe('Whether to show hover tooltips (default true)'),
     fillOpacity: z.number().min(0).max(1).optional().describe('Polygon fill opacity (0–1, default 0.25)'),
   })
-  .strict();
+  .strict()
+  .superRefine((val, ctx) => {
+    const subjectKey = val.subjectKey ?? 'subject';
+    validateChartDataKeys(val.data, subjectKey, val.series, ctx);
+  });
 
 export type RadarChartDataPoint = z.infer<typeof RadarChartDataPointSchema>;
 export type RadarChartPresentation = z.infer<typeof RadarChartPresentationSchema>;

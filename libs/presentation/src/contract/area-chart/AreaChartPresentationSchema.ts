@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { ChartDataPointSchema, ChartSeriesSchema, ChartLegendPositionSchema } from '../chart-common/ChartCommonSchemas';
+import {
+  ChartDataPointSchema,
+  ChartSeriesSchema,
+  ChartLegendPositionSchema,
+  validateChartDataKeys,
+} from '../chart-common/ChartCommonSchemas';
 
 export const AreaChartPresentationSchema = z
   .object({
@@ -18,6 +23,9 @@ export const AreaChartPresentationSchema = z
     fillOpacity: z.number().min(0).max(1).optional().describe('Area fill opacity (0–1, default 0.3)'),
     curved: z.boolean().optional().describe('Use a smooth monotone curve instead of straight lines'),
   })
-  .strict();
+  .strict()
+  .superRefine((val, ctx) => {
+    validateChartDataKeys(val.data, val.xKey, val.series, ctx);
+  });
 
 export type AreaChartPresentation = z.infer<typeof AreaChartPresentationSchema>;
