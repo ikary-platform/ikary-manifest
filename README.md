@@ -39,7 +39,6 @@ ikary-manifest/
   manifests/                 # Canonical YAML schemas + examples
   libs/                      # Core libraries (contract, loader, engine, renderer, etc.)
   apps/                      # Executables, services, and sites (CLI, preview server, MCP server, docs)
-  runtime-api/               # Runtime API generators/adapters
   decisions/                 # Architecture decision records and diagrams
 ```
 

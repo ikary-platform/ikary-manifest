@@ -1124,22 +1124,6 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  runtime-api/node/generator-nest:
-    dependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../../libs/engine
-    devDependencies:
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
 packages:
 
   '@algolia/abtesting@1.16.1':
