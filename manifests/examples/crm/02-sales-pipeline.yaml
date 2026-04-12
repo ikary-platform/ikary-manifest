@@ -1,0 +1,257 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: crm_pipeline
+  name: Sales Pipeline
+  version: "1.0.0"
+  description: "Sales pipeline with Leads qualifying into Opportunities through stages: prospect → qualified → proposal → negotiation → closed."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: lead
+      name: Lead
+      pluralName: Leads
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: name@company.com
+        - key: company
+          name: Company
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: source
+          name: Source
+          type: enum
+          enumValues: [website, referral, event, cold_outreach, social, partner]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [new, contacted, qualified, unqualified]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: score
+          name: Lead Score
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: notes
+          name: Notes
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      lifecycle:
+        field: status
+        initial: new
+        states: [new, contacted, qualified, unqualified]
+        transitions:
+          - key: contact
+            from: new
+            to: contacted
+            label: Mark Contacted
+          - key: qualify
+            from: contacted
+            to: qualified
+            label: Qualify
+            event: lead.qualified
+          - key: disqualify_from_new
+            from: new
+            to: unqualified
+            label: Disqualify
+          - key: disqualify_from_contacted
+            from: contacted
+            to: unqualified
+            label: Disqualify
+    - key: opportunity
+      name: Opportunity
+      pluralName: Opportunities
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: account_name
+          name: Account
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: stage
+          name: Stage
+          type: enum
+          enumValues: [prospect, qualified, proposal, negotiation, closed_won, closed_lost]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: amount
+          name: Value
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: close_date
+          name: Expected Close
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: probability
+          name: "Probability %"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: owner
+          name: Owner
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      lifecycle:
+        field: stage
+        initial: prospect
+        states: [prospect, qualified, proposal, negotiation, closed_won, closed_lost]
+        transitions:
+          - key: advance_to_qualified
+            from: prospect
+            to: qualified
+            label: Qualify
+          - key: advance_to_proposal
+            from: qualified
+            to: proposal
+            label: Send Proposal
+          - key: advance_to_negotiation
+            from: proposal
+            to: negotiation
+            label: Enter Negotiation
+          - key: close_won
+            from: negotiation
+            to: closed_won
+            label: Close Won
+            event: opportunity.won
+          - key: close_lost_from_prospect
+            from: prospect
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_qualified
+            from: qualified
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_proposal
+            from: proposal
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_negotiation
+            from: negotiation
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Pipeline Dashboard
+      path: /dashboard
+    - key: lead_list
+      type: entity-list
+      title: Leads
+      path: /leads
+      entity: lead
+    - key: lead_detail
+      type: entity-detail
+      title: Lead
+      path: /leads/:id
+      entity: lead
+    - key: lead_create
+      type: entity-create
+      title: New Lead
+      path: /leads/new
+      entity: lead
+    - key: opportunity_list
+      type: entity-list
+      title: Opportunities
+      path: /opportunities
+      entity: opportunity
+    - key: opportunity_detail
+      type: entity-detail
+      title: Opportunity
+      path: /opportunities/:id
+      entity: opportunity
+    - key: opportunity_create
+      type: entity-create
+      title: New Opportunity
+      path: /opportunities/new
+      entity: opportunity
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_leads
+        pageKey: lead_list
+        label: Leads
+      - type: page
+        key: nav_opportunities
+        pageKey: opportunity_list
+        label: Opportunities

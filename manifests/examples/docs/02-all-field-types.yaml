@@ -1,0 +1,95 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_fields
+  name: All Field Types
+  version: "1.0.0"
+  description: "One entity that uses every supported field type: string, text, number, boolean, date, datetime, and enum."
+spec:
+  mount:
+    mountPath: /
+    landingPage: sample_list
+  entities:
+    - key: sample
+      name: Sample Record
+      pluralName: Sample Records
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: Record name
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: score
+          name: Score
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: is_active
+          name: Active
+          type: boolean
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: start_date
+          name: Start Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: scheduled_at
+          name: Scheduled At
+          type: datetime
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: category
+          name: Category
+          type: enum
+          enumValues: [alpha, beta, gamma, delta]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+  pages:
+    - key: sample_list
+      type: entity-list
+      title: Sample Records
+      path: /samples
+      entity: sample
+    - key: sample_detail
+      type: entity-detail
+      title: Record Detail
+      path: /samples/:id
+      entity: sample
+    - key: sample_create
+      type: entity-create
+      title: New Record
+      path: /samples/new
+      entity: sample
+  navigation:
+    items:
+      - type: page
+        key: nav_samples
+        pageKey: sample_list
+        label: Sample Records

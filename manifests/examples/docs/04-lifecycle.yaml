@@ -1,0 +1,114 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_lifecycle
+  name: Entity Lifecycle
+  version: "1.0.0"
+  description: "A task entity with a 4-state lifecycle: todo → in_progress → review → done, with guards and transition events."
+spec:
+  mount:
+    mountPath: /
+    landingPage: task_list
+  entities:
+    - key: task
+      name: Task
+      pluralName: Tasks
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [todo, in_progress, review, done]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: assignee
+          name: Assignee
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: due_date
+          name: Due Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: estimate_hours
+          name: "Estimate (h)"
+          type: number
+          form:
+            visible: true
+          list:
+            visible: false
+      lifecycle:
+        field: status
+        initial: todo
+        states: [todo, in_progress, review, done]
+        transitions:
+          - key: start
+            from: todo
+            to: in_progress
+            label: Start Work
+            guards: ["assignee != null"]
+          - key: submit_review
+            from: in_progress
+            to: review
+            label: Submit for Review
+          - key: request_changes
+            from: review
+            to: in_progress
+            label: Request Changes
+          - key: approve
+            from: review
+            to: done
+            label: Approve
+            event: task.completed
+          - key: reopen
+            from: done
+            to: todo
+            label: Reopen
+  pages:
+    - key: task_list
+      type: entity-list
+      title: Tasks
+      path: /tasks
+      entity: task
+    - key: task_detail
+      type: entity-detail
+      title: Task Detail
+      path: /tasks/:id
+      entity: task
+    - key: task_create
+      type: entity-create
+      title: New Task
+      path: /tasks/new
+      entity: task
+  navigation:
+    items:
+      - type: page
+        key: nav_tasks
+        pageKey: task_list
+        label: Tasks

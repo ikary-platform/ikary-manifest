@@ -1,0 +1,243 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: erp_procurement
+  name: Procurement
+  version: "1.0.0"
+  description: "Procurement module: Suppliers and Purchase Orders with a full approval lifecycle from draft to completed."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: supplier
+      name: Supplier
+      pluralName: Suppliers
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: code
+          name: Code
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: SUP-001
+        - key: category
+          name: Category
+          type: enum
+          enumValues: [goods, services, it, facilities, logistics]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: contact_email
+          name: Contact Email
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: payment_terms
+          name: "Payment Terms (days)"
+          type: number
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [active, inactive, blacklisted]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: rating
+          name: Rating
+          type: enum
+          enumValues: [preferred, approved, restricted]
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: purchase_orders
+          relation: has_many
+          entity: purchase_order
+          foreignKey: supplier_id
+    - key: purchase_order
+      name: Purchase Order
+      pluralName: Purchase Orders
+      fields:
+        - key: po_number
+          name: PO Number
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: PO-2024-001
+        - key: description
+          name: Description
+          type: text
+          required: true
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: total_amount
+          name: Total Amount
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: currency
+          name: Currency
+          type: enum
+          enumValues: [USD, EUR, GBP, JPY]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, submitted, approved, rejected, received, completed]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: required_by
+          name: Required By
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: approved_by
+          name: Approved By
+          type: string
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: rejection_reason
+          name: Rejection Reason
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+      relations:
+        - key: supplier_id
+          relation: belongs_to
+          entity: supplier
+          required: true
+      lifecycle:
+        field: status
+        initial: draft
+        states: [draft, submitted, approved, rejected, received, completed]
+        transitions:
+          - key: submit
+            from: draft
+            to: submitted
+            label: Submit for Approval
+            guards: ["total_amount > 0"]
+          - key: approve
+            from: submitted
+            to: approved
+            label: Approve
+            event: purchase_order.approved
+          - key: reject
+            from: submitted
+            to: rejected
+            label: Reject
+            event: purchase_order.rejected
+          - key: redraft
+            from: rejected
+            to: draft
+            label: Revise & Redraft
+          - key: receive
+            from: approved
+            to: received
+            label: Mark Received
+          - key: complete
+            from: received
+            to: completed
+            label: Complete
+            event: purchase_order.completed
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Procurement Dashboard
+      path: /dashboard
+    - key: po_list
+      type: entity-list
+      title: Purchase Orders
+      path: /purchase-orders
+      entity: purchase_order
+    - key: po_detail
+      type: entity-detail
+      title: Purchase Order
+      path: /purchase-orders/:id
+      entity: purchase_order
+    - key: po_create
+      type: entity-create
+      title: New Purchase Order
+      path: /purchase-orders/new
+      entity: purchase_order
+    - key: supplier_list
+      type: entity-list
+      title: Suppliers
+      path: /suppliers
+      entity: supplier
+    - key: supplier_detail
+      type: entity-detail
+      title: Supplier
+      path: /suppliers/:id
+      entity: supplier
+    - key: supplier_create
+      type: entity-create
+      title: New Supplier
+      path: /suppliers/new
+      entity: supplier
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: group
+        key: nav_procurement
+        label: Procurement
+        children:
+          - type: page
+            key: nav_pos
+            pageKey: po_list
+            label: Purchase Orders
+          - type: page
+            key: nav_suppliers
+            pageKey: supplier_list
+            label: Suppliers

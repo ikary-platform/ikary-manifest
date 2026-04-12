@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { JsonEditor } from '../components/JsonEditor';
 import { AppPreview } from '../components/app-runtime/AppPreview';
-import { APP_MANIFEST_SCENARIOS, MANIFEST_CATEGORY_LABELS, MANIFEST_CATEGORY_ORDER } from '../data/app-sample-manifests';
-import type { AppManifestScenario } from '../data/app-sample-manifests';
+import { APP_MANIFEST_SCENARIOS, MANIFEST_CATEGORY_LABELS, MANIFEST_CATEGORY_ORDER } from '../data/app-manifest-loader';
+import type { AppManifestScenario } from '../data/app-manifest-loader';
 
 type Category = AppManifestScenario['category'];
 

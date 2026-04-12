@@ -1,0 +1,146 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_nav
+  name: Navigation Groups
+  version: "1.0.0"
+  description: Two entities with navigation grouped under collapsible sidebar sections.
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: project
+      name: Project
+      pluralName: Projects
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [active, on_hold, completed, cancelled]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: start_date
+          name: Start Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+    - key: task
+      name: Task
+      pluralName: Tasks
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: priority
+          name: Priority
+          type: enum
+          enumValues: [low, medium, high, critical]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [todo, in_progress, done]
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: due_date
+          name: Due Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Dashboard
+      path: /dashboard
+    - key: project_list
+      type: entity-list
+      title: Projects
+      path: /projects
+      entity: project
+    - key: project_detail
+      type: entity-detail
+      title: Project
+      path: /projects/:id
+      entity: project
+    - key: project_create
+      type: entity-create
+      title: New Project
+      path: /projects/new
+      entity: project
+    - key: task_list
+      type: entity-list
+      title: Tasks
+      path: /tasks
+      entity: task
+    - key: task_detail
+      type: entity-detail
+      title: Task
+      path: /tasks/:id
+      entity: task
+    - key: task_create
+      type: entity-create
+      title: New Task
+      path: /tasks/new
+      entity: task
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: group
+        key: nav_projects_group
+        label: Projects
+        children:
+          - type: page
+            key: nav_project_list
+            pageKey: project_list
+            label: All Projects
+      - type: group
+        key: nav_tasks_group
+        label: Tasks
+        children:
+          - type: page
+            key: nav_task_list
+            pageKey: task_list
+            label: All Tasks

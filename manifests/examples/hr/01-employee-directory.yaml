@@ -1,0 +1,242 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: hr_employees
+  name: Employee Directory
+  version: "1.0.0"
+  description: "HR directory: Departments and Employees with position, hire date, salary (sensitive), and an employment status lifecycle."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: department
+      name: Department
+      pluralName: Departments
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: code
+          name: Code
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: DEPT-001
+        - key: manager_name
+          name: Manager
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: location
+          name: Location
+          type: string
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: budget
+          name: Budget
+          type: number
+          sensitive: pii
+          list:
+            visible: false
+          form:
+            visible: true
+      relations:
+        - key: employees
+          relation: has_many
+          entity: employee
+          foreignKey: department_id
+    - key: employee
+      name: Employee
+      pluralName: Employees
+      fields:
+        - key: employee_id
+          name: Employee ID
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: EMP-0001
+        - key: first_name
+          name: First Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: last_name
+          name: Last Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: email
+          name: Work Email
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: firstname.lastname@company.com
+        - key: position
+          name: Position
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: employment_type
+          name: Type
+          type: enum
+          enumValues: [full_time, part_time, contractor, intern]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: hire_date
+          name: Hire Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [active, on_leave, terminated]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: salary
+          name: Salary
+          type: number
+          sensitive: pii
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: phone
+          name: Phone
+          type: string
+          list:
+            visible: false
+          form:
+            visible: true
+      relations:
+        - key: department_id
+          relation: belongs_to
+          entity: department
+          required: true
+      lifecycle:
+        field: status
+        initial: active
+        states: [active, on_leave, terminated]
+        transitions:
+          - key: go_on_leave
+            from: active
+            to: on_leave
+            label: Place on Leave
+          - key: return_from_leave
+            from: on_leave
+            to: active
+            label: Return from Leave
+          - key: terminate_from_active
+            from: active
+            to: terminated
+            label: Terminate
+            event: employee.terminated
+          - key: terminate_from_on_leave
+            from: on_leave
+            to: terminated
+            label: Terminate
+            event: employee.terminated
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: HR Dashboard
+      path: /dashboard
+    - key: employee_list
+      type: entity-list
+      title: Employees
+      path: /employees
+      entity: employee
+    - key: employee_detail
+      type: entity-detail
+      title: Employee
+      path: /employees/:id
+      entity: employee
+    - key: employee_create
+      type: entity-create
+      title: New Employee
+      path: /employees/new
+      entity: employee
+    - key: department_list
+      type: entity-list
+      title: Departments
+      path: /departments
+      entity: department
+    - key: department_detail
+      type: entity-detail
+      title: Department
+      path: /departments/:id
+      entity: department
+    - key: department_create
+      type: entity-create
+      title: New Department
+      path: /departments/new
+      entity: department
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_employees
+        pageKey: employee_list
+        label: Employees
+      - type: page
+        key: nav_departments
+        pageKey: department_list
+        label: Departments
+  roles:
+    - key: hr_admin
+      name: HR Admin
+      scopes: ["*"]
+    - key: manager
+      name: Manager
+      scopes: [employee.list, employee.view, employee.update, department.list, department.view]
+    - key: employee
+      name: Employee
+      scopes: [employee.list, employee.view, department.list, department.view]

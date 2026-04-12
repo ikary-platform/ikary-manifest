@@ -1,0 +1,126 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: doc_computed
+  name: Computed Fields
+  version: "1.0.0"
+  description: "An invoice entity with expression (total), aggregation (line item count), and conditional (overdue) computed fields."
+spec:
+  mount:
+    mountPath: /
+    landingPage: invoice_list
+  entities:
+    - key: invoice
+      name: Invoice
+      pluralName: Invoices
+      fields:
+        - key: number
+          name: Number
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: INV-0001
+        - key: customer_name
+          name: Customer
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: subtotal
+          name: Subtotal
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: tax_rate
+          name: Tax Rate
+          type: number
+          form:
+            visible: true
+          list:
+            visible: false
+          helpText: "Decimal, e.g. 0.2 for 20%"
+        - key: due_date
+          name: Due Date
+          type: date
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [draft, sent, paid, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+      computed:
+        - key: total_amount
+          name: Total
+          type: number
+          formulaType: expression
+          expression: "subtotal * (1 + tax_rate)"
+        - key: overdue
+          name: Overdue
+          type: boolean
+          formulaType: conditional
+          condition: 'due_date < now() and status != "paid"'
+          then: "true"
+          else: "false"
+      lifecycle:
+        field: status
+        initial: draft
+        states: [draft, sent, paid, cancelled]
+        transitions:
+          - key: send
+            from: draft
+            to: sent
+            label: Send
+          - key: mark_paid
+            from: sent
+            to: paid
+            label: Mark as Paid
+          - key: cancel_from_draft
+            from: draft
+            to: cancelled
+            label: Cancel
+          - key: cancel_from_sent
+            from: sent
+            to: cancelled
+            label: Cancel
+  pages:
+    - key: invoice_list
+      type: entity-list
+      title: Invoices
+      path: /invoices
+      entity: invoice
+    - key: invoice_detail
+      type: entity-detail
+      title: Invoice Detail
+      path: /invoices/:id
+      entity: invoice
+    - key: invoice_create
+      type: entity-create
+      title: New Invoice
+      path: /invoices/new
+      entity: invoice
+  navigation:
+    items:
+      - type: page
+        key: nav_invoices
+        pageKey: invoice_list
+        label: Invoices

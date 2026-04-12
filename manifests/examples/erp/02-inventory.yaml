@@ -1,0 +1,205 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: erp_inventory
+  name: Inventory
+  version: "1.0.0"
+  description: Product catalog with categories and real-time stock tracking. Includes a computed margin expression field.
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: category
+      name: Category
+      pluralName: Categories
+      fields:
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: code
+          name: Code
+          type: string
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+            placeholder: CAT-001
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: is_active
+          name: Active
+          type: boolean
+          list:
+            visible: true
+          form:
+            visible: true
+      relations:
+        - key: products
+          relation: has_many
+          entity: product
+          foreignKey: category_id
+    - key: product
+      name: Product
+      pluralName: Products
+      fields:
+        - key: sku
+          name: SKU
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+            placeholder: SKU-0001
+        - key: name
+          name: Name
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: description
+          name: Description
+          type: text
+          form:
+            visible: true
+          list:
+            visible: false
+        - key: cost_price
+          name: Cost Price
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: sell_price
+          name: Sell Price
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: stock_qty
+          name: Stock Qty
+          type: number
+          required: true
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: reorder_point
+          name: Reorder Point
+          type: number
+          list:
+            visible: false
+          form:
+            visible: true
+        - key: unit
+          name: Unit
+          type: enum
+          enumValues: [each, kg, litre, m, box, pack]
+          list:
+            visible: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [active, discontinued, draft]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+      relations:
+        - key: category_id
+          relation: belongs_to
+          entity: category
+          required: true
+      computed:
+        - key: margin_pct
+          name: "Margin %"
+          type: number
+          formulaType: expression
+          expression: "((sell_price - cost_price) / sell_price) * 100"
+        - key: low_stock
+          name: Low Stock
+          type: boolean
+          formulaType: conditional
+          condition: "stock_qty <= reorder_point"
+          then: "true"
+          else: "false"
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Inventory Dashboard
+      path: /dashboard
+    - key: product_list
+      type: entity-list
+      title: Products
+      path: /products
+      entity: product
+    - key: product_detail
+      type: entity-detail
+      title: Product
+      path: /products/:id
+      entity: product
+    - key: product_create
+      type: entity-create
+      title: New Product
+      path: /products/new
+      entity: product
+    - key: category_list
+      type: entity-list
+      title: Categories
+      path: /categories
+      entity: category
+    - key: category_detail
+      type: entity-detail
+      title: Category
+      path: /categories/:id
+      entity: category
+    - key: category_create
+      type: entity-create
+      title: New Category
+      path: /categories/new
+      entity: category
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: group
+        key: nav_catalog
+        label: Catalog
+        children:
+          - type: page
+            key: nav_products
+            pageKey: product_list
+            label: Products
+          - type: page
+            key: nav_categories
+            pageKey: category_list
+            label: Categories
