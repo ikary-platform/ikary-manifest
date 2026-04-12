@@ -27,7 +27,7 @@
     "docs:build": "pnpm playground:build && vitepress build apps/docs",
     "docs:preview": "vitepress preview apps/docs",
     "docs:check:freshness": "node scripts/check-docs-freshness.mjs",
-    "docs:check:commands": "node scripts/check-docs-command-smoke.mjs",
+    "docs:check:commands": "pnpm --filter @ikary/cli build && node scripts/check-docs-command-smoke.mjs",
     "docs:check": "pnpm docs:build && pnpm docs:check:freshness && pnpm docs:check:commands",
     "capture-cli-output": "tsx scripts/capture-cli-output.ts"
   },
