@@ -1,0 +1,73 @@
+$schema: 'http://json-schema.org/draft-07/schema#'
+title: BarChartPresentation
+description: Presentation contract for the bar-chart primitive.
+type: object
+required: [type, data, xKey, series]
+additionalProperties: false
+properties:
+  type:
+    type: string
+    const: bar-chart
+  data:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: number
+          - type: 'null'
+  xKey:
+    type: string
+    minLength: 1
+  series:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/ChartSeries'
+  title:
+    type: string
+    minLength: 1
+  description:
+    type: string
+    minLength: 1
+  height:
+    type: integer
+    minimum: 100
+    maximum: 800
+  showGrid:
+    type: boolean
+  showLegend:
+    type: boolean
+  legendPosition:
+    $ref: '#/definitions/ChartLegendPosition'
+  showTooltip:
+    type: boolean
+  stacked:
+    type: boolean
+  layout:
+    type: string
+    enum: [horizontal, vertical]
+  radius:
+    type: integer
+    minimum: 0
+    maximum: 20
+
+definitions:
+  ChartSeries:
+    type: object
+    required: [dataKey, label]
+    additionalProperties: false
+    properties:
+      dataKey:
+        type: string
+        minLength: 1
+      label:
+        type: string
+        minLength: 1
+      color:
+        type: string
+  ChartLegendPosition:
+    type: string
+    enum: [top, right, bottom, left, none]

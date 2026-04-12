@@ -1,0 +1,61 @@
+$schema: 'http://json-schema.org/draft-07/schema#'
+title: RadarChartPresentation
+description: Presentation contract for the radar-chart primitive.
+type: object
+required: [type, data, series]
+additionalProperties: false
+properties:
+  type:
+    type: string
+    const: radar-chart
+  data:
+    type: array
+    minItems: 3
+    items:
+      type: object
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: number
+          - type: 'null'
+  series:
+    type: array
+    minItems: 1
+    items:
+      $ref: '#/definitions/ChartSeries'
+  subjectKey:
+    type: string
+    minLength: 1
+  title:
+    type: string
+    minLength: 1
+  description:
+    type: string
+    minLength: 1
+  height:
+    type: integer
+    minimum: 100
+    maximum: 800
+  showLegend:
+    type: boolean
+  showTooltip:
+    type: boolean
+  fillOpacity:
+    type: number
+    minimum: 0
+    maximum: 1
+
+definitions:
+  ChartSeries:
+    type: object
+    required: [dataKey, label]
+    additionalProperties: false
+    properties:
+      dataKey:
+        type: string
+        minLength: 1
+      label:
+        type: string
+        minLength: 1
+      color:
+        type: string

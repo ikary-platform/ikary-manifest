@@ -5,7 +5,7 @@ export const PrimitiveCatalogEntrySchema = z.object({
   label: z.string(),
   description: z.string().optional(),
   category: z
-    .enum(['data', 'form', 'layout', 'feedback', 'navigation', 'custom'])
+    .enum(['data', 'form', 'layout', 'feedback', 'navigation', 'charts', 'custom'])
     .default('custom'),
   version: z.string().optional(),
   source: z.enum(['core', 'custom']).default('core'),
@@ -20,6 +20,7 @@ export const PRIMITIVE_CATEGORIES = [
   'layout',
   'feedback',
   'navigation',
+  'charts',
   'custom',
 ] as const;
 
@@ -48,6 +49,7 @@ export function groupPrimitivesByCategory(
     layout: 'Layout',
     feedback: 'Feedback',
     navigation: 'Navigation',
+    charts: 'Charts',
     custom: 'Custom',
   };
 
