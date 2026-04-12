@@ -206,3 +206,12 @@ export function useLocalization(): LocalizationContextValue {
 
   return value;
 }
+
+/**
+ * Non-throwing variant of `useLocalization` that returns `null` when no
+ * LocalizationProvider is mounted above this component. Libraries use this
+ * to stay compatible with host apps that haven't adopted the provider.
+ */
+export function useOptionalLocalization(): LocalizationContextValue | null {
+  return useContext(LocalizationContext);
+}

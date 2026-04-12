@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { EntityDefinition } from '@ikary/contract';
 import { buildEntityListPath } from '@ikary/engine';
-import { useT } from '@ikary/system-localization/ui';
+import { useOptionalT } from '@ikary/system-localization/ui';
+import { messages as rendererEnMessages } from '../i18n/en';
 import { useUIComponents } from '../UIComponentsProvider';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
 import { PromotedMetadataRow } from './promoted-metadata-row';
@@ -32,7 +33,7 @@ export function DetailHeader({ entity, record, id, activeTab, mode, onEnterEdit 
   const navigate = useNavigate();
   const manifest = useCellManifest();
   const { dataStore } = useCellRuntime();
-  const t = useT();
+  const t = useOptionalT(rendererEnMessages);
   const {
     AlertDialog,
     AlertDialogTrigger,
