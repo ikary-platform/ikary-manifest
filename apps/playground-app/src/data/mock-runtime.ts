@@ -3,12 +3,13 @@ import type { RuntimeContext } from '@ikary/primitives';
 export const MOCK_RUNTIME: RuntimeContext = {
   entity: {
     key: 'customer',
-    label: 'Customer',
+    name: 'Customer',
+    pluralName: 'Customers',
     fields: [
-      { key: 'name', label: 'Name', type: 'string' },
-      { key: 'email', label: 'Email', type: 'string' },
-      { key: 'status', label: 'Status', type: 'enum' },
-      { key: 'revenue', label: 'Revenue', type: 'number' },
+      { key: 'name', name: 'Name', label: 'Name', type: 'string' },
+      { key: 'email', name: 'Email', label: 'Email', type: 'string' },
+      { key: 'status', name: 'Status', label: 'Status', type: 'enum' },
+      { key: 'revenue', name: 'Revenue', label: 'Revenue', type: 'number' },
     ],
   },
   record: {

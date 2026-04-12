@@ -1,10 +1,25 @@
 import { useState } from 'react';
 import { JsonEditor } from '../components/JsonEditor';
 import { AppPreview } from '../components/app-runtime/AppPreview';
-import { SAMPLE_CELL_MANIFEST } from '../data/app-sample-manifest';
+import { APP_MANIFEST_SCENARIOS, MANIFEST_CATEGORY_LABELS, MANIFEST_CATEGORY_ORDER } from '../data/app-sample-manifests';
+import type { AppManifestScenario } from '../data/app-sample-manifests';
+
+type Category = AppManifestScenario['category'];
+
+function groupScenarios() {
+  return MANIFEST_CATEGORY_ORDER.map((cat) => ({
+    category: cat,
+    label: MANIFEST_CATEGORY_LABELS[cat],
+    scenarios: APP_MANIFEST_SCENARIOS.map((s, i) => ({ ...s, index: i })).filter((s) => s.category === cat),
+  }));
+}
+
+const SCENARIO_GROUPS = groupScenarios();
 
 export function AppRuntimeSection() {
-  const [json, setJson] = useState(SAMPLE_CELL_MANIFEST);
+  const [activeScenario, setActiveScenario] = useState(0);
+  const [collapsedCategories, setCollapsedCategories] = useState<Set<Category>>(new Set());
+  const [json, setJson] = useState(() => JSON.stringify(APP_MANIFEST_SCENARIOS[0].manifest, null, 2));
 
   const parseError = (() => {
     try {
@@ -15,30 +30,188 @@ export function AppRuntimeSection() {
     }
   })();
 
+  function selectScenario(index: number) {
+    setActiveScenario(index);
+    setJson(JSON.stringify(APP_MANIFEST_SCENARIOS[index].manifest, null, 2));
+  }
+
+  function toggleCategory(cat: Category) {
+    setCollapsedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat);
+      else next.add(cat);
+      return next;
+    });
+  }
+
+  const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
+
   return (
-    <div className="flex h-full">
-      {/* Left: JSON editor */}
-      <div className="w-[38%] flex flex-col border-r border-gray-200 dark:border-gray-700">
-        <div className="shrink-0 flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Cell Manifest
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+
+      {/* ── Left sidebar: manifest list ── */}
+      <div
+        style={{
+          width: '220px',
+          flexShrink: 0,
+          borderRight: '1px solid #e2e8f0',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Sidebar header */}
+        <div
+          style={{
+            padding: '12px 12px 8px',
+            borderBottom: '1px solid #e2e8f0',
+            flexShrink: 0,
+          }}
+        >
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#64748b',
+            }}
+          >
+            Manifests
           </span>
-          <span className="text-xs text-gray-400 dark:text-gray-500">CellManifestV1 JSON</span>
+        </div>
+
+        {/* Manifest list grouped by category */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0 16px' }}>
+          {SCENARIO_GROUPS.map((group) => {
+            const collapsed = collapsedCategories.has(group.category);
+            return (
+              <div key={group.category}>
+                {/* Category header */}
+                <button
+                  onClick={() => toggleCategory(group.category)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    width: '100%',
+                    padding: '8px 12px 4px',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: '#64748b',
+                    textAlign: 'left',
+                  }}
+                >
+                  <span style={{ fontSize: '8px', marginTop: '1px' }}>{collapsed ? '▶' : '▼'}</span>
+                  {group.label}
+                </button>
+
+                {/* Items */}
+                {!collapsed && group.scenarios.map((scenario) => {
+                  const isSelected = activeScenario === scenario.index;
+                  return (
+                    <button
+                      key={scenario.label}
+                      onClick={() => selectScenario(scenario.index)}
+                      title={scenario.description}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        padding: '5px 12px 5px 20px',
+                        background: isSelected ? '#eff6ff' : 'none',
+                        border: 'none',
+                        borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        color: isSelected ? '#1e40af' : '#374151',
+                        textAlign: 'left',
+                        fontWeight: isSelected ? 500 : 400,
+                      }}
+                    >
+                      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {scenario.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Center: JSON editor ── */}
+      <div
+        style={{
+          width: '380px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          borderRight: '1px solid #e2e8f0',
+        }}
+      >
+        <div
+          style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '8px 12px',
+            borderBottom: '1px solid #e2e8f0',
+            background: '#f8fafc',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#64748b',
+            }}
+          >
+            {activeLabel}
+          </span>
+          <span style={{ fontSize: '11px', color: '#94a3b8' }}>CellManifestV1</span>
         </div>
         <JsonEditor value={json} onChange={setJson} error={parseError} />
       </div>
 
-      {/* Right: app preview */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <div className="shrink-0 flex items-center px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+      {/* ── Right: app preview ── */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px 12px',
+            borderBottom: '1px solid #e2e8f0',
+            background: '#f8fafc',
+            gap: '8px',
+          }}
+        >
+          <span
+            style={{
+              fontSize: '10px',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#64748b',
+            }}
+          >
             Preview
           </span>
-          <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
-            Paste a compiled manifest or edit the sample to preview your app.
+          <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+            Select a manifest or edit JSON directly.
           </span>
         </div>
-        <div className="flex-1 overflow-hidden">
+        <div style={{ flex: 1, overflow: 'hidden' }}>
           <AppPreview json={json} />
         </div>
       </div>
