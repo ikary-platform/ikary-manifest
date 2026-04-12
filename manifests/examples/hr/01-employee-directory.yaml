@@ -171,8 +171,13 @@ spec:
             from: on_leave
             to: active
             label: Return from Leave
-          - key: terminate
-            from: [active, on_leave]
+          - key: terminate_from_active
+            from: active
+            to: terminated
+            label: Terminate
+            event: employee.terminated
+          - key: terminate_from_on_leave
+            from: on_leave
             to: terminated
             label: Terminate
             event: employee.terminated

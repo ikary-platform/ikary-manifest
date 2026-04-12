@@ -250,13 +250,35 @@ spec:
             to: hired
             label: Hire
             event: application.hired
-          - key: reject
-            from: [screening, interview, offer]
+          - key: reject_from_screening
+            from: screening
             to: rejected
             label: Reject
             event: application.rejected
-          - key: withdraw
-            from: [applied, screening, interview, offer]
+          - key: reject_from_interview
+            from: interview
+            to: rejected
+            label: Reject
+            event: application.rejected
+          - key: reject_from_offer
+            from: offer
+            to: rejected
+            label: Reject
+            event: application.rejected
+          - key: withdraw_from_applied
+            from: applied
+            to: withdrawn
+            label: Mark Withdrawn
+          - key: withdraw_from_screening
+            from: screening
+            to: withdrawn
+            label: Mark Withdrawn
+          - key: withdraw_from_interview
+            from: interview
+            to: withdrawn
+            label: Mark Withdrawn
+          - key: withdraw_from_offer
+            from: offer
             to: withdrawn
             label: Mark Withdrawn
   pages:

@@ -149,8 +149,14 @@ spec:
             from: on_hold
             to: in_progress
             label: Resume
-          - key: resolve
-            from: [in_progress, on_hold]
+          - key: resolve_from_in_progress
+            from: in_progress
+            to: resolved
+            label: Resolve
+            guards: ["resolution_notes != null"]
+            event: ticket.resolved
+          - key: resolve_from_on_hold
+            from: on_hold
             to: resolved
             label: Resolve
             guards: ["resolution_notes != null"]
@@ -159,8 +165,12 @@ spec:
             from: resolved
             to: closed
             label: Close
-          - key: reopen
-            from: [resolved, closed]
+          - key: reopen_from_resolved
+            from: resolved
+            to: open
+            label: Reopen
+          - key: reopen_from_closed
+            from: closed
             to: open
             label: Reopen
   pages:

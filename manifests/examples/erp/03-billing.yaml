@@ -172,8 +172,12 @@ spec:
             to: paid
             label: Mark as Paid
             event: invoice.paid
-          - key: cancel
-            from: [draft, sent]
+          - key: cancel_from_draft
+            from: draft
+            to: cancelled
+            label: Cancel
+          - key: cancel_from_sent
+            from: sent
             to: cancelled
             label: Cancel
   pages:

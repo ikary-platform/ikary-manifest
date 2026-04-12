@@ -88,8 +88,12 @@ spec:
             to: qualified
             label: Qualify
             event: lead.qualified
-          - key: disqualify
-            from: [new, contacted]
+          - key: disqualify_from_new
+            from: new
+            to: unqualified
+            label: Disqualify
+          - key: disqualify_from_contacted
+            from: contacted
             to: unqualified
             label: Disqualify
     - key: opportunity
@@ -182,8 +186,23 @@ spec:
             to: closed_won
             label: Close Won
             event: opportunity.won
-          - key: close_lost
-            from: [prospect, qualified, proposal, negotiation]
+          - key: close_lost_from_prospect
+            from: prospect
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_qualified
+            from: qualified
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_proposal
+            from: proposal
+            to: closed_lost
+            label: Close Lost
+            event: opportunity.lost
+          - key: close_lost_from_negotiation
+            from: negotiation
             to: closed_lost
             label: Close Lost
             event: opportunity.lost

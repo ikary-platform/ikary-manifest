@@ -193,8 +193,12 @@ spec:
             to: rejected
             label: Reject
             event: leave_request.rejected
-          - key: cancel
-            from: [pending, approved]
+          - key: cancel_from_pending
+            from: pending
+            to: cancelled
+            label: Cancel
+          - key: cancel_from_approved
+            from: approved
             to: cancelled
             label: Cancel
           - key: resubmit

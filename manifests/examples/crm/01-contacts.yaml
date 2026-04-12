@@ -152,8 +152,16 @@ spec:
             to: customer
             label: Convert to Customer
             event: contact.converted
-          - key: deactivate
-            from: [lead, qualified, customer]
+          - key: deactivate_from_lead
+            from: lead
+            to: inactive
+            label: Deactivate
+          - key: deactivate_from_qualified
+            from: qualified
+            to: inactive
+            label: Deactivate
+          - key: deactivate_from_customer
+            from: customer
             to: inactive
             label: Deactivate
           - key: reactivate

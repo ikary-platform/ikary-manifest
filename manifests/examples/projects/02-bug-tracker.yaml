@@ -129,12 +129,21 @@ spec:
             from: resolved
             to: closed
             label: Close
-          - key: wont_fix
-            from: [open, triaged]
+          - key: wont_fix_from_open
+            from: open
             to: wont_fix
             label: "Won't Fix"
-          - key: reopen
-            from: [resolved, closed]
+          - key: wont_fix_from_triaged
+            from: triaged
+            to: wont_fix
+            label: "Won't Fix"
+          - key: reopen_from_resolved
+            from: resolved
+            to: open
+            label: Reopen
+            event: issue.reopened
+          - key: reopen_from_closed
+            from: closed
             to: open
             label: Reopen
             event: issue.reopened
