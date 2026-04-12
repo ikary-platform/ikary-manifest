@@ -30,11 +30,15 @@ function resolveSystemLogMigrationsRoot(): string {
         const dbOptions = databaseConnectionOptionsSchema.parse({ connectionString: rawDbUrl });
         const dbService = new DatabaseService(dbOptions);
 
-        const migrations = new MigrationRunner(dbService, {
-          packageName: '@ikary/system-log-core',
-          migrationsRoot: resolveSystemLogMigrationsRoot(),
-        });
-        await migrations.migrate();
+        try {
+          const migrations = new MigrationRunner(dbService, {
+            packageName: '@ikary/system-log-core',
+            migrationsRoot: resolveSystemLogMigrationsRoot(),
+          });
+          await migrations.migrate();
+        } catch (err) {
+          console.warn('[DatabaseModule] DB unavailable — structured logging disabled:', (err as Error).message);
+        }
 
         return dbService;
       },
