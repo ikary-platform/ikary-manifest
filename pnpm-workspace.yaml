@@ -1,4 +1,3 @@
 packages:
   - 'libs/*'
-  - 'runtime-api/node/*'
   - 'apps/*'

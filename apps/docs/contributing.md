@@ -24,7 +24,6 @@ ikary-manifest/
   manifests/       # YAML source of truth (schemas and examples)
   libs/            # Core TypeScript libraries
   apps/            # Executables and services (CLI, runtime APIs, docs, playgrounds)
-  runtime-api/     # Runtime API support code
   decisions/       # Architecture decision records
 ```
 
