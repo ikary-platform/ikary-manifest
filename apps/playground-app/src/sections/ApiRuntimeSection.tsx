@@ -51,7 +51,7 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
 
 type Category = ApiEntityScenario['category'];
 
-const CATEGORY_ORDER: Category[] = ['crm', 'erp', 'projects', 'hr', 'finance'];
+const CATEGORY_ORDER: Category[] = ['docs', 'crm', 'erp', 'projects', 'hr', 'finance'];
 
 function groupScenarios() {
   return CATEGORY_ORDER.map((cat) => ({

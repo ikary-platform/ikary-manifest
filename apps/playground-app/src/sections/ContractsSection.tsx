@@ -5,6 +5,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CELL_SCHEMA_CATALOG } from '@ikary/contract';
 import type { SchemaCategory, SchemaCatalogEntry } from '@ikary/contract';
+import { SchemaDependencyGraphWorkspace } from '../components/contracts/SchemaDependencyGraph';
 
 const GITHUB_BLOB = 'https://github.com/ikary-platform/ikary-manifest/blob/main';
 const RAW_BASE =
@@ -43,10 +44,14 @@ const CATEGORY_DESCRIPTIONS: Record<SchemaCategory | 'all', string> = {
 };
 
 type DetailTab = 'documentation' | 'metadata';
+type SectionView = 'schemas' | 'dependencies';
 
 export function ContractsSection() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState('');
+
+  const viewParam = searchParams.get('view') as SectionView | null;
+  const sectionView: SectionView = viewParam === 'dependencies' ? 'dependencies' : 'schemas';
 
   const categoryParam = searchParams.get('category') as SchemaCategory | 'all' | null;
   const category: SchemaCategory | 'all' = categoryParam && CATEGORIES.includes(categoryParam) ? categoryParam : 'all';
@@ -68,6 +73,7 @@ export function ContractsSection() {
     }, { replace: true });
   }, [setSearchParams]);
 
+  const setSectionView = (v: SectionView) => updateParams({ view: v === 'schemas' ? null : v });
   const setCategory = (c: SchemaCategory | 'all') => updateParams({ category: c === 'all' ? null : c });
   const setSelected = (e: SchemaCatalogEntry) => updateParams({ schema: e.name });
   const setDetailTab = (t: DetailTab) => updateParams({ tab: t === 'documentation' ? null : t });
@@ -102,7 +108,32 @@ export function ContractsSection() {
   );
 
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col h-full">
+      {/* View toggle strip */}
+      <div className="shrink-0 flex gap-2 px-4 py-2 border-b border-gray-200 bg-gray-50">
+        {(['schemas', 'dependencies'] as const).map((v) => (
+          <button
+            key={v}
+            onClick={() => setSectionView(v)}
+            className={`px-3 py-1 text-xs font-medium rounded capitalize ${
+              sectionView === v
+                ? 'bg-blue-600 text-white'
+                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            {v}
+          </button>
+        ))}
+      </div>
+
+      {sectionView === 'dependencies' && (
+        <div className="flex-1 overflow-auto p-4">
+          <SchemaDependencyGraphWorkspace />
+        </div>
+      )}
+
+      {sectionView === 'schemas' && (
+      <div className="flex flex-1 overflow-hidden">
       {/* Sidebar */}
       <aside className="w-72 shrink-0 flex flex-col border-r border-gray-200">
         <div className="p-3 border-b border-gray-200">
@@ -299,6 +330,8 @@ export function ContractsSection() {
           </div>
         </div>
       </article>
+      </div>
+      )}
     </div>
   );
 }
