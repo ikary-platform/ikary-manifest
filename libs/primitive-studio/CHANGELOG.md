@@ -1,8 +1,8 @@
-# @ikary/presentation
+# @ikary/primitive-studio
 
-## 0.2.0
+## 0.1.1
 
-### Minor Changes
+### Patch Changes
 
 - 4cca3dd: Add Area, Bar, Line, Pie, Radar, and Radial chart primitives
 
@@ -12,8 +12,5 @@
 
   Charts are exposed in `PrimitiveStudio` under a new **Charts** category. Chart colours are driven by `--chart-1`…`--chart-5` CSS variables with light and dark mode variants.
 
-## 0.1.1
-
-### Patch Changes
-
-- a2acd7d: Rename package scope from @ikary-manifest to @ikary
+- Updated dependencies [4cca3dd]
+  - @ikary/primitives@0.2.0
