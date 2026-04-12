@@ -45,7 +45,7 @@ export function EntityOverviewTab({ entity }: EntityOverviewTabProps) {
           <h3 className="mt-6 mb-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             Computed Fields
           </h3>
-          <ComputedFieldsSection computed={entity.computed!} />
+          <ComputedFieldsSection fields={entity.computed!} />
         </div>
       )}
 

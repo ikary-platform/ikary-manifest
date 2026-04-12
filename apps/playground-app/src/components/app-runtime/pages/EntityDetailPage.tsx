@@ -93,13 +93,13 @@ export function EntityDetailPage({ page, params }: Props) {
           </div>
         ))}
 
-        {data.createdAt && (
+        {Boolean(data.createdAt) && (
           <div className="flex px-4 py-3 gap-4">
             <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Created</dt>
             <dd className="text-xs text-gray-500">{new Date(data.createdAt as string).toLocaleString()}</dd>
           </div>
         )}
-        {data.updatedAt && (
+        {Boolean(data.updatedAt) && (
           <div className="flex px-4 py-3 gap-4">
             <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Updated</dt>
             <dd className="text-xs text-gray-500">{new Date(data.updatedAt as string).toLocaleString()}</dd>

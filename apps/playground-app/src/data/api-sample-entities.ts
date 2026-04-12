@@ -3,9 +3,467 @@ import type { EntityDefinition } from '@ikary/contract';
 export interface ApiEntityScenario {
   label: string;
   description?: string;
-  category: 'crm' | 'erp' | 'projects' | 'hr' | 'finance';
+  category: 'docs' | 'crm' | 'erp' | 'projects' | 'hr' | 'finance';
   entity: EntityDefinition;
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Documentation
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DOC_MINIMAL_ENTITY: EntityDefinition = {
+  key: 'customer',
+  name: 'Customer',
+  pluralName: 'Customers',
+  fields: [
+    { key: 'name', type: 'string', name: 'Name', list: { visible: true, searchable: true } },
+    { key: 'email', type: 'string', name: 'Email', list: { visible: true } },
+    { key: 'phone', type: 'string', name: 'Phone' },
+    { key: 'website', type: 'string', name: 'Website' },
+    { key: 'industry', type: 'string', name: 'Industry', list: { visible: true } },
+    { key: 'street', type: 'string', name: 'Street' },
+    { key: 'city', type: 'string', name: 'City' },
+    { key: 'postal_code', type: 'string', name: 'Postal Code' },
+    { key: 'country', type: 'string', name: 'Country' },
+    { key: 'vat_number', type: 'string', name: 'VAT Number' },
+    { key: 'payment_terms_days', type: 'number', name: 'Payment Terms (Days)' },
+    { key: 'account_owner_id', type: 'string', name: 'Account Owner ID' },
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['active', 'inactive', 'suspended'],
+      list: { visible: true, filterable: true },
+    },
+  ],
+};
+
+const DOC_NESTED_ENTITY: EntityDefinition = {
+  key: 'customer',
+  name: 'Customer',
+  pluralName: 'Customers',
+  fields: [
+    { key: 'name', type: 'string', name: 'Name', list: { visible: true, searchable: true } },
+    { key: 'email', type: 'string', name: 'Email', list: { visible: true } },
+    { key: 'phone', type: 'string', name: 'Phone' },
+    {
+      key: 'contact',
+      type: 'object',
+      name: 'Contact',
+      fields: [{ key: 'website', type: 'string', name: 'Website' }],
+    },
+    {
+      key: 'address',
+      type: 'object',
+      name: 'Address',
+      fields: [
+        { key: 'street', type: 'string', name: 'Street' },
+        { key: 'city', type: 'string', name: 'City' },
+        { key: 'postal_code', type: 'string', name: 'Postal Code' },
+        { key: 'country', type: 'string', name: 'Country' },
+      ],
+    },
+    {
+      key: 'billing',
+      type: 'object',
+      name: 'Billing',
+      fields: [
+        { key: 'vat_number', type: 'string', name: 'VAT Number' },
+        { key: 'payment_terms_days', type: 'number', name: 'Payment Terms (Days)' },
+      ],
+    },
+    {
+      key: 'commercial',
+      type: 'object',
+      name: 'Commercial',
+      fields: [
+        { key: 'industry', type: 'string', name: 'Industry' },
+        { key: 'account_owner_id', type: 'string', name: 'Account Owner ID' },
+      ],
+    },
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['active', 'inactive', 'suspended'],
+      list: { visible: true, filterable: true },
+    },
+  ],
+};
+
+const DOC_BELONGS_TO_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['draft', 'sent', 'paid', 'cancelled'],
+      list: { visible: true },
+    },
+    { key: 'due_date', type: 'date', name: 'Due Date' },
+  ],
+  relations: [{ key: 'customer_id', relation: 'belongs_to', entity: 'customer', required: true }],
+};
+
+const DOC_HAS_MANY_ENTITY: EntityDefinition = {
+  key: 'customer',
+  name: 'Customer',
+  pluralName: 'Customers',
+  fields: [
+    { key: 'name', type: 'string', name: 'Name', list: { visible: true } },
+    { key: 'email', type: 'string', name: 'Email', list: { visible: true } },
+  ],
+  relations: [
+    { key: 'invoices', relation: 'has_many', entity: 'invoice', foreignKey: 'customer_id' },
+    { key: 'tickets', relation: 'has_many', entity: 'ticket', foreignKey: 'customer_id' },
+  ],
+};
+
+const DOC_MANY_TO_MANY_ENTITY: EntityDefinition = {
+  key: 'user',
+  name: 'User',
+  pluralName: 'Users',
+  fields: [
+    { key: 'name', type: 'string', name: 'Name', list: { visible: true } },
+    { key: 'email', type: 'string', name: 'Email', list: { visible: true } },
+  ],
+  relations: [
+    {
+      key: 'workspaces',
+      relation: 'many_to_many',
+      entity: 'workspace',
+      through: 'membership',
+      sourceKey: 'user_id',
+      targetKey: 'workspace_id',
+    },
+  ],
+};
+
+const DOC_POLYMORPHIC_ENTITY: EntityDefinition = {
+  key: 'comment',
+  name: 'Comment',
+  pluralName: 'Comments',
+  fields: [{ key: 'message', type: 'text', name: 'Message', list: { visible: true } }],
+  relations: [{ key: 'target', relation: 'polymorphic', typeField: 'target_type', idField: 'target_id' }],
+};
+
+const DOC_COMPUTED_EXPRESSION_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    { key: 'subtotal', type: 'number', name: 'Subtotal', list: { visible: true } },
+    { key: 'tax_rate', type: 'number', name: 'Tax Rate' },
+    { key: 'due_date', type: 'date', name: 'Due Date', list: { visible: true } },
+  ],
+  computed: [
+    {
+      key: 'tax_amount',
+      name: 'Tax Amount',
+      type: 'number',
+      formulaType: 'expression',
+      expression: 'subtotal * tax_rate',
+    },
+    {
+      key: 'total_amount',
+      name: 'Total Amount',
+      type: 'number',
+      formulaType: 'expression',
+      expression: 'subtotal + tax_amount',
+      dependencies: ['subtotal', 'tax_amount'],
+    },
+  ],
+};
+
+const DOC_COMPUTED_AGGREGATION_ENTITY: EntityDefinition = {
+  key: 'customer',
+  name: 'Customer',
+  pluralName: 'Customers',
+  fields: [
+    { key: 'name', type: 'string', name: 'Name', list: { visible: true } },
+    { key: 'email', type: 'string', name: 'Email', list: { visible: true } },
+  ],
+  computed: [
+    {
+      key: 'lifetime_value',
+      name: 'Lifetime Value',
+      type: 'number',
+      formulaType: 'aggregation',
+      relation: 'invoices',
+      operation: 'sum',
+      field: 'total_amount',
+    },
+    {
+      key: 'invoice_count',
+      name: 'Invoice Count',
+      type: 'number',
+      formulaType: 'aggregation',
+      relation: 'invoices',
+      operation: 'count',
+    },
+    {
+      key: 'unpaid_total',
+      name: 'Unpaid Total',
+      type: 'number',
+      formulaType: 'aggregation',
+      relation: 'invoices',
+      operation: 'sum',
+      field: 'total_amount',
+      filter: 'status != "paid"',
+    },
+  ],
+};
+
+const DOC_COMPUTED_CONDITION_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    { key: 'due_date', type: 'date', name: 'Due Date', list: { visible: true } },
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['draft', 'sent', 'paid', 'cancelled'],
+      list: { visible: true },
+    },
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+  ],
+  computed: [
+    {
+      key: 'overdue',
+      name: 'Overdue',
+      type: 'boolean',
+      formulaType: 'conditional',
+      condition: 'due_date < now()',
+      then: 'true',
+      else: 'false',
+    },
+    {
+      key: 'is_paid',
+      name: 'Is Paid',
+      type: 'boolean',
+      formulaType: 'conditional',
+      condition: 'status == "paid"',
+      then: 'true',
+      else: 'false',
+    },
+    {
+      key: 'is_high_value',
+      name: 'Is High Value',
+      type: 'boolean',
+      formulaType: 'conditional',
+      condition: 'total_amount > 10000',
+      then: 'true',
+      else: 'false',
+    },
+  ],
+};
+
+const DOC_LIFECYCLE_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    { key: 'status', type: 'string', name: 'Status', list: { visible: true } },
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+  ],
+  lifecycle: {
+    field: 'status',
+    initial: 'draft',
+    states: ['draft', 'pending', 'approved', 'rejected', 'paid'],
+    transitions: [
+      {
+        key: 'submit',
+        from: 'draft',
+        to: 'pending',
+        label: 'Submit for Approval',
+        guards: ['total_amount > 0'],
+        hooks: ['notify_approvers'],
+        event: 'invoice.submitted',
+      },
+      {
+        key: 'approve',
+        from: 'pending',
+        to: 'approved',
+        label: 'Approve',
+        guards: ['total_amount > 0', 'customer_verified == true'],
+        hooks: ['send_invoice_approved_email', 'create_audit_log'],
+        event: 'invoice.approved',
+      },
+      {
+        key: 'reject',
+        from: 'pending',
+        to: 'rejected',
+        label: 'Reject',
+        hooks: ['notify_sales_team'],
+        event: 'invoice.rejected',
+      },
+      {
+        key: 'mark_paid',
+        from: 'approved',
+        to: 'paid',
+        label: 'Mark as Paid',
+        guards: ['payment_received == true'],
+        hooks: ['update_customer_balance', 'close_invoice'],
+        event: 'invoice.paid',
+      },
+    ],
+  },
+};
+
+const DOC_VALIDATION_ENTITY: EntityDefinition = {
+  key: 'user',
+  name: 'User',
+  pluralName: 'Users',
+  fields: [
+    {
+      key: 'full_name',
+      type: 'string',
+      name: 'Full Name',
+      list: { visible: true },
+      validation: {
+        fieldRules: [
+          { ruleId: 'user.full_name.required', type: 'required', field: 'full_name', messageKey: 'user.full_name.required', clientSafe: true, blocking: true, severity: 'error' },
+          { ruleId: 'user.full_name.min_length', type: 'min_length', field: 'full_name', params: { min: 2 }, messageKey: 'user.full_name.min_length', clientSafe: true, blocking: true, severity: 'error' },
+          { ruleId: 'user.full_name.max_length', type: 'max_length', field: 'full_name', params: { max: 100 }, messageKey: 'user.full_name.max_length', clientSafe: true, blocking: true, severity: 'error' },
+        ],
+      },
+    },
+    {
+      key: 'email',
+      type: 'string',
+      name: 'Email',
+      list: { visible: true },
+      validation: {
+        fieldRules: [
+          { ruleId: 'user.email.required', type: 'required', field: 'email', messageKey: 'user.email.required', clientSafe: true, blocking: true, severity: 'error' },
+          { ruleId: 'user.email.email', type: 'email', field: 'email', messageKey: 'user.email.email', clientSafe: true, blocking: true, severity: 'error' },
+        ],
+      },
+    },
+    {
+      key: 'username',
+      type: 'string',
+      name: 'Username',
+      list: { visible: true },
+      validation: {
+        fieldRules: [
+          { ruleId: 'user.username.required', type: 'required', field: 'username', messageKey: 'user.username.required', clientSafe: true, blocking: true, severity: 'error' },
+          { ruleId: 'user.username.regex', type: 'regex', field: 'username', params: { pattern: '^[a-z0-9_]{3,20}$' }, messageKey: 'user.username.regex', clientSafe: true, blocking: true, severity: 'error' },
+        ],
+      },
+    },
+    {
+      key: 'age',
+      type: 'number',
+      name: 'Age',
+      validation: {
+        fieldRules: [
+          { ruleId: 'user.age.min', type: 'number_min', field: 'age', params: { min: 18 }, messageKey: 'user.age.min', clientSafe: true, blocking: true, severity: 'error' },
+          { ruleId: 'user.age.max', type: 'number_max', field: 'age', params: { max: 120 }, messageKey: 'user.age.max', clientSafe: true, blocking: false, severity: 'warning' },
+        ],
+      },
+    },
+  ],
+};
+
+const DOC_EVENTS_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    { key: 'status', type: 'string', name: 'Status', list: { visible: true } },
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+    { key: 'bank_account', type: 'string', name: 'Bank Account' },
+  ],
+  events: {
+    exclude: ['bank_account'],
+    names: {
+      created: 'billing.invoice.raised',
+      updated: 'billing.invoice.changed',
+      deleted: 'billing.invoice.voided',
+    },
+  },
+};
+
+const DOC_CAPABILITIES_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['draft', 'pending', 'approved', 'paid'],
+      list: { visible: true },
+    },
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+  ],
+  lifecycle: {
+    field: 'status',
+    initial: 'draft',
+    states: ['draft', 'pending', 'approved', 'paid'],
+    transitions: [
+      { key: 'submit', from: 'draft', to: 'pending' },
+      { key: 'approve', from: 'pending', to: 'approved' },
+      { key: 'pay', from: 'approved', to: 'paid' },
+    ],
+  },
+  capabilities: [
+    { key: 'submit', type: 'transition', transition: 'submit', description: 'Submit for approval' },
+    { key: 'approve', type: 'transition', transition: 'approve', description: 'Approve invoice', confirm: true },
+    { key: 'export_pdf', type: 'export', format: 'pdf', description: 'Download as PDF' },
+    { key: 'reset', type: 'mutation', updates: { status: 'draft' }, description: 'Reset to draft', confirm: true },
+  ],
+};
+
+const DOC_POLICIES_ENTITY: EntityDefinition = {
+  key: 'invoice',
+  name: 'Invoice',
+  pluralName: 'Invoices',
+  fields: [
+    {
+      key: 'status',
+      type: 'enum',
+      name: 'Status',
+      enumValues: ['draft', 'pending', 'approved'],
+      list: { visible: true },
+    },
+    { key: 'owner_id', type: 'string', name: 'Owner ID', list: { visible: true } },
+    { key: 'total_amount', type: 'number', name: 'Total Amount', list: { visible: true } },
+  ],
+  lifecycle: {
+    field: 'status',
+    initial: 'draft',
+    states: ['draft', 'pending', 'approved'],
+    transitions: [
+      { key: 'submit', from: 'draft', to: 'pending' },
+      { key: 'approve', from: 'pending', to: 'approved' },
+    ],
+  },
+  capabilities: [
+    {
+      key: 'approve',
+      type: 'transition',
+      transition: 'approve',
+      scope: 'entity',
+      confirm: true,
+      description: 'Approve invoice',
+    },
+  ],
+  policies: {
+    view: { scope: 'role' },
+    create: { scope: 'role' },
+    update: { scope: 'role' },
+    delete: { scope: 'role' },
+  },
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CRM
@@ -2314,6 +2772,21 @@ const EXPENSE_REPORT_ENTITY: EntityDefinition = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const API_ENTITY_SCENARIOS: ApiEntityScenario[] = [
+  // Documentation
+  { label: 'Minimal Entity', description: 'Plain entity with flat string/number/enum fields — the simplest possible entity definition', category: 'docs', entity: DOC_MINIMAL_ENTITY },
+  { label: 'Nested Entity', description: 'Entity with object fields grouping related properties into logical sub-objects', category: 'docs', entity: DOC_NESTED_ENTITY },
+  { label: 'Belongs To Entity', description: 'Entity with a belongs_to relation pointing to a parent entity', category: 'docs', entity: DOC_BELONGS_TO_ENTITY },
+  { label: 'One to Many Entity', description: 'Entity with has_many relations to multiple child entities via foreign keys', category: 'docs', entity: DOC_HAS_MANY_ENTITY },
+  { label: 'Many to Many Entity', description: 'Entity linked to another through a join table using many_to_many relation', category: 'docs', entity: DOC_MANY_TO_MANY_ENTITY },
+  { label: 'Polymorphic Entity', description: 'Entity with a polymorphic relation using typeField/idField to reference multiple entity types', category: 'docs', entity: DOC_POLYMORPHIC_ENTITY },
+  { label: 'Computed Expression', description: 'Computed fields using arithmetic expressions over other field values', category: 'docs', entity: DOC_COMPUTED_EXPRESSION_ENTITY },
+  { label: 'Aggregation Expression', description: 'Computed fields using aggregation operations (sum, count) over related entity collections', category: 'docs', entity: DOC_COMPUTED_AGGREGATION_ENTITY },
+  { label: 'Condition Expression', description: 'Computed boolean fields using conditional expressions with now() and field comparisons', category: 'docs', entity: DOC_COMPUTED_CONDITION_ENTITY },
+  { label: 'Lifecycle Entity', description: 'Full lifecycle with states, transitions, labels, guards, hooks, and events per transition', category: 'docs', entity: DOC_LIFECYCLE_ENTITY },
+  { label: 'Validation Entity', description: 'Entity demonstrating required, email, min_length, max_length, regex, min, and max field rules', category: 'docs', entity: DOC_VALIDATION_ENTITY },
+  { label: 'Events Entity', description: 'Custom domain event names for CRUD operations and excluded fields from event payloads', category: 'docs', entity: DOC_EVENTS_ENTITY },
+  { label: 'Capabilities Entity', description: 'Action buttons on an entity: transition, export, mutation capabilities with confirm dialogs', category: 'docs', entity: DOC_CAPABILITIES_ENTITY },
+  { label: 'Policies Entity', description: 'Role-based access control policies for view, create, update, and delete operations', category: 'docs', entity: DOC_POLICIES_ENTITY },
   // CRM
   { label: 'Contact', description: 'Person record with lifecycle from lead to customer, relations to company and deals', category: 'crm', entity: CONTACT_ENTITY },
   { label: 'Company', description: 'Organization/account with industry, tier, computed deal count, and field-level policies', category: 'crm', entity: COMPANY_ENTITY },
@@ -2338,6 +2811,7 @@ export const API_ENTITY_SCENARIOS: ApiEntityScenario[] = [
 ];
 
 export const CATEGORY_LABELS: Record<ApiEntityScenario['category'], string> = {
+  docs: 'Documentation',
   crm: 'CRM',
   erp: 'ERP',
   projects: 'Project Management',
