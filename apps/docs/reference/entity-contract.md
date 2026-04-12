@@ -8,7 +8,7 @@ Version: 1.2
 Scope: micro-app-api
 Status: Mandatory
 
-> **See also:** `system/registry/ENTITY-DEFINITION.MD`: canonical IKARY Entity Definition JSON standard. Defines the JSON shape for entity definitions stored in `domain-registry`, including mandatory governance fields, `scope`, `governance_tier`, `permissions`, and the declarative `data` block.
+> This is an advanced maintainer-focused contract. Start with [Entity Definition](/reference/entity-definition) for the core model.
 
 This document defines how Entity Schema evolution is handled when the system normalizes all entities to the latest schema version on read.
 

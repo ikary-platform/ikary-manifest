@@ -14,7 +14,7 @@ The Node SDK is the current reference implementation of the canonical manifest m
 | `contract` | `@ikary/contract` | Node-facing schema, types, and validation bindings |
 | `engine` | `@ikary/engine` | Compile canonical expressions into runtime-ready application structures |
 
-Additional runtime packages such as `presentation`, `runtime-ui`, `renderer`, and `data-runtime` consume the compiled manifest to render application behavior.
+Additional runtime packages such as `presentation`, `primitives`, `renderer`, and `data` consume the compiled manifest to render application behavior.
 
 ## What the Node SDK exposes today
 

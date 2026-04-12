@@ -26,7 +26,7 @@ cd my-app
 ikary local start manifest.json
 
 # 3. Open the preview
-open http://localhost:4500
+# Open http://localhost:4500 in your browser
 ```
 
 The preview server hot-reloads when you edit `manifest.json`. The data API runs at `http://localhost:4501`. Stop everything with `ikary local stop`.

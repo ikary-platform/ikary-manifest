@@ -1,45 +1,34 @@
 # Packages Overview
 
-Packages are organised by concern, not by language. Each top-level directory answers a different question.
+Packages are organized by responsibility.
 
-## contracts/
+## `libs/` core packages
 
-Everything related to "what is a valid manifest?".
+These packages define the manifest contract, compile manifests, and render applications.
 
 | Package | Role |
 |---------|------|
-| `@ikary/contract` | Zod schemas, TypeScript types, structural + semantic validation |
-| `@ikary/loader` | YAML/JSON parsing, meta-property stripping, validation pipeline |
+| `@ikary/contract` | Zod schemas, TypeScript types, structural and semantic validation |
+| `@ikary/loader` | YAML and JSON parsing, meta-property stripping, validation pipeline |
 | `@ikary/engine` | Compilation, normalization, field derivation, path builders |
+| `@ikary/presentation` | Zod schemas for UI primitive contracts |
+| `@ikary/primitives` | React primitive components, resolvers, adapters, registry |
+| `@ikary/data` | Data providers and entity data hooks |
+| `@ikary/renderer` | Top-level `CellAppRenderer` and page rendering runtime |
 
-See [Loading & Validation](/packages/loading) for the full API reference.
+See [Loading & Validation](/packages/loading) for the full contract pipeline API.
 
-## runtime-api/
+## `apps/` executable packages
 
-Everything related to "how do I serve a REST API from a manifest?".
-
-| Package | Role |
-|---------|------|
-| `@ikary/generator-nest` | NestJS module/controller/service generator _(placeholder)_ |
-
-## ui/
-
-Client-side rendering. All packages target the browser, not Node.js.
+These packages run as applications or CLIs.
 
 | Package | Role |
 |---------|------|
-| `@ikary/presentation` | Zod schemas for 40+ UI primitive presentations |
-| `@ikary/primitives` | React component library: primitives, registries, query engine |
-| `@ikary/data` | Data-binding providers for entity pages |
-| `@ikary/renderer` | Manifest-driven React app shell and page renderer |
-
-## apps/
-
-Standalone executables.
-
-| App | Role |
-|-----|------|
-| `@ikary/cli` | `ikary` CLI: validate, compile, generate _(placeholder)_ |
+| `@ikary/cli` | `ikary` CLI for scaffolding, validation, compilation, local stack commands, and primitives tooling |
+| `@ikary/ikary` | Thin npm wrapper that exposes the same `ikary` command |
+| `@ikary/cell-runtime-api` | Local runtime REST API service generated from manifests |
+| `@ikary/preview-server` | Local preview server used by the local stack |
+| `@ikary/mcp-server` | Contract Intelligence API and MCP server |
 
 ## Dependency graph
 
@@ -53,19 +42,9 @@ graph TD
     primitives --> renderer[renderer]
     primitives --> data[data]
     engine --> renderer
-
-    style contract fill:#1d4ed8,stroke:#78afff,color:#f8fafc
-    style loader fill:#182644,stroke:#78afff,color:#f8fafc
-    style engine fill:#182644,stroke:#78afff,color:#f8fafc
-    style presentation fill:#182644,stroke:#63a0ff,color:#f8fafc
-    style primitives fill:#182644,stroke:#63a0ff,color:#f8fafc
-    style renderer fill:#182644,stroke:#63a0ff,color:#f8fafc
-    style data fill:#182644,stroke:#63a0ff,color:#f8fafc
 ```
 
 ## Processing pipeline
-
-The three contract packages form a pipeline:
 
 ```mermaid
 flowchart TD
@@ -73,12 +52,6 @@ flowchart TD
     B -->|parse| C[contract]
     C -->|validate| D[engine]
     D -->|compile| E[Runtime CellManifestV1]
-
-    style A fill:#0a1329,stroke:#78afff,color:#bcc8df
-    style B fill:#182644,stroke:#78afff,color:#f8fafc
-    style C fill:#182644,stroke:#78afff,color:#f8fafc
-    style D fill:#182644,stroke:#78afff,color:#f8fafc
-    style E fill:#1d4ed8,stroke:#78afff,color:#f8fafc
 ```
 
 ```typescript
@@ -91,10 +64,10 @@ if (loaded.valid) {
 }
 ```
 
-## Building
+## Build commands
 
 ```bash
-pnpm build        # Build all packages (via Turbo)
-pnpm test         # Run all tests
-pnpm typecheck    # Type-check all packages
+pnpm build
+pnpm test
+pnpm typecheck
 ```

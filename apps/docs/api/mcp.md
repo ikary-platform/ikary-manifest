@@ -58,6 +58,7 @@ claude mcp add ikary-manifest {{ baseUrl }}/mcp
 ```bash-vue
 curl -X POST {{ baseUrl }}/mcp \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
   -d '{ "jsonrpc": "2.0", "id": 1, "method": "tools/list" }'
 ```
 

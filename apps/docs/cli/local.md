@@ -80,7 +80,7 @@ ikary local logs mcp      # MCP server only
 
 | Option | Description |
 |--------|-------------|
-| `-f, --follow` | Follow log output (default: true) |
+| `-f, --follow` | Follow log output |
 
 ---
 

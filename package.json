@@ -18,7 +18,7 @@
     "coverage:system-db-core": "pnpm --filter @ikary/system-db-core test:coverage",
     "coverage:cell-runtime-core": "pnpm --filter @ikary/cell-runtime-core test:coverage",
     "coverage:cell-migration-core": "pnpm --filter @ikary/cell-migration-core test:coverage",
-"generate:schema": "tsx libs/scripts/generate-json-schema.ts",
+    "generate:schema": "tsx libs/scripts/generate-json-schema.ts",
     "playground:build": "pnpm --filter @ikary/playground run build",
     "changeset": "changeset",
     "version": "changeset version",
@@ -26,6 +26,9 @@
     "docs:dev": "vitepress dev apps/docs",
     "docs:build": "pnpm playground:build && vitepress build apps/docs",
     "docs:preview": "vitepress preview apps/docs",
+    "docs:check:freshness": "node scripts/check-docs-freshness.mjs",
+    "docs:check:commands": "pnpm --filter @ikary/cli build && node scripts/check-docs-command-smoke.mjs",
+    "docs:check": "pnpm docs:build && pnpm docs:check:freshness && pnpm docs:check:commands",
     "capture-cli-output": "tsx scripts/capture-cli-output.ts"
   },
   "devDependencies": {

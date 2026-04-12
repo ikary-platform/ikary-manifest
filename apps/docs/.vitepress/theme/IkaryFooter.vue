@@ -30,7 +30,7 @@
           <p class="ikary-footer-heading">Docs</p>
           <ul>
             <li><a href="/guide/why-ikary-manifest">Why IKARY Manifest</a></li>
-            <li><a href="/guide/getting-started">Getting Started</a></li>
+            <li><a href="/guide/cli">Getting Started</a></li>
             <li><a href="/guide/architecture">Architecture</a></li>
           </ul>
         </div>

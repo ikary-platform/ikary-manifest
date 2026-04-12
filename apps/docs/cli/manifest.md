@@ -78,10 +78,10 @@ ikary compile ./manifest.json --stdout
 
 ## `ikary preview <path>`
 
-Compiles a manifest and opens a browser preview. Requires the local stack to be running.
+Compiles a manifest and opens a standalone browser preview.
 
 ```bash
 ikary preview ./manifest.json
 ```
 
-Start the local stack first with [`ikary local start`](/cli/local#ikary-local-start-manifest).
+This command does not require the local stack.

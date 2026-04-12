@@ -51,6 +51,31 @@ jobs:
 
       - run: pnpm coverage:ui
 
+  docs-quality:
+    name: Docs quality
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run build
+
+      - run: pnpm docs:build
+
+      - run: pnpm docs:check:freshness
+
+      - run: pnpm docs:check:commands
+
   coverage-system-db-core:
     name: Coverage — system-db-core
     runs-on: ubuntu-latest

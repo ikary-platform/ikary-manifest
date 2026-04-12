@@ -44,7 +44,7 @@ The API runtime generates routes under `/customers`. The list endpoint returns a
 
 ## Current status
 
-The NestJS module/controller/service generator (`@ikary/generator-nest`) is in active development.
+The runtime API is currently exposed by the `@ikary/cell-runtime-api` app in this repository. A standalone API generation package is not published yet.
 
 ## Related pages
 

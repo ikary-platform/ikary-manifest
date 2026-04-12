@@ -1,2 +1,4 @@
 #!/usr/bin/env node
-import '@ikary/cli/dist/cli.js';
+
+const cliEntry = new URL('./cli.js', import.meta.resolve('@ikary/cli'));
+await import(cliEntry.href);

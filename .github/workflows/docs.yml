@@ -3,6 +3,13 @@ name: Deploy docs to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - 'apps/docs/**'
+      - 'apps/playground-app/**'
+      - '.github/workflows/docs.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
   workflow_dispatch:
 
 permissions:
@@ -41,6 +48,7 @@ jobs:
           path: apps/docs/.vitepress/dist
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

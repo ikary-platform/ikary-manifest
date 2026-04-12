@@ -7,13 +7,13 @@ This package is a thin wrapper around [`@ikary/cli`](https://www.npmjs.com/packa
 ## Install
 
 ```bash
-npx ikary init
+npx @ikary/ikary init
 ```
 
 Or install globally:
 
 ```bash
-npm install -g ikary
+npm install -g @ikary/ikary
 ikary --help
 ```
 
@@ -28,4 +28,4 @@ ikary preview <path>        # Preview a manifest in the playground
 
 ## Documentation
 
-Full documentation lives in the [ikary-manifest](https://github.com/ikary-platform/ikary-manifest) repository.
+Full documentation: [documentation.ikary.co](https://documentation.ikary.co)

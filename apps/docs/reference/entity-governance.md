@@ -8,7 +8,7 @@ Version: 1.1
 Scope: Workspace + Cell entities (micro-app-api + micro-app-ui + micro-app-db)
 Status: Mandatory
 
-> **See also:** `system/registry/ENTITY-DEFINITION.MD`: canonical IKARY Entity Definition JSON standard with governance extensions (`scope`, `governance_tier`, `permissions`, mandatory base fields, and the `data` block for declarative filtering/searching/sorting).
+> This is an advanced maintainer-focused contract. If you are starting with IKARY, read [Entity Definition](/reference/entity-definition) first.
 
 ---
 
