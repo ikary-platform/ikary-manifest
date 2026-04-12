@@ -23,6 +23,7 @@ export default defineConfig({
         'src/store/**',                  // Zustand state management
         'src/providers/**',              // Provider setup files
         'src/ui-components.ts',          // TypeScript interface declarations only
+        'src/i18n/**',                   // Static message maps (pure data)
       ],
       thresholds: { lines: 100, branches: 100, functions: 100, statements: 100 },
     },
