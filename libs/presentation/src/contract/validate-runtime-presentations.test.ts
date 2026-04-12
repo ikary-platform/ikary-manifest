@@ -107,6 +107,35 @@ import {
   validateRuntimeSkeletonPresentation,
   parseRuntimeSkeletonPresentation,
 } from './skeleton/validate-runtime-skeleton-presentation';
+import {
+  validateRuntimeAreaChartPresentation,
+  parseRuntimeAreaChartPresentation,
+} from './area-chart/validate-runtime-area-chart-presentation';
+import {
+  validateRuntimeBarChartPresentation,
+  parseRuntimeBarChartPresentation,
+} from './bar-chart/validate-runtime-bar-chart-presentation';
+import {
+  validateRuntimeLineChartPresentation,
+  parseRuntimeLineChartPresentation,
+} from './line-chart/validate-runtime-line-chart-presentation';
+import {
+  validateRuntimePieChartPresentation,
+  parseRuntimePieChartPresentation,
+} from './pie-chart/validate-runtime-pie-chart-presentation';
+import {
+  validateRuntimeRadarChartPresentation,
+  parseRuntimeRadarChartPresentation,
+} from './radar-chart/validate-runtime-radar-chart-presentation';
+import {
+  validateRuntimeRadialChartPresentation,
+  parseRuntimeRadialChartPresentation,
+} from './radial-chart/validate-runtime-radial-chart-presentation';
+import {
+  ChartSeriesSchema,
+  ChartDataPointSchema,
+  ChartLegendPositionSchema,
+} from './chart-common/ChartCommonSchemas';
 
 // ── ActivityFeed ──────────────────────────────────────────────────────────────
 
@@ -1398,5 +1427,321 @@ describe('validateRuntimeSkeletonPresentation', () => {
 
   it('parseRuntimeSkeletonPresentation throws for invalid input', () => {
     expect(() => parseRuntimeSkeletonPresentation(null)).toThrow();
+  });
+});
+
+// ── ChartCommon schemas ───────────────────────────────────────────────────────
+
+describe('ChartCommonSchemas', () => {
+  it('ChartSeriesSchema accepts valid series', () => {
+    expect(ChartSeriesSchema.safeParse({ dataKey: 'revenue', label: 'Revenue' }).success).toBe(true);
+  });
+
+  it('ChartSeriesSchema accepts optional color', () => {
+    expect(ChartSeriesSchema.safeParse({ dataKey: 'x', label: 'X', color: '#fff' }).success).toBe(true);
+  });
+
+  it('ChartSeriesSchema rejects missing dataKey', () => {
+    expect(ChartSeriesSchema.safeParse({ label: 'X' }).success).toBe(false);
+  });
+
+  it('ChartDataPointSchema accepts a record of string/number/null', () => {
+    expect(ChartDataPointSchema.safeParse({ month: 'Jan', value: 42, extra: null }).success).toBe(true);
+  });
+
+  it('ChartLegendPositionSchema accepts valid positions', () => {
+    for (const pos of ['top', 'right', 'bottom', 'left', 'none'] as const) {
+      expect(ChartLegendPositionSchema.safeParse(pos).success).toBe(true);
+    }
+  });
+
+  it('ChartLegendPositionSchema rejects invalid position', () => {
+    expect(ChartLegendPositionSchema.safeParse('center').success).toBe(false);
+  });
+});
+
+// ── validateChartDataKeys (cross-field refinement) ────────────────────────────
+
+describe('validateChartDataKeys cross-field validation', () => {
+  it('area-chart rejects data point missing the xKey field', () => {
+    const result = validateRuntimeAreaChartPresentation({
+      type: 'area-chart',
+      data: [{ revenue: 100 }],           // 'month' xKey is missing
+      xKey: 'month',
+      series: [{ dataKey: 'revenue', label: 'Revenue' }],
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('area-chart rejects data point missing a series dataKey field', () => {
+    const result = validateRuntimeAreaChartPresentation({
+      type: 'area-chart',
+      data: [{ month: 'Jan' }],           // 'revenue' dataKey is missing
+      xKey: 'month',
+      series: [{ dataKey: 'revenue', label: 'Revenue' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('bar-chart rejects data point missing a series dataKey', () => {
+    const result = validateRuntimeBarChartPresentation({
+      type: 'bar-chart',
+      data: [{ quarter: 'Q1' }],          // 'sales' dataKey missing
+      xKey: 'quarter',
+      series: [{ dataKey: 'sales', label: 'Sales' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('line-chart rejects data point missing the xKey', () => {
+    const result = validateRuntimeLineChartPresentation({
+      type: 'line-chart',
+      data: [{ users: 100 }],             // 'week' xKey missing
+      xKey: 'week',
+      series: [{ dataKey: 'users', label: 'Users' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('radar-chart rejects data point missing the default subject key', () => {
+    const result = validateRuntimeRadarChartPresentation({
+      type: 'radar-chart',
+      data: [
+        { score: 80 },                    // 'subject' key missing
+        { score: 70 },
+        { score: 60 },
+      ],
+      series: [{ dataKey: 'score', label: 'Score' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it('radar-chart rejects data point missing a series dataKey', () => {
+    const result = validateRuntimeRadarChartPresentation({
+      type: 'radar-chart',
+      data: [
+        { subject: 'A' },                 // 'score' dataKey missing
+        { subject: 'B' },
+        { subject: 'C' },
+      ],
+      series: [{ dataKey: 'score', label: 'Score' }],
+    });
+    expect(result.ok).toBe(false);
+  });
+});
+
+// ── AreaChart ────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeAreaChartPresentation', () => {
+  const valid = {
+    type: 'area-chart',
+    data: [{ month: 'Jan', revenue: 100 }],
+    xKey: 'month',
+    series: [{ dataKey: 'revenue', label: 'Revenue' }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeAreaChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when data is missing', () => {
+    const result = validateRuntimeAreaChartPresentation({ type: 'area-chart', xKey: 'x', series: [] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeAreaChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeAreaChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeAreaChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeAreaChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeAreaChartPresentation({})).toThrow();
+  });
+});
+
+// ── BarChart ─────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeBarChartPresentation', () => {
+  const valid = {
+    type: 'bar-chart',
+    data: [{ quarter: 'Q1', sales: 42 }],
+    xKey: 'quarter',
+    series: [{ dataKey: 'sales', label: 'Sales' }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeBarChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when xKey is missing', () => {
+    const result = validateRuntimeBarChartPresentation({ type: 'bar-chart', data: [{}], series: [{ dataKey: 'x', label: 'X' }] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeBarChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeBarChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeBarChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeBarChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeBarChartPresentation({})).toThrow();
+  });
+});
+
+// ── LineChart ────────────────────────────────────────────────────────────────
+
+describe('validateRuntimeLineChartPresentation', () => {
+  const valid = {
+    type: 'line-chart',
+    data: [{ week: 'W1', users: 100 }],
+    xKey: 'week',
+    series: [{ dataKey: 'users', label: 'Users' }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeLineChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when series is empty', () => {
+    const result = validateRuntimeLineChartPresentation({ ...valid, series: [] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeLineChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeLineChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeLineChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeLineChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeLineChartPresentation({})).toThrow();
+  });
+});
+
+// ── PieChart ─────────────────────────────────────────────────────────────────
+
+describe('validateRuntimePieChartPresentation', () => {
+  const valid = {
+    type: 'pie-chart',
+    data: [{ label: 'Enterprise', value: 60 }, { label: 'SMB', value: 40 }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimePieChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when data is empty', () => {
+    const result = validateRuntimePieChartPresentation({ type: 'pie-chart', data: [] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimePieChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimePieChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimePieChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimePieChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimePieChartPresentation({})).toThrow();
+  });
+});
+
+// ── RadarChart ───────────────────────────────────────────────────────────────
+
+describe('validateRuntimeRadarChartPresentation', () => {
+  const valid = {
+    type: 'radar-chart',
+    data: [
+      { subject: 'Frontend', score: 80 },
+      { subject: 'Backend', score: 70 },
+      { subject: 'Design', score: 60 },
+    ],
+    series: [{ dataKey: 'score', label: 'Score' }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeRadarChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when data has fewer than 3 items', () => {
+    const result = validateRuntimeRadarChartPresentation({ ...valid, data: [{ subject: 'A', score: 1 }, { subject: 'B', score: 2 }] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeRadarChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeRadarChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeRadarChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeRadarChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeRadarChartPresentation({})).toThrow();
+  });
+});
+
+// ── RadialChart ──────────────────────────────────────────────────────────────
+
+describe('validateRuntimeRadialChartPresentation', () => {
+  const valid = {
+    type: 'radial-chart',
+    data: [{ label: 'Revenue', value: 78 }, { label: 'NPS', value: 91 }],
+  };
+
+  it('returns ok:true for valid input', () => {
+    const result = validateRuntimeRadialChartPresentation(valid);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.errors).toEqual([]);
+  });
+
+  it('returns ok:false when a value exceeds 100', () => {
+    const result = validateRuntimeRadialChartPresentation({ type: 'radial-chart', data: [{ label: 'X', value: 150 }] });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors[0].code).toBe('STRUCTURAL_VALIDATION_ERROR');
+  });
+
+  it('returns ok:false for non-object input', () => {
+    const result = validateRuntimeRadialChartPresentation(null);
+    expect(result.ok).toBe(false);
+  });
+
+  it('parseRuntimeRadialChartPresentation succeeds for valid input', () => {
+    expect(() => parseRuntimeRadialChartPresentation(valid)).not.toThrow();
+  });
+
+  it('parseRuntimeRadialChartPresentation throws for invalid input', () => {
+    expect(() => parseRuntimeRadialChartPresentation({})).toThrow();
   });
 });

@@ -1,4 +1,10 @@
 import type {
+  AreaChartPresentation,
+  BarChartPresentation,
+  LineChartPresentation,
+  PieChartPresentation,
+  RadarChartPresentation,
+  RadialChartPresentation,
   ActivityFeedPresentation,
   BulkCommandBarPresentation,
   CheckboxPresentation,
@@ -76,7 +82,13 @@ type ContractPresentationType =
   | ListPagePresentation['type']
   | PageHeaderPresentation['type']
   | PaginationPresentation['type']
-  | TabsPresentation['type'];
+  | TabsPresentation['type']
+  | 'area-chart'
+  | 'bar-chart'
+  | 'line-chart'
+  | 'pie-chart'
+  | 'radar-chart'
+  | 'radial-chart';
 
 export interface PrimitiveScenario {
   label: string;
@@ -2283,6 +2295,379 @@ PRIMITIVE_DEMOS['card'] = {
     { label: 'Header only', description: 'Title + description, no content', props: CARD_MINIMAL as unknown as Record<string, unknown>, runtime: {} },
     { label: 'Full card', description: 'Header + content + footer', props: CARD_FULL as unknown as Record<string, unknown>, runtime: {} },
     { label: 'Content only', description: 'Body text without header', props: CARD_CONTENT_ONLY as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// ── Chart primitives ──────────────────────────────────────────────────────────
+
+const AREA_CHART_CONTRACT_TYPE = 'area-chart' as const;
+const BAR_CHART_CONTRACT_TYPE = 'bar-chart' as const;
+const LINE_CHART_CONTRACT_TYPE = 'line-chart' as const;
+const PIE_CHART_CONTRACT_TYPE = 'pie-chart' as const;
+const RADAR_CHART_CONTRACT_TYPE = 'radar-chart' as const;
+const RADIAL_CHART_CONTRACT_TYPE = 'radial-chart' as const;
+
+// Area chart scenarios
+
+const AREA_MONTHLY_REVENUE: AreaChartPresentation = {
+  type: 'area-chart',
+  title: 'Monthly Revenue vs Expenses',
+  description: 'Jan–Jun 2026 · All figures in USD',
+  xKey: 'month',
+  series: [
+    { dataKey: 'revenue', label: 'Revenue' },
+    { dataKey: 'expenses', label: 'Expenses' },
+  ],
+  data: [
+    { month: 'Jan', revenue: 142000, expenses: 98000 },
+    { month: 'Feb', revenue: 165000, expenses: 104000 },
+    { month: 'Mar', revenue: 189000, expenses: 112000 },
+    { month: 'Apr', revenue: 174000, expenses: 107000 },
+    { month: 'May', revenue: 213000, expenses: 121000 },
+    { month: 'Jun', revenue: 228000, expenses: 135000 },
+  ],
+  height: 300,
+  curved: true,
+  fillOpacity: 0.25,
+};
+
+const AREA_STACKED: AreaChartPresentation = {
+  type: 'area-chart',
+  title: 'Support Tickets by Channel',
+  description: 'Stacked — shows total volume',
+  xKey: 'week',
+  series: [
+    { dataKey: 'email', label: 'Email' },
+    { dataKey: 'chat', label: 'Live Chat' },
+    { dataKey: 'phone', label: 'Phone' },
+  ],
+  data: [
+    { week: 'W1', email: 85, chat: 62, phone: 31 },
+    { week: 'W2', email: 92, chat: 71, phone: 28 },
+    { week: 'W3', email: 78, chat: 65, phone: 35 },
+    { week: 'W4', email: 105, chat: 80, phone: 42 },
+    { week: 'W5', email: 98, chat: 74, phone: 38 },
+    { week: 'W6', email: 112, chat: 88, phone: 45 },
+  ],
+  stacked: true,
+  fillOpacity: 0.6,
+  height: 300,
+};
+
+const AREA_SINGLE_SERIES: AreaChartPresentation = {
+  type: 'area-chart',
+  title: 'Weekly Active Users',
+  xKey: 'week',
+  series: [{ dataKey: 'users', label: 'Active Users' }],
+  data: [
+    { week: 'W1', users: 4820 },
+    { week: 'W2', users: 5340 },
+    { week: 'W3', users: 5010 },
+    { week: 'W4', users: 5870 },
+    { week: 'W5', users: 6240 },
+    { week: 'W6', users: 6810 },
+    { week: 'W7', users: 7150 },
+    { week: 'W8', users: 7640 },
+  ],
+  height: 260,
+  showLegend: false,
+};
+
+PRIMITIVE_DEMOS['area-chart'] = {
+  primitive: 'area-chart',
+  contractType: AREA_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Revenue vs Expenses', description: 'Two-series area with fill opacity', props: AREA_MONTHLY_REVENUE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Stacked channels', description: 'Three stacked areas', props: AREA_STACKED as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Single series', description: 'User growth trend', props: AREA_SINGLE_SERIES as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// Bar chart scenarios
+
+const BAR_QUARTERLY_SALES: BarChartPresentation = {
+  type: 'bar-chart',
+  title: 'Quarterly Sales by Region',
+  description: 'FY 2026 · USD millions',
+  xKey: 'quarter',
+  series: [
+    { dataKey: 'north', label: 'North America' },
+    { dataKey: 'europe', label: 'Europe' },
+    { dataKey: 'apac', label: 'APAC' },
+  ],
+  data: [
+    { quarter: 'Q1', north: 4.2, europe: 2.8, apac: 1.9 },
+    { quarter: 'Q2', north: 4.8, europe: 3.1, apac: 2.3 },
+    { quarter: 'Q3', north: 5.1, europe: 3.4, apac: 2.7 },
+    { quarter: 'Q4', north: 6.0, europe: 4.0, apac: 3.2 },
+  ],
+  radius: 4,
+  height: 300,
+};
+
+const BAR_HORIZONTAL: BarChartPresentation = {
+  type: 'bar-chart',
+  title: 'Pipeline by Stage',
+  description: 'Deals currently in each stage',
+  xKey: 'stage',
+  series: [{ dataKey: 'deals', label: 'Deals' }],
+  data: [
+    { stage: 'Lead', deals: 148 },
+    { stage: 'Qualified', deals: 93 },
+    { stage: 'Proposal', deals: 61 },
+    { stage: 'Negotiation', deals: 34 },
+    { stage: 'Closed Won', deals: 22 },
+  ],
+  layout: 'vertical',
+  height: 300,
+  showLegend: false,
+  radius: 4,
+};
+
+const BAR_STACKED: BarChartPresentation = {
+  type: 'bar-chart',
+  title: 'Headcount by Department',
+  description: 'FTE vs contractors',
+  xKey: 'dept',
+  series: [
+    { dataKey: 'fte', label: 'Full-time' },
+    { dataKey: 'contract', label: 'Contractors' },
+  ],
+  data: [
+    { dept: 'Engineering', fte: 42, contract: 12 },
+    { dept: 'Sales', fte: 28, contract: 4 },
+    { dept: 'Marketing', fte: 16, contract: 6 },
+    { dept: 'Ops', fte: 11, contract: 2 },
+    { dept: 'Finance', fte: 8, contract: 1 },
+  ],
+  stacked: true,
+  height: 300,
+};
+
+PRIMITIVE_DEMOS['bar-chart'] = {
+  primitive: 'bar-chart',
+  contractType: BAR_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Quarterly by region', description: 'Grouped bars, 3 series', props: BAR_QUARTERLY_SALES as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Horizontal pipeline', description: 'Vertical layout, single series', props: BAR_HORIZONTAL as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Stacked headcount', description: 'FTE vs contractors', props: BAR_STACKED as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// Line chart scenarios
+
+const LINE_WEEKLY_USERS: LineChartPresentation = {
+  type: 'line-chart',
+  title: 'Weekly Active Users',
+  description: 'Last 8 weeks · mobile, web, API',
+  xKey: 'week',
+  series: [
+    { dataKey: 'mobile', label: 'Mobile' },
+    { dataKey: 'web', label: 'Web' },
+    { dataKey: 'api', label: 'API' },
+  ],
+  data: [
+    { week: 'W1', mobile: 3200, web: 4800, api: 1100 },
+    { week: 'W2', mobile: 3450, web: 5100, api: 1250 },
+    { week: 'W3', mobile: 3600, web: 4900, api: 1380 },
+    { week: 'W4', mobile: 3900, web: 5400, api: 1420 },
+    { week: 'W5', mobile: 4100, web: 5700, api: 1560 },
+    { week: 'W6', mobile: 4350, web: 6000, api: 1700 },
+    { week: 'W7', mobile: 4600, web: 6200, api: 1820 },
+    { week: 'W8', mobile: 4900, web: 6500, api: 1950 },
+  ],
+  height: 300,
+};
+
+const LINE_SINGLE_WITH_DOTS: LineChartPresentation = {
+  type: 'line-chart',
+  title: 'Average Response Time',
+  description: 'API p95 latency · ms',
+  xKey: 'hour',
+  series: [{ dataKey: 'p95', label: 'p95 latency (ms)' }],
+  data: [
+    { hour: '00:00', p95: 142 },
+    { hour: '04:00', p95: 118 },
+    { hour: '08:00', p95: 195 },
+    { hour: '12:00', p95: 228 },
+    { hour: '16:00', p95: 214 },
+    { hour: '20:00', p95: 176 },
+    { hour: '23:59', p95: 148 },
+  ],
+  showDots: true,
+  height: 260,
+  showLegend: false,
+};
+
+const LINE_STRAIGHT: LineChartPresentation = {
+  type: 'line-chart',
+  title: 'Monthly NPS Score',
+  xKey: 'month',
+  series: [{ dataKey: 'nps', label: 'NPS' }],
+  data: [
+    { month: 'Jan', nps: 42 },
+    { month: 'Feb', nps: 45 },
+    { month: 'Mar', nps: 41 },
+    { month: 'Apr', nps: 48 },
+    { month: 'May', nps: 52 },
+    { month: 'Jun', nps: 55 },
+  ],
+  curved: false,
+  showDots: true,
+  strokeWidth: 2,
+  height: 260,
+  showLegend: false,
+};
+
+PRIMITIVE_DEMOS['line-chart'] = {
+  primitive: 'line-chart',
+  contractType: LINE_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Weekly active users', description: 'Multi-series, smooth curves', props: LINE_WEEKLY_USERS as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'API latency', description: 'Single series with dots', props: LINE_SINGLE_WITH_DOTS as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'NPS trend', description: 'Straight lines with dots', props: LINE_STRAIGHT as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// Pie chart scenarios
+
+const PIE_MARKET_SHARE: PieChartPresentation = {
+  type: 'pie-chart',
+  title: 'Revenue by Product Line',
+  description: 'FY 2026 · % of total revenue',
+  data: [
+    { label: 'Enterprise', value: 48 },
+    { label: 'Professional', value: 27 },
+    { label: 'Starter', value: 14 },
+    { label: 'Add-ons', value: 7 },
+    { label: 'Services', value: 4 },
+  ],
+  height: 320,
+};
+
+const PIE_DONUT: PieChartPresentation = {
+  type: 'pie-chart',
+  title: 'Support Ticket Status',
+  description: 'Open tickets by current state',
+  data: [
+    { label: 'Open', value: 142 },
+    { label: 'In Progress', value: 87 },
+    { label: 'Waiting', value: 53 },
+    { label: 'Resolved', value: 218 },
+  ],
+  innerRadius: 60,
+  height: 320,
+};
+
+const PIE_WITH_LABELS: PieChartPresentation = {
+  type: 'pie-chart',
+  title: 'Traffic Sources',
+  data: [
+    { label: 'Organic', value: 41 },
+    { label: 'Direct', value: 24 },
+    { label: 'Referral', value: 19 },
+    { label: 'Paid', value: 16 },
+  ],
+  showLabels: true,
+  legendPosition: 'right',
+  height: 300,
+};
+
+PRIMITIVE_DEMOS['pie-chart'] = {
+  primitive: 'pie-chart',
+  contractType: PIE_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Market share', description: '5-segment pie chart', props: PIE_MARKET_SHARE as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Donut status', description: 'Donut with innerRadius 60', props: PIE_DONUT as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'With labels', description: 'Slice labels + right legend', props: PIE_WITH_LABELS as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// Radar chart scenarios
+
+const RADAR_TEAM_SKILLS: RadarChartPresentation = {
+  type: 'radar-chart',
+  title: 'Team Competency Map',
+  description: 'Engineering · Design · Product',
+  data: [
+    { subject: 'Frontend', engineering: 90, design: 75, product: 60 },
+    { subject: 'Backend', engineering: 85, design: 40, product: 55 },
+    { subject: 'Security', engineering: 80, design: 35, product: 50 },
+    { subject: 'Data', engineering: 70, design: 45, product: 65 },
+    { subject: 'Mobile', engineering: 65, design: 80, product: 58 },
+    { subject: 'Leadership', engineering: 60, design: 70, product: 88 },
+  ],
+  series: [
+    { dataKey: 'engineering', label: 'Engineering' },
+    { dataKey: 'design', label: 'Design' },
+    { dataKey: 'product', label: 'Product' },
+  ],
+  fillOpacity: 0.2,
+  height: 340,
+};
+
+const RADAR_PRODUCT_FEATURES: RadarChartPresentation = {
+  type: 'radar-chart',
+  title: 'Product Feature Coverage',
+  description: 'v2 vs v3 feature completeness',
+  data: [
+    { subject: 'Auth', v2: 95, v3: 100 },
+    { subject: 'Reporting', v2: 60, v3: 85 },
+    { subject: 'API', v2: 80, v3: 95 },
+    { subject: 'Mobile', v2: 45, v3: 78 },
+    { subject: 'Integrations', v2: 70, v3: 90 },
+    { subject: 'Analytics', v2: 55, v3: 80 },
+  ],
+  series: [
+    { dataKey: 'v2', label: 'v2.x' },
+    { dataKey: 'v3', label: 'v3.x' },
+  ],
+  fillOpacity: 0.25,
+  height: 320,
+};
+
+PRIMITIVE_DEMOS['radar-chart'] = {
+  primitive: 'radar-chart',
+  contractType: RADAR_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'Team competencies', description: '3-series skill radar', props: RADAR_TEAM_SKILLS as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Feature coverage', description: 'v2 vs v3 comparison', props: RADAR_PRODUCT_FEATURES as unknown as Record<string, unknown>, runtime: {} },
+  ],
+};
+
+// Radial chart scenarios
+
+const RADIAL_KPI_PROGRESS: RadialChartPresentation = {
+  type: 'radial-chart',
+  title: 'Q2 OKR Progress',
+  description: 'Key result achievement (% of target)',
+  data: [
+    { label: 'Revenue', value: 78 },
+    { label: 'NPS', value: 91 },
+    { label: 'Churn Rate', value: 64 },
+    { label: 'New Logos', value: 55 },
+  ],
+  innerRadius: 30,
+  outerRadius: 100,
+  height: 340,
+};
+
+const RADIAL_SINGLE_GAUGE: RadialChartPresentation = {
+  type: 'radial-chart',
+  title: 'Platform Uptime',
+  description: 'Rolling 30-day SLA target: 99.9%',
+  data: [{ label: 'Uptime', value: 99 }],
+  innerRadius: 50,
+  outerRadius: 110,
+  height: 280,
+};
+
+PRIMITIVE_DEMOS['radial-chart'] = {
+  primitive: 'radial-chart',
+  contractType: RADIAL_CHART_CONTRACT_TYPE,
+  scenarios: [
+    { label: 'OKR progress', description: '4 arcs — Q2 key results', props: RADIAL_KPI_PROGRESS as unknown as Record<string, unknown>, runtime: {} },
+    { label: 'Uptime gauge', description: 'Single arc — 99% SLA', props: RADIAL_SINGLE_GAUGE as unknown as Record<string, unknown>, runtime: {} },
   ],
 };
 

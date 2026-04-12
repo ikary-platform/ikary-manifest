@@ -40,4 +40,10 @@ export const PRIMITIVE_CATEGORIES: Record<string, PrimitiveCatalogEntry['categor
   avatar: 'data',
   breadcrumb: 'navigation',
   card: 'layout',
+  'area-chart': 'charts',
+  'bar-chart': 'charts',
+  'line-chart': 'charts',
+  'pie-chart': 'charts',
+  'radar-chart': 'charts',
+  'radial-chart': 'charts',
 };

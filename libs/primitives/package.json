@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts src/registry.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external lucide-react --external @tanstack/react-query --external @radix-ui/react-tabs --external @radix-ui/react-popover --external react-day-picker --external date-fns",
+    "build": "tsup src/index.ts src/registry.ts --format cjs,esm --dts --clean --external react --external react-dom --external react-router-dom --external @ikary/contract --external @ikary/presentation --external lucide-react --external @tanstack/react-query --external @radix-ui/react-tabs --external @radix-ui/react-popover --external react-day-picker --external date-fns --external recharts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -35,6 +35,7 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^1.8.0",
     "react-day-picker": "^9.14.0",
+    "recharts": "^2.15.0",
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {

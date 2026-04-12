@@ -417,5 +417,36 @@ export { buildEntityCreatePresentation } from './primitives/form';
 export { useFormRuntime, type UseFormRuntimeOptions, type UseFormRuntimeResult } from './primitives/form';
 export type { IkaryFormResolverRuntime } from './primitives/form';
 
+// Chart primitives
+export { AreaChart } from './primitives/area-chart/AreaChart';
+export { buildAreaChartViewModel } from './primitives/area-chart/AreaChart.adapter';
+export { resolveAreaChart } from './primitives/area-chart/AreaChart.resolver';
+export type { AreaChartViewProps, AreaChartSeriesView } from './primitives/area-chart/AreaChart.types';
+
+export { BarChart } from './primitives/bar-chart/BarChart';
+export { buildBarChartViewModel } from './primitives/bar-chart/BarChart.adapter';
+export { resolveBarChart } from './primitives/bar-chart/BarChart.resolver';
+export type { BarChartViewProps, BarChartSeriesView } from './primitives/bar-chart/BarChart.types';
+
+export { LineChart } from './primitives/line-chart/LineChart';
+export { buildLineChartViewModel } from './primitives/line-chart/LineChart.adapter';
+export { resolveLineChart } from './primitives/line-chart/LineChart.resolver';
+export type { LineChartViewProps, LineChartSeriesView } from './primitives/line-chart/LineChart.types';
+
+export { PieChart } from './primitives/pie-chart/PieChart';
+export { buildPieChartViewModel } from './primitives/pie-chart/PieChart.adapter';
+export { resolvePieChart } from './primitives/pie-chart/PieChart.resolver';
+export type { PieChartViewProps, PieChartSliceView } from './primitives/pie-chart/PieChart.types';
+
+export { RadarChart } from './primitives/radar-chart/RadarChart';
+export { buildRadarChartViewModel } from './primitives/radar-chart/RadarChart.adapter';
+export { resolveRadarChart } from './primitives/radar-chart/RadarChart.resolver';
+export type { RadarChartViewProps, RadarChartSeriesView } from './primitives/radar-chart/RadarChart.types';
+
+export { RadialChart } from './primitives/radial-chart/RadialChart';
+export { buildRadialChartViewModel } from './primitives/radial-chart/RadialChart.adapter';
+export { resolveRadialChart } from './primitives/radial-chart/RadialChart.resolver';
+export type { RadialChartViewProps, RadialChartBarView } from './primitives/radial-chart/RadialChart.types';
+
 // Shell components (CellAppShell, CellTopBar, CellRuntimeProvider) are provided
 // by the enterprise @ikary/cell-shell package — not included in the open-source runtime.

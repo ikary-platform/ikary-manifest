@@ -1,4 +1,10 @@
 import {
+  AreaChartPresentationSchema,
+  BarChartPresentationSchema,
+  LineChartPresentationSchema,
+  PieChartPresentationSchema,
+  RadarChartPresentationSchema,
+  RadialChartPresentationSchema,
   ActivityFeedPresentationSchema,
   BulkCommandBarPresentationSchema,
   CardListPresentationSchema,
@@ -80,4 +86,10 @@ export const SCHEMA_BY_CONTRACT_TYPE: Record<string, ZodTypeAny> = {
   avatar: AvatarPresentationSchema,
   breadcrumb: BreadcrumbPresentationSchema,
   card: CardPresentationSchema,
+  'area-chart': AreaChartPresentationSchema,
+  'bar-chart': BarChartPresentationSchema,
+  'line-chart': LineChartPresentationSchema,
+  'pie-chart': PieChartPresentationSchema,
+  'radar-chart': RadarChartPresentationSchema,
+  'radial-chart': RadialChartPresentationSchema,
 };
