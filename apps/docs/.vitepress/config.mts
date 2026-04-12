@@ -27,6 +27,19 @@ export default defineConfig({
   ignoreDeadLinks: [/^http:\/\/localhost/],
 
   head: [
+    [
+      'script',
+      {},
+      `(function () {
+  var pathname = window.location.pathname || '';
+  if (!pathname.startsWith('/playground/') || pathname === '/playground/') return;
+
+  var route = pathname.slice('/playground'.length);
+  var targetRoute = route + (window.location.search || '') + (window.location.hash || '');
+  var encodedRoute = encodeURIComponent(targetRoute);
+  window.location.replace('/playground/?__ikary_playground_route=' + encodedRoute);
+})();`,
+    ],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/brand/original-symbol.svg' }],
     ['meta', { name: 'theme-color', content: '#0a1329' }],
@@ -124,26 +137,46 @@ export default defineConfig({
     siteTitle: false,
 
     nav: [
-      { text: 'Tutorials', link: '/tutorials/start-here-10-minutes' },
-      { text: 'How-to', link: '/how-to/troubleshoot-local-stack' },
-      { text: 'CLI', link: '/cli/' },
-      { text: 'API', link: '/api/' },
-      { text: 'Reference', link: '/reference/entity-definition' },
-      { text: 'Explanation', link: '/guide/why-ikary-manifest' },
-      { text: 'SDKs', link: '/sdks/' },
-      { text: 'Deployment', link: '/deployment' },
-      { text: 'Releases', link: '/release-notes' },
-      { text: 'Packages', link: '/packages/overview' },
-      { text: 'Playground', link: '/playground' },
       {
-        text: `v${CLI_VERSION}`,
-        link: 'https://www.npmjs.com/package/@ikary/cli',
-        target: '_blank',
+        text: 'Getting Started',
+        items: [
+          { text: 'Start Here In 10 Minutes', link: '/tutorials/start-here-10-minutes' },
+          { text: 'How-to Guides', link: '/how-to/troubleshoot-local-stack' },
+          { text: 'CLI Reference', link: '/cli/' },
+        ],
       },
       {
-        text: 'ikary.co',
-        link: 'https://ikary.co',
-        target: '_blank',
+        text: 'Docs',
+        items: [
+          { text: 'Why IKARY Manifest', link: '/guide/why-ikary-manifest' },
+          { text: 'API And MCP', link: '/api/' },
+          { text: 'Reference', link: '/reference/entity-definition' },
+        ],
+      },
+      {
+        text: 'Platform',
+        items: [
+          { text: 'SDKs', link: '/sdks/' },
+          { text: 'Deployment', link: '/deployment' },
+          { text: 'Packages', link: '/packages/overview' },
+          { text: 'Release Notes', link: '/release-notes' },
+        ],
+      },
+      { text: 'Playground', link: '/playground' },
+      {
+        text: 'More',
+        items: [
+          {
+            text: `CLI v${CLI_VERSION} On npm`,
+            link: 'https://www.npmjs.com/package/@ikary/cli',
+            target: '_blank',
+          },
+          {
+            text: 'ikary.co',
+            link: 'https://ikary.co',
+            target: '_blank',
+          },
+        ],
       },
     ],
 
