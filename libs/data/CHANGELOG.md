@@ -1,5 +1,13 @@
 # @ikary/data
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [4cca3dd]
+  - @ikary/presentation@0.2.0
+  - @ikary/primitives@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes
