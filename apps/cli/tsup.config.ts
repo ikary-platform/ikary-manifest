@@ -14,7 +14,7 @@ function copyRendererBundle(): void {
     copyFileSync(src, dest);
     console.log('[cli] Copied renderer.iife.js →', dest);
   } else {
-    console.warn('[cli] renderer.iife.js not found — run pnpm --filter @ikary/renderer build:standalone first');
+    console.warn('[cli] renderer.iife.js not found — run pnpm --filter @ikary/cell-renderer build:standalone first');
   }
 }
 
@@ -25,9 +25,9 @@ export default defineConfig([
     clean: true,
     banner: { js: '#!/usr/bin/env node' },
     noExternal: [
-      '@ikary/contract',
-      '@ikary/engine',
-      '@ikary/loader',
+      '@ikary/cell-contract',
+      '@ikary/cell-engine',
+      '@ikary/cell-loader',
     ],
     define: {
       'process.env.CLI_VERSION': JSON.stringify(pkg.version),
@@ -39,9 +39,9 @@ export default defineConfig([
     format: ['esm', 'cjs'],
     dts: true,
     noExternal: [
-      '@ikary/contract',
-      '@ikary/engine',
-      '@ikary/loader',
+      '@ikary/cell-contract',
+      '@ikary/cell-engine',
+      '@ikary/cell-loader',
     ],
   },
 ]);

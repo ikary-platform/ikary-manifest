@@ -3,7 +3,7 @@ import { existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { Global, Module } from '@nestjs/common';
 import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
-import { MigrationRunner } from '@ikary/cell-migration-core';
+import { MigrationRunner } from '@ikary/system-migration-core';
 
 const _require = createRequire(import.meta.url ?? `file://${process.cwd()}/`);
 

@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
 import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
-import { MigrationRunner } from '@ikary/cell-migration-core';
+import { MigrationRunner } from '@ikary/system-migration-core';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 

@@ -15,9 +15,9 @@ import {
   AuditService,
 } from '@ikary/cell-runtime-core';
 import { DatabaseService } from '@ikary/system-db-core';
-import { MigrationRunner } from '@ikary/cell-migration-core';
-import { loadManifestFromFile } from '@ikary/loader';
-import { compileCellApp, isValidationResult } from '@ikary/engine';
+import { MigrationRunner } from '@ikary/system-migration-core';
+import { loadManifestFromFile } from '@ikary/cell-loader';
+import { compileCellApp, isValidationResult } from '@ikary/cell-engine';
 import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
 import {
   AuthModule,

@@ -242,4 +242,4 @@ Server validators are never sent to the browser. Set `clientSafe: false` on any 
 
 When the renderer derives a create or edit form, it calls `buildCreateZodSchema(fields)`. That function reads each field's `effectiveFieldRules` and builds a `z.ZodObject` matching the rules declared in the manifest. The Zod schema is passed to React Hook Form via `zodResolver`, so inline form validation is driven directly by the manifest.
 
-See `libs/renderer/src/form/schema/build-create-zod-schema.ts` for the mapping from rule types to Zod chains.
+See `libs/cell-renderer/src/form/schema/build-create-zod-schema.ts` for the mapping from rule types to Zod chains.

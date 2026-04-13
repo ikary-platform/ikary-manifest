@@ -1,6 +1,6 @@
 import type { DatabaseService } from '@ikary/system-db-core';
 import { sql } from '@ikary/system-db-core';
-import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
+import type { CellManifestV1, EntityDefinition } from '@ikary/cell-contract';
 import type { CellRuntimeDatabase } from '../db/schema.js';
 import type { FieldType } from '../shared/field-type.schema.js';
 

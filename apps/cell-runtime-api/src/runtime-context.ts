@@ -1,5 +1,5 @@
 import type { DatabaseService } from '@ikary/system-db-core';
-import type { CellManifestV1 } from '@ikary/contract';
+import type { CellManifestV1 } from '@ikary/cell-contract';
 import type { CellRuntimeDatabase } from '@ikary/cell-runtime-core';
 import type { SystemLogDatabaseSchema } from '@ikary/system-log-core/server';
 

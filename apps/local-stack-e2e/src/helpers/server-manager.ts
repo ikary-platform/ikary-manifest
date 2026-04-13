@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 const REPO_ROOT = resolve(__dirname, '../../../..');
 
 const API_SERVER_PATH = join(REPO_ROOT, 'apps/cell-runtime-api/dist/main.js');
-const PREVIEW_SERVER_PATH = join(REPO_ROOT, 'apps/preview-server/server.mjs');
+const PREVIEW_SERVER_PATH = join(REPO_ROOT, 'apps/cell-preview-server/server.mjs');
 
 const API_PORT = 4511;
 const PREVIEW_PORT = 4510;

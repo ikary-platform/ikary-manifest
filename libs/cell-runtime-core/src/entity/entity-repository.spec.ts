@@ -4,7 +4,7 @@ import { EntitySchemaManager } from './entity-schema-manager.js';
 import { EntityRepository } from './entity-repository.js';
 import { EntityNotFoundError, VersionConflictError } from '../errors.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
-import type { CellManifestV1 } from '@ikary/contract';
+import type { CellManifestV1 } from '@ikary/cell-contract';
 
 const MANIFEST = {
   spec: {

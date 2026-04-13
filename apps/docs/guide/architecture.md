@@ -14,7 +14,7 @@ The schema layer is language-neutral YAML manifests and JSON Schema definitions 
 
 ### Contract layer
 
-The contract layer consists of packages that load, parse, and validate manifests. TypeScript uses `@ikary/contract` with Zod-based validation.
+The contract layer consists of packages that load, parse, and validate manifests. TypeScript uses `@ikary/cell-contract` with Zod-based validation.
 
 The contract layer owns all validation: structural checks (types, required fields, pattern matching) and semantic checks (unique keys, valid cross-references, lifecycle consistency). It produces a typed, validated manifest ready for compilation.
 
@@ -43,10 +43,10 @@ flowchart TD
 
 ### Step by step
 
-1. **Load**: `@ikary/loader` reads a `.yaml` or `.json` file and parses it into a plain JS object. No validation yet.
-2. **Structural validation**: `@ikary/contract`'s `parseManifest()` runs Zod's `safeParse`. This catches type mismatches, missing required fields, and invalid enum values. The result is a typed `CellManifestV1` object.
+1. **Load**: `@ikary/cell-loader` reads a `.yaml` or `.json` file and parses it into a plain JS object. No validation yet.
+2. **Structural validation**: `@ikary/cell-contract`'s `parseManifest()` runs Zod's `safeParse`. This catches type mismatches, missing required fields, and invalid enum values. The result is a typed `CellManifestV1` object.
 3. **Semantic validation**: `validateManifestSemantics()` checks business rules that Zod cannot express: unique entity keys, valid lifecycle transitions, relation consistency, page-entity bindings, and navigation references.
-4. **Compilation**: `@ikary/engine`'s `compileCellApp()` normalizes the manifest, derives form fields, builds scope registries, and returns a runtime-ready manifest.
+4. **Compilation**: `@ikary/cell-engine`'s `compileCellApp()` normalizes the manifest, derives form fields, builds scope registries, and returns a runtime-ready manifest.
 
 ### Why loader and contract are separate
 

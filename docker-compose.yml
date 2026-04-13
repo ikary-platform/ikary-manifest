@@ -64,7 +64,7 @@ services:
   preview-server:
     build:
       context: .
-      dockerfile: apps/preview-server/Dockerfile
+      dockerfile: apps/cell-preview-server/Dockerfile
     ports:
       - "4500:4500"
     volumes:

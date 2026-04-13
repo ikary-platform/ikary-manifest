@@ -9,8 +9,8 @@ import {
   PrimitiveContractSchema,
   scaffoldPrimitiveFiles,
   toPascalCase,
-} from '@ikary/primitive-contract';
-import type { PrimitiveContract } from '@ikary/primitive-contract';
+} from '@ikary/cell-primitive-contract';
+import type { PrimitiveContract } from '@ikary/cell-primitive-contract';
 
 export interface ExampleEntry {
   key: string;

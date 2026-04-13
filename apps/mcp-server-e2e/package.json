@@ -1,6 +1,6 @@
 {
   "name": "@ikary/mcp-server-e2e",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "private": true,
   "description": "End-to-end tests for the IKARY MCP server and REST API",
   "type": "module",

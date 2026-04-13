@@ -1,6 +1,6 @@
 {
   "name": "@ikary/mcp-server",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "description": "IKARY Manifest public MCP server and REST API — contract intelligence for AI agents",
   "scripts": {
@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
-    "@ikary/cell-migration-core": "workspace:*",
-    "@ikary/primitive-contract": "workspace:*",
+    "@ikary/system-migration-core": "workspace:*",
+    "@ikary/cell-primitive-contract": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
     "yaml": "^2.7.0",
     "@ikary/system-log-core": "workspace:*",
@@ -29,9 +29,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ikary/contract": "workspace:*",
-    "@ikary/engine": "workspace:*",
-    "@ikary/loader": "workspace:*",
+    "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
+    "@ikary/cell-loader": "workspace:*",
     "@swc/core": "^1.15.24",
     "@types/express": "^5.0.0",
     "tsup": "^8.0.2",

@@ -3,10 +3,10 @@ import {
   validateManifest,
   EntityDefinitionSchema,
   validateSingleEntitySemantics,
-} from '@ikary/contract';
-import type { ValidationError } from '@ikary/contract';
+} from '@ikary/cell-contract';
+import type { ValidationError } from '@ikary/cell-contract';
 import { z } from 'zod';
-import { compileCellApp, isValidationResult } from '@ikary/engine';
+import { compileCellApp, isValidationResult } from '@ikary/cell-engine';
 
 export interface ValidationResult {
   valid: boolean;

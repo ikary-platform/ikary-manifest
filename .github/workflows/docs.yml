@@ -6,7 +6,7 @@ on:
   pull_request:
     paths:
       - 'apps/docs/**'
-      - 'apps/playground-app/**'
+      - 'apps/cell-playground/**'
       - '.github/workflows/docs.yml'
       - 'package.json'
       - 'pnpm-lock.yaml'

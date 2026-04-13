@@ -103,4 +103,4 @@ A user denied at the entity level never reaches field-level evaluation.
 
 ## Scope registry
 
-The `deriveEntityScopeRegistry` function in `@ikary/engine` reads the entity definition and returns a flat list of all permission scopes. This list can be used to seed a role-based access control (RBAC) system. The playground's Scope Registry tab shows the derived scopes for any entity.
+The `deriveEntityScopeRegistry` function in `@ikary/cell-engine` reads the entity definition and returns a flat list of all permission scopes. This list can be used to seed a role-based access control (RBAC) system. The playground's Scope Registry tab shows the derived scopes for any entity.

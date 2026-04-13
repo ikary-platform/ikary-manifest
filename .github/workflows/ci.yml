@@ -113,8 +113,8 @@ jobs:
         env:
           TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 
-  coverage-cell-migration-core:
-    name: Coverage — cell-migration-core
+  coverage-system-migration-core:
+    name: Coverage — system-migration-core
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -146,7 +146,7 @@ jobs:
 
       - run: pnpm run build
 
-      - run: pnpm coverage:cell-migration-core
+      - run: pnpm coverage:system-migration-core
         env:
           TEST_DATABASE_URL: postgres://ikary:ikary@localhost:5433/ikary_test
 

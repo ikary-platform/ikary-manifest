@@ -1,6 +1,6 @@
 {
   "name": "@ikary/cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "IKARY Manifest CLI — generate, validate, compile, and preview Cell manifests",
   "license": "MIT",
   "type": "module",
@@ -49,9 +49,9 @@
     "dev": "tsx src/bin/cli.ts"
   },
   "dependencies": {
-    "@ikary/cell-migration-core": "workspace:*",
+    "@ikary/system-migration-core": "workspace:*",
     "@ikary/cell-runtime-core": "workspace:*",
-    "@ikary/primitive-contract": "workspace:*",
+    "@ikary/cell-primitive-contract": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
     "@ikary/system-localization": "workspace:*",
     "boxen": "^8.0.1",
@@ -64,9 +64,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@ikary/contract": "workspace:*",
-    "@ikary/engine": "workspace:*",
-    "@ikary/loader": "workspace:*",
+    "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
+    "@ikary/cell-loader": "workspace:*",
     "@types/prompts": "^2.4.9",
     "tsup": "^8.0.2",
     "tsx": "^4.19.0",

@@ -1,7 +1,7 @@
 ---
-"@ikary/presentation": minor
-"@ikary/primitives": minor
-"@ikary/primitive-studio": patch
+"@ikary/cell-presentation": minor
+"@ikary/cell-primitives": minor
+"@ikary/cell-primitive-studio": patch
 ---
 
 Add Area, Bar, Line, Pie, Radar, and Radial chart primitives

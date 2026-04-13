@@ -5,11 +5,11 @@ WORKDIR /app
 # ── Install dependencies ──
 FROM base AS deps
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
-COPY libs/cell-migration-core/package.json libs/cell-migration-core/package.json
-COPY libs/contract/package.json libs/contract/package.json
-COPY libs/engine/package.json libs/engine/package.json
-COPY libs/loader/package.json libs/loader/package.json
-COPY libs/primitive-contract/package.json libs/primitive-contract/package.json
+COPY libs/system-migration-core/package.json libs/system-migration-core/package.json
+COPY libs/cell-contract/package.json libs/cell-contract/package.json
+COPY libs/cell-engine/package.json libs/cell-engine/package.json
+COPY libs/cell-loader/package.json libs/cell-loader/package.json
+COPY libs/cell-primitive-contract/package.json libs/cell-primitive-contract/package.json
 COPY libs/system-db-core/package.json libs/system-db-core/package.json
 COPY libs/system-log-core/package.json libs/system-log-core/package.json
 COPY apps/mcp-server/package.json apps/mcp-server/package.json
@@ -17,22 +17,22 @@ RUN pnpm install --frozen-lockfile --filter @ikary/mcp-server...
 
 # ── Build ──
 FROM deps AS build
-COPY libs/cell-migration-core/ libs/cell-migration-core/
-COPY libs/contract/ libs/contract/
-COPY libs/engine/ libs/engine/
-COPY libs/loader/ libs/loader/
-COPY libs/primitive-contract/ libs/primitive-contract/
+COPY libs/system-migration-core/ libs/system-migration-core/
+COPY libs/cell-contract/ libs/cell-contract/
+COPY libs/cell-engine/ libs/cell-engine/
+COPY libs/cell-loader/ libs/cell-loader/
+COPY libs/cell-primitive-contract/ libs/cell-primitive-contract/
 COPY libs/system-db-core/ libs/system-db-core/
 COPY libs/system-log-core/ libs/system-log-core/
 COPY apps/mcp-server/ apps/mcp-server/
 COPY manifests/ manifests/
-RUN pnpm --filter @ikary/contract build \
- && pnpm --filter @ikary/engine build \
- && pnpm --filter @ikary/loader build \
- && pnpm --filter @ikary/primitive-contract build \
+RUN pnpm --filter @ikary/cell-contract build \
+ && pnpm --filter @ikary/cell-engine build \
+ && pnpm --filter @ikary/cell-loader build \
+ && pnpm --filter @ikary/cell-primitive-contract build \
  && pnpm --filter @ikary/system-db-core build \
  && pnpm --filter @ikary/system-log-core build \
- && pnpm --filter @ikary/cell-migration-core build \
+ && pnpm --filter @ikary/system-migration-core build \
  && pnpm --filter @ikary/mcp-server build
 
 # ── Production image ──

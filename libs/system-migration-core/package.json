@@ -1,0 +1,40 @@
+{
+  "name": "@ikary/system-migration-core",
+  "version": "0.3.0",
+  "description": "File-based database migration engine for IKARY local stack. Uses PostgreSQL via system-db-core.",
+  "license": "MIT",
+  "type": "module",
+  "microPackageKind": "server",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@ikary/system-db-core": "workspace:*",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ]
+}

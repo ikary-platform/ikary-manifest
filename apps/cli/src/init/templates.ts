@@ -303,8 +303,8 @@ in the browser with mock data — no server needed.
 Contract definitions and example manifests live in the public repository:
 https://github.com/ikary-platform/ikary-manifest
 
-- Schema contracts: \`libs/contract/src/\`
-- Compilation engine: \`libs/engine/src/\`
+- Schema contracts: \`libs/cell-contract/src/\`
+- Compilation engine: \`libs/cell-engine/src/\`
 - Example manifests: \`manifests/examples/\`
 `;
 }

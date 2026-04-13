@@ -1,6 +1,6 @@
 {
   "name": "@ikary/system-db-core",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Shared Kysely-based database foundation for IKARY backend libraries and apps. Uses PostgreSQL via Kysely.",
   "license": "MIT",
   "type": "module",
