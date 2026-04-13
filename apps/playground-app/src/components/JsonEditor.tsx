@@ -10,11 +10,11 @@ export function JsonEditor({ value, onChange, error }: JsonEditorProps) {
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 resize-none p-3 font-mono text-xs bg-gray-50 text-gray-800 focus:outline-none focus:bg-white transition-colors"
+        className="flex-1 resize-none p-3 font-mono text-xs bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 focus:outline-none focus:bg-white dark:focus:bg-gray-900 transition-colors"
         spellCheck={false}
       />
       {error && (
-        <div className="shrink-0 px-3 py-1.5 bg-red-50 text-red-600 text-xs border-t border-red-200">
+        <div className="shrink-0 px-3 py-1.5 bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 text-xs border-t border-red-200 dark:border-red-800">
           {error}
         </div>
       )}

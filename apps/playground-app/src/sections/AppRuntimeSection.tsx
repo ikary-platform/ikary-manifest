@@ -56,7 +56,7 @@ export function AppRuntimeSection() {
         style={{
           width: '220px',
           flexShrink: 0,
-          borderRight: '1px solid #e2e8f0',
+          borderRight: '1px solid hsl(var(--border))',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -66,7 +66,7 @@ export function AppRuntimeSection() {
         <div
           style={{
             padding: '12px 12px 8px',
-            borderBottom: '1px solid #e2e8f0',
+            borderBottom: '1px solid hsl(var(--border))',
             flexShrink: 0,
           }}
         >
@@ -76,7 +76,7 @@ export function AppRuntimeSection() {
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#64748b',
+              color: 'hsl(var(--muted-foreground))',
             }}
           >
             Manifests
@@ -105,7 +105,7 @@ export function AppRuntimeSection() {
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
-                    color: '#64748b',
+                    color: 'hsl(var(--muted-foreground))',
                     textAlign: 'left',
                   }}
                 >
@@ -126,12 +126,12 @@ export function AppRuntimeSection() {
                         alignItems: 'center',
                         width: '100%',
                         padding: '5px 12px 5px 20px',
-                        background: isSelected ? '#eff6ff' : 'none',
+                        background: isSelected ? 'hsl(var(--accent))' : 'transparent',
                         border: 'none',
                         borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
                         cursor: 'pointer',
                         fontSize: '12px',
-                        color: isSelected ? '#1e40af' : '#374151',
+                        color: isSelected ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
                         textAlign: 'left',
                         fontWeight: isSelected ? 500 : 400,
                       }}
@@ -155,7 +155,7 @@ export function AppRuntimeSection() {
           flexShrink: 0,
           display: 'flex',
           flexDirection: 'column',
-          borderRight: jsonCollapsed ? 'none' : '1px solid #e2e8f0',
+          borderRight: jsonCollapsed ? 'none' : '1px solid hsl(var(--border))',
           transition: 'width 0.2s ease',
           overflow: 'hidden',
         }}
@@ -167,15 +167,15 @@ export function AppRuntimeSection() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '8px 12px',
-            borderBottom: '1px solid #e2e8f0',
-            background: '#f8fafc',
+            borderBottom: '1px solid hsl(var(--border))',
+            background: 'hsl(var(--muted))',
             minWidth: '380px',
           }}
         >
-          <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '6px' }}>
+          <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '6px' }}>
             {activeLabel}
           </span>
-          <span style={{ fontSize: '11px', color: '#94a3b8', whiteSpace: 'nowrap' }}>CellManifestV1</span>
+          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap' }}>CellManifestV1</span>
         </div>
         <div style={{ flex: 1, minWidth: '380px', overflow: 'hidden' }}>
           <JsonEditor value={json} onChange={setJson} error={parseError} />
@@ -190,8 +190,8 @@ export function AppRuntimeSection() {
             display: 'flex',
             alignItems: 'center',
             padding: '8px 12px',
-            borderBottom: '1px solid #e2e8f0',
-            background: '#f8fafc',
+            borderBottom: '1px solid hsl(var(--border))',
+            background: 'hsl(var(--muted))',
             gap: '8px',
           }}
         >
@@ -207,10 +207,10 @@ export function AppRuntimeSection() {
               width: '20px',
               height: '20px',
               borderRadius: '4px',
-              border: '1px solid #e2e8f0',
-              background: '#fff',
+              border: '1px solid hsl(var(--border))',
+              background: 'hsl(var(--background))',
               cursor: 'pointer',
-              color: '#64748b',
+              color: 'hsl(var(--muted-foreground))',
               fontSize: '12px',
               lineHeight: 1,
             }}
@@ -223,12 +223,12 @@ export function AppRuntimeSection() {
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#64748b',
+              color: 'hsl(var(--muted-foreground))',
             }}
           >
             Preview
           </span>
-          <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>
             Select a manifest or edit JSON directly.
           </span>
         </div>
