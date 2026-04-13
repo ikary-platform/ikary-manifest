@@ -49,15 +49,6 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
     }
   })();
 
-  function toggleViewMode() {
-    if (viewMode === 'split') {
-      setViewMode('full');
-      setFullContent('preview');
-    } else {
-      setViewMode('split');
-    }
-  }
-
   const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
 
   return (

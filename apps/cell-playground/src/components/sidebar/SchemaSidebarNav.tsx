@@ -19,7 +19,15 @@ export function SchemaSidebarNav() {
           <button
             key={key}
             onClick={() =>
-              setSearchParams(key === 'schemas' ? {} : { view: key }, { replace: true })
+              setSearchParams(
+                (prev) => {
+                  const next = new URLSearchParams(prev);
+                  if (key === 'schemas') next.delete('view');
+                  else next.set('view', key);
+                  return next;
+                },
+                { replace: true },
+              )
             }
             style={{
               display: 'flex',

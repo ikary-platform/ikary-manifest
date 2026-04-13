@@ -118,7 +118,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
   const [selectedKey, setSelectedKey] = useState<string | null>(initialKey);
 
   useEffect(() => {
-    if (initialKey !== undefined && initialKey !== null) {
+    if (initialKey !== undefined) {
       setSelectedKey(initialKey);
     }
   }, [initialKey]);

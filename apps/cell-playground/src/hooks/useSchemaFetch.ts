@@ -8,6 +8,9 @@ export function useSchemaFetch(url: string | undefined): object | null {
   const [schema, setSchema] = useState<object | null>(null);
 
   useEffect(() => {
+    // Clear stale schema immediately when url is removed or changed
+    setSchema(null);
+
     if (!url) return;
     let cancelled = false;
 
