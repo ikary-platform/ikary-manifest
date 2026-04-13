@@ -24,13 +24,13 @@ const CATEGORIES: Array<SchemaCategory | 'all'> = [
 ];
 
 const CATEGORY_COLORS: Record<SchemaCategory | 'all', string> = {
-  all: 'bg-gray-100 text-gray-600',
-  entity: 'bg-blue-100 text-blue-700',
-  manifest: 'bg-purple-100 text-purple-700',
-  policy: 'bg-amber-100 text-amber-700',
-  presentation: 'bg-green-100 text-green-700',
-  validation: 'bg-red-100 text-red-700',
-  validation_issue: 'bg-orange-100 text-orange-700',
+  all: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400',
+  entity: 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
+  manifest: 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300',
+  policy: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+  presentation: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
+  validation: 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
+  validation_issue: 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300',
 };
 
 const CATEGORY_DESCRIPTIONS: Record<SchemaCategory | 'all', string> = {
@@ -110,7 +110,7 @@ export function ContractsSection() {
   return (
     <div className="flex flex-col h-full">
       {/* View toggle strip */}
-      <div className="shrink-0 flex gap-2 px-4 py-2 border-b border-gray-200 bg-gray-50">
+      <div className="shrink-0 flex gap-2 px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
         {(['schemas', 'dependencies'] as const).map((v) => (
           <button
             key={v}
@@ -118,7 +118,7 @@ export function ContractsSection() {
             className={`px-3 py-1 text-xs font-medium rounded capitalize ${
               sectionView === v
                 ? 'bg-blue-600 text-white'
-                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {v}
@@ -135,17 +135,17 @@ export function ContractsSection() {
       {sectionView === 'schemas' && (
       <div className="flex flex-1 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-72 shrink-0 flex flex-col border-r border-gray-200">
-        <div className="p-3 border-b border-gray-200">
+      <aside className="w-72 shrink-0 flex flex-col border-r border-gray-200 dark:border-gray-700">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search schemas…"
-            className="w-full rounded border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
         </div>
 
-        <div className="flex flex-wrap gap-1 p-2 border-b border-gray-200">
+        <div className="flex flex-wrap gap-1 p-2 border-b border-gray-200 dark:border-gray-700">
           {CATEGORIES.map((c) => (
             <button
               key={c}
@@ -154,7 +154,7 @@ export function ContractsSection() {
               className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
                 category === c
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               {c}
@@ -163,32 +163,32 @@ export function ContractsSection() {
         </div>
 
         {filtered.length === 0 && (
-          <p className="p-4 text-sm text-gray-400">No schemas match.</p>
+          <p className="p-4 text-sm text-gray-400 dark:text-gray-500">No schemas match.</p>
         )}
 
-        <ul className="flex-1 overflow-y-auto divide-y divide-gray-100">
+        <ul className="flex-1 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-800">
           {filtered.map((e) => (
             <li key={e.name}>
               <button
                 onClick={() => setSelected(e)}
-                className={`w-full text-left px-3 py-2.5 transition-colors hover:bg-gray-50 ${
-                  selected.name === e.name ? 'bg-blue-50' : ''
+                className={`w-full text-left px-3 py-2.5 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                  selected.name === e.name ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                 }`}
               >
                 <div
                   className={`text-sm font-medium truncate ${
-                    selected.name === e.name ? 'text-blue-700' : 'text-gray-800'
+                    selected.name === e.name ? 'text-blue-700 dark:text-blue-400' : 'text-gray-800 dark:text-gray-200'
                   }`}
                 >
                   {e.name}
                 </div>
-                <div className="text-xs text-gray-400 mt-0.5">{e.category}</div>
+                <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{e.category}</div>
               </button>
             </li>
           ))}
         </ul>
 
-        <div className="px-3 py-2 border-t border-gray-100 text-xs text-gray-400">
+        <div className="px-3 py-2 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500">
           {filtered.length} of {CELL_SCHEMA_CATALOG.length} schemas
         </div>
       </aside>
@@ -199,7 +199,7 @@ export function ContractsSection() {
         <div className="shrink-0 px-6 pt-6 pb-4">
           <div className="max-w-2xl">
             <div className="flex items-start gap-3">
-              <h2 className="text-xl font-semibold text-gray-900 flex-1">{selected.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex-1">{selected.name}</h2>
               <span
                 title={CATEGORY_DESCRIPTIONS[selected.category]}
                 className={`shrink-0 mt-0.5 inline-block px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide cursor-help ${
@@ -209,19 +209,19 @@ export function ContractsSection() {
                 {selected.category}
               </span>
             </div>
-            <p className="mt-2 text-sm text-gray-700 leading-relaxed">{selected.summary}</p>
+            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{selected.summary}</p>
           </div>
 
           {/* Tab bar */}
-          <div className="mt-4 flex gap-4 border-b border-gray-200">
+          <div className="mt-4 flex gap-4 border-b border-gray-200 dark:border-gray-700">
             {(['documentation', 'metadata'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setDetailTab(t)}
                 className={`pb-2 text-sm font-medium capitalize transition-colors ${
                   detailTab === t
-                    ? 'text-blue-600 border-b-2 border-blue-600'
-                    : 'text-gray-400 hover:text-gray-600'
+                    ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
+                    : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                 }`}
               >
                 {t}
@@ -236,9 +236,9 @@ export function ContractsSection() {
             {detailTab === 'documentation' && (
               <>
                 {selected.docPath ? (
-                  <div className="rounded border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900 overflow-y-auto">
+                  <div className="rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 overflow-y-auto">
                     {docLoading && (
-                      <p className="p-3 text-xs text-gray-400">Loading...</p>
+                      <p className="p-3 text-xs text-gray-400 dark:text-gray-500">Loading...</p>
                     )}
                     {docError && (
                       <p className="p-3 text-xs text-red-500">Failed to load documentation.</p>
@@ -250,7 +250,7 @@ export function ContractsSection() {
                     )}
                   </div>
                 ) : (
-                  <p className="mt-4 text-sm text-gray-400">
+                  <p className="mt-4 text-sm text-gray-400 dark:text-gray-500">
                     No documentation available for this schema.
                   </p>
                 )}
@@ -259,14 +259,14 @@ export function ContractsSection() {
 
             {detailTab === 'metadata' && (
               <>
-                <h3 className="mt-4 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                <h3 className="mt-4 mb-1 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                   Purpose
                 </h3>
-                <p className="text-sm text-gray-700 leading-relaxed">{selected.purpose}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{selected.purpose}</p>
 
                 {selected.references.length > 0 && (
                   <>
-                    <h3 className="mt-6 mb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    <h3 className="mt-6 mb-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       References
                     </h3>
                     <ul className="space-y-1">
@@ -277,7 +277,7 @@ export function ContractsSection() {
                               const found = CELL_SCHEMA_CATALOG.find((e) => e.name === r);
                               if (found) setSelected(found);
                             }}
-                            className="text-sm text-blue-600 font-mono hover:underline text-left"
+                            className="text-sm text-blue-600 dark:text-blue-400 font-mono hover:underline text-left"
                           >
                             {r}
                           </button>
@@ -287,40 +287,40 @@ export function ContractsSection() {
                   </>
                 )}
 
-                <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                   TypeScript Source
                 </h3>
                 <a
                   href={`${GITHUB_BLOB}/libs/cell-contract/${selected.sourcePath}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs text-blue-600 font-mono hover:underline break-all"
+                  className="text-xs text-blue-600 dark:text-blue-400 font-mono hover:underline break-all"
                 >
                   {selected.sourcePath}
                 </a>
 
                 {selected.yamlPath && (
                   <>
-                    <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    <h3 className="mt-6 mb-1 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       YAML Schema
                     </h3>
                     <a
                       href={`${GITHUB_BLOB}/${selected.yamlPath}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-xs text-blue-600 font-mono hover:underline break-all"
+                      className="text-xs text-blue-600 dark:text-blue-400 font-mono hover:underline break-all"
                     >
                       {selected.yamlPath}
                     </a>
-                    <div className="mt-2 rounded border border-gray-200 bg-gray-50 overflow-auto max-h-96">
+                    <div className="mt-2 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 overflow-auto max-h-96">
                       {yamlLoading && (
-                        <p className="p-3 text-xs text-gray-400">Loading…</p>
+                        <p className="p-3 text-xs text-gray-400 dark:text-gray-500">Loading…</p>
                       )}
                       {yamlError && (
                         <p className="p-3 text-xs text-red-500">Failed to load YAML.</p>
                       )}
                       {yamlContent && (
-                        <pre className="p-3 text-xs font-mono text-gray-700 whitespace-pre">{yamlContent}</pre>
+                        <pre className="p-3 text-xs font-mono text-gray-700 dark:text-gray-300 whitespace-pre">{yamlContent}</pre>
                       )}
                     </div>
                   </>

@@ -119,7 +119,7 @@ export function ApiRuntimeSection() {
         style={{
           width: '220px',
           flexShrink: 0,
-          borderRight: '1px solid #e2e8f0',
+          borderRight: '1px solid hsl(var(--border))',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -129,7 +129,7 @@ export function ApiRuntimeSection() {
         <div
           style={{
             padding: '12px 12px 8px',
-            borderBottom: '1px solid #e2e8f0',
+            borderBottom: '1px solid hsl(var(--border))',
             flexShrink: 0,
           }}
         >
@@ -139,7 +139,7 @@ export function ApiRuntimeSection() {
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#64748b',
+              color: 'hsl(var(--muted-foreground))',
             }}
           >
             Entities
@@ -168,7 +168,7 @@ export function ApiRuntimeSection() {
                     fontWeight: 600,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
-                    color: '#64748b',
+                    color: 'hsl(var(--muted-foreground))',
                     textAlign: 'left',
                   }}
                 >
@@ -189,12 +189,12 @@ export function ApiRuntimeSection() {
                         alignItems: 'center',
                         width: '100%',
                         padding: '5px 12px 5px 20px',
-                        background: isSelected ? '#eff6ff' : 'none',
+                        background: isSelected ? 'hsl(var(--accent))' : 'transparent',
                         border: 'none',
                         borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
                         cursor: 'pointer',
                         fontSize: '12px',
-                        color: isSelected ? '#1e40af' : '#374151',
+                        color: isSelected ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
                         textAlign: 'left',
                         fontWeight: isSelected ? 500 : 400,
                       }}
@@ -218,7 +218,7 @@ export function ApiRuntimeSection() {
           flexShrink: 0,
           display: 'flex',
           flexDirection: 'column',
-          borderRight: '1px solid #e2e8f0',
+          borderRight: '1px solid hsl(var(--border))',
         }}
       >
         <div
@@ -228,8 +228,8 @@ export function ApiRuntimeSection() {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '8px 12px',
-            borderBottom: '1px solid #e2e8f0',
-            background: '#f8fafc',
+            borderBottom: '1px solid hsl(var(--border))',
+            background: 'hsl(var(--muted))',
           }}
         >
           <span
@@ -238,12 +238,12 @@ export function ApiRuntimeSection() {
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#64748b',
+              color: 'hsl(var(--muted-foreground))',
             }}
           >
             Entity Definition
           </span>
-          <span style={{ fontSize: '11px', color: '#94a3b8' }}>JSON</span>
+          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>JSON</span>
         </div>
         <JsonEditor value={json} onChange={setJson} error={parseError} />
       </div>
@@ -251,15 +251,15 @@ export function ApiRuntimeSection() {
       {/* ── Right: output tabs ── */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         {/* Tab bar */}
-        <div className="shrink-0 flex border-b border-gray-200 px-2 pt-1 gap-0.5 overflow-x-auto">
+        <div className="shrink-0 flex border-b border-gray-200 dark:border-gray-700 px-2 pt-1 gap-0.5 overflow-x-auto">
           {OUTPUT_TABS.map((t) => (
             <button
               key={t.key}
               onClick={() => setOutputTab(t.key)}
               className={`px-3 py-1.5 text-xs font-medium rounded-t border-b-2 transition-colors whitespace-nowrap ${
                 outputTab === t.key
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
               }`}
             >
               {t.label}
@@ -268,8 +268,8 @@ export function ApiRuntimeSection() {
         </div>
 
         {/* Description */}
-        <div className="shrink-0 px-3 py-2 bg-blue-50 border-b border-blue-100">
-          <p className="text-xs text-blue-700">{currentTab.description}</p>
+        <div className="shrink-0 px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900">
+          <p className="text-xs text-blue-700 dark:text-blue-400">{currentTab.description}</p>
         </div>
 
         {/* Output */}

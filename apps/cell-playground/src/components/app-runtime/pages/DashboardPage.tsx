@@ -253,10 +253,10 @@ function DonutChart({ data }: { data: { label: string; count: number; color: str
         {slices.map((s, i) => (
           <path key={i} d={s.path} fill={s.color} />
         ))}
-        <text x={cx} y={cy - 7} textAnchor="middle" style={{ fontSize: '17px', fontWeight: 700, fill: '#111827' }}>
+        <text x={cx} y={cy - 7} textAnchor="middle" style={{ fontSize: '17px', fontWeight: 700, fill: 'hsl(var(--foreground))' }}>
           {total}
         </text>
-        <text x={cx} y={cy + 9} textAnchor="middle" style={{ fontSize: '9px', fill: '#9ca3af' }}>
+        <text x={cx} y={cy + 9} textAnchor="middle" style={{ fontSize: '9px', fill: 'hsl(var(--muted-foreground))' }}>
           total
         </text>
       </svg>
