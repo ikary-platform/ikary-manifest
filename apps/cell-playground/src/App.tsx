@@ -1,18 +1,25 @@
 import { useState, useEffect } from 'react';
+import { PanelLeft } from 'lucide-react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ContractsSection } from './sections/ContractsSection';
 import { ApiRuntimeSection } from './sections/ApiRuntimeSection';
 import { UIRuntimeSection } from './sections/UIRuntimeSection';
 import { AppRuntimeSection } from './sections/AppRuntimeSection';
+import { ManifestsSidebarList } from './components/sidebar/ManifestsSidebarList';
+import { EntitiesSidebarList } from './components/sidebar/EntitiesSidebarList';
+import { UiRuntimeSidebar } from './components/sidebar/UiRuntimeSidebar';
+import { SchemaSidebarNav } from './components/sidebar/SchemaSidebarNav';
+import type { AppManifestScenario } from './data/app-manifest-loader';
+import type { ApiEntityScenario } from './data/api-sample-entities';
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
 const TABS = [
   { label: 'App Runtime', path: '/app-runtime' },
-  { label: 'Schema', path: '/contracts' },
   { label: 'API Runtime', path: '/api-runtime' },
   { label: 'UI Runtime', path: '/ui-runtime' },
+  { label: 'Schema', path: '/contracts' },
 ] as const;
 
 // Read initial state from the class already applied by the inline <script> in
@@ -35,109 +42,214 @@ export function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Lifted state for AppRuntime sidebar
+  const [appActiveScenario, setAppActiveScenario] = useState(0);
+  const [appCollapsedCats, setAppCollapsedCats] = useState<Set<AppManifestScenario['category']>>(new Set());
+
+  // Lifted state for ApiRuntime sidebar
+  const [apiActiveScenario, setApiActiveScenario] = useState(0);
+  const [apiCollapsedCats, setApiCollapsedCats] = useState<Set<ApiEntityScenario['category']>>(new Set());
+
+  // Global sidebar collapsed state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   return (
     <QueryClientProvider client={qc}>
+      {/* Root: flex-row so sidebar spans full browser height */}
       <div
-        className="flex h-screen flex-col text-[#071230] dark:text-[#f8fafc] bg-white dark:bg-[#081022]"
+        className="flex h-screen text-[#071230] dark:text-[#f8fafc] bg-white dark:bg-[#081022]"
         style={{ fontFamily: "'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif" }}
       >
-        {/* ── Nav bar — 64 px, same as VitePress --vp-nav-height ── */}
-        <header className="ikary-nav shrink-0 h-16 z-10">
-          <div className="flex items-center h-full px-6 gap-2 max-w-none">
 
-            {/* Logo — light / dark variants, height mirrors .VPNavBarTitle .logo */}
-            <a
-              href="https://documentation.ikary.co/"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center shrink-0 mr-4"
-            >
-              <img
-                src="/brand/original-full.svg"
-                alt="IKARY Manifest"
-                className="h-[22px] sm:h-[26px] w-auto block dark:hidden"
-              />
-              <img
-                src="/brand/white-full.svg"
-                alt="IKARY Manifest"
-                className="h-[22px] sm:h-[26px] w-auto hidden dark:block"
-              />
+        {/* ── LEFT GLOBAL SIDEBAR — full browser height ── */}
+        <div
+          style={{
+            width: sidebarCollapsed ? '0' : '220px',
+            flexShrink: 0,
+            overflow: 'hidden',
+            transition: 'width 0.2s ease',
+            borderRight: '1px solid hsl(var(--border))',
+            display: 'flex',
+            flexDirection: 'column',
+            background: 'hsl(var(--background))',
+            zIndex: 10,
+          }}
+        >
+          {/* Logo area — same height as the nav bar on the right */}
+          <div
+            style={{
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 16px',
+              borderBottom: '1px solid hsl(var(--border))',
+              flexShrink: 0,
+            }}
+          >
+            <a href="https://documentation.ikary.co/" target="_blank" rel="noreferrer">
+              <img src="/brand/original-full.svg" alt="IKARY" className="h-[18px] w-auto block dark:hidden" />
+              <img src="/brand/white-full.svg" alt="IKARY" className="h-[18px] w-auto hidden dark:block" />
             </a>
+          </div>
 
-            {/* Tab nav — styled as VitePress nav links */}
-            <nav className="flex items-center h-full mr-auto" aria-label="Playground sections">
-              {TABS.map((t) => (
-                <button
-                  key={t.path}
-                  onClick={() => navigate(t.path)}
-                  className={[
-                    'px-3 h-full flex items-center text-sm font-medium transition-colors outline-none',
-                    location.pathname.startsWith(t.path)
-                      ? 'text-[#1d4ed8] dark:text-[#78afff]'
-                      : 'text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff]',
-                  ].join(' ')}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </nav>
+          {/* Route-specific label */}
+          <div
+            style={{
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 12px',
+              borderBottom: '1px solid hsl(var(--border))',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'hsl(var(--muted-foreground))',
+              }}
+            >
+              {location.pathname.startsWith('/app-runtime') && 'Manifests'}
+              {location.pathname.startsWith('/api-runtime') && 'Entities'}
+              {location.pathname.startsWith('/ui-runtime') && 'Primitives'}
+              {location.pathname.startsWith('/contracts') && 'Schema'}
+            </span>
+          </div>
 
-            {/* External nav links — same style as VitePress external nav items */}
-            <div className="flex items-center h-full ml-2 gap-0">
-              <a
-                href="https://documentation.ikary.co/"
-                target="_blank"
-                rel="noreferrer"
-                className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
-              >
-                Back to documentation
-                <ExternalLinkIcon />
-              </a>
-              <a
-                href="https://ikary.co"
-                target="_blank"
-                rel="noreferrer"
-                className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
-              >
-                ikary.co
-                <ExternalLinkIcon />
-              </a>
-            </div>
+          {/* Route-specific list */}
+          {location.pathname.startsWith('/app-runtime') && (
+            <ManifestsSidebarList
+              activeScenario={appActiveScenario}
+              onSelect={setAppActiveScenario}
+              collapsedCategories={appCollapsedCats}
+              onToggleCategory={(cat) =>
+                setAppCollapsedCats((prev) => {
+                  const n = new Set(prev);
+                  n.has(cat) ? n.delete(cat) : n.add(cat);
+                  return n;
+                })
+              }
+            />
+          )}
+          {location.pathname.startsWith('/api-runtime') && (
+            <EntitiesSidebarList
+              activeScenario={apiActiveScenario}
+              onSelect={setApiActiveScenario}
+              collapsedCategories={apiCollapsedCats}
+              onToggleCategory={(cat) =>
+                setApiCollapsedCats((prev) => {
+                  const n = new Set(prev);
+                  n.has(cat) ? n.delete(cat) : n.add(cat);
+                  return n;
+                })
+              }
+            />
+          )}
+          {location.pathname.startsWith('/ui-runtime') && <UiRuntimeSidebar />}
+          {location.pathname.startsWith('/contracts') && <SchemaSidebarNav />}
+        </div>
 
-            {/* Theme toggle + GitHub — mirroring VitePress nav social / appearance area */}
-            <div className="flex items-center gap-1 ml-1">
+        {/* ── RIGHT COLUMN: nav on top, content below ── */}
+        <div className="flex flex-col flex-1 overflow-hidden min-w-0">
+
+          {/* Top nav bar — same 48px height as sidebar logo area */}
+          <header className="ikary-nav shrink-0 z-10" style={{ height: '48px' }}>
+            <div className="flex items-center h-full px-6 gap-2 max-w-none">
+
+              {/* Sidebar toggle — classic panel button, left of first tab */}
               <button
-                onClick={toggle}
-                aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-                className="w-9 h-9 flex items-center justify-center rounded-md text-[#62708c] dark:text-[#bcc8df] hover:bg-black/5 dark:hover:bg-white/8 transition-colors"
+                onClick={() => setSidebarCollapsed((c) => !c)}
+                aria-label={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+                title={sidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+                className="w-8 h-8 flex items-center justify-center rounded-md mr-1 text-[#62708c] dark:text-[#bcc8df] hover:bg-black/5 dark:hover:bg-white/8 transition-colors"
               >
-                {dark ? <SunIcon /> : <MoonIcon />}
+                <PanelLeft size={18} strokeWidth={1.8} />
               </button>
 
-              <a
-                href="https://github.com/ikary-platform/ikary-manifest"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub repository"
-                className="w-9 h-9 flex items-center justify-center rounded-md text-[#62708c] dark:text-[#bcc8df] hover:bg-black/5 dark:hover:bg-white/8 transition-colors"
-              >
-                <GitHubIcon />
-              </a>
-            </div>
-          </div>
-        </header>
+              <nav className="flex items-center h-full mr-auto" aria-label="Playground sections">
+                {TABS.map((t) => (
+                  <button
+                    key={t.path}
+                    onClick={() => navigate(t.path)}
+                    className={[
+                      'px-3 h-full flex items-center text-sm font-medium transition-colors outline-none',
+                      location.pathname.startsWith(t.path)
+                        ? 'text-[#1d4ed8] dark:text-[#78afff]'
+                        : 'text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff]',
+                    ].join(' ')}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </nav>
 
-        {/* ── Content ── */}
-        <main className="flex-1 overflow-hidden">
-          <Routes>
-            <Route path="/app-runtime" element={<AppRuntimeSection />} />
-            <Route path="/contracts" element={<ContractsSection />} />
-            <Route path="/schema" element={<Navigate to="/contracts" replace />} />
-            <Route path="/api-runtime" element={<ApiRuntimeSection />} />
-            <Route path="/ui-runtime" element={<UIRuntimeSection />} />
-            <Route path="*" element={<Navigate to="/app-runtime" replace />} />
-          </Routes>
-        </main>
+              <div className="flex items-center h-full ml-2 gap-0">
+                <a
+                  href="https://documentation.ikary.co/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
+                >
+                  Back to documentation
+                  <ExternalLinkIcon />
+                </a>
+                <a
+                  href="https://ikary.co"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
+                >
+                  ikary.co
+                  <ExternalLinkIcon />
+                </a>
+              </div>
+
+              <div className="flex items-center gap-1 ml-1">
+                <button
+                  onClick={toggle}
+                  aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+                  className="w-9 h-9 flex items-center justify-center rounded-md text-[#62708c] dark:text-[#bcc8df] hover:bg-black/5 dark:hover:bg-white/8 transition-colors"
+                >
+                  {dark ? <SunIcon /> : <MoonIcon />}
+                </button>
+                <a
+                  href="https://github.com/ikary-platform/ikary-manifest"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub repository"
+                  className="w-9 h-9 flex items-center justify-center rounded-md text-[#62708c] dark:text-[#bcc8df] hover:bg-black/5 dark:hover:bg-white/8 transition-colors"
+                >
+                  <GitHubIcon />
+                </a>
+              </div>
+            </div>
+          </header>
+
+          {/* Section content */}
+          <main className="flex-1 overflow-hidden">
+            <Routes>
+              <Route
+                path="/app-runtime"
+                element={
+                  <AppRuntimeSection activeScenario={appActiveScenario} />
+                }
+              />
+              <Route path="/contracts" element={<ContractsSection />} />
+              <Route path="/schema" element={<Navigate to="/contracts" replace />} />
+              <Route
+                path="/api-runtime"
+                element={
+                  <ApiRuntimeSection activeScenario={apiActiveScenario} />
+                }
+              />
+              <Route path="/ui-runtime" element={<UIRuntimeSection />} />
+              <Route path="*" element={<Navigate to="/app-runtime" replace />} />
+            </Routes>
+          </main>
+        </div>
       </div>
     </QueryClientProvider>
   );
