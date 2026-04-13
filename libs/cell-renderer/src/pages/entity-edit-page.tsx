@@ -4,7 +4,7 @@ import type { FieldError } from 'react-hook-form';
 import type { NavigateFunction } from 'react-router-dom';
 import type { CellManifestV1, PageDefinition } from '@ikary/cell-contract';
 import type { ResolvedCreateField } from '@ikary/cell-engine';
-import { buildEntityDetailPath, buildEntityListPath } from '@ikary/cell-engine';
+import { buildEntityListPath } from '@ikary/cell-engine';
 import { buildCreateZodSchema } from '../form/build-create-zod-schema';
 import { FieldControl } from '../form/field-control';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
