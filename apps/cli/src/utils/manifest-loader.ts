@@ -1,5 +1,5 @@
-import { loadManifestFromFile } from '@ikary/loader';
-import { compileCellApp, isValidationResult } from '@ikary/engine';
+import { loadManifestFromFile } from '@ikary/cell-loader';
+import { compileCellApp, isValidationResult } from '@ikary/cell-engine';
 import { api, withApiFallback } from '../api/index.js';
 import type { ApiValidationResult, ApiNormalizeResult } from '../api/index.js';
 

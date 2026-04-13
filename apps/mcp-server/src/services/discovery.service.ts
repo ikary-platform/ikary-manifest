@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CELL_SCHEMA_CATALOG } from '@ikary/contract';
-import type { SchemaCatalogEntry } from '@ikary/contract';
+import { CELL_SCHEMA_CATALOG } from '@ikary/cell-contract';
+import type { SchemaCatalogEntry } from '@ikary/cell-contract';
 
 export interface SchemaField {
   key: string;

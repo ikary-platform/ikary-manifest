@@ -8,13 +8,13 @@ export default defineConfig([
     clean: true,
     target: 'node20',
     noExternal: [
-      '@ikary/contract',
-      '@ikary/engine',
-      '@ikary/loader',
-      '@ikary/primitive-contract',
+      '@ikary/cell-contract',
+      '@ikary/cell-engine',
+      '@ikary/cell-loader',
+      '@ikary/cell-primitive-contract',
       '@ikary/system-db-core',
       '@ikary/system-log-core',
-      '@ikary/cell-migration-core',
+      '@ikary/system-migration-core',
     ],
     external: [
       '@nestjs/common',
@@ -32,7 +32,7 @@ export default defineConfig([
     entry: ['src/main-stdio.ts'],
     format: ['cjs'],
     target: 'node20',
-    noExternal: ['@ikary/contract', '@ikary/engine', '@ikary/loader', '@ikary/primitive-contract'],
+    noExternal: ['@ikary/cell-contract', '@ikary/cell-engine', '@ikary/cell-loader', '@ikary/cell-primitive-contract'],
     external: ['@modelcontextprotocol/sdk', 'zod'],
   },
 ]);

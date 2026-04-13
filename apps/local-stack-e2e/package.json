@@ -1,6 +1,6 @@
 {
   "name": "@ikary/local-stack-e2e",
-  "version": "0.0.1",
+  "version": "0.3.0",
   "private": true,
   "description": "End-to-end tests for the IKARY local development stack (cell-runtime-api + preview-server)",
   "type": "module",

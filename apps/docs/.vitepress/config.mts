@@ -237,6 +237,7 @@ export default defineConfig({
             { text: 'Runtime UI', link: '/guide/runtime-ui' },
             { text: 'Custom Primitives', link: '/guide/primitives' },
             { text: 'Localization', link: '/guide/localization' },
+            { text: 'Repository Conventions', link: '/guide/repository-conventions' },
           ],
         },
       ],

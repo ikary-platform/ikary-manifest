@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import yaml from 'yaml';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
-import { IkaryPrimitivesConfigSchema, PrimitiveContractSchema } from '@ikary/primitive-contract';
+import { IkaryPrimitivesConfigSchema, PrimitiveContractSchema } from '@ikary/cell-primitive-contract';
 
 export async function primitiveValidateCommand(): Promise<void> {
   const cwd = process.cwd();

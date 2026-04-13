@@ -56,27 +56,112 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
+        version: link:../../libs/cell-contract
+      '@ikary/cell-engine':
         specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/presentation':
+        version: link:../../libs/cell-engine
+      '@ikary/cell-presentation':
         specifier: workspace:*
-        version: link:../../libs/presentation
-      '@ikary/primitive-contract':
+        version: link:../../libs/cell-presentation
+      '@ikary/cell-primitive-studio':
         specifier: workspace:*
-        version: link:../../libs/primitive-contract
-      '@ikary/primitive-studio':
+        version: link:../../libs/cell-primitive-studio
+      '@ikary/cell-primitives':
         specifier: workspace:*
-        version: link:../../libs/primitive-studio
-      '@ikary/primitives':
+        version: link:../../libs/cell-primitives
+      '@ikary/cell-renderer':
         specifier: workspace:*
-        version: link:../../libs/primitives
-      '@ikary/renderer':
+        version: link:../../libs/cell-renderer
+      '@tanstack/react-query':
+        specifier: ^5.0.0
+        version: 5.96.1(react@19.2.4)
+      lucide-react:
+        specifier: ^1.8.0
+        version: 1.8.0(react@19.2.4)
+      react:
+        specifier: ^19.0.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.4(react@19.2.4)
+      react-hook-form:
+        specifier: ^7.53.0
+        version: 7.72.1(react@19.2.4)
+      react-markdown:
+        specifier: ^9.0.0
+        version: 9.1.0(@types/react@19.2.14)(react@19.2.4)
+      react-router-dom:
+        specifier: ^6.30.1
+        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.1
+      yaml:
+        specifier: ^2.7.0
+        version: 2.8.3
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.0
+        version: 0.5.19(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3))
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.27(postcss@8.5.8)
+      postcss:
+        specifier: ^8.5.3
+        version: 8.5.8
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3)
+
+  apps/cell-playground-legacy:
+    dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.9.0
+        version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../../libs/renderer
+        version: link:../../libs/cell-contract
+      '@ikary/cell-engine':
+        specifier: workspace:*
+        version: link:../../libs/cell-engine
+      '@ikary/cell-presentation':
+        specifier: workspace:*
+        version: link:../../libs/cell-presentation
+      '@ikary/cell-primitive-contract':
+        specifier: workspace:*
+        version: link:../../libs/cell-primitive-contract
+      '@ikary/cell-primitive-studio':
+        specifier: workspace:*
+        version: link:../../libs/cell-primitive-studio
+      '@ikary/cell-primitives':
+        specifier: workspace:*
+        version: link:../../libs/cell-primitives
+      '@ikary/cell-renderer':
+        specifier: workspace:*
+        version: link:../../libs/cell-renderer
       '@radix-ui/react-separator':
         specifier: ^1.1.8
         version: 1.1.8(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -131,7 +216,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react':
         specifier: ^4.3.1
-        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3))
+        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.27(postcss@8.5.8)
@@ -149,362 +234,37 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^6.0.0
-        version: 6.4.2(@types/node@22.19.16)(jiti@1.21.7)(tsx@4.21.0)(yaml@2.8.3)
-
-  apps/cell-runtime-api:
-    dependencies:
-      '@ikary/cell-migration-core':
-        specifier: workspace:*
-        version: link:../../libs/cell-migration-core
-      '@ikary/cell-runtime-core':
-        specifier: workspace:*
-        version: link:../../libs/cell-runtime-core
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/loader':
-        specifier: workspace:*
-        version: link:../../libs/loader
-      '@ikary/system-auth':
-        specifier: workspace:*
-        version: link:../../libs/system-auth
-      '@ikary/system-db-core':
-        specifier: workspace:*
-        version: link:../../libs/system-db-core
-      '@ikary/system-log-core':
-        specifier: workspace:*
-        version: link:../../libs/system-log-core
-      '@nestjs/common':
-        specifier: ^11.1.0
-        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core':
-        specifier: ^11.1.0
-        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.18)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/platform-express':
-        specifier: ^11.1.0
-        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)
-      '@nestjs/swagger':
-        specifier: ^11.2.0
-        version: 11.2.6(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)(reflect-metadata@0.2.2)
-      express:
-        specifier: ^5.1.0
-        version: 5.2.1
-      kysely:
-        specifier: ^0.27.0
-        version: 0.27.6
-      pg:
-        specifier: ^8.13.0
-        version: 8.20.0
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
-    devDependencies:
-      '@swc/core':
-        specifier: ^1.15.24
-        version: 1.15.24
-      '@types/express':
-        specifier: ^5.0.0
-        version: 5.0.6
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
-  apps/cli:
-    dependencies:
-      '@ikary/cell-migration-core':
-        specifier: workspace:*
-        version: link:../../libs/cell-migration-core
-      '@ikary/cell-runtime-core':
-        specifier: workspace:*
-        version: link:../../libs/cell-runtime-core
-      '@ikary/primitive-contract':
-        specifier: workspace:*
-        version: link:../../libs/primitive-contract
-      '@ikary/system-db-core':
-        specifier: workspace:*
-        version: link:../../libs/system-db-core
-      '@ikary/system-localization':
-        specifier: workspace:*
-        version: link:../../libs/system-localization
-      boxen:
-        specifier: ^8.0.1
-        version: 8.0.1
-      chalk:
-        specifier: ^5.4.1
-        version: 5.6.2
-      commander:
-        specifier: ^13.0.0
-        version: 13.1.0
-      log-symbols:
-        specifier: ^7.0.0
-        version: 7.0.1
-      ora:
-        specifier: ^8.2.0
-        version: 8.2.0
-      prompts:
-        specifier: ^2.4.2
-        version: 2.4.2
-      yaml:
-        specifier: ^2.7.0
-        version: 2.8.3
-      zod:
-        specifier: ^3.23.8
-        version: 3.25.76
-    devDependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/loader':
-        specifier: workspace:*
-        version: link:../../libs/loader
-      '@types/prompts':
-        specifier: ^2.4.9
-        version: 2.4.9
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
-  apps/ikary:
-    dependencies:
-      '@ikary/cli':
-        specifier: workspace:*
-        version: link:../cli
-
-  apps/local-stack-e2e:
-    devDependencies:
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.39
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
-
-  apps/mcp-server:
-    dependencies:
-      '@ikary/cell-migration-core':
-        specifier: workspace:*
-        version: link:../../libs/cell-migration-core
-      '@ikary/primitive-contract':
-        specifier: workspace:*
-        version: link:../../libs/primitive-contract
-      '@ikary/system-db-core':
-        specifier: workspace:*
-        version: link:../../libs/system-db-core
-      '@ikary/system-log-core':
-        specifier: workspace:*
-        version: link:../../libs/system-log-core
-      '@modelcontextprotocol/sdk':
-        specifier: ^1.12.1
-        version: 1.29.0(zod@3.25.76)
-      '@nestjs/common':
-        specifier: ^11.1.0
-        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/core':
-        specifier: ^11.1.0
-        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.18)(reflect-metadata@0.2.2)(rxjs@7.8.2)
-      '@nestjs/platform-express':
-        specifier: ^11.1.0
-        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)
-      '@nestjs/swagger':
-        specifier: ^11.2.0
-        version: 11.2.6(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)(reflect-metadata@0.2.2)
-      express:
-        specifier: ^5.1.0
-        version: 5.2.1
-      pg:
-        specifier: ^8.13.0
-        version: 8.20.0
-      reflect-metadata:
-        specifier: ^0.2.2
-        version: 0.2.2
-      rxjs:
-        specifier: ^7.8.1
-        version: 7.8.2
-      yaml:
-        specifier: ^2.7.0
-        version: 2.8.3
-      zod:
-        specifier: ^3.23.8
-        version: 3.25.76
-    devDependencies:
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/loader':
-        specifier: workspace:*
-        version: link:../../libs/loader
-      '@swc/core':
-        specifier: ^1.15.24
-        version: 1.15.24
-      '@types/express':
-        specifier: ^5.0.0
-        version: 5.0.6
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
-      tsx:
-        specifier: ^4.19.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-
-  apps/mcp-server-e2e:
-    devDependencies:
-      '@modelcontextprotocol/sdk':
-        specifier: ^1.12.1
-        version: 1.29.0(zod@3.25.76)
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.39
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.0
-        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
-
-  apps/playground-app:
-    dependencies:
-      '@hookform/resolvers':
-        specifier: ^3.9.0
-        version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/presentation':
-        specifier: workspace:*
-        version: link:../../libs/presentation
-      '@ikary/primitive-studio':
-        specifier: workspace:*
-        version: link:../../libs/primitive-studio
-      '@ikary/primitives':
-        specifier: workspace:*
-        version: link:../../libs/primitives
-      '@ikary/renderer':
-        specifier: workspace:*
-        version: link:../../libs/renderer
-      '@tanstack/react-query':
-        specifier: ^5.0.0
-        version: 5.96.1(react@19.2.4)
-      lucide-react:
-        specifier: ^1.8.0
-        version: 1.8.0(react@19.2.4)
-      react:
-        specifier: ^19.0.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.0.0
-        version: 19.2.4(react@19.2.4)
-      react-hook-form:
-        specifier: ^7.53.0
-        version: 7.72.1(react@19.2.4)
-      react-markdown:
-        specifier: ^9.0.0
-        version: 9.1.0(@types/react@19.2.14)(react@19.2.4)
-      react-router-dom:
-        specifier: ^6.30.1
-        version: 6.30.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      remark-gfm:
-        specifier: ^4.0.0
-        version: 4.0.1
-      yaml:
-        specifier: ^2.7.0
-        version: 2.8.3
-      zod:
-        specifier: ^3.23.8
-        version: 3.25.76
-    devDependencies:
-      '@tailwindcss/typography':
-        specifier: ^0.5.0
-        version: 0.5.19(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.14)
-      '@vitejs/plugin-react':
-        specifier: ^4.3.4
-        version: 4.7.0(vite@6.4.2(@types/node@22.19.16)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))
-      autoprefixer:
-        specifier: ^10.4.20
-        version: 10.4.27(postcss@8.5.8)
-      postcss:
-        specifier: ^8.5.3
-        version: 8.5.8
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
-      typescript:
-        specifier: ^5.5.3
-        version: 5.9.3
-      vite:
-        specifier: ^6.0.0
         version: 6.4.2(@types/node@22.19.16)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  apps/preview-server:
+  apps/cell-preview-server:
     dependencies:
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../../libs/contract
-      '@ikary/data':
+        version: link:../../libs/cell-contract
+      '@ikary/cell-data':
         specifier: workspace:*
-        version: link:../../libs/data
-      '@ikary/engine':
+        version: link:../../libs/cell-data
+      '@ikary/cell-engine':
         specifier: workspace:*
-        version: link:../../libs/engine
-      '@ikary/loader':
+        version: link:../../libs/cell-engine
+      '@ikary/cell-loader':
         specifier: workspace:*
-        version: link:../../libs/loader
-      '@ikary/presentation':
+        version: link:../../libs/cell-loader
+      '@ikary/cell-presentation':
         specifier: workspace:*
-        version: link:../../libs/presentation
-      '@ikary/primitive-contract':
+        version: link:../../libs/cell-presentation
+      '@ikary/cell-primitive-contract':
         specifier: workspace:*
-        version: link:../../libs/primitive-contract
-      '@ikary/primitive-studio':
+        version: link:../../libs/cell-primitive-contract
+      '@ikary/cell-primitive-studio':
         specifier: workspace:*
-        version: link:../../libs/primitive-studio
-      '@ikary/primitives':
+        version: link:../../libs/cell-primitive-studio
+      '@ikary/cell-primitives':
         specifier: workspace:*
-        version: link:../../libs/primitives
-      '@ikary/renderer':
+        version: link:../../libs/cell-primitives
+      '@ikary/cell-renderer':
         specifier: workspace:*
-        version: link:../../libs/renderer
+        version: link:../../libs/cell-renderer
       '@ikary/system-localization':
         specifier: workspace:*
         version: link:../../libs/system-localization
@@ -561,24 +321,151 @@ importers:
         specifier: ^6.0.0
         version: 6.4.2(@types/node@22.19.16)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/cell-migration-core:
+  apps/cell-runtime-api:
     dependencies:
+      '@ikary/cell-contract':
+        specifier: workspace:*
+        version: link:../../libs/cell-contract
+      '@ikary/cell-engine':
+        specifier: workspace:*
+        version: link:../../libs/cell-engine
+      '@ikary/cell-loader':
+        specifier: workspace:*
+        version: link:../../libs/cell-loader
+      '@ikary/cell-runtime-core':
+        specifier: workspace:*
+        version: link:../../libs/cell-runtime-core
+      '@ikary/system-auth':
+        specifier: workspace:*
+        version: link:../../libs/system-auth
       '@ikary/system-db-core':
         specifier: workspace:*
-        version: link:../system-db-core
+        version: link:../../libs/system-db-core
+      '@ikary/system-log-core':
+        specifier: workspace:*
+        version: link:../../libs/system-log-core
+      '@ikary/system-migration-core':
+        specifier: workspace:*
+        version: link:../../libs/system-migration-core
+      '@nestjs/common':
+        specifier: ^11.1.0
+        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.1.0
+        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.18)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/platform-express':
+        specifier: ^11.1.0
+        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)
+      '@nestjs/swagger':
+        specifier: ^11.2.0
+        version: 11.2.6(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)(reflect-metadata@0.2.2)
+      express:
+        specifier: ^5.1.0
+        version: 5.2.1
+      kysely:
+        specifier: ^0.27.0
+        version: 0.27.6
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+    devDependencies:
+      '@swc/core':
+        specifier: ^1.15.24
+        version: 1.15.24
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.6
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  apps/cli:
+    dependencies:
+      '@ikary/cell-primitive-contract':
+        specifier: workspace:*
+        version: link:../../libs/cell-primitive-contract
+      '@ikary/cell-runtime-core':
+        specifier: workspace:*
+        version: link:../../libs/cell-runtime-core
+      '@ikary/system-db-core':
+        specifier: workspace:*
+        version: link:../../libs/system-db-core
+      '@ikary/system-localization':
+        specifier: workspace:*
+        version: link:../../libs/system-localization
+      '@ikary/system-migration-core':
+        specifier: workspace:*
+        version: link:../../libs/system-migration-core
+      boxen:
+        specifier: ^8.0.1
+        version: 8.0.1
+      chalk:
+        specifier: ^5.4.1
+        version: 5.6.2
+      commander:
+        specifier: ^13.0.0
+        version: 13.1.0
+      log-symbols:
+        specifier: ^7.0.0
+        version: 7.0.1
+      ora:
+        specifier: ^8.2.0
+        version: 8.2.0
+      prompts:
+        specifier: ^2.4.2
+        version: 2.4.2
+      yaml:
+        specifier: ^2.7.0
+        version: 2.8.3
       zod:
-        specifier: ^3.0.0
+        specifier: ^3.23.8
         version: 3.25.76
+    devDependencies:
+      '@ikary/cell-contract':
+        specifier: workspace:*
+        version: link:../../libs/cell-contract
+      '@ikary/cell-engine':
+        specifier: workspace:*
+        version: link:../../libs/cell-engine
+      '@ikary/cell-loader':
+        specifier: workspace:*
+        version: link:../../libs/cell-loader
+      '@types/prompts':
+        specifier: ^2.4.9
+        version: 2.4.9
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  apps/ikary:
+    dependencies:
+      '@ikary/cli':
+        specifier: workspace:*
+        version: link:../cli
+
+  apps/local-stack-e2e:
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.39
-      '@vitest/coverage-v8':
-        specifier: ^3.0.0
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
-      tsup:
-        specifier: ^8.0.2
-        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
       typescript:
         specifier: ^5.5.3
         version: 5.9.3
@@ -586,33 +473,87 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/cell-runtime-core:
+  apps/mcp-server:
     dependencies:
-      '@ikary/cell-migration-core':
+      '@ikary/cell-primitive-contract':
         specifier: workspace:*
-        version: link:../cell-migration-core
-      '@ikary/contract':
-        specifier: workspace:*
-        version: link:../contract
-      '@ikary/engine':
-        specifier: workspace:*
-        version: link:../engine
+        version: link:../../libs/cell-primitive-contract
       '@ikary/system-db-core':
         specifier: workspace:*
-        version: link:../system-db-core
+        version: link:../../libs/system-db-core
+      '@ikary/system-log-core':
+        specifier: workspace:*
+        version: link:../../libs/system-log-core
+      '@ikary/system-migration-core':
+        specifier: workspace:*
+        version: link:../../libs/system-migration-core
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.12.1
+        version: 1.29.0(zod@3.25.76)
+      '@nestjs/common':
+        specifier: ^11.1.0
+        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.1.0
+        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.18)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/platform-express':
+        specifier: ^11.1.0
+        version: 11.1.18(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)
+      '@nestjs/swagger':
+        specifier: ^11.2.0
+        version: 11.2.6(@nestjs/common@11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)(reflect-metadata@0.2.2)
+      express:
+        specifier: ^5.1.0
+        version: 5.2.1
+      pg:
+        specifier: ^8.13.0
+        version: 8.20.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      rxjs:
+        specifier: ^7.8.1
+        version: 7.8.2
+      yaml:
+        specifier: ^2.7.0
+        version: 2.8.3
       zod:
-        specifier: ^3.0.0
+        specifier: ^3.23.8
         version: 3.25.76
     devDependencies:
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.39
-      '@vitest/coverage-v8':
-        specifier: ^3.0.0
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
+      '@ikary/cell-contract':
+        specifier: workspace:*
+        version: link:../../libs/cell-contract
+      '@ikary/cell-engine':
+        specifier: workspace:*
+        version: link:../../libs/cell-engine
+      '@ikary/cell-loader':
+        specifier: workspace:*
+        version: link:../../libs/cell-loader
+      '@swc/core':
+        specifier: ^1.15.24
+        version: 1.15.24
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.6
       tsup:
         specifier: ^8.0.2
         version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      tsx:
+        specifier: ^4.19.0
+        version: 4.21.0
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+
+  apps/mcp-server-e2e:
+    devDependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.12.1
+        version: 1.29.0(zod@3.25.76)
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
       typescript:
         specifier: ^5.5.3
         version: 5.9.3
@@ -620,7 +561,7 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/contract:
+  libs/cell-contract:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -636,17 +577,17 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/data:
+  libs/cell-data:
     dependencies:
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../contract
-      '@ikary/presentation':
+        version: link:../cell-contract
+      '@ikary/cell-presentation':
         specifier: workspace:*
-        version: link:../presentation
-      '@ikary/primitives':
+        version: link:../cell-presentation
+      '@ikary/cell-primitives':
         specifier: workspace:*
-        version: link:../primitives
+        version: link:../cell-primitives
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -667,11 +608,11 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  libs/engine:
+  libs/cell-engine:
     dependencies:
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../contract
+        version: link:../cell-contract
     devDependencies:
       tsup:
         specifier: ^8.0.2
@@ -683,11 +624,11 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/loader:
+  libs/cell-loader:
     dependencies:
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../contract
+        version: link:../cell-contract
       yaml:
         specifier: ^2.7.0
         version: 2.8.3
@@ -705,7 +646,7 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/presentation:
+  libs/cell-presentation:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -718,7 +659,7 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  libs/primitive-contract:
+  libs/cell-primitive-contract:
     dependencies:
       zod:
         specifier: ^3.23.8
@@ -737,14 +678,14 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
-  libs/primitive-studio:
+  libs/cell-primitive-studio:
     dependencies:
-      '@ikary/primitive-contract':
+      '@ikary/cell-primitive-contract':
         specifier: workspace:*
-        version: link:../primitive-contract
-      '@ikary/primitives':
+        version: link:../cell-primitive-contract
+      '@ikary/cell-primitives':
         specifier: workspace:*
-        version: link:../primitives
+        version: link:../cell-primitives
       react:
         specifier: ^19.0.0
         version: 19.2.4
@@ -765,17 +706,17 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  libs/primitives:
+  libs/cell-primitives:
     dependencies:
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../contract
-      '@ikary/presentation':
+        version: link:../cell-contract
+      '@ikary/cell-presentation':
         specifier: workspace:*
-        version: link:../presentation
-      '@ikary/primitive-contract':
+        version: link:../cell-presentation
+      '@ikary/cell-primitive-contract':
         specifier: workspace:*
-        version: link:../primitive-contract
+        version: link:../cell-primitive-contract
       '@radix-ui/react-popover':
         specifier: ^1.1.15
         version: 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -823,23 +764,23 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
 
-  libs/renderer:
+  libs/cell-renderer:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.10.0(react-hook-form@7.72.1(react@19.2.4))
-      '@ikary/contract':
+      '@ikary/cell-contract':
         specifier: workspace:*
-        version: link:../contract
-      '@ikary/engine':
+        version: link:../cell-contract
+      '@ikary/cell-engine':
         specifier: workspace:*
-        version: link:../engine
-      '@ikary/presentation':
+        version: link:../cell-engine
+      '@ikary/cell-presentation':
         specifier: workspace:*
-        version: link:../presentation
-      '@ikary/primitives':
+        version: link:../cell-presentation
+      '@ikary/cell-primitives':
         specifier: workspace:*
-        version: link:../primitives
+        version: link:../cell-primitives
       '@ikary/system-localization':
         specifier: workspace:*
         version: link:../system-localization
@@ -883,6 +824,40 @@ importers:
       vitest:
         specifier: ^3.0.0
         version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.16)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  libs/cell-runtime-core:
+    dependencies:
+      '@ikary/cell-contract':
+        specifier: workspace:*
+        version: link:../cell-contract
+      '@ikary/cell-engine':
+        specifier: workspace:*
+        version: link:../cell-engine
+      '@ikary/system-db-core':
+        specifier: workspace:*
+        version: link:../system-db-core
+      '@ikary/system-migration-core':
+        specifier: workspace:*
+        version: link:../system-migration-core
+      zod:
+        specifier: ^3.0.0
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
+      '@vitest/coverage-v8':
+        specifier: ^3.0.0
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
 
   libs/system-auth:
     dependencies:
@@ -1126,6 +1101,31 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.2.3(@types/react@19.2.14)
+      '@vitest/coverage-v8':
+        specifier: ^3.0.0
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  libs/system-migration-core:
+    dependencies:
+      '@ikary/system-db-core':
+        specifier: workspace:*
+        version: link:../system-db-core
+      zod:
+        specifier: ^3.0.0
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
       '@vitest/coverage-v8':
         specifier: ^3.0.0
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))

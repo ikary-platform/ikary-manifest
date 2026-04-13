@@ -5,8 +5,8 @@ import prompts from 'prompts';
 import yaml from 'yaml';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
-import { scaffoldPrimitiveFiles, toPascalCase } from '@ikary/primitive-contract';
-import type { IkaryPrimitivesConfig } from '@ikary/primitive-contract';
+import { scaffoldPrimitiveFiles, toPascalCase } from '@ikary/cell-primitive-contract';
+import type { IkaryPrimitivesConfig } from '@ikary/cell-primitive-contract';
 import { PORTS } from '../utils/ports.js';
 
 const CATEGORIES = ['data', 'form', 'layout', 'feedback', 'navigation', 'custom'] as const;

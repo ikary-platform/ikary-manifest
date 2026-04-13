@@ -104,7 +104,7 @@ jobs:
           PROMPT="${PROMPT}"$'\n\n'"[2-3 sentences summarising what this release brings from a user perspective. No commit hashes.]"
           PROMPT="${PROMPT}"$'\n\n'"## CLI"
           PROMPT="${PROMPT}"$'\n\n'"[User-facing changes to the ikary CLI and its commands. This section covers @ikary/cli.]"
-          PROMPT="${PROMPT}"$'\n\n'"## [Full scoped package name, e.g. @ikary/contract]"
+          PROMPT="${PROMPT}"$'\n\n'"## [Full scoped package name, e.g. @ikary/cell-contract]"
           PROMPT="${PROMPT}"$'\n\n'"[Changes for that package — only include if there are user-facing changes.]"
           PROMPT="${PROMPT}"$'\n\n'"Guidelines:"
           PROMPT="${PROMPT}"$'\n'"- Past tense, active voice throughout"

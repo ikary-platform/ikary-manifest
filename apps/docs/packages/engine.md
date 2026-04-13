@@ -5,13 +5,13 @@ Compilation takes a validated manifest and produces a normalized, runtime-ready 
 ## Package
 
 ```text
-@ikary/engine   (contracts/node/engine/)
+@ikary/cell-engine   (contracts/node/engine/)
 ```
 
 ## Install
 
 ```bash
-pnpm add @ikary/engine
+pnpm add @ikary/cell-engine
 ```
 
 ## `compileCellApp(manifest)`
@@ -19,8 +19,8 @@ pnpm add @ikary/engine
 The main entry point. Takes a validated `CellManifestV1`, runs schema validation and business rules, normalizes the manifest, and returns a compiled manifest.
 
 ```typescript
-import { compileCellApp, isValidationResult } from '@ikary/engine';
-import type { CellManifestV1 } from '@ikary/contract';
+import { compileCellApp, isValidationResult } from '@ikary/cell-engine';
+import type { CellManifestV1 } from '@ikary/cell-contract';
 
 const result = compileCellApp(manifest);
 
@@ -37,7 +37,7 @@ if (isValidationResult(result)) {
 Ensures all optional arrays exist (entities, pages, navigation items). Prevents undefined access in downstream code.
 
 ```typescript
-import { normalizeManifest } from '@ikary/engine';
+import { normalizeManifest } from '@ikary/cell-engine';
 
 const normalized = normalizeManifest(manifest);
 ```
@@ -45,7 +45,7 @@ const normalized = normalizeManifest(manifest);
 ## Field derivation
 
 ```typescript
-import { deriveCreateFields, deriveEditFields } from '@ikary/engine';
+import { deriveCreateFields, deriveEditFields } from '@ikary/cell-engine';
 
 // Derive fields for a create form (filtered, sorted, with effective properties)
 const createFields = deriveCreateFields(entity.fields);
@@ -62,7 +62,7 @@ import {
   buildEntityDetailPath,
   buildEntityCreatePath,
   buildEntityEditPath,
-} from '@ikary/engine';
+} from '@ikary/cell-engine';
 
 buildEntityListPath(manifest, 'customer');           // "/crm/customers"
 buildEntityDetailPath(manifest, 'customer', '123'); // "/crm/customers/123"

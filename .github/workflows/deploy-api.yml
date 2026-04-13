@@ -5,9 +5,9 @@ on:
     branches: [main]
     paths:
       - 'apps/mcp-server/**'
-      - 'libs/contract/**'
-      - 'libs/engine/**'
-      - 'libs/loader/**'
+      - 'libs/cell-contract/**'
+      - 'libs/cell-engine/**'
+      - 'libs/cell-loader/**'
       - 'manifests/**'
       - 'Dockerfile'
       - '.github/workflows/deploy-api.yml'

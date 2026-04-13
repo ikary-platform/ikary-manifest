@@ -4,6 +4,22 @@
 
 Open-source declarative cell contracts, compilation engine, and multi-runtime renderer for the [Ikary Platform](https://ikary.co).
 
+## What is IKARY?
+
+IKARY is a declarative runtime. A contributor new to the repo only needs four terms:
+
+- **Cell** — an isolated runtime environment that renders a presentation layer on top of the IKARY API. One Cell is one application: its own data, its own UI, its own lifecycle, described by a single manifest file.
+- **Entity** — a domain object inside a Cell (for example `Customer`, `Invoice`). An entity declares fields, relations, computed values, capabilities (create/read/update/delete), and policies. The renderer generates list and detail pages for every entity from its definition.
+- **Manifest** — the YAML or JSON file that defines a Cell. Its schema is `CellManifestV1`, published from [`@ikary/cell-contract`](./libs/cell-contract/). Loading, validating, and compiling a manifest turns it into a running Cell.
+- **Primitive** — a reusable UI component (text input, date picker, table, chart). Built-in primitives ship in [`@ikary/cell-primitives`](./libs/cell-primitives/); projects register custom primitives via `ikary-primitives.yaml`.
+
+Packages follow a naming convention so it is obvious what layer a module lives at:
+
+- `cell-*` — Cell-domain code (contract schemas, engine, renderer, primitives, runtime).
+- `system-*` — infrastructure that wraps a 3rd-party tool (Postgres via Kysely, react-intl, JWT, Pino, NestJS). Reusable outside the Cell domain.
+
+See [`apps/docs/guide/repository-conventions.md`](./apps/docs/guide/repository-conventions.md) for the full rule and rationale.
+
 ## Why Ikary Manifest?
 
 AI-native code generation tools produce code. This creates a practical problem: **generated code is unpredictable, hard to maintain, and expensive to validate in production.** Every generated line must be reviewed, tested, versioned, and debugged like hand-written code, without the benefit of human intent behind it.
@@ -46,13 +62,13 @@ ikary-manifest/
 
 | Package               | Path                                        | Responsibility                                                  |
 | --------------------- | ------------------------------------------- | --------------------------------------------------------------- |
-| `@ikary/contract`     | [`libs/contract`](./libs/contract/)         | Zod schemas, TypeScript types, structural + semantic validation |
-| `@ikary/loader`       | [`libs/loader`](./libs/loader/)             | YAML/JSON loading, parsing, and pre-validation pipeline         |
-| `@ikary/engine`       | [`libs/engine`](./libs/engine/)             | Manifest normalization, compilation, and derivation             |
-| `@ikary/presentation` | [`libs/presentation`](./libs/presentation/) | Presentation contracts for UI primitives                        |
-| `@ikary/primitives`   | [`libs/primitives`](./libs/primitives/)     | Runtime primitive components, resolvers, and registry           |
-| `@ikary/renderer`     | [`libs/renderer`](./libs/renderer/)         | React rendering runtime (pages, forms, grids, detail views)     |
-| `@ikary/data`         | [`libs/data`](./libs/data/)                 | Data providers and page/runtime data orchestration              |
+| `@ikary/cell-contract`     | [`libs/cell-contract`](./libs/cell-contract/)         | Zod schemas, TypeScript types, structural + semantic validation |
+| `@ikary/cell-loader`       | [`libs/cell-loader`](./libs/cell-loader/)             | YAML/JSON loading, parsing, and pre-validation pipeline         |
+| `@ikary/cell-engine`       | [`libs/cell-engine`](./libs/cell-engine/)             | Manifest normalization, compilation, and derivation             |
+| `@ikary/cell-presentation` | [`libs/cell-presentation`](./libs/cell-presentation/) | Presentation contracts for UI primitives                        |
+| `@ikary/cell-primitives`   | [`libs/cell-primitives`](./libs/cell-primitives/)     | Runtime primitive components, resolvers, and registry           |
+| `@ikary/cell-renderer`     | [`libs/cell-renderer`](./libs/cell-renderer/)         | React rendering runtime (pages, forms, grids, detail views)     |
+| `@ikary/cell-data`         | [`libs/cell-data`](./libs/cell-data/)       | Data providers and page/runtime data orchestration              |
 | `@ikary/cli`          | [`apps/cli`](./apps/cli/)                   | Authoring and local-stack developer workflow                    |
 
 ## Quick Start
@@ -95,8 +111,8 @@ Internal developer tools run on the following fixed ports:
 
 | Port | Tool | Command |
 | ---- | ---- | ------- |
-| 4504 | Cell Playground (`apps/cell-playground`) | `pnpm --filter @ikary/cell-playground dev` |
-| 4505 | Docs Playground (`apps/playground-app`) | `pnpm --filter @ikary/playground dev` |
+| 4504 | Cell Playground (`apps/cell-playground-legacy`) | `pnpm --filter @ikary/cell-playground-legacy dev` |
+| 4505 | Docs Playground (`apps/cell-playground`) | `pnpm --filter @ikary/cell-playground dev` |
 
 ## How Manifests Work
 
@@ -104,22 +120,22 @@ YAML is the authoring format. The processing pipeline:
 
 ```mermaid
 flowchart TD
-    M["YAML manifest<br/>(manifests/)"] --> L["@ikary/loader<br/>Parse YAML → JSON object"]
-    L --> C["@ikary/contract<br/>Zod structural validation + semantic rules"]
-    C --> E["@ikary/engine<br/>Normalization + compilation → runtime manifest"]
+    M["YAML manifest<br/>(manifests/)"] --> L["@ikary/cell-loader<br/>Parse YAML → JSON object"]
+    L --> C["@ikary/cell-contract<br/>Zod structural validation + semantic rules"]
+    C --> E["@ikary/cell-engine<br/>Normalization + compilation → runtime manifest"]
 ```
 
 ## Architecture
 
 ```mermaid
 flowchart TD
-    C["contract<br/>Zod schemas + types"]
-    L["loader<br/>YAML/JSON parsing + validation pipeline"]
-    P["presentation<br/>UI primitive schemas"]
-    E["engine<br/>compilation + derivation"]
-    R["primitives<br/>component registry + resolvers + adapters"]
-    RR["renderer<br/>CellAppRenderer + forms + grids"]
-    D["data<br/>data-binding providers"]
+    C["cell-contract<br/>Zod schemas + types"]
+    L["cell-loader<br/>YAML/JSON parsing + validation pipeline"]
+    P["cell-presentation<br/>UI primitive schemas"]
+    E["cell-engine<br/>compilation + derivation"]
+    R["cell-primitives<br/>component registry + resolvers + adapters"]
+    RR["cell-renderer<br/>CellAppRenderer + forms + grids"]
+    D["cell-data<br/>data-binding providers"]
 
     C --> L
     C --> P
@@ -129,7 +145,7 @@ flowchart TD
     R --> D
 ```
 
-All packages are framework-agnostic at the schema level. The `primitives`, `renderer`, and `data` packages use React.
+All packages are framework-agnostic at the schema level. The `cell-primitives`, `cell-renderer`, and `cell-data` packages use React.
 
 ## Extensibility
 

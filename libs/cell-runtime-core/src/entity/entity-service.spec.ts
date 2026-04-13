@@ -6,7 +6,7 @@ import { EntityService } from './entity-service.js';
 import { AuditService } from '../audit/audit-service.js';
 import { EntityNotFoundError, VersionConflictError } from '../errors.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
-import type { CellManifestV1 } from '@ikary/contract';
+import type { CellManifestV1 } from '@ikary/cell-contract';
 
 const TEST_DB_URL =
   process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';

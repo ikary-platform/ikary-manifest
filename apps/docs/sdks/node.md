@@ -10,9 +10,9 @@ The Node SDK is the current reference implementation of the canonical manifest m
 
 | Layer | Package | Responsibility |
 | --- | --- | --- |
-| `loader` | `@ikary/loader` | Parse YAML or JSON and return validated manifest data |
-| `contract` | `@ikary/contract` | Node-facing schema, types, and validation bindings |
-| `engine` | `@ikary/engine` | Compile canonical expressions into runtime-ready application structures |
+| `loader` | `@ikary/cell-loader` | Parse YAML or JSON and return validated manifest data |
+| `contract` | `@ikary/cell-contract` | Node-facing schema, types, and validation bindings |
+| `engine` | `@ikary/cell-engine` | Compile canonical expressions into runtime-ready application structures |
 
 Additional runtime packages such as `presentation`, `primitives`, `renderer`, and `data` consume the compiled manifest to render application behavior.
 
@@ -42,13 +42,13 @@ The Node `contract` package is the Node SDK binding layer. It is not the ultimat
 Use this authority ladder:
 
 1. canonical YAML schemas and examples under `manifests/`
-2. Node contract bindings in `@ikary/contract`
-3. Node engine compilation in `@ikary/engine`
+2. Node contract bindings in `@ikary/cell-contract`
+3. Node engine compilation in `@ikary/cell-engine`
 4. Node runtime packages that render or execute the compiled result
 
 ## Package docs
 
 - [Package overview](/packages/overview)
-- [`@ikary/loader`](/packages/loading)
-- [`@ikary/contract`](/packages/overview)
-- [`@ikary/engine`](/packages/engine)
+- [`@ikary/cell-loader`](/packages/loading)
+- [`@ikary/cell-contract`](/packages/overview)
+- [`@ikary/cell-engine`](/packages/engine)

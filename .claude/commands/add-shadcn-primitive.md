@@ -51,7 +51,7 @@ The schema must have a `type: z.literal('<primitive-name>')` discriminator field
 ## Step 3 — Create ALL files (in order)
 
 ### 3a. Presentation contract — schema file
-**Path:** `libs/presentation/src/contract/<primitive-name>/<PrimitiveName>PresentationSchema.ts`
+**Path:** `libs/cell-presentation/src/contract/<primitive-name>/<PrimitiveName>PresentationSchema.ts`
 
 ```typescript
 import { z } from 'zod';
@@ -72,7 +72,7 @@ export type <PrimitiveName>Presentation = z.infer<typeof <PrimitiveName>Presenta
 ```
 
 ### 3b. Presentation contract — validation file
-**Path:** `libs/presentation/src/contract/<primitive-name>/validate-runtime-<primitive-name>-presentation.ts`
+**Path:** `libs/cell-presentation/src/contract/<primitive-name>/validate-runtime-<primitive-name>-presentation.ts`
 
 ```typescript
 import type { ZodIssue } from 'zod';
@@ -110,7 +110,7 @@ function toRuntimeErrors(issues: ZodIssue[]): <PrimitiveName>RuntimeValidationEr
 ```
 
 ### 3c. Presentation contract — samples file
-**Path:** `libs/presentation/src/contract/<primitive-name>/<PrimitiveName>.samples.json`
+**Path:** `libs/cell-presentation/src/contract/<primitive-name>/<PrimitiveName>.samples.json`
 
 Write 4–6 JSON objects, each a valid `<PrimitiveName>Presentation` (with `"type": "<primitive-name>"`). Cover:
 - Default/minimal usage
@@ -119,7 +119,7 @@ Write 4–6 JSON objects, each a valid `<PrimitiveName>Presentation` (with `"typ
 - Complex content (if applicable)
 
 ### 3d. Presentation contract — index
-**Path:** `libs/presentation/src/contract/<primitive-name>/index.ts`
+**Path:** `libs/cell-presentation/src/contract/<primitive-name>/index.ts`
 
 ```typescript
 export * from './<PrimitiveName>PresentationSchema';
@@ -127,7 +127,7 @@ export * from './validate-runtime-<primitive-name>-presentation';
 ```
 
 ### 3e. View types
-**Path:** `libs/primitives/src/primitives/<primitive-name>/<PrimitiveName>.types.ts`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/<PrimitiveName>.types.ts`
 
 Define `<PrimitiveName>ViewProps`. Rules:
 - Mirrors presentation fields (optional fields stay optional)
@@ -136,10 +136,10 @@ Define `<PrimitiveName>ViewProps`. Rules:
 - If there are sub-components, export their view types too (e.g. `<PrimitiveName>ItemView`)
 
 ### 3f. Adapter
-**Path:** `libs/primitives/src/primitives/<primitive-name>/<PrimitiveName>.adapter.ts`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/<PrimitiveName>.adapter.ts`
 
 ```typescript
-import type { <PrimitiveName>Presentation } from '@ikary/presentation';
+import type { <PrimitiveName>Presentation } from '@ikary/cell-presentation';
 import type { <PrimitiveName>ViewProps } from './<PrimitiveName>.types';
 
 export type Build<PrimitiveName>ViewModelInput = {
@@ -163,7 +163,7 @@ function normalizeOptionalText(value: string | undefined): string | undefined {
 ```
 
 ### 3g. View component
-**Path:** `libs/primitives/src/primitives/<primitive-name>/<PrimitiveName>.tsx`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/<PrimitiveName>.tsx`
 
 - Import `@radix-ui/*` if the shadcn component wraps Radix (check Step 1 analysis)
 - Use `cn()` from `'../../lib/utils'` for className composition
@@ -173,10 +173,10 @@ function normalizeOptionalText(value: string | undefined): string | undefined {
 - If the Radix component needs `asChild` for navigation (like Tabs → Link), implement that pattern
 
 ### 3h. Resolver
-**Path:** `libs/primitives/src/primitives/<primitive-name>/<PrimitiveName>.resolver.ts`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/<PrimitiveName>.resolver.ts`
 
 ```typescript
-import { validateRuntime<PrimitiveName>Presentation } from '@ikary/presentation';
+import { validateRuntime<PrimitiveName>Presentation } from '@ikary/cell-presentation';
 import { build<PrimitiveName>ViewModel, type Build<PrimitiveName>ViewModelInput } from './<PrimitiveName>.adapter';
 import type { <PrimitiveName>ViewProps } from './<PrimitiveName>.types';
 
@@ -198,7 +198,7 @@ export function resolve<PrimitiveName>(
 ```
 
 ### 3i. Registration
-**Path:** `libs/primitives/src/primitives/<primitive-name>/register<PrimitiveName>.ts`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/register<PrimitiveName>.ts`
 
 ```typescript
 import { registerPrimitive } from '../../registry/primitiveRegistry';
@@ -223,7 +223,7 @@ register<PrimitiveName>();
 ```
 
 ### 3j. Primitive index
-**Path:** `libs/primitives/src/primitives/<primitive-name>/index.ts`
+**Path:** `libs/cell-primitives/src/primitives/<primitive-name>/index.ts`
 
 ```typescript
 export { <PrimitiveName> } from './<PrimitiveName>';
@@ -238,11 +238,11 @@ export type { <PrimitiveName>ViewProps } from './<PrimitiveName>.types';
 ## Step 4 — Wire up exports in 5 existing files
 
 ### 4a. Presentation contract index
-**File:** `libs/presentation/src/contract/index.ts`
+**File:** `libs/cell-presentation/src/contract/index.ts`
 Add at the end: `export * from './<primitive-name>';`
 
 ### 4b. Primitives public index
-**File:** `libs/primitives/src/index.ts`
+**File:** `libs/cell-primitives/src/index.ts`
 Add a block matching the existing style:
 ```typescript
 export { <PrimitiveName> } from './primitives/<primitive-name>/<PrimitiveName>';
@@ -253,11 +253,11 @@ export type { <PrimitiveName>ViewProps } from './primitives/<primitive-name>/<Pr
 ```
 
 ### 4c. Registry
-**File:** `libs/primitives/src/registry.ts`
+**File:** `libs/cell-primitives/src/registry.ts`
 Add at the end: `import './primitives/<primitive-name>/register<PrimitiveName>';`
 
 ### 4d. Playground demos
-**File:** `apps/cell-playground/src/pages/primitive-demos.ts`
+**File:** `apps/cell-playground-legacy/src/pages/primitive-demos.ts`
 
 1. Add to the import block at the top:
    ```typescript
@@ -284,14 +284,14 @@ Add at the end: `import './primitives/<primitive-name>/register<PrimitiveName>';
    ```
 
 ### 4e. Playground studio categories
-**File:** `apps/cell-playground/src/pages/primitive-studio-page.tsx`
+**File:** `apps/cell-playground-legacy/src/pages/primitive-studio-page.tsx`
 Add to `PRIMITIVE_CATEGORIES`:
 ```typescript
 '<primitive-name>': 'feedback',  // use: data | form | layout | feedback | navigation
 ```
 
 ### 4f. Playground schema registry
-**File:** `apps/cell-playground/src/pages/primitive-studio-page.tsx`
+**File:** `apps/cell-playground-legacy/src/pages/primitive-studio-page.tsx`
 Add to `SCHEMA_BY_CONTRACT_TYPE`:
 ```typescript
 '<primitive-name>': <PrimitiveName>PresentationSchema,
@@ -304,9 +304,9 @@ Also add the import at the top from `@ikary/cell-contract-presentation`.
 
 Run:
 ```
-pnpm --filter @ikary/presentation typecheck
-pnpm --filter @ikary/primitives typecheck
-pnpm --filter @ikary/cell-playground typecheck
+pnpm --filter @ikary/cell-presentation typecheck
+pnpm --filter @ikary/cell-primitives typecheck
+pnpm --filter @ikary/cell-playground-legacy typecheck
 ```
 
 Fix any errors before finishing. Common issues:

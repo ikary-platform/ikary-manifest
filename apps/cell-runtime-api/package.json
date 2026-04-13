@@ -1,6 +1,6 @@
 {
   "name": "@ikary/cell-runtime-api",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "description": "IKARY local entity CRUD REST API — PostgreSQL-backed runtime for local development",
   "scripts": {
@@ -10,11 +10,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ikary/cell-migration-core": "workspace:*",
+    "@ikary/system-migration-core": "workspace:*",
     "@ikary/cell-runtime-core": "workspace:*",
-    "@ikary/contract": "workspace:*",
-    "@ikary/engine": "workspace:*",
-    "@ikary/loader": "workspace:*",
+    "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
+    "@ikary/cell-loader": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
     "@ikary/system-auth": "workspace:*",
     "@ikary/system-log-core": "workspace:*",

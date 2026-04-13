@@ -8,13 +8,13 @@ These packages define the manifest contract, compile manifests, and render appli
 
 | Package | Role |
 |---------|------|
-| `@ikary/contract` | Zod schemas, TypeScript types, structural and semantic validation |
-| `@ikary/loader` | YAML and JSON parsing, meta-property stripping, validation pipeline |
-| `@ikary/engine` | Compilation, normalization, field derivation, path builders |
-| `@ikary/presentation` | Zod schemas for UI primitive contracts |
-| `@ikary/primitives` | React primitive components, resolvers, adapters, registry |
-| `@ikary/data` | Data providers and entity data hooks |
-| `@ikary/renderer` | Top-level `CellAppRenderer` and page rendering runtime |
+| `@ikary/cell-contract` | Zod schemas, TypeScript types, structural and semantic validation |
+| `@ikary/cell-loader` | YAML and JSON parsing, meta-property stripping, validation pipeline |
+| `@ikary/cell-engine` | Compilation, normalization, field derivation, path builders |
+| `@ikary/cell-presentation` | Zod schemas for UI primitive contracts |
+| `@ikary/cell-primitives` | React primitive components, resolvers, adapters, registry |
+| `@ikary/cell-data` | Data providers and entity data hooks |
+| `@ikary/cell-renderer` | Top-level `CellAppRenderer` and page rendering runtime |
 
 See [Loading & Validation](/packages/loading) for the full contract pipeline API.
 
@@ -27,7 +27,7 @@ These packages run as applications or CLIs.
 | `@ikary/cli` | `ikary` CLI for scaffolding, validation, compilation, local stack commands, and primitives tooling |
 | `@ikary/ikary` | Thin npm wrapper that exposes the same `ikary` command |
 | `@ikary/cell-runtime-api` | Local runtime REST API service generated from manifests |
-| `@ikary/preview-server` | Local preview server used by the local stack |
+| `@ikary/cell-preview-server` | Local preview server used by the local stack |
 | `@ikary/mcp-server` | Contract Intelligence API and MCP server |
 
 ## Dependency graph
@@ -55,8 +55,8 @@ flowchart TD
 ```
 
 ```typescript
-import { loadManifestFromFile } from '@ikary/loader';
-import { compileCellApp } from '@ikary/engine';
+import { loadManifestFromFile } from '@ikary/cell-loader';
+import { compileCellApp } from '@ikary/cell-engine';
 
 const loaded = await loadManifestFromFile('manifest.yaml');
 if (loaded.valid) {

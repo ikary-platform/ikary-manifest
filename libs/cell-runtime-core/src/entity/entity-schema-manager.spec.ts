@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager, tableName, fieldTypeToSql, isDuplicateColumnError } from './entity-schema-manager.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
-import type { CellManifestV1, EntityDefinition } from '@ikary/contract';
+import type { CellManifestV1, EntityDefinition } from '@ikary/cell-contract';
 
 const TEST_DB_URL =
   process.env['TEST_DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5433/ikary_test';

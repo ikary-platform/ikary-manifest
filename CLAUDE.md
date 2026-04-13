@@ -35,3 +35,26 @@ Key rules at a glance:
 - Use `src/server/` for Node/NestJS runtime code in mixed packages
 - All runtime DB access must use `@ikary/system-db-core` (Kysely repositories)
 - No inline SQL strings outside migrations and approved repository `sql\`\`` edge cases
+
+### Naming conventions
+
+Libs MUST be prefixed `system-*` (wraps a 3rd-party tool, reusable outside the
+Cell domain) or `cell-*` (Cell manifest domain). No exceptions.
+
+- `cell-*` — depends on `@ikary/cell-contract` or models the Cell domain
+  (contract, engine, renderer, primitives, runtime).
+- `system-*` — wraps a 3rd-party tool with no Cell-specific knowledge
+  (Postgres via Kysely, react-intl, JWT, Pino, NestJS).
+
+Apps use descriptive names; the `cell-*` prefix is only applied when the app
+is Cell-specific.
+
+Repo-orchestration scripts live in root `/scripts/`, never in `libs/scripts/`.
+
+Every publishable package shares one version enforced by Changesets `fixed`
+config in `.changeset/config.json`. Release everything or nothing. When
+adding a new `apps/*` or `libs/*` package, add its `@ikary/*` name to the
+`fixed` array at the same time.
+
+See `apps/docs/guide/repository-conventions.md` for the full rule and
+concrete examples.

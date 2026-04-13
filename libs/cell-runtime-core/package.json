@@ -1,6 +1,6 @@
 {
   "name": "@ikary/cell-runtime-core",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "license": "MIT",
   "type": "module",
   "microPackageKind": "server",
@@ -22,10 +22,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@ikary/cell-migration-core": "workspace:*",
+    "@ikary/system-migration-core": "workspace:*",
     "@ikary/system-db-core": "workspace:*",
-    "@ikary/contract": "workspace:*",
-    "@ikary/engine": "workspace:*",
+    "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
     "zod": "^3.0.0"
   },
   "devDependencies": {
