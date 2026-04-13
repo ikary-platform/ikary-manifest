@@ -28,6 +28,11 @@ interface LocalizationContextValue {
   scope: LocalizationScope;
   setScope: (scope: LocalizationScope) => void;
   refreshCatalog: () => Promise<void>;
+  /** Messages for the currently active locale — populated by the loader for
+   *  the current `locale` plus any catalogClient overrides. */
+  messages: LocaleMessages;
+  /** Messages for the default locale — used as fallback when the active
+   *  locale lacks a key. */
   defaultMessages: LocaleMessages;
   isLoading: boolean;
 }
@@ -162,12 +167,14 @@ export function LocalizationProvider({
       scope,
       setScope,
       refreshCatalog,
+      messages,
       defaultMessages,
       isLoading,
     }),
     [
       config.defaultLocale,
       config.supportedLocales,
+      messages,
       defaultMessages,
       isLoading,
       locale,
@@ -205,4 +212,13 @@ export function useLocalization(): LocalizationContextValue {
   }
 
   return value;
+}
+
+/**
+ * Non-throwing variant of `useLocalization` that returns `null` when no
+ * LocalizationProvider is mounted above this component. Libraries use this
+ * to stay compatible with host apps that haven't adopted the provider.
+ */
+export function useOptionalLocalization(): LocalizationContextValue | null {
+  return useContext(LocalizationContext);
 }

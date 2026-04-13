@@ -21,6 +21,13 @@ import { primitiveAddCommand } from './commands/primitive-add.js';
 import { primitiveValidateCommand } from './commands/primitive-validate.js';
 import { primitiveStudioCommand } from './commands/primitive-studio.js';
 import { primitiveListCommand } from './commands/primitive-list.js';
+import {
+  localizeInitCommand,
+  localizeBuildCommand,
+  localizeExtractCommand,
+  localizeMissingCommand,
+  localizeSyncCommand,
+} from './commands/localize.js';
 
 export function createProgram(): Command {
   configureTheme();
@@ -157,6 +164,49 @@ export function createProgram(): Command {
     .description('List all registered primitives (core + custom)')
     .option('--json', 'Output as JSON')
     .action(primitiveListCommand);
+
+  const localize = program
+    .command('localize')
+    .description('Manage application localization (translations and i18n catalogs)');
+
+  localize
+    .command('init')
+    .description('Scaffold localization config and starter locale files')
+    .option('--path <path>', 'Cell package root', '.')
+    .option('--default-locale <code>', 'Default locale code', 'en')
+    .option('--locales <codes>', 'Comma-separated supported locales (defaults to --default-locale)')
+    .option('--force', 'Overwrite existing files', false)
+    .action(localizeInitCommand);
+
+  localize
+    .command('build')
+    .description('Discover locale sources, merge catalogs, generate JSON artifacts')
+    .option('--app <path>', 'Cell package root', '.')
+    .option('--watch', 'Watch locale sources and rebuild on change', false)
+    .option('--fail-on-missing', 'Treat missing translated keys as errors', false)
+    .option('--fail-on-duplicate', 'Treat duplicate message ids as errors', false)
+    .action(localizeBuildCommand);
+
+  localize
+    .command('extract')
+    .description('Scan source files for translation keys and write a catalog')
+    .option('--app <path>', 'Cell package root', '.')
+    .action(localizeExtractCommand);
+
+  localize
+    .command('missing')
+    .description('Report missing translations for a locale')
+    .requiredOption('--lang <code>', 'Target locale code (e.g. en, fr)')
+    .option('--app <path>', 'Cell package root', '.')
+    .option('--strict', 'Exit with non-zero status when keys are missing')
+    .action(localizeMissingCommand);
+
+  localize
+    .command('sync')
+    .description('Sync extracted keys with the translation catalog')
+    .option('--app <path>', 'Cell package root', '.')
+    .option('--check', 'Report drift without updating the catalog')
+    .action(localizeSyncCommand);
 
   return program;
 }

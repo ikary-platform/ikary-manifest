@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { buildEntityDetailPath } from '@ikary/engine';
 import type { DataGridColumn } from '@ikary/presentation';
+import { useOptionalT } from '@ikary/system-localization/ui';
+import { messages as rendererEnMessages } from '../i18n/en';
 import { EntityCreateSheet } from '../sheets/EntityCreateSheet';
 import { CellDataGrid } from '../components/cell-data-grid';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
@@ -93,6 +95,7 @@ export function EntityListPage({ page, entity }: CellPageRendererProps) {
   const { dataStore, dataMode } = useCellRuntime();
   const manifest = useCellManifest();
   const { ListPageLayout, SearchInput, PaginationControls } = useUIComponents();
+  const t = useOptionalT(rendererEnMessages);
   const [searchParams, setSearchParams] = useSearchParams();
   const [createOpen, setCreateOpen] = useState(false);
 
@@ -334,14 +337,14 @@ export function EntityListPage({ page, entity }: CellPageRendererProps) {
             onClick={() => setCreateOpen(true)}
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
           >
-            Create {resolvedEntity.name}
+            {t('entity.list.create_button', { entityName: resolvedEntity.name })}
           </button>
         }
         filterStart={
           <SearchInput
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder={`Search ${resolvedEntity.pluralName.toLowerCase()}`}
+            placeholder={t('entity.list.search_placeholder', { pluralName: resolvedEntity.pluralName.toLowerCase() })}
             className="w-64"
           />
         }
@@ -385,9 +388,11 @@ export function EntityListPage({ page, entity }: CellPageRendererProps) {
           getDetailHref={getDetailHref}
           getRowId={(row) => String(row['id'] ?? '')}
           emptyTitle={
-            hasAnyData ? `No ${resolvedEntity.pluralName} match your search` : `No ${resolvedEntity.pluralName} yet`
+            hasAnyData
+              ? `No ${resolvedEntity.pluralName} match your search`
+              : t('entity.list.empty_title', { pluralName: resolvedEntity.pluralName })
           }
-          emptyDescription={hasAnyData ? 'Try clearing your search or filters.' : undefined}
+          emptyDescription={hasAnyData ? t('entity.list.empty_filtered_description') : undefined}
           emptyAction={
             hasAnyData ? (
               <button type="button" onClick={clearAllFilters} className="text-sm text-muted-foreground hover:underline">

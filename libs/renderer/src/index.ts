@@ -36,3 +36,6 @@ export { defaultUIComponents } from './default-ui-components';
 export { buildCreateZodSchema } from './form/schema/build-create-zod-schema';
 export type { CreateFormValues } from './form/schema/build-create-zod-schema';
 export { FieldControl } from './form/field-control';
+// Localization defaults — renderer's built-in English strings. Apps can override
+// any of these keys in their own locale files.
+export { messages as rendererEnMessages } from './i18n/en';

@@ -235,6 +235,9 @@ importers:
       '@ikary/system-db-core':
         specifier: workspace:*
         version: link:../../libs/system-db-core
+      '@ikary/system-localization':
+        specifier: workspace:*
+        version: link:../../libs/system-localization
       boxen:
         specifier: ^8.0.1
         version: 8.0.1
@@ -502,6 +505,9 @@ importers:
       '@ikary/renderer':
         specifier: workspace:*
         version: link:../../libs/renderer
+      '@ikary/system-localization':
+        specifier: workspace:*
+        version: link:../../libs/system-localization
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.96.1(react@19.2.4)
@@ -834,6 +840,9 @@ importers:
       '@ikary/primitives':
         specifier: workspace:*
         version: link:../primitives
+      '@ikary/system-localization':
+        specifier: workspace:*
+        version: link:../system-localization
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.96.1(react@19.2.4)
