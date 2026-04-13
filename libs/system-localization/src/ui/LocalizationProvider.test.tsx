@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   LocalizationProvider,
   useLocalization,
+  useOptionalLocalization,
   type LocalizationCatalogClient,
 } from './LocalizationProvider';
 import type { LocalizationConfig, LocaleMessages } from '../shared/index';
@@ -71,6 +72,30 @@ describe('useLocalization', () => {
     } finally {
       console.error = originalError;
     }
+  });
+});
+
+describe('useOptionalLocalization', () => {
+  it('returns null when no LocalizationProvider is mounted', () => {
+    const { result } = renderHook(() => useOptionalLocalization());
+    expect(result.current).toBeNull();
+  });
+
+  it('returns the context value when wrapped in LocalizationProvider', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const loaders = createLoaders();
+    const wrapper = ({ children }: { children: React.ReactNode }) =>
+      React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        React.createElement(LocalizationProvider, { config: baseConfig, loaders }, children),
+      );
+
+    const { result } = renderHook(() => useOptionalLocalization(), { wrapper });
+    await waitFor(() => {
+      expect(result.current).not.toBeNull();
+    });
+    expect(result.current?.locale).toBe('en');
   });
 });
 

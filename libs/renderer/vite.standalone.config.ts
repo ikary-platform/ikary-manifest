@@ -37,6 +37,8 @@ export default defineConfig({
       '@ikary/loader': resolve(__dirname, '../loader/src/index.ts'),
       '@ikary/presentation': resolve(__dirname, '../presentation/src/index.ts'),
       '@ikary/primitives': resolve(__dirname, '../primitives/src/index.ts'),
+      '@ikary/system-localization/ui': resolve(__dirname, '../system-localization/src/ui/index.ts'),
+      '@ikary/system-localization': resolve(__dirname, '../system-localization/src/index.ts'),
     },
   },
 });

@@ -1,6 +1,7 @@
 export {
   LocalizationProvider,
   useLocalization,
+  useOptionalLocalization,
   type LocalizationProviderProps,
   type LocalizationScope,
   type LocalizationCatalogClient,
@@ -16,6 +17,7 @@ export {
 export { useLanguage } from './hooks/useLanguage';
 export { T, type TProps } from './T';
 export { useT, type TranslateFn } from './hooks/useT';
+export { useOptionalT } from './hooks/useOptionalT';
 export { useTranslation, type UseTranslationResult } from './hooks/useTranslation';
 
 export {

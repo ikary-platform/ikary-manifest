@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { EntityDefinition } from '@ikary/contract';
 import { buildEntityListPath } from '@ikary/engine';
+import { useOptionalT } from '@ikary/system-localization/ui';
+import { messages as rendererEnMessages } from '../i18n/en';
 import { useUIComponents } from '../UIComponentsProvider';
 import { useCellManifest, useCellRuntime } from '../context/cell-runtime-context';
 import { PromotedMetadataRow } from './promoted-metadata-row';
@@ -31,6 +33,7 @@ export function DetailHeader({ entity, record, id, activeTab, mode, onEnterEdit 
   const navigate = useNavigate();
   const manifest = useCellManifest();
   const { dataStore } = useCellRuntime();
+  const t = useOptionalT(rendererEnMessages);
   const {
     AlertDialog,
     AlertDialogTrigger,
@@ -95,12 +98,12 @@ export function DetailHeader({ entity, record, id, activeTab, mode, onEnterEdit 
                 onClick={onEnterEdit ?? mode.enterEdit}
                 className="px-3 py-1.5 text-sm border border-border rounded text-foreground hover:bg-muted"
               >
-                Edit
+                {t('entity.detail.edit_button')}
               </button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <button className="px-3 py-1.5 text-sm border border-destructive/30 rounded text-destructive hover:bg-destructive/10">
-                    Delete
+                    {t('entity.detail.delete_button')}
                   </button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -111,13 +114,13 @@ export function DetailHeader({ entity, record, id, activeTab, mode, onEnterEdit 
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel disabled={deleting}>{t('common.cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
                       disabled={deleting}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      {deleting ? 'Deleting\u2026' : 'Delete'}
+                      {deleting ? 'Deleting\u2026' : t('entity.detail.delete_button')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
