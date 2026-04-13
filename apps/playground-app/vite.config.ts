@@ -46,6 +46,8 @@ export default defineConfig({
       '@ikary/primitives/registry': path.resolve(__dirname, '../../libs/primitives/src/registry.ts'),
       '@ikary/primitives': path.resolve(__dirname, '../../libs/primitives/src/index.ts'),
       '@ikary/renderer': path.resolve(__dirname, '../../libs/renderer/src/index.ts'),
+      '@ikary/system-localization/ui': path.resolve(__dirname, '../../libs/system-localization/src/ui/index.ts'),
+      '@ikary/system-localization': path.resolve(__dirname, '../../libs/system-localization/src/index.ts'),
     },
   },
   build: {

@@ -31,6 +31,8 @@ export default defineConfig({
       '@ikary/primitive-contract': path.resolve(__dirname, `${LIBS}/primitive-contract/src/index.ts`),
       '@ikary/primitive-studio/ui': path.resolve(__dirname, `${LIBS}/primitive-studio/src/ui/index.ts`),
       '@ikary/primitive-studio': path.resolve(__dirname, `${LIBS}/primitive-studio/src/index.ts`),
+      '@ikary/system-localization/ui': path.resolve(__dirname, `${LIBS}/system-localization/src/ui/index.ts`),
+      '@ikary/system-localization': path.resolve(__dirname, `${LIBS}/system-localization/src/index.ts`),
     },
   },
 });
