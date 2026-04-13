@@ -79,7 +79,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         fontSize: '13px',
-        backgroundColor: '#f8fafc',
+        backgroundColor: 'hsl(var(--muted))',
         overflow: 'hidden',
       }}
     >
@@ -145,13 +145,13 @@ function PrimitivePreviewToolbar({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '6px 12px',
-        borderBottom: '1px solid #e2e8f0',
-        backgroundColor: '#f8fafc',
+        borderBottom: '1px solid hsl(var(--border))',
+        backgroundColor: 'hsl(var(--muted))',
         flexShrink: 0,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '12px', fontWeight: 600, color: '#1e293b' }}>
+        <span style={{ fontSize: '12px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
           {entry?.label ?? primitiveKey}
         </span>
         {entry?.source === 'custom' && (
@@ -160,9 +160,9 @@ function PrimitivePreviewToolbar({
               fontSize: '10px',
               padding: '1px 6px',
               borderRadius: '10px',
-              backgroundColor: '#fef3c7',
-              color: '#92400e',
-              border: '1px solid #fcd34d',
+              backgroundColor: 'rgba(251,191,36,0.15)',
+              color: '#fcd34d',
+              border: '1px solid rgba(251,191,36,0.4)',
             }}
           >
             Custom
@@ -171,7 +171,7 @@ function PrimitivePreviewToolbar({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <label style={{ fontSize: '11px', color: '#64748b' }}>Version:</label>
+        <label style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>Version:</label>
         <select
           value={version ?? 'latest'}
           onChange={(e) =>
@@ -180,9 +180,10 @@ function PrimitivePreviewToolbar({
           style={{
             fontSize: '11px',
             padding: '2px 6px',
-            border: '1px solid #e2e8f0',
+            border: '1px solid hsl(var(--border))',
             borderRadius: '4px',
-            backgroundColor: '#ffffff',
+            backgroundColor: 'hsl(var(--background))',
+            color: 'hsl(var(--foreground))',
           }}
         >
           <option value="latest">latest</option>

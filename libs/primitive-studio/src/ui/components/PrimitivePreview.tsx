@@ -16,7 +16,7 @@ export function PrimitivePreview({ primitiveKey, version, props, runtime }: Prim
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#94a3b8',
+          color: 'hsl(var(--muted-foreground))',
           fontSize: '13px',
         }}
       >
@@ -31,7 +31,7 @@ export function PrimitivePreview({ primitiveKey, version, props, runtime }: Prim
         flex: 1,
         overflow: 'auto',
         padding: '16px',
-        backgroundColor: '#ffffff',
+        backgroundColor: 'hsl(var(--background))',
       }}
     >
       <PrimitiveRenderer

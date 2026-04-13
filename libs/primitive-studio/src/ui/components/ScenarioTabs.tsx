@@ -20,7 +20,7 @@ export function ScenarioTabs({ scenarios, activeIndex, onSelect }: ScenarioTabsP
         display: 'flex',
         gap: '2px',
         padding: '8px 12px 0',
-        borderBottom: '1px solid #e2e8f0',
+        borderBottom: '1px solid hsl(var(--border))',
         overflowX: 'auto',
         flexShrink: 0,
       }}
@@ -38,7 +38,7 @@ export function ScenarioTabs({ scenarios, activeIndex, onSelect }: ScenarioTabsP
             borderBottom: i === activeIndex ? '2px solid #3b82f6' : '2px solid transparent',
             background: 'none',
             cursor: 'pointer',
-            color: i === activeIndex ? '#1e40af' : '#6b7280',
+            color: i === activeIndex ? '#3b82f6' : 'hsl(var(--muted-foreground))',
             fontWeight: i === activeIndex ? 600 : 400,
             whiteSpace: 'nowrap',
             marginBottom: '-1px',

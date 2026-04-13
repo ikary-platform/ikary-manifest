@@ -35,7 +35,7 @@ export function PropsEditor({
         flex: '0 0 38%',
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid #e2e8f0',
+        borderRight: '1px solid hsl(var(--border))',
         overflow: 'hidden',
       }}
     >
@@ -84,17 +84,17 @@ function ContractReference({ fields }: { fields: ContractField[] }) {
         maxHeight: '210px',
         display: 'flex',
         flexDirection: 'column',
-        borderTop: '1px solid #e2e8f0',
+        borderTop: '1px solid hsl(var(--border))',
       }}
     >
       <div
         style={{
           padding: '4px 12px',
-          borderBottom: '1px solid #f1f5f9',
+          borderBottom: '1px solid hsl(var(--border))',
           flexShrink: 0,
         }}
       >
-        <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', letterSpacing: '0.04em' }}>
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'hsl(var(--muted-foreground))', letterSpacing: '0.04em' }}>
           CONTRACT SCHEMA
         </span>
       </div>
@@ -107,20 +107,20 @@ function ContractReference({ fields }: { fields: ContractField[] }) {
               alignItems: 'baseline',
               gap: '8px',
               padding: '3px 12px',
-              borderBottom: '1px solid #f8fafc',
+              borderBottom: '1px solid hsl(var(--border))',
             }}
           >
             <code
               style={{
                 fontFamily: 'monospace',
                 fontSize: '11px',
-                color: '#1e293b',
+                color: 'hsl(var(--foreground))',
                 flexShrink: 0,
                 minWidth: '110px',
               }}
             >
               {field.name}
-              {!field.required && <span style={{ color: '#94a3b8' }}>?</span>}
+              {!field.required && <span style={{ color: 'hsl(var(--muted-foreground))' }}>?</span>}
             </code>
             <span
               style={{
@@ -138,7 +138,7 @@ function ContractReference({ fields }: { fields: ContractField[] }) {
               {field.type}
             </span>
             {field.description && (
-              <span style={{ fontSize: '10px', color: '#64748b' }}>{field.description}</span>
+              <span style={{ fontSize: '10px', color: 'hsl(var(--muted-foreground))' }}>{field.description}</span>
             )}
           </div>
         ))}
@@ -154,7 +154,7 @@ function EditorSection({ label, value, onChange, error, flex = 1 }: EditorSectio
         flex,
         display: 'flex',
         flexDirection: 'column',
-        borderBottom: '1px solid #e2e8f0',
+        borderBottom: '1px solid hsl(var(--border))',
         minHeight: 0,
       }}
     >
@@ -164,11 +164,11 @@ function EditorSection({ label, value, onChange, error, flex = 1 }: EditorSectio
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '4px 12px',
-          borderBottom: '1px solid #f1f5f9',
+          borderBottom: '1px solid hsl(var(--border))',
           flexShrink: 0,
         }}
       >
-        <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', letterSpacing: '0.04em' }}>
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'hsl(var(--muted-foreground))', letterSpacing: '0.04em' }}>
           {label}
         </span>
         {error && (
@@ -190,8 +190,8 @@ function EditorSection({ label, value, onChange, error, flex = 1 }: EditorSectio
           border: 'none',
           outline: 'none',
           resize: 'none',
-          backgroundColor: error ? '#fff5f5' : '#fafafa',
-          color: '#1e293b',
+          backgroundColor: error ? 'rgba(239,68,68,0.1)' : 'hsl(var(--muted))',
+          color: 'hsl(var(--foreground))',
           width: '100%',
           boxSizing: 'border-box',
         }}

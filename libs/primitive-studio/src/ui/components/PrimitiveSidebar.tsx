@@ -30,7 +30,7 @@ export function PrimitiveSidebar({ entries, selectedKey, onSelect }: PrimitiveSi
       style={{
         width: '220px',
         flexShrink: 0,
-        borderRight: '1px solid #e2e8f0',
+        borderRight: '1px solid hsl(var(--border))',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
@@ -46,10 +46,12 @@ export function PrimitiveSidebar({ entries, selectedKey, onSelect }: PrimitiveSi
             width: '100%',
             padding: '5px 8px',
             fontSize: '12px',
-            border: '1px solid #e2e8f0',
+            border: '1px solid hsl(var(--border))',
             borderRadius: '6px',
             outline: 'none',
             boxSizing: 'border-box',
+            backgroundColor: 'hsl(var(--background))',
+            color: 'hsl(var(--foreground))',
           }}
         />
       </div>
@@ -77,7 +79,7 @@ export function PrimitiveSidebar({ entries, selectedKey, onSelect }: PrimitiveSi
             style={{
               padding: '12px',
               fontSize: '12px',
-              color: '#94a3b8',
+              color: 'hsl(var(--muted-foreground))',
               textAlign: 'center',
             }}
           >
@@ -118,7 +120,7 @@ function SidebarGroup({ group, selectedKey, onSelect }: SidebarGroupProps) {
           fontWeight: 600,
           letterSpacing: '0.08em',
           textTransform: 'uppercase',
-          color: '#64748b',
+          color: 'hsl(var(--muted-foreground))',
         }}
       >
         <span style={{ fontSize: '8px' }}>{collapsed ? '▶' : '▼'}</span>
@@ -156,12 +158,12 @@ function SidebarItem({ entry, isSelected, onSelect }: SidebarItemProps) {
         gap: '6px',
         width: '100%',
         padding: '5px 12px 5px 20px',
-        background: isSelected ? '#eff6ff' : 'none',
+        background: isSelected ? 'hsl(var(--accent))' : 'transparent',
         border: 'none',
         borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
         cursor: 'pointer',
         fontSize: '12px',
-        color: isSelected ? '#1e40af' : '#374151',
+        color: isSelected ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
         textAlign: 'left',
       }}
     >

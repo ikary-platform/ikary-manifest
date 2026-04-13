@@ -86,15 +86,15 @@ export function SchemaDependencyGraphWorkspace() {
     URL.revokeObjectURL(url);
   }
 
-  const selectClass = 'h-8 rounded border border-gray-200 bg-white px-2 text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500';
+  const selectClass = 'h-8 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-2 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500';
 
   return (
     <div className="grid gap-4">
       {/* Controls card */}
-      <div className="border border-gray-200 rounded-lg bg-white">
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900">
         <div className="px-4 pt-4 pb-3">
-          <h3 className="text-sm font-semibold text-gray-800">Dependencies Workspace</h3>
-          <p className="text-xs text-gray-500 mt-1">Inspect schema dependency structure with hybrid edges and diagnostics.</p>
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Dependencies Workspace</h3>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Inspect schema dependency structure with hybrid edges and diagnostics.</p>
         </div>
         <div className="px-4 pb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
           <input
@@ -148,14 +148,14 @@ export function SchemaDependencyGraphWorkspace() {
             <button
               type="button"
               onClick={() => void handleCopyMermaid()}
-              className="px-3 py-1 text-xs border border-gray-200 rounded hover:bg-gray-50 text-gray-600"
+              className="px-3 py-1 text-xs border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
             >
               Copy Mermaid
             </button>
             <button
               type="button"
               onClick={handleDownloadJson}
-              className="px-3 py-1 text-xs border border-gray-200 rounded hover:bg-gray-50 text-gray-600"
+              className="px-3 py-1 text-xs border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
             >
               Download JSON
             </button>
@@ -166,47 +166,49 @@ export function SchemaDependencyGraphWorkspace() {
       {/* Three-column layout */}
       <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)_320px]">
         {/* Node list */}
-        <div className="border border-gray-200 rounded-lg bg-white min-h-[28rem]">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 min-h-[28rem]">
           <div className="px-4 pt-4 pb-3">
-            <h3 className="text-sm font-semibold text-gray-800">Nodes ({sortedNodes.length})</h3>
-            <p className="text-xs text-gray-500 mt-1">Select a node to inspect inbound/outbound dependencies.</p>
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Nodes ({sortedNodes.length})</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Select a node to inspect inbound/outbound dependencies.</p>
           </div>
           <div className="px-4 pb-4">
-            <div className="rounded border border-gray-200 max-h-[34rem] overflow-auto">
+            <div className="rounded border border-gray-200 dark:border-gray-700 max-h-[34rem] overflow-auto">
               {sortedNodes.map((node) => (
                 <button
                   key={node.id}
                   type="button"
                   onClick={() => setSelectedNodeId(node.id)}
-                  className={`w-full text-left px-3 py-2 border-b border-gray-100 last:border-b-0 ${
-                    node.id === selectedNodeId ? 'bg-blue-50 text-blue-900' : 'hover:bg-gray-50'
+                  className={`w-full text-left px-3 py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0 ${
+                    node.id === selectedNodeId
+                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-200'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-mono text-xs font-semibold truncate">{node.label}</p>
-                    <span className="text-[10px] text-gray-400">{node.totalDegree}</span>
+                    <p className="font-mono text-xs font-semibold truncate text-gray-800 dark:text-gray-200">{node.label}</p>
+                    <span className="text-[10px] text-gray-400 dark:text-gray-500">{node.totalDegree}</span>
                   </div>
                   <div className="mt-1 flex flex-wrap gap-1">
-                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                       {node.category}
                     </span>
                     {node.isLeaf && (
-                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                         leaf
                       </span>
                     )}
                     {node.isRoot && (
-                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                         root
                       </span>
                     )}
                     {node.isHotspot && (
-                      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">
                         hotspot
                       </span>
                     )}
                     {node.isCrossReferenced && (
-                      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">
                         cross-ref
                       </span>
                     )}
@@ -218,15 +220,15 @@ export function SchemaDependencyGraphWorkspace() {
         </div>
 
         {/* SVG graph */}
-        <div className="border border-gray-200 rounded-lg bg-white min-h-[28rem]">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 min-h-[28rem]">
           <div className="px-4 pt-4 pb-3">
-            <h3 className="text-sm font-semibold text-gray-800">Dependency Graph</h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Dependency Graph</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Edge direction: <span className="font-medium">A → B</span> means A depends on B.
             </p>
           </div>
           <div className="px-4 pb-4">
-            <div className="rounded border border-gray-200 overflow-auto max-h-[34rem]">
+            <div className="rounded border border-gray-200 dark:border-gray-700 overflow-auto max-h-[34rem]">
               <SchemaDependencyGraph
                 nodes={viewModel.nodes}
                 edges={viewModel.edges}
@@ -240,34 +242,34 @@ export function SchemaDependencyGraphWorkspace() {
         </div>
 
         {/* Selected node detail */}
-        <div className="border border-gray-200 rounded-lg bg-white min-h-[28rem]">
+        <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 min-h-[28rem]">
           <div className="px-4 pt-4 pb-3">
-            <h3 className="text-sm font-semibold text-gray-800">Selected Node</h3>
-            <p className="text-xs text-gray-500 mt-1">Inbound and outbound dependency details.</p>
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Selected Node</h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Inbound and outbound dependency details.</p>
           </div>
           <div className="px-4 pb-4 space-y-4">
             {selectedNode ? (
               <>
                 <div className="space-y-1">
-                  <p className="font-mono text-xs font-semibold break-all">{selectedNode.label}</p>
-                  <p className="text-[11px] text-gray-400 break-all">{selectedNode.id}</p>
+                  <p className="font-mono text-xs font-semibold break-all text-gray-800 dark:text-gray-200">{selectedNode.label}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 break-all">{selectedNode.id}</p>
                   <div className="flex flex-wrap gap-1">
-                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                       {selectedNode.category}
                     </span>
-                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                       in: {selectedNode.inDegree}
                     </span>
-                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                       out: {selectedNode.outDegree}
                     </span>
                     {selectedNode.isLeaf && (
-                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                         leaf
                       </span>
                     )}
                     {selectedNode.isRoot && (
-                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                      <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                         root
                       </span>
                     )}
@@ -291,7 +293,7 @@ export function SchemaDependencyGraphWorkspace() {
                 />
               </>
             ) : (
-              <p className="text-xs text-gray-400">No node selected.</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">No node selected.</p>
             )}
           </div>
         </div>
@@ -339,7 +341,7 @@ function SchemaDependencyGraph({
   }, [edges, selectedNodeId]);
 
   return (
-    <svg width={width} height={height} style={{ background: '#f8fafc' }}>
+    <svg width={width} height={height} style={{ background: 'hsl(var(--muted))' }}>
       <defs>
         <marker id="schema-graph-arrow-declared" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
           <path d="M0,0 L8,3 L0,6 z" fill="#3b82f6" />
@@ -406,14 +408,14 @@ function SchemaDependencyGraph({
               height={NODE_HEIGHT}
               rx={8}
               ry={8}
-              fill={isSelected ? '#eff6ff' : '#ffffff'}
-              stroke={isSelected ? '#3b82f6' : '#e2e8f0'}
+              fill={isSelected ? 'hsl(var(--accent))' : 'hsl(var(--background))'}
+              stroke={isSelected ? '#3b82f6' : 'hsl(var(--border))'}
               strokeWidth={isSelected ? 2 : 1}
             />
             <text
               x={10}
               y={20}
-              fill="#1e293b"
+              fill="hsl(var(--foreground))"
               fontSize="11"
               fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
               fontWeight={600}
@@ -423,7 +425,7 @@ function SchemaDependencyGraph({
             <text
               x={10}
               y={38}
-              fill="#94a3b8"
+              fill="hsl(var(--muted-foreground))"
               fontSize="10"
               fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace"
             >
@@ -451,12 +453,12 @@ function DependencyList({
 }) {
   return (
     <div className="space-y-1">
-      <p className="text-xs font-semibold text-gray-500">
+      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
         {title} ({edges.length})
       </p>
-      <div className="rounded border border-gray-200 overflow-hidden">
+      <div className="rounded border border-gray-200 dark:border-gray-700 overflow-hidden">
         {edges.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-gray-400">None</div>
+          <div className="px-2 py-2 text-xs text-gray-400 dark:text-gray-500">None</div>
         ) : (
           edges.map((edge, index) => {
             const nodeId = direction === 'from' ? edge.from : edge.to;
@@ -466,11 +468,11 @@ function DependencyList({
                 key={`${title}-${nodeId}-${edge.kind}-${index}`}
                 type="button"
                 onClick={() => onSelectNode(nodeId)}
-                className="w-full text-left px-2 py-1.5 border-b border-gray-100 last:border-b-0 hover:bg-gray-50"
+                className="w-full text-left px-2 py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-xs truncate">{node?.label ?? nodeId}</span>
-                  <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600">
+                  <span className="font-mono text-xs truncate text-gray-700 dark:text-gray-300">{node?.label ?? nodeId}</span>
+                  <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
                     {edge.kind}
                   </span>
                 </div>
@@ -493,10 +495,10 @@ function SchemaDiagnosticsPanel({
   onSelectNode: (nodeId: string) => void;
 }) {
   return (
-    <div className="border border-gray-200 rounded-lg bg-white">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900">
       <div className="px-4 pt-4 pb-3">
-        <h3 className="text-sm font-semibold text-gray-800">Diagnostics</h3>
-        <p className="text-xs text-gray-500 mt-1">
+        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Diagnostics</h3>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           Structural checks for cycles, drift, unresolved references, and isolated nodes.
         </p>
       </div>
@@ -512,8 +514,8 @@ function SchemaDiagnosticsPanel({
           <MetricBadge label="Issues" value={diagnostics.length} />
         </div>
 
-        <div className="rounded border border-gray-200 overflow-hidden">
-          <div className="grid grid-cols-[auto_1.2fr_2fr_auto] gap-2 px-3 py-2 border-b border-gray-200 bg-gray-50 text-[11px] font-semibold text-gray-500">
+        <div className="rounded border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="grid grid-cols-[auto_1.2fr_2fr_auto] gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-[11px] font-semibold text-gray-500 dark:text-gray-400">
             <span>Severity</span>
             <span>Code</span>
             <span>Message</span>
@@ -521,28 +523,28 @@ function SchemaDiagnosticsPanel({
           </div>
 
           {diagnostics.length === 0 ? (
-            <div className="px-3 py-3 text-xs text-gray-400">
+            <div className="px-3 py-3 text-xs text-gray-400 dark:text-gray-500">
               No diagnostics detected for the current graph selection.
             </div>
           ) : (
             diagnostics.map((diagnostic) => (
               <div
                 key={diagnostic.id}
-                className="grid grid-cols-[auto_1.2fr_2fr_auto] gap-2 px-3 py-2 border-b border-gray-100 last:border-b-0 items-center"
+                className="grid grid-cols-[auto_1.2fr_2fr_auto] gap-2 px-3 py-2 border-b border-gray-100 dark:border-gray-800 last:border-b-0 items-center"
               >
                 <SeverityBadge severity={diagnostic.severity} />
-                <code className="font-mono text-[11px] text-gray-400 break-all">{diagnostic.code}</code>
-                <span className="text-xs text-gray-700 break-words">{diagnostic.message}</span>
+                <code className="font-mono text-[11px] text-gray-400 dark:text-gray-500 break-all">{diagnostic.code}</code>
+                <span className="text-xs text-gray-700 dark:text-gray-300 break-words">{diagnostic.message}</span>
                 {diagnostic.fromNodeId ? (
                   <button
                     type="button"
-                    className="text-[11px] font-medium text-blue-600 hover:underline"
+                    className="text-[11px] font-medium text-blue-600 dark:text-blue-400 hover:underline"
                     onClick={() => onSelectNode(diagnostic.fromNodeId!)}
                   >
                     Open
                   </button>
                 ) : (
-                  <span className="text-[11px] text-gray-400">-</span>
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">-</span>
                 )}
               </div>
             ))
@@ -555,7 +557,7 @@ function SchemaDiagnosticsPanel({
 
 function MetricBadge({ label, value }: { label: string; value: number }) {
   return (
-    <span className="px-1.5 py-0.5 text-[11px] font-medium border border-gray-200 rounded text-gray-600">
+    <span className="px-1.5 py-0.5 text-[11px] font-medium border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400">
       {label}: {value}
     </span>
   );
@@ -564,16 +566,16 @@ function MetricBadge({ label, value }: { label: string; value: number }) {
 function SeverityBadge({ severity }: { severity: 'error' | 'warning' | 'info' }) {
   if (severity === 'error') {
     return (
-      <span className="px-1.5 py-0.5 text-[10px] bg-red-100 rounded text-red-700 uppercase">Error</span>
+      <span className="px-1.5 py-0.5 text-[10px] bg-red-100 dark:bg-red-900/40 rounded text-red-700 dark:text-red-300 uppercase">Error</span>
     );
   }
   if (severity === 'warning') {
     return (
-      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 rounded text-gray-600 uppercase">Warning</span>
+      <span className="px-1.5 py-0.5 text-[10px] bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300 uppercase">Warning</span>
     );
   }
   return (
-    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 rounded text-gray-600 uppercase">Info</span>
+    <span className="px-1.5 py-0.5 text-[10px] border border-gray-200 dark:border-gray-700 rounded text-gray-600 dark:text-gray-400 uppercase">Info</span>
   );
 }
 
