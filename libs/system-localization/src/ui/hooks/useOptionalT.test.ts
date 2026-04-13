@@ -97,3 +97,46 @@ describe('useOptionalT — with provider', () => {
     expect(result.current('totally.missing')).toBe('totally.missing');
   });
 });
+
+describe('useOptionalT — non-default locale', () => {
+  const multiConfig: LocalizationConfig = {
+    defaultLocale: 'en',
+    supportedLocales: ['en', 'fr'],
+    outputDir: 'locales',
+    validation: { failOnMissing: false, failOnDuplicate: true },
+  };
+
+  const multiLoaders: LocaleLoaderMap = {
+    en: async () => ({ 'common.cancel': 'Close' }) as LocaleMessages,
+    fr: async () => ({ 'common.cancel': 'Annuler' }) as LocaleMessages,
+  };
+
+  function frWrapper({ children }: { children: React.ReactNode }) {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    return React.createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      React.createElement(
+        LocalizationProvider,
+        { config: multiConfig, loaders: multiLoaders, initialLocale: 'fr' },
+        children,
+      ),
+    );
+  }
+
+  it('returns the active-locale translation (not just the default)', async () => {
+    const { result } = renderHook(() => useOptionalT(FALLBACK), { wrapper: frWrapper });
+    await waitFor(() => {
+      expect(result.current('common.cancel')).toBe('Annuler');
+    });
+  });
+
+  it('falls back to default-locale messages when active locale lacks the key', async () => {
+    const { result } = renderHook(() => useOptionalT(FALLBACK), { wrapper: frWrapper });
+    // 'greet.plain' not defined in either en or fr loader, but in fallback
+    await waitFor(() => {
+      expect(result.current('common.cancel')).toBe('Annuler');
+    });
+    expect(result.current('greet.plain')).toBe('Hello');
+  });
+});

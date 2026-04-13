@@ -22,10 +22,11 @@ function interpolate(template: string, values?: TranslationValues): string {
 /**
  * Translation hook that works with or without a `LocalizationProvider`.
  *
- * When a provider is mounted, the returned function looks up the key in the
- * provider's merged catalog (via `defaultMessages`), letting cell-level
- * overrides take effect. When no provider is mounted, falls back to
- * `fallbackMessages` with simple `{var}` interpolation.
+ * When a provider is mounted, the returned function resolves keys in this
+ * order: active-locale messages → default-locale messages → fallback map →
+ * raw id. That lets cell-level overrides AND non-default locales take
+ * effect. When no provider is mounted, falls back to `fallbackMessages`
+ * with simple `{var}` interpolation.
  *
  * Libraries use this so host apps stay compatible whether or not they've
  * adopted the provider.
@@ -38,7 +39,8 @@ function interpolate(template: string, values?: TranslationValues): string {
 export function useOptionalT(fallbackMessages: Readonly<LocaleMessages>): TranslateFn {
   const localization = useOptionalLocalization();
   return (id, values) => {
-    const template = localization?.defaultMessages[id] ?? fallbackMessages[id] ?? id;
+    const template =
+      localization?.messages[id] ?? localization?.defaultMessages[id] ?? fallbackMessages[id] ?? id;
     return interpolate(template, values);
   };
 }

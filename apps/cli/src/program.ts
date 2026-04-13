@@ -174,7 +174,7 @@ export function createProgram(): Command {
     .description('Scaffold localization config and starter locale files')
     .option('--path <path>', 'Cell package root', '.')
     .option('--default-locale <code>', 'Default locale code', 'en')
-    .option('--locales <codes>', 'Comma-separated supported locales', 'en')
+    .option('--locales <codes>', 'Comma-separated supported locales (defaults to --default-locale)')
     .option('--force', 'Overwrite existing files', false)
     .action(localizeInitCommand);
 
