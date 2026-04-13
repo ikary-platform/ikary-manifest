@@ -1,8 +1,12 @@
-# @ikary/primitives
+# @ikary/primitive-studio
 
 ## 0.2.0
 
 ### Minor Changes
+
+- bdc8874: Add dark mode support: all inline styles now use CSS custom properties (`hsl(var(--background))`, `hsl(var(--foreground))`, `hsl(var(--border))`, `hsl(var(--muted))`, `hsl(var(--muted-foreground))`, `hsl(var(--accent))`, `hsl(var(--accent-foreground))`) so the studio adapts automatically to the host app's colour scheme.
+
+### Patch Changes
 
 - 4cca3dd: Add Area, Bar, Line, Pie, Radar, and Radial chart primitives
 
@@ -12,17 +16,6 @@
 
   Charts are exposed in `PrimitiveStudio` under a new **Charts** category. Chart colours are driven by `--chart-1`…`--chart-5` CSS variables with light and dark mode variants.
 
-### Patch Changes
-
-- bdc8874: Fix dark mode: `ChartHeader` and `ChartTooltipContent` now use CSS custom properties instead of hardcoded hex values, so chart titles and tooltips render correctly in dark-themed host apps.
 - Updated dependencies [4cca3dd]
-  - @ikary/presentation@0.2.0
-
-## 0.1.1
-
-### Patch Changes
-
-- a2acd7d: Rename package scope from @ikary-manifest to @ikary
-- Updated dependencies [a2acd7d]
-  - @ikary/contract@0.1.1
-  - @ikary/presentation@0.1.1
+- Updated dependencies [bdc8874]
+  - @ikary/primitives@0.2.0
