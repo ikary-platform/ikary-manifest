@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Try Ikary — Describe. Generate. See it live.</title>
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('ikary-theme');
+          var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (s === 'dark' || (!s && m)) document.documentElement.classList.add('dark');
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

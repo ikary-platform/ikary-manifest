@@ -1,3 +1,7 @@
+// ── Chrome (app-shell primitives, not manifest-driven) ───────────────────────
+export { ThemeToggle, useTheme, THEME_PREFLIGHT_SCRIPT } from './chrome/theme-toggle';
+export type { ThemeToggleProps, ThemeMode, UseThemeReturn } from './chrome/theme-toggle';
+
 export type { PrimitiveComponent, UIPrimitiveDefinition } from './types/PrimitiveTypes';
 export type { FieldBinding, ValueBinding, Binding } from './types/BindingTypes';
 export type { EntityField, EntitySchema } from './types/EntityTypes';

@@ -28,7 +28,11 @@
       "@ikary/system-authorization",
       "@ikary/system-db-core",
       "@ikary/system-localization",
-      "@ikary/system-log-core"
+      "@ikary/system-log-core",
+      "@ikary/system-ai",
+      "@ikary/cell-ai",
+      "@ikary/try-api",
+      "@ikary/try-demo"
     ]
   ],
   "linked": [],
