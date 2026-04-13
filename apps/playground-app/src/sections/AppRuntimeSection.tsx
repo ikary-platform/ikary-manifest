@@ -44,6 +44,8 @@ export function AppRuntimeSection() {
     });
   }
 
+  const [jsonCollapsed, setJsonCollapsed] = useState(false);
+
   const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
 
   return (
@@ -146,14 +148,16 @@ export function AppRuntimeSection() {
         </div>
       </div>
 
-      {/* ── Center: JSON editor ── */}
+      {/* ── Center: JSON editor (collapsible) ── */}
       <div
         style={{
-          width: '380px',
+          width: jsonCollapsed ? '0' : '380px',
           flexShrink: 0,
           display: 'flex',
           flexDirection: 'column',
-          borderRight: '1px solid #e2e8f0',
+          borderRight: jsonCollapsed ? 'none' : '1px solid #e2e8f0',
+          transition: 'width 0.2s ease',
+          overflow: 'hidden',
         }}
       >
         <div
@@ -165,22 +169,17 @@ export function AppRuntimeSection() {
             padding: '8px 12px',
             borderBottom: '1px solid #e2e8f0',
             background: '#f8fafc',
+            minWidth: '380px',
           }}
         >
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#64748b',
-            }}
-          >
+          <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '6px' }}>
             {activeLabel}
           </span>
-          <span style={{ fontSize: '11px', color: '#94a3b8' }}>CellManifestV1</span>
+          <span style={{ fontSize: '11px', color: '#94a3b8', whiteSpace: 'nowrap' }}>CellManifestV1</span>
         </div>
-        <JsonEditor value={json} onChange={setJson} error={parseError} />
+        <div style={{ flex: 1, minWidth: '380px', overflow: 'hidden' }}>
+          <JsonEditor value={json} onChange={setJson} error={parseError} />
+        </div>
       </div>
 
       {/* ── Right: app preview ── */}
@@ -196,6 +195,28 @@ export function AppRuntimeSection() {
             gap: '8px',
           }}
         >
+          {/* JSON panel toggle — lives here so it's always reachable */}
+          <button
+            onClick={() => setJsonCollapsed((c) => !c)}
+            title={jsonCollapsed ? 'Show JSON editor' : 'Hide JSON editor'}
+            style={{
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '20px',
+              height: '20px',
+              borderRadius: '4px',
+              border: '1px solid #e2e8f0',
+              background: '#fff',
+              cursor: 'pointer',
+              color: '#64748b',
+              fontSize: '12px',
+              lineHeight: 1,
+            }}
+          >
+            {jsonCollapsed ? '›' : '‹'}
+          </button>
           <span
             style={{
               fontSize: '10px',

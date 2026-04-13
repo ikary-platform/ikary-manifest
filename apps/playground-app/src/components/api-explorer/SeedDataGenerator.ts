@@ -285,7 +285,8 @@ export function generateSeedRecords(
     }
 
     if (entity.lifecycle) {
-      record[entity.lifecycle.field] = entity.lifecycle.initial;
+      const states = entity.lifecycle.states;
+      record[entity.lifecycle.field] = states[i % states.length]!;
     }
 
     records.push(record);
