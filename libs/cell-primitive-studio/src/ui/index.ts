@@ -1,5 +1,6 @@
 export { PrimitiveStudio } from './PrimitiveStudio';
 export type { PrimitiveStudioProps } from './PrimitiveStudio';
+export { PrimitiveSidebar } from './components/PrimitiveSidebar';
 export { ScenarioTabs } from './components/ScenarioTabs';
 export type { ScenarioDefinition } from './components/ScenarioTabs';
 export type { ContractField } from './components/PropsEditor';

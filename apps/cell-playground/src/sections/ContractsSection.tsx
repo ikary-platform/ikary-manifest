@@ -109,23 +109,6 @@ export function ContractsSection() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* View toggle strip */}
-      <div className="shrink-0 flex gap-2 px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-        {(['schemas', 'dependencies'] as const).map((v) => (
-          <button
-            key={v}
-            onClick={() => setSectionView(v)}
-            className={`px-3 py-1 text-xs font-medium rounded capitalize ${
-              sectionView === v
-                ? 'bg-blue-600 text-white'
-                : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-            }`}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
-
       {sectionView === 'dependencies' && (
         <div className="flex-1 overflow-auto p-4">
           <SchemaDependencyGraphWorkspace />

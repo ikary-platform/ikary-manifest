@@ -9,6 +9,8 @@ import { PRIMITIVE_DEMOS } from '../data/primitive-demos';
 import { SCHEMA_BY_CONTRACT_TYPE } from '../data/schema-by-contract-type';
 import { PRIMITIVE_CATEGORIES } from '../data/primitive-categories';
 import { extractContractFields } from '../lib/schema-introspection';
+import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
+import { MCP_API_URL } from '../lib/config';
 
 export function UIRuntimeSection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,6 +59,16 @@ export function UIRuntimeSection() {
         contractFieldsByKey={contractFieldsByKey}
         initialKey={primitiveKey}
         onSelectPrimitive={(key) => setSearchParams({ primitive: key }, { replace: true })}
+        hideSidebar
+        renderContractEditor={({ value, onChange, primitiveKey: key }) => (
+          <MonacoJsonEditor
+            value={value}
+            onChange={onChange}
+            error={null}
+            schemaUrl={key ? `${MCP_API_URL}/api/json-schema/primitive/${key}` : undefined}
+            modelUri={`primitive://${key ?? 'none'}.json`}
+          />
+        )}
       />
     </div>
   );

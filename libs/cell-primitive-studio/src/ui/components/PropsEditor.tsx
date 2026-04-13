@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { type ScenarioDefinition, ScenarioTabs } from './ScenarioTabs';
 import type { ParseState } from '../hooks/usePropsEditorState';
 
@@ -17,6 +18,8 @@ interface PropsEditorProps {
   activeScenario: number;
   onScenarioSelect: (index: number) => void;
   contractFields?: ContractField[];
+  /** Optional custom renderer for the Contract Props textarea — receives value + onChange */
+  renderContractEditor?: (p: { value: string; onChange: (v: string) => void }) => ReactNode;
 }
 
 export function PropsEditor({
@@ -28,17 +31,42 @@ export function PropsEditor({
   activeScenario,
   onScenarioSelect,
   contractFields,
+  renderContractEditor,
 }: PropsEditorProps) {
+
   return (
     <div
       style={{
-        flex: '0 0 38%',
+        flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        borderRight: '1px solid hsl(var(--border))',
         overflow: 'hidden',
       }}
     >
+      {/* Panel header bar — matches the 36px height used by AppRuntime/ApiRuntime */}
+      <div
+        style={{
+          height: '36px',
+          flexShrink: 0,
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px',
+          borderBottom: '1px solid hsl(var(--border))',
+          background: 'hsl(var(--muted))',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '10px',
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'hsl(var(--muted-foreground))',
+          }}
+        >
+          Props
+        </span>
+      </div>
       <ScenarioTabs
         scenarios={scenarios}
         activeIndex={activeScenario}
@@ -52,6 +80,7 @@ export function PropsEditor({
           onChange={onPropsChange}
           error={propsState.error}
           flex={3}
+          renderContent={renderContractEditor}
         />
         <EditorSection
           label="Runtime Context"
@@ -74,6 +103,8 @@ interface EditorSectionProps {
   onChange: (text: string) => void;
   error: string | null;
   flex?: number;
+  /** When provided, replaces the textarea with a custom editor component */
+  renderContent?: (p: { value: string; onChange: (v: string) => void }) => ReactNode;
 }
 
 function ContractReference({ fields }: { fields: ContractField[] }) {
@@ -147,7 +178,7 @@ function ContractReference({ fields }: { fields: ContractField[] }) {
   );
 }
 
-function EditorSection({ label, value, onChange, error, flex = 1 }: EditorSectionProps) {
+function EditorSection({ label, value, onChange, error, flex = 1, renderContent }: EditorSectionProps) {
   return (
     <div
       style={{
@@ -177,25 +208,29 @@ function EditorSection({ label, value, onChange, error, flex = 1 }: EditorSectio
           </span>
         )}
       </div>
-      <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        spellCheck={false}
-        style={{
-          flex: 1,
-          padding: '8px 12px',
-          fontFamily: 'monospace',
-          fontSize: '11px',
-          lineHeight: '1.5',
-          border: 'none',
-          outline: 'none',
-          resize: 'none',
-          backgroundColor: error ? 'rgba(239,68,68,0.1)' : 'hsl(var(--muted))',
-          color: 'hsl(var(--foreground))',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
-      />
+      {renderContent ? (
+        renderContent({ value, onChange })
+      ) : (
+        <textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+          style={{
+            flex: 1,
+            padding: '8px 12px',
+            fontFamily: 'monospace',
+            fontSize: '11px',
+            lineHeight: '1.5',
+            border: 'none',
+            outline: 'none',
+            resize: 'none',
+            backgroundColor: error ? 'rgba(239,68,68,0.1)' : 'hsl(var(--muted))',
+            color: 'hsl(var(--foreground))',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        />
+      )}
     </div>
   );
 }

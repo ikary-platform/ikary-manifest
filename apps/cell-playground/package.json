@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@monaco-editor/react": "^4.6.0",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",
     "@ikary/cell-presentation": "workspace:*",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.0",
+    "monaco-editor": "^0.55.0",
     "tailwindcss-animate": "^1.0.7",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

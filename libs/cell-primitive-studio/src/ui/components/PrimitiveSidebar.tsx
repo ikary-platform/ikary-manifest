@@ -36,7 +36,29 @@ export function PrimitiveSidebar({ entries, selectedKey, onSelect }: PrimitiveSi
         overflow: 'hidden',
       }}
     >
-      <div style={{ padding: '12px 12px 8px' }}>
+      <div
+        style={{
+          height: '36px',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 12px',
+          borderBottom: '1px solid hsl(var(--border))',
+          flexShrink: 0,
+        }}
+      >
+        <span
+          style={{
+            fontSize: '10px',
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            color: 'hsl(var(--muted-foreground))',
+          }}
+        >
+          Primitives
+        </span>
+      </div>
+      <div style={{ padding: '8px 12px', borderBottom: '1px solid hsl(var(--border))', flexShrink: 0 }}>
         <input
           type="search"
           placeholder="Search primitives…"
