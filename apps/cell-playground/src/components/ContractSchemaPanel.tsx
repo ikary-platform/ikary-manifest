@@ -114,12 +114,12 @@ export function ContractSchemaPanel({
   return (
     <div
       style={{
-        flex: '0 0 auto',
-        maxHeight: collapsed ? '28px' : '220px',
+        flex: collapsed ? '0 0 28px' : '1 1 0',
+        minHeight: collapsed ? undefined : '200px',
         display: 'flex',
         flexDirection: 'column',
         borderTop: '1px solid hsl(var(--border))',
-        transition: 'max-height 0.18s ease',
+        transition: 'flex 0.18s ease, min-height 0.18s ease',
         overflow: 'hidden',
       }}
     >
