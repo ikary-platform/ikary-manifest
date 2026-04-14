@@ -1,0 +1,66 @@
+name: Quality gate
+
+# Reusable workflow. Caller passes the SHA to verify; this job polls the
+# Actions API until both `CI` and `CodeQL` have reached a terminal state
+# for that SHA on `main`, and exits non-zero if either didn't conclude
+# `success`. Used by deploy/release workflows to refuse publishing
+# artifacts built from a commit that hasn't passed the full quality
+# suite (unit + coverage + e2e + docs-quality + CodeQL).
+
+on:
+  workflow_call:
+    inputs:
+      sha:
+        required: true
+        type: string
+        description: The commit SHA to verify CI + CodeQL success for.
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    name: Verify CI + CodeQL succeeded for ${{ inputs.sha }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Wait for CI and CodeQL conclusions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+          deadline=$(( $(date +%s) + 1800 ))
+          for wf in ci.yml codeql.yml; do
+            echo "::group::Waiting for $wf on $SHA"
+            while :; do
+              if [ "$(date +%s)" -gt "$deadline" ]; then
+                echo "Timed out waiting for $wf to reach a terminal state."
+                exit 1
+              fi
+              run=$(gh api \
+                "repos/$REPO/actions/workflows/$wf/runs?head_sha=$SHA&branch=main&per_page=1" \
+                --jq '.workflow_runs[0] // empty')
+              if [ -z "$run" ]; then
+                echo "No $wf run yet for $SHA; sleeping 15s..."
+                sleep 15
+                continue
+              fi
+              status=$(jq -r '.status' <<<"$run")
+              conclusion=$(jq -r '.conclusion // "null"' <<<"$run")
+              if [ "$status" = "completed" ]; then
+                if [ "$conclusion" = "success" ]; then
+                  echo "$wf passed (run $(jq -r '.id' <<<"$run"))."
+                  break
+                fi
+                echo "$wf finished with conclusion=$conclusion. Refusing to deploy."
+                exit 1
+              fi
+              echo "$wf status=$status; sleeping 15s..."
+              sleep 15
+            done
+            echo "::endgroup::"
+          done
+          echo "All quality gates passed for $SHA."

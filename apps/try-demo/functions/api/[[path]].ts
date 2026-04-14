@@ -7,7 +7,11 @@ const DEFAULT_ORIGIN = 'https://try-api-566740938284.us-central1.run.app';
 export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
   const origin = env.TRY_API_ORIGIN ?? DEFAULT_ORIGIN;
   const incoming = new URL(request.url);
-  const target = new URL(incoming.pathname + incoming.search, origin);
+  // Strip the `/api` prefix so requests land on the Nest route tree
+  // unchanged. This matches vite's dev proxy (`rewrite: p => p.replace(/^\/api/, '')`),
+  // keeping the backend identical between local dev and Cloud Run.
+  const forwardedPath = incoming.pathname.replace(/^\/api/, '') || '/';
+  const target = new URL(forwardedPath + incoming.search, origin);
 
   const headers = new Headers(request.headers);
   headers.delete('host');

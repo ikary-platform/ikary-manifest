@@ -1,28 +1,21 @@
 name: Deploy try.ikary.co
 
 on:
-  push:
+  # Triggered by CI completion on main rather than the raw push event.
+  # The `gate` job (below) additionally verifies CodeQL succeeded for
+  # the same SHA, so deploys only fire when the full quality suite
+  # (unit + coverage + e2e + docs-quality + CodeQL) is green. As a
+  # bonus this sidesteps the GitHub Actions bug where commits touching
+  # `apps/try-demo/functions/api/[[path]].ts` silently drop the push
+  # event and prevent any workflow from firing.
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
-    paths:
-      - 'apps/try-demo/**'
-      - 'apps/try-api/**'
-      - 'libs/cell-ai/**'
-      - 'libs/cell-contract/**'
-      - 'libs/cell-engine/**'
-      - 'libs/cell-data/**'
-      - 'libs/cell-presentation/**'
-      - 'libs/cell-primitive-contract/**'
-      - 'libs/cell-primitives/**'
-      - 'libs/cell-renderer/**'
-      - 'libs/system-ai/**'
-      - 'libs/system-localization/**'
-      - 'manifests/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-try.yml'
   workflow_dispatch:
 
 concurrency:
-  group: deploy-try-${{ github.ref }}
+  group: deploy-try-${{ github.event.workflow_run.head_sha || github.sha }}
   cancel-in-progress: false
 
 env:
@@ -30,17 +23,36 @@ env:
   GCP_REGION: ${{ vars.GCP_REGION || 'us-central1' }}
   API_SERVICE_NAME: try-api
   API_IMAGE: ${{ vars.GCP_REGION || 'us-central1' }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/ikary/try-api
+  # Use the SHA from the triggering CI run when invoked via workflow_run;
+  # fall back to github.sha for workflow_dispatch. github.sha alone races
+  # if main advances between CI completion and this workflow firing.
+  TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
 
 permissions:
   contents: read
   id-token: write
+  actions: read
 
 jobs:
+  gate:
+    # Skip deploy entirely when CI itself failed/cancelled. For
+    # workflow_dispatch, run the gate unconditionally so manual reruns
+    # are equally safe.
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    uses: ./.github/workflows/_gate.yml
+    with:
+      sha: ${{ github.event.workflow_run.head_sha || github.sha }}
+
   deploy-demo:
     name: Deploy SPA to Cloudflare Pages
     runs-on: ubuntu-latest
+    needs: gate
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - uses: pnpm/action-setup@v4
 
@@ -78,8 +90,11 @@ jobs:
   deploy-api:
     name: Deploy API to Cloud Run
     runs-on: ubuntu-latest
+    needs: gate
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -96,10 +111,10 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build \
-            -t ${{ env.API_IMAGE }}:${{ github.sha }} \
+            -t ${{ env.API_IMAGE }}:${{ env.TARGET_SHA }} \
             -t ${{ env.API_IMAGE }}:latest \
             -f apps/try-api/Dockerfile .
-          docker push ${{ env.API_IMAGE }}:${{ github.sha }}
+          docker push ${{ env.API_IMAGE }}:${{ env.TARGET_SHA }}
           docker push ${{ env.API_IMAGE }}:latest
 
       - name: Write env vars file
@@ -128,7 +143,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.API_SERVICE_NAME }} \
-            --image ${{ env.API_IMAGE }}:${{ github.sha }} \
+            --image ${{ env.API_IMAGE }}:${{ env.TARGET_SHA }} \
             --region ${{ env.GCP_REGION }} \
             --platform managed \
             --allow-unauthenticated \
