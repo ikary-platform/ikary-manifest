@@ -161,4 +161,24 @@ describe('cell-runtime-api — branding', () => {
     expect(data.version).toBe(0);
     expect(data.isCustomized).toBe(false);
   });
+
+  it('accepts slug cell IDs (not only UUIDs)', async () => {
+    const slugCell = 'e2e_branding_slug';
+    const readRes = await getJson(`${API_BASE}/cells/${slugCell}/branding`, handle.token);
+    expect(readRes.status).toBe(200);
+    const writeRes = await patchJson(
+      `${API_BASE}/cells/${slugCell}/branding`,
+      handle.token,
+      { expectedVersion: 0, accentColor: '#112233' },
+    );
+    expect(writeRes.status).toBe(200);
+    const data = (writeRes.body as BrandingResponse).data;
+    expect(data.cellId).toBe(slugCell);
+    expect(data.accentColor).toBe('#112233');
+  });
+
+  it('rejects unauthenticated requests with 401', async () => {
+    const res = await fetch(URL_BASE);
+    expect(res.status).toBe(401);
+  });
 });

@@ -1,7 +1,10 @@
 BEGIN;
 
+-- cell_id is TEXT rather than UUID because manifest-declared cells identify
+-- by slug (e.g. "crm", "e2e_local"), not UUID. The shared Zod schema
+-- constrains to min(1) length; UUIDs remain valid values.
 CREATE TABLE IF NOT EXISTS cell_branding (
-  cell_id UUID PRIMARY KEY,
+  cell_id TEXT PRIMARY KEY,
   accent_color TEXT,
   title_font_family TEXT,
   body_font_family TEXT,

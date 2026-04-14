@@ -57,8 +57,27 @@ export class CellBrandingService {
           expectedVersion: input.expectedVersion,
         });
       }
-      const row = await this.repository.insert(cellId, input);
-      return mapCellBrandingRowToDto(row);
+      try {
+        const row = await this.repository.insert(cellId, input);
+        return mapCellBrandingRowToDto(row);
+      } catch (err) {
+        // Postgres unique_violation: another request inserted the same row
+        // between findByCellId and insert. Surface as 409 so the client
+        // retries against the fresh version.
+        if (
+          err &&
+          typeof err === 'object' &&
+          'code' in err &&
+          (err as { code?: string }).code === '23505'
+        ) {
+          throw new ConflictException({
+            message: 'Branding row was created concurrently.',
+            currentVersion: 1,
+            expectedVersion: input.expectedVersion,
+          });
+        }
+        throw err;
+      }
     }
 
     if (current.version !== input.expectedVersion) {

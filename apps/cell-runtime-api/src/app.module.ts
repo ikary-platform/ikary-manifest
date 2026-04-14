@@ -22,6 +22,7 @@ import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
 import {
   AuthModule,
   AuthAuditService,
+  JwtAuthGuard,
 } from '@ikary/system-auth';
 import { CellBrandingModule } from '@ikary/cell-branding/server';
 import { DatabaseModule } from './database.module.js';
@@ -89,6 +90,7 @@ const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5
     CellBrandingModule.register({
       databaseProviderToken: DatabaseService,
       packageVersion: '0.3.0',
+      guards: [JwtAuthGuard],
     }),
   ],
   controllers: [HealthController, EntityController, PreviewAuthController],
