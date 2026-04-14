@@ -169,7 +169,7 @@ function containerClassName(dense: boolean): string {
 
 function referenceLinkClassName(dense: boolean): string {
   return [
-    'inline-flex max-w-full rounded-sm text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-blue-400',
+    'inline-flex max-w-full rounded-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
     dense ? 'text-xs' : 'text-sm',
   ].join(' ');
 }

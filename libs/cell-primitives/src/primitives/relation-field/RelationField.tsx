@@ -70,7 +70,7 @@ function AttachView(props: RelationFieldAttachViewProps) {
             placeholder={props.placeholder ?? 'Search…'}
             disabled={props.disabled || props.readonly}
             onChange={(e) => props.onSearchChange(e.target.value)}
-            className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder-gray-500"
+            className="w-full rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm placeholder-gray-400 focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder-gray-500"
             aria-describedby={props.describedBy}
           />
           {props.isSearching && (
@@ -96,14 +96,14 @@ function SelectedBadge({
 }) {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-950/40 dark:text-blue-300">
+      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
         {option.label}
         {!disabled && (
           <button
             type="button"
             aria-label={`Remove ${option.label}`}
             onClick={onClear}
-            className="ml-0.5 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+            className="ml-0.5 text-primary hover:opacity-80"
           >
             ×
           </button>

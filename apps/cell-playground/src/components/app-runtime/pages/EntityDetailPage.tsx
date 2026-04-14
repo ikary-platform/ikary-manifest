@@ -43,7 +43,7 @@ export function EntityDetailPage({ page, params }: Props) {
     return (
       <div className="p-6 space-y-3">
         <p className="text-sm text-gray-500 dark:text-gray-400">Record not found.</p>
-        <button onClick={handleBack} className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+        <button onClick={handleBack} className="text-xs text-primary hover:underline">
           Back to list
         </button>
       </div>

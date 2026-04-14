@@ -106,7 +106,7 @@ function UtilityActionButton({
       onClick={action.onClick}
       className={[
         'inline-flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
         'disabled:cursor-not-allowed disabled:opacity-50',
         variant === 'clear'
           ? 'text-gray-600 hover:text-gray-800 hover:underline dark:text-gray-300 dark:hover:text-gray-100'
@@ -152,14 +152,14 @@ function overflowTriggerClassName(): string {
   return [
     'inline-flex h-8 cursor-pointer list-none items-center justify-center rounded-md px-3 text-sm font-medium',
     'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
     'dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-900',
   ].join(' ');
 }
 
 function actionClassName(action: BulkCommandBarResolvedAction, emphasis: 'visible' | 'overflow'): string {
   const base =
-    'inline-flex h-8 items-center justify-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex h-8 items-center justify-center gap-1.5 rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (action.variant === 'destructive') {
     return `${base} border border-red-200 bg-white text-red-700 hover:bg-red-50 dark:border-red-900 dark:bg-transparent dark:text-red-300 dark:hover:bg-red-950/40`;

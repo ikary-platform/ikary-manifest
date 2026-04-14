@@ -113,10 +113,10 @@ export function FilterBar({
                   onClick={() => onAdvancedToggle?.(!advancedFilters.open)}
                   className={[
                     'inline-flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                     'disabled:cursor-not-allowed disabled:opacity-50',
                     advancedFilters.open
-                      ? 'border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300'
+                      ? 'border border-primary/30 bg-primary/10 text-primary'
                       : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-900',
                   ].join(' ')}
                 >
@@ -158,7 +158,7 @@ export function FilterBar({
                 onClick={clearAction.onClick}
                 className={[
                   'inline-flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
                   'disabled:cursor-not-allowed disabled:opacity-50',
                   'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50',
                   'dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-900',
@@ -341,7 +341,7 @@ function FilterControl({
           }}
           className={[
             'min-h-16 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
             'disabled:cursor-not-allowed disabled:opacity-60',
             'dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200',
           ].join(' ')}
@@ -405,7 +405,7 @@ function ActiveFilterPill({
       onClick={() => onRemoveActiveFilter(activeFilter.key)}
       className={[
         'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800',
       ].join(' ')}

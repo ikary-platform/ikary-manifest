@@ -102,7 +102,7 @@ export function EntityListPage({ page }: { page: PageDefinition }) {
           />
           <button
             onClick={handleCreate}
-            className="text-xs font-medium px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            className="text-xs font-medium px-3 py-1.5 rounded bg-primary text-primary-foreground hover:opacity-90 transition-colors"
           >
             + New
           </button>
@@ -124,7 +124,7 @@ export function EntityListPage({ page }: { page: PageDefinition }) {
                 >
                   {field.name}
                   {sortField === field.key && (
-                    <span className="ml-1 text-blue-500">{sortDir === 'asc' ? '\u2191' : '\u2193'}</span>
+                    <span className="ml-1 text-primary">{sortDir === 'asc' ? '\u2191' : '\u2193'}</span>
                   )}
                 </th>
               ))}
@@ -231,7 +231,7 @@ function CellValue({ field, value, isFirst }: { field: FieldDefinition; value: u
   }
 
   if (isFirst) {
-    return <span className="font-medium text-blue-600 dark:text-blue-400">{text}</span>;
+    return <span className="font-medium text-primary">{text}</span>;
   }
 
   return <span className="text-gray-700 dark:text-gray-300 truncate max-w-xs block">{text}</span>;

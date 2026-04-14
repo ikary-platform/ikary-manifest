@@ -22,7 +22,9 @@ import { SystemLogModule, LogService } from '@ikary/system-log-core/server';
 import {
   AuthModule,
   AuthAuditService,
+  JwtAuthGuard,
 } from '@ikary/system-auth';
+import { CellBrandingModule } from '@ikary/cell-branding/server';
 import { DatabaseModule } from './database.module.js';
 import type { RuntimeContext } from './runtime-context.js';
 
@@ -43,6 +45,45 @@ function resolveMigrationsRoot(packageName: string): string {
 
 const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
 
+// Materialize AuthModule once so it can be forwarded to CellBrandingModule
+// without creating a second instance. JwtAuthGuard's TokenService lives in
+// this module's scope; the branding controller needs the same reference to
+// resolve the guard at runtime.
+const authModule = AuthModule.register({
+  database: {
+    connectionString: dbUrl,
+    ssl: false,
+    maxPoolSize: 5,
+  },
+  jwt: {
+    accessTokenSecret: process.env['AUTH_ACCESS_TOKEN_SECRET'] ?? 'ikary-preview-access-secret-key-0',
+    refreshTokenSecret: process.env['AUTH_REFRESH_TOKEN_SECRET'] ?? 'ikary-preview-refresh-secret-key0',
+    tokenHashSecret: process.env['AUTH_TOKEN_HASH_SECRET'] ?? 'ikary-preview-hash-secret-key-000',
+    accessTokenTtlSeconds: 3600,
+    refreshTokenTtlSeconds: 86_400 * 14,
+    issuer: 'ikary-preview',
+    audience: 'ikary-preview',
+  },
+  cookie: {
+    domain: process.env['AUTH_COOKIE_DOMAIN'] ?? 'localhost',
+    secure: false,
+  },
+  classic: {
+    enabled: true,
+    signup: false,
+    resetPassword: false,
+    magicLink: false,
+    emailVerification: 'code',
+    requireEmailVerification: false,
+    passwordMinLength: 8,
+    verificationCodeLength: 6,
+    verificationTokenTtlMinutes: 20,
+    resetPasswordTtlMinutes: 30,
+    magicLinkTtlMinutes: 15,
+  },
+  extraExports: [AuthAuditService],
+});
+
 @Module({
   imports: [
     DatabaseModule,
@@ -51,39 +92,12 @@ const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5
       service: 'cell-runtime-api',
       pretty: true,
     }),
-    AuthModule.register({
-      database: {
-        connectionString: dbUrl,
-        ssl: false,
-        maxPoolSize: 5,
-      },
-      jwt: {
-        accessTokenSecret: process.env['AUTH_ACCESS_TOKEN_SECRET'] ?? 'ikary-preview-access-secret-key-0',
-        refreshTokenSecret: process.env['AUTH_REFRESH_TOKEN_SECRET'] ?? 'ikary-preview-refresh-secret-key0',
-        tokenHashSecret: process.env['AUTH_TOKEN_HASH_SECRET'] ?? 'ikary-preview-hash-secret-key-000',
-        accessTokenTtlSeconds: 3600,
-        refreshTokenTtlSeconds: 86_400 * 14,
-        issuer: 'ikary-preview',
-        audience: 'ikary-preview',
-      },
-      cookie: {
-        domain: process.env['AUTH_COOKIE_DOMAIN'] ?? 'localhost',
-        secure: false,
-      },
-      classic: {
-        enabled: true,
-        signup: false,
-        resetPassword: false,
-        magicLink: false,
-        emailVerification: 'code',
-        requireEmailVerification: false,
-        passwordMinLength: 8,
-        verificationCodeLength: 6,
-        verificationTokenTtlMinutes: 20,
-        resetPasswordTtlMinutes: 30,
-        magicLinkTtlMinutes: 15,
-      },
-      extraExports: [AuthAuditService],
+    authModule,
+    CellBrandingModule.register({
+      databaseProviderToken: DatabaseService,
+      packageVersion: '0.3.0',
+      guards: [JwtAuthGuard],
+      imports: [authModule],
     }),
   ],
   controllers: [HealthController, EntityController, PreviewAuthController],
@@ -135,6 +149,13 @@ const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5
           migrationLog,
         );
         await authMigrations.migrate();
+
+        const brandingMigrations = new MigrationRunner(
+          dbService,
+          { packageName: '@ikary/cell-branding', migrationsRoot: resolveMigrationsRoot('@ikary/cell-branding') },
+          migrationLog,
+        );
+        await brandingMigrations.migrate();
 
         const schemaManager = new EntitySchemaManager(dbService);
         await schemaManager.initFromManifest(compiled as any);

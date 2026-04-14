@@ -33,7 +33,7 @@ export function PageHeader({
                     {item.href && !isLast ? (
                       <a
                         href={item.href}
-                        className="rounded-sm hover:text-gray-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:hover:text-gray-200"
+                        className="rounded-sm hover:text-gray-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 dark:hover:text-gray-200"
                       >
                         {item.label}
                       </a>
@@ -140,7 +140,7 @@ function ActionButton({ action, variant }: { action: PageHeaderResolvedAction; v
 
 function resolveActionClassName(action: PageHeaderResolvedAction, variant: 'primary' | 'secondary'): string {
   const base =
-    'inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex h-9 items-center justify-center rounded-md px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50';
 
   if (variant === 'primary') {
     if (action.intent === 'danger') {
