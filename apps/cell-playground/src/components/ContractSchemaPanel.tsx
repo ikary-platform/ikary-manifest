@@ -108,7 +108,7 @@ export function ContractSchemaPanel({
   }
 
   const schemaViewerHref = current.schemaName
-    ? `/contracts?schema=${current.schemaName}`
+    ? `/playground/contracts?schema=${current.schemaName}`
     : undefined;
 
   return (
