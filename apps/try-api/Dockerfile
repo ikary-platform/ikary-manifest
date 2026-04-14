@@ -1,20 +1,37 @@
-FROM node:20-alpine AS build
-WORKDIR /repo
-RUN corepack enable
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json ./
-COPY libs ./libs
-COPY apps/try-api ./apps/try-api
-COPY manifests ./manifests
-RUN pnpm install --frozen-lockfile
-RUN pnpm --filter @ikary/try-api build
-
-FROM node:20-alpine AS runtime
+FROM node:20-slim AS base
+RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 WORKDIR /app
+
+# ── Install deps (filtered to try-api and its transitive workspace deps) ──
+FROM base AS deps
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
+COPY libs/cell-contract/package.json libs/cell-contract/package.json
+COPY libs/system-ai/package.json libs/system-ai/package.json
+COPY libs/cell-ai/package.json libs/cell-ai/package.json
+COPY apps/try-api/package.json apps/try-api/package.json
+RUN pnpm install --frozen-lockfile --filter @ikary/try-api...
+
+# ── Build ──
+FROM deps AS build
+COPY libs/cell-contract/ libs/cell-contract/
+COPY libs/system-ai/ libs/system-ai/
+COPY libs/cell-ai/ libs/cell-ai/
+COPY apps/try-api/ apps/try-api/
+COPY manifests/ manifests/
+RUN pnpm --filter @ikary/cell-contract build \
+ && pnpm --filter @ikary/system-ai build \
+ && pnpm --filter @ikary/cell-ai build \
+ && pnpm --filter @ikary/try-api build
+
+# ── Production image ──
+FROM base AS production
 ENV NODE_ENV=production
-COPY --from=build /repo/apps/try-api/dist ./dist
-COPY --from=build /repo/apps/try-api/package.json ./package.json
-COPY --from=build /repo/manifests ./manifests
-COPY --from=build /repo/node_modules ./node_modules
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/try-api/node_modules ./apps/try-api/node_modules
+COPY --from=build /app/apps/try-api/dist ./apps/try-api/dist
+COPY --from=build /app/apps/try-api/package.json ./apps/try-api/package.json
+COPY --from=build /app/manifests ./manifests
+
 EXPOSE 8080
 ENV PORT=8080
-CMD ["node", "dist/main.cjs"]
+CMD ["node", "apps/try-api/dist/main.cjs"]
