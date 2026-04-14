@@ -1,0 +1,1 @@
+export { RelationDiagramTab } from './RelationDiagramTab';
