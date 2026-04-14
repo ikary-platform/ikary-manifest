@@ -57,6 +57,9 @@ export class CellBrandingRepository {
         title_font_family: input.titleFontFamily ?? null,
         body_font_family: input.bodyFontFamily ?? null,
         default_theme_mode: input.defaultThemeMode ?? null,
+        // First successful write bumps the conceptual pre-write version (0)
+        // to 1 so subsequent PATCHes send expectedVersion: 1.
+        version: 1,
       })
       .returningAll()
       .executeTakeFirstOrThrow();
