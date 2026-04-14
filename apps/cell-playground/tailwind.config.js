@@ -5,6 +5,7 @@ export default {
   darkMode: 'class',
   content: [
     './src/**/*.{ts,tsx}',
+    '../../libs/system-ikary-ui/src/**/*.{ts,tsx}',
     '../../libs/cell-primitives/src/**/*.{ts,tsx}',
     '../../libs/cell-primitive-studio/src/**/*.{ts,tsx}',
     '../../libs/cell-presentation/src/**/*.{ts,tsx}',

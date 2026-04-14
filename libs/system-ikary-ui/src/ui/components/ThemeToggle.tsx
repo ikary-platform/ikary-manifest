@@ -1,4 +1,4 @@
-import { useTheme, type ThemeMode } from './useTheme';
+import { useTheme, type ThemeMode } from '../hooks/useTheme';
 
 export interface ThemeToggleProps {
   /** Controlled mode — omit to use the internal `useTheme` hook. */

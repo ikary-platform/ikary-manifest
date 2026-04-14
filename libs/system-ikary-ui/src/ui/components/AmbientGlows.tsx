@@ -1,7 +1,7 @@
 /**
  * Two pulsing radial glows that sit above the waves and below the content.
  * Positioning + colors come from `.ob-glow-top` / `.ob-glow-bottom` rules
- * in `styles.css`. The pulse animation is shared via `.ob-glow-pulse`.
+ * in `brand.css`. The pulse animation is shared via `.ob-glow-pulse`.
  */
 export function AmbientGlows() {
   return (

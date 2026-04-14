@@ -52,6 +52,8 @@ export function useTheme(): UseThemeReturn {
 /**
  * Drop this snippet into the `<head>` of any SSR/static HTML page to pre-apply
  * the stored theme before React hydrates, preventing a flash of wrong theme.
+ *
+ * Re-exported from `@ikary/system-ikary-ui` (root entry) as a plain string.
  */
 export const THEME_PREFLIGHT_SCRIPT = `(() => {
   try {

@@ -1,6 +1,6 @@
 // ── Chrome (app-shell primitives, not manifest-driven) ───────────────────────
-export { ThemeToggle, useTheme, THEME_PREFLIGHT_SCRIPT } from './chrome/theme-toggle';
-export type { ThemeToggleProps, ThemeMode, UseThemeReturn } from './chrome/theme-toggle';
+export { ThemeToggle, useTheme, THEME_PREFLIGHT_SCRIPT } from '@ikary/system-ikary-ui/ui';
+export type { ThemeToggleProps, ThemeMode, UseThemeReturn } from '@ikary/system-ikary-ui/ui';
 
 export type { PrimitiveComponent, UIPrimitiveDefinition } from './types/PrimitiveTypes';
 export type { FieldBinding, ValueBinding, Binding } from './types/BindingTypes';

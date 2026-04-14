@@ -11,7 +11,7 @@ import { EntitiesSidebarList } from './components/sidebar/EntitiesSidebarList';
 import { UiRuntimeSidebar } from './components/sidebar/UiRuntimeSidebar';
 import { SchemaSidebarNav } from './components/sidebar/SchemaSidebarNav';
 import { ExternalLinkIcon, SunIcon, MoonIcon, GitHubIcon } from './components/icons';
-import { useDarkMode } from './hooks/useDarkMode';
+import { useTheme, IkaryLogo } from '@ikary/system-ikary-ui/ui';
 import type { AppManifestScenario } from './data/app-manifest-loader';
 import type { ApiEntityScenario } from './data/api-sample-entities';
 
@@ -25,7 +25,8 @@ const TABS = [
 ] as const;
 
 export function App() {
-  const { dark, toggle } = useDarkMode();
+  const { mode, toggle } = useTheme();
+  const dark = mode === 'dark';
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,9 +59,8 @@ export function App() {
         >
           {/* Logo area — same height as the nav bar on the right */}
           <div className="h-12 flex items-center px-4 border-b border-[hsl(var(--border))] shrink-0">
-            <a href="https://documentation.ikary.co/" target="_blank" rel="noreferrer">
-              <img src="/brand/original-full.svg" alt="IKARY" className="h-[18px] w-auto block dark:hidden" />
-              <img src="/brand/white-full.svg" alt="IKARY" className="h-[18px] w-auto hidden dark:block" />
+            <a href="https://documentation.ikary.co/" target="_blank" rel="noreferrer" aria-label="IKARY documentation">
+              <IkaryLogo variant="full-auto" height={18} />
             </a>
           </div>
 

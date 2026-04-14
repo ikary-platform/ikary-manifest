@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppHeader } from './chrome/AppHeader';
-import { OnboardingBackground } from './chrome/OnboardingBackground';
+import { IkaryWaveBackground } from '@ikary/system-ikary-ui/ui';
 import { RunLocallyPanel } from './chrome/RunLocallyPanel';
 import { ChatView } from './chat/ChatView';
 import { PreviewPanel } from './preview/PreviewPanel';
@@ -26,7 +26,7 @@ export function App() {
 
   return (
     <div className="app-shell">
-      <OnboardingBackground />
+      <IkaryWaveBackground />
       <AppHeader streamState={streamState} onRunLocally={openRunLocally} />
       <div className="app-body">
         <ChatView
