@@ -106,7 +106,7 @@ export function EntityCreatePage({ page }: { page: PageDefinition }) {
         <div className="flex gap-2 pt-2">
           <button
             type="submit"
-            className="text-xs font-medium px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            className="text-xs font-medium px-4 py-2 rounded bg-primary text-primary-foreground hover:opacity-90 transition-colors"
           >
             {isEdit ? 'Save' : 'Create'}
           </button>

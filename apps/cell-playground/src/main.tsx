@@ -5,6 +5,7 @@ import '@ikary/cell-primitives/registry';
 import '@ikary/system-ikary-ui/styles';
 import './index.css';
 import { App } from './App';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const PLAYGROUND_ROUTE_PARAM = '__ikary_playground_route';
 
@@ -27,8 +28,10 @@ restorePlaygroundDeepLink();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter basename="/playground">
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter basename="/playground">
+        <App />
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 );

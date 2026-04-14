@@ -475,7 +475,7 @@ function WidgetActionButton({ action }: { action: DashboardWidgetResolvedAction 
   const className = [
     'inline-flex h-7 items-center justify-center gap-1 rounded-md border border-gray-200',
     'bg-white px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
     'disabled:cursor-not-allowed disabled:opacity-50',
     'dark:border-gray-700 dark:bg-transparent dark:text-gray-200 dark:hover:bg-gray-900',
   ].join(' ');

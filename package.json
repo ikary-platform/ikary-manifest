@@ -19,7 +19,7 @@
     "coverage:cell-runtime-core": "pnpm --filter @ikary/cell-runtime-core test:coverage",
     "coverage:system-migration-core": "pnpm --filter @ikary/system-migration-core test:coverage",
     "generate:schema": "tsx scripts/generate-json-schema.ts",
-    "playground:build": "pnpm --filter @ikary/cell-playground run build",
+    "playground:build": "turbo run build --filter @ikary/cell-playground",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",

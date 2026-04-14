@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AppHeader } from './chrome/AppHeader';
 import { IkaryWaveBackground } from '@ikary/system-ikary-ui/ui';
 import { RunLocallyPanel } from './chrome/RunLocallyPanel';
+import { BrandingPanel } from './chrome/BrandingPanel';
 import { ChatView } from './chat/ChatView';
 import { PreviewPanel } from './preview/PreviewPanel';
 import { useDemoStatus } from './hooks';
@@ -19,15 +20,22 @@ import type { StreamState } from './stream/stream-state';
 export function App() {
   const [streamState, setStreamState] = useState<StreamState>(INITIAL_STREAM_STATE);
   const [runLocallyOpen, setRunLocallyOpen] = useState(false);
+  const [brandingOpen, setBrandingOpen] = useState(false);
   const demoStatus = useDemoStatus();
 
   const openRunLocally = () => setRunLocallyOpen(true);
   const closeRunLocally = () => setRunLocallyOpen(false);
+  const openBranding = () => setBrandingOpen(true);
+  const closeBranding = () => setBrandingOpen(false);
 
   return (
     <div className="app-shell">
       <IkaryWaveBackground />
-      <AppHeader streamState={streamState} onRunLocally={openRunLocally} />
+      <AppHeader
+        streamState={streamState}
+        onRunLocally={openRunLocally}
+        onOpenBranding={openBranding}
+      />
       <div className="app-body">
         <ChatView
           onStreamStateChange={setStreamState}
@@ -39,6 +47,7 @@ export function App() {
       {runLocallyOpen && (
         <RunLocallyPanel manifest={streamState.manifest} onClose={closeRunLocally} />
       )}
+      {brandingOpen && <BrandingPanel onClose={closeBranding} />}
     </div>
   );
 }

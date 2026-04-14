@@ -236,7 +236,7 @@ function inferTone(value: unknown): FieldValueTone {
 
 function linkClassName(dense: boolean, truncate: boolean): string {
   return [
-    'rounded-sm text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-blue-400',
+    'rounded-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
     dense ? 'text-xs' : 'text-sm',
     truncate ? 'block truncate' : '',
   ]
@@ -246,7 +246,7 @@ function linkClassName(dense: boolean, truncate: boolean): string {
 
 function linkButtonClassName(dense: boolean, truncate: boolean): string {
   return [
-    'rounded-sm text-left text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-blue-400',
+    'rounded-sm text-left text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40',
     dense ? 'text-xs' : 'text-sm',
     truncate ? 'block truncate' : '',
   ]

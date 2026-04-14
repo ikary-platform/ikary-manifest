@@ -49,7 +49,7 @@ function NavItemComponent({ item }: { item: NavItem }) {
       className={[
         'block w-full text-left px-2 py-1.5 rounded text-xs transition-colors truncate',
         isActive
-          ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium'
+          ? 'bg-primary/10 text-primary font-medium'
           : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200',
       ].join(' ')}
     >

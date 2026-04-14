@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ikary/cell-branding": "workspace:*",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-data": "workspace:*",
     "@ikary/cell-engine": "workspace:*",
