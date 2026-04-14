@@ -81,6 +81,41 @@ pages:
     path: /dashboard
 ```
 
+#### Slot bindings
+
+Use `slotBindings` to inject registered primitives into named zones on a page. Zones are fixed per page type. Each zone supports three binding points derived by convention: `zone.before` (prepend), `zone` (replace), and `zone.after` (append).
+
+```yaml
+pages:
+  - key: customer-list
+    type: entity-list
+    title: Customers
+    path: /customers
+    entity: customer
+    slotBindings:
+      - slot: toolbar.before
+        primitive: beta-banner
+        props:
+          message: "Beta feature"
+      - slot: table.after
+        primitive: export-controls
+```
+
+Set `primitive` on a `type: custom` page to render a registered primitive as the page body:
+
+```yaml
+  - key: reports
+    type: custom
+    title: Reports
+    path: /reports
+    primitive: blank-slot
+    slotBindings:
+      - slot: content
+        primitive: reports-view
+```
+
+See [Slots and Bindings](/guide/slots-and-bindings) for the full guide, including zone names by page type, slot context, and the `blank-slot` primitive.
+
 ### `roles`
 
 Roles define access control groups. They control which entities and pages are accessible to which users at runtime. Each role specifies a set of permission scopes tied to entity resources.

@@ -3,6 +3,16 @@ import { PageTypeSchema, type PageType } from './PageTypeSchema';
 import { DataContextSchema } from '../../data/DataContextSchema';
 import { DataProviderSchema } from '../../data/DataProviderSchema';
 
+export const SlotBindingSchema = z.object({
+  slot: z.string().min(1),
+  primitive: z.string().min(1),
+  version: z.string().optional(),
+  props: z.record(z.unknown()).optional().default({}),
+  mode: z.enum(['replace', 'prepend', 'append']).optional(),
+});
+
+export type SlotBinding = z.infer<typeof SlotBindingSchema>;
+
 const PageMenuSchema = z
   .object({
     label: z.string().min(1).optional(),
@@ -33,6 +43,8 @@ export const PageDefinitionSchema = z
     options: z.record(z.unknown()).optional(),
     dataContext: DataContextSchema.optional(),
     dataProviders: z.array(DataProviderSchema).optional(),
+    slotBindings: z.array(SlotBindingSchema).optional(),
+    primitive: z.string().optional(),
   })
   .strict()
   .superRefine((value, ctx) => {

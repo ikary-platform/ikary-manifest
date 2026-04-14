@@ -110,4 +110,34 @@ curl {{ baseUrl }}/api/primitives/data-grid
 }
 ```
 
+For custom primitives that declare slots, the response includes a `slots` array:
+
+```json
+{
+  "key": "my-layout",
+  "category": "layout",
+  "description": "Custom layout with a header and body area",
+  "source": "custom",
+  "contract": {
+    "key": "my-layout",
+    "version": "1.0.0",
+    "label": "My Layout",
+    "category": "layout",
+    "props": { "type": "object", "properties": {} },
+    "slots": [
+      {
+        "name": "header",
+        "description": "Top area of the layout",
+        "allowedModes": ["replace", "prepend", "append"]
+      },
+      {
+        "name": "body",
+        "description": "Main content area",
+        "allowedModes": ["replace", "append"]
+      }
+    ]
+  }
+}
+```
+
 Returns an error if the key does not match any known primitive. See [Error Handling](/api/errors) for the error shape.

@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import type { PageDefinition } from '@ikary/cell-contract';
+import { SlotOutlet } from '@ikary/cell-primitives';
+import type { SlotContext } from '@ikary/cell-primitives';
 import { useAppRuntime } from '../../AppRuntimeContext';
 import { KpiCard } from './KpiCard';
 import { BarChartWidget } from './BarChartWidget';
@@ -91,55 +93,74 @@ export function DashboardPage({ page }: { page: PageDefinition }) {
     [pies, stores],
   );
 
+  const slotBindings = page.slotBindings ?? [];
+  const baseSlotCtx: Omit<SlotContext, 'slotZone' | 'slotMode'> = {
+    pageType: 'dashboard',
+    pageTitle: page.title ?? '',
+    pageKey: page.key,
+  };
+
   return (
-    <div className="p-6 space-y-8 overflow-y-auto h-full">
+    <div className="flex flex-col overflow-y-auto h-full">
 
       {/* Header */}
-      <div>
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{page.title}</h1>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          {manifest.metadata.description ?? 'Welcome to your application preview.'}
-        </p>
-      </div>
-
-      {/* KPI cards */}
-      {kpis.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {kpis.map((spec, i) => (
-            <KpiCard
-              key={i}
-              title={spec.label}
-              value={kpiValues[i]!.value}
-              subtitle={kpiValues[i]!.subtitle}
-              accent={kpiValues[i]!.accent}
-            />
-          ))}
+      <SlotOutlet zone="header" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <div className="px-6 pt-6 pb-2">
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{page.title}</h1>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {manifest.metadata.description ?? 'Welcome to your application preview.'}
+          </p>
         </div>
-      )}
+      </SlotOutlet>
 
-      {/* Status distribution — labeled bar rows */}
-      {bars.length > 0 && (
-        <div className="space-y-3">
-          <SectionLabel label="Status Distribution" />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {bars.map((spec, i) => (
-              <BarChartWidget key={i} title={spec.label} data={barData[i] ?? null} />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Content */}
+      <SlotOutlet zone="content" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <div className="px-6 pb-6 space-y-8">
+          {/* KPI cards */}
+          {kpis.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+              {kpis.map((spec, i) => (
+                <KpiCard
+                  key={i}
+                  title={spec.label}
+                  value={kpiValues[i]!.value}
+                  subtitle={kpiValues[i]!.subtitle}
+                  accent={kpiValues[i]!.accent}
+                />
+              ))}
+            </div>
+          )}
 
-      {/* Breakdowns — donut charts */}
-      {pies.length > 0 && (
-        <div className="space-y-3">
-          <SectionLabel label="Breakdowns" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {pies.map((spec, i) => (
-              <DonutChartWidget key={i} title={spec.label} data={pieData[i] ?? null} />
-            ))}
-          </div>
+          {/* Status distribution — labeled bar rows */}
+          {bars.length > 0 && (
+            <div className="space-y-3">
+              <SectionLabel label="Status Distribution" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {bars.map((spec, i) => (
+                  <BarChartWidget key={i} title={spec.label} data={barData[i] ?? null} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Breakdowns — donut charts */}
+          {pies.length > 0 && (
+            <div className="space-y-3">
+              <SectionLabel label="Breakdowns" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {pies.map((spec, i) => (
+                  <DonutChartWidget key={i} title={spec.label} data={pieData[i] ?? null} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </SlotOutlet>
+
+      {/* Footer */}
+      <SlotOutlet zone="footer" bindings={slotBindings} slotContext={baseSlotCtx}>
+        {null}
+      </SlotOutlet>
 
     </div>
   );

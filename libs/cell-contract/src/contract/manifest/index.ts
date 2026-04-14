@@ -4,7 +4,7 @@ export { CellMetadataSchema } from './CellMetadataSchema';
 export { AppShellDefinitionSchema } from './shell/AppShellDefinitionSchema';
 export { CellMountDefinitionSchema } from './shell/CellMountDefinitionSchema';
 export { PageTypeSchema } from './page/PageTypeSchema';
-export { PageDefinitionSchema } from './page/PageDefinitionSchema';
+export { PageDefinitionSchema, SlotBindingSchema } from './page/PageDefinitionSchema';
 export { NavigationItemSchema } from './navigation/NavigationItemSchema';
 export { NavigationDefinitionSchema } from './navigation/NavigationDefinitionSchema';
 

@@ -91,4 +91,30 @@ export function registerValidationTools(server: McpServer, validation: Validatio
       }
     },
   );
+
+  server.tool(
+    'validate_slot_bindings',
+    'Validates an array of slot bindings: checks that each primitive key is registered, the slot zone is valid for the given page type, and that the binding mode is allowed. Use list_slots_for_page_type to see valid zones first.',
+    {
+      slotBindings: z.array(z.record(z.unknown())).describe('Array of slot binding objects to validate'),
+      pageType: z.enum(['entity-list', 'entity-detail', 'entity-create', 'entity-edit', 'dashboard', 'custom'])
+        .optional()
+        .describe('Optional page type used to validate zone names. If omitted, zone names are not validated against the page type.'),
+    },
+    async ({ slotBindings, pageType }) => {
+      try {
+        const result = validation.validateSlotBindings(slotBindings, pageType);
+        if (result.valid) {
+          return mcpResult(`All ${slotBindings.length} slot binding(s) are valid.`, result);
+        }
+        return mcpResult(
+          `Slot bindings are **invalid**. ${result.errors.length} error(s):\n\n` +
+          result.errors.map((e) => `- \`${e.field}\`: ${e.message}`).join('\n'),
+          result,
+        );
+      } catch (err) {
+        return mcpError(String(err));
+      }
+    },
+  );
 }

@@ -11,6 +11,8 @@ import type { CellPageRendererProps } from '../registry/cell-component-registry'
 import type { FieldDefinition } from '@ikary/cell-contract';
 import { resolveManifestEntity } from '../manifest/selectors';
 import { useUIComponents } from '../UIComponentsProvider';
+import { SlotOutlet } from '@ikary/cell-primitives';
+import type { SlotContext } from '@ikary/cell-primitives';
 
 type Row = Record<string, unknown>;
 
@@ -326,90 +328,112 @@ export function EntityListPage({ page, entity }: CellPageRendererProps) {
       </>
     ) : null;
 
+  // ---- slot context ----
+  const baseSlotCtx: Omit<SlotContext, 'slotZone' | 'slotMode'> = {
+    pageType: 'entity-list',
+    pageTitle: page.title,
+    pageKey: page.key,
+    entityKey: entity.key,
+    entityName: resolvedEntity.name,
+    entityPluralName: resolvedEntity.pluralName,
+    entity: entity,
+  };
+  const slotBindings = page.slotBindings ?? [];
+
   // ---- render ----
   return (
     <>
-      <ListPageLayout
-        title={page.title}
-        actions={
-          <button
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
-          >
-            {t('entity.list.create_button', { entityName: resolvedEntity.name })}
-          </button>
-        }
-        filterStart={
-          <SearchInput
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder={t('entity.list.search_placeholder', { pluralName: resolvedEntity.pluralName.toLowerCase() })}
-            className="w-64"
-          />
-        }
-        filterEnd={filterControls}
-        pagination={
-          <PaginationControls
-            page={pageParam}
-            pageSize={effectivePageSize}
-            total={filteredTotal}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        }
-      >
-        {hasActiveNarrow && (
-          <div className="flex flex-wrap items-center gap-2 py-2">
-            {activeChips.map((chip) => (
-              <span key={chip.key} className="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs">
-                {chip.label}
-                <button
-                  type="button"
-                  onClick={() => clearChip(chip.key)}
-                  aria-label={`Clear ${chip.label}`}
-                  className="ml-0.5 text-muted-foreground hover:text-foreground"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-            <button type="button" onClick={clearAllFilters} className="text-xs text-muted-foreground hover:underline">
-              Clear all
+      <SlotOutlet zone="header" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <ListPageLayout
+          title={page.title}
+          actions={
+            <button
+              type="button"
+              onClick={() => setCreateOpen(true)}
+              className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+            >
+              {t('entity.list.create_button', { entityName: resolvedEntity.name })}
             </button>
-          </div>
-        )}
+          }
+          filterStart={
+            <SlotOutlet zone="toolbar" bindings={slotBindings} slotContext={baseSlotCtx}>
+              <SearchInput
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder={t('entity.list.search_placeholder', { pluralName: resolvedEntity.pluralName.toLowerCase() })}
+                className="w-64"
+              />
+            </SlotOutlet>
+          }
+          filterEnd={filterControls}
+          pagination={
+            <SlotOutlet zone="footer" bindings={slotBindings} slotContext={baseSlotCtx}>
+              <PaginationControls
+                page={pageParam}
+                pageSize={effectivePageSize}
+                total={filteredTotal}
+                onPageChange={handlePageChange}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </SlotOutlet>
+          }
+        >
+          <SlotOutlet zone="table" bindings={slotBindings} slotContext={baseSlotCtx}>
+            <>
+              {hasActiveNarrow && (
+                <div className="flex flex-wrap items-center gap-2 py-2">
+                  {activeChips.map((chip) => (
+                    <span key={chip.key} className="inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs">
+                      {chip.label}
+                      <button
+                        type="button"
+                        onClick={() => clearChip(chip.key)}
+                        aria-label={`Clear ${chip.label}`}
+                        className="ml-0.5 text-muted-foreground hover:text-foreground"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                  <button type="button" onClick={clearAllFilters} className="text-xs text-muted-foreground hover:underline">
+                    Clear all
+                  </button>
+                </div>
+              )}
 
-        <CellDataGrid
-          columns={gridColumns}
-          rows={paginatedRows}
-          sort={parseSortParam(sortParam)}
-          onSortChange={handleSortChange}
-          getDetailHref={getDetailHref}
-          getRowId={(row) => String(row['id'] ?? '')}
-          emptyTitle={
-            hasAnyData
-              ? `No ${resolvedEntity.pluralName} match your search`
-              : t('entity.list.empty_title', { pluralName: resolvedEntity.pluralName })
-          }
-          emptyDescription={hasAnyData ? t('entity.list.empty_filtered_description') : undefined}
-          emptyAction={
-            hasAnyData ? (
-              <button type="button" onClick={clearAllFilters} className="text-sm text-muted-foreground hover:underline">
-                Clear filters
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setCreateOpen(true)}
-                className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
-              >
-                Create the first one
-              </button>
-            )
-          }
-        />
-      </ListPageLayout>
+              <CellDataGrid
+                columns={gridColumns}
+                rows={paginatedRows}
+                sort={parseSortParam(sortParam)}
+                onSortChange={handleSortChange}
+                getDetailHref={getDetailHref}
+                getRowId={(row) => String(row['id'] ?? '')}
+                emptyTitle={
+                  hasAnyData
+                    ? `No ${resolvedEntity.pluralName} match your search`
+                    : t('entity.list.empty_title', { pluralName: resolvedEntity.pluralName })
+                }
+                emptyDescription={hasAnyData ? t('entity.list.empty_filtered_description') : undefined}
+                emptyAction={
+                  hasAnyData ? (
+                    <button type="button" onClick={clearAllFilters} className="text-sm text-muted-foreground hover:underline">
+                      Clear filters
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setCreateOpen(true)}
+                      className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
+                    >
+                      Create the first one
+                    </button>
+                  )
+                }
+              />
+            </>
+          </SlotOutlet>
+        </ListPageLayout>
+      </SlotOutlet>
 
       <EntityCreateSheet entityKey={resolvedEntity.key} open={createOpen} onOpenChange={setCreateOpen} />
     </>

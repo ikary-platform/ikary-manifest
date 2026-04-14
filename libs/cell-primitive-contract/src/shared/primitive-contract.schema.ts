@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+export const SlotDefinitionSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  allowedModes: z
+    .array(z.enum(['replace', 'prepend', 'append']))
+    .default(['replace', 'prepend', 'append']),
+});
+
+export type SlotDefinition = z.infer<typeof SlotDefinitionSchema>;
+
 export const PrimitivePropSchema: z.ZodType<PrimitiveProp> = z.lazy(() =>
   z.object({
     type: z.enum(['string', 'number', 'boolean', 'array', 'object', 'function', 'ReactNode']),
@@ -36,6 +46,7 @@ export const PrimitiveContractSchema = z.object({
     properties: z.record(PrimitivePropSchema),
     required: z.array(z.string()).optional(),
   }),
+  slots: z.array(SlotDefinitionSchema).optional(),
 });
 
 export type PrimitiveContract = z.infer<typeof PrimitiveContractSchema>;
