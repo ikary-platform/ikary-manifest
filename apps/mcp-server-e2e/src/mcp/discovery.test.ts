@@ -8,7 +8,7 @@ afterAll(async () => { await client.close(); });
 
 describe('MCP Discovery Tools', () => {
   describe('tools/list', () => {
-    it('exposes all 19 expected tools', async () => {
+    it('exposes all 21 expected tools', async () => {
       const res = await client.listTools();
       const names = res.tools.map((t) => t.name);
 
@@ -36,8 +36,11 @@ describe('MCP Discovery Tools', () => {
       expect(names).toContain('validate_entity');
       expect(names).toContain('validate_page');
       expect(names).toContain('normalize_manifest');
+      // Slots
+      expect(names).toContain('list_slots_for_page_type');
+      expect(names).toContain('validate_slot_bindings');
 
-      expect(names.length).toBe(19);
+      expect(names.length).toBe(21);
     });
   });
 
