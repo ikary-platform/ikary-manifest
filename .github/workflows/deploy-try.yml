@@ -60,14 +60,16 @@ jobs:
           VITE_IKARY_MCP_URL: ${{ vars.VITE_IKARY_MCP_URL }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: >-
-            pages deploy apps/try-demo/dist
-            --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT || 'try-ikary-co' }}
-            --branch=main
+        # `cloudflare/wrangler-action` calls `pnpm add wrangler` inside a
+        # pnpm workspace root, which triggers ERR_PNPM_ADDING_TO_ROOT.
+        # Call wrangler via npx directly to sidestep the workspace lock.
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@latest pages deploy apps/try-demo/dist \
+            --project-name="${{ vars.CLOUDFLARE_PAGES_PROJECT || 'try-ikary-co' }}" \
+            --branch=main \
             --commit-dirty=true
 
   deploy-api:
@@ -97,6 +99,29 @@ jobs:
           docker push ${{ env.API_IMAGE }}:${{ github.sha }}
           docker push ${{ env.API_IMAGE }}:latest
 
+      - name: Write env vars file
+        # `gcloud ... --set-env-vars KEY=VAL` uses commas as a separator
+        # between multiple vars, so the model chain (which contains
+        # commas) gets mis-parsed. `--env-vars-file` takes a YAML file
+        # with no such ambiguity.
+        env:
+          AI_MODEL_MANIFEST_GENERATE: ${{ vars.AI_MODEL_MANIFEST_GENERATE || 'openai/gpt-oss-120b:free,qwen/qwen3-next-80b-a3b-instruct:free,google/gemma-4-31b-it:free,anthropic/claude-sonnet-4-5' }}
+          AI_BUDGET_PER_TURN_OUTPUT_TOKENS: ${{ vars.AI_BUDGET_PER_TURN_OUTPUT_TOKENS || '2000' }}
+          FEATURE_AI_ENABLED: ${{ vars.FEATURE_AI_ENABLED || 'true' }}
+        run: |
+          python3 - <<'PY'
+          import os, yaml
+          out = {
+              "NODE_ENV": "production",
+              "AI_MODEL_MANIFEST_GENERATE": os.environ["AI_MODEL_MANIFEST_GENERATE"],
+              "AI_BUDGET_PER_TURN_OUTPUT_TOKENS": os.environ["AI_BUDGET_PER_TURN_OUTPUT_TOKENS"],
+              "FEATURE_AI_ENABLED": os.environ["FEATURE_AI_ENABLED"],
+          }
+          with open("/tmp/try-api-env.yaml", "w") as f:
+              yaml.safe_dump(out, f, default_flow_style=False)
+          print(open("/tmp/try-api-env.yaml").read())
+          PY
+
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy ${{ env.API_SERVICE_NAME }} \
@@ -110,10 +135,7 @@ jobs:
             --min-instances 0 \
             --max-instances 3 \
             --timeout 120s \
-            --set-env-vars NODE_ENV=production \
-            --set-env-vars "AI_MODEL_MANIFEST_GENERATE=${{ vars.AI_MODEL_MANIFEST_GENERATE || 'openai/gpt-oss-120b:free,qwen/qwen3-next-80b-a3b-instruct:free,google/gemma-4-31b-it:free,anthropic/claude-sonnet-4-5' }}" \
-            --set-env-vars AI_BUDGET_PER_TURN_OUTPUT_TOKENS=${{ vars.AI_BUDGET_PER_TURN_OUTPUT_TOKENS || '2000' }} \
-            --set-env-vars FEATURE_AI_ENABLED=${{ vars.FEATURE_AI_ENABLED || 'true' }} \
+            --env-vars-file /tmp/try-api-env.yaml \
             --set-secrets AI_OPENROUTER_API_KEYS=openrouter-key:latest \
             --quiet
 
