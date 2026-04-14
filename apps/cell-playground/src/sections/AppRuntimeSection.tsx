@@ -9,20 +9,17 @@ import { APP_MANIFEST_SCENARIOS } from '../data/app-manifest-loader';
 import { extractContractFields } from '../lib/schema-introspection';
 import { SCHEMA_REGISTRY } from '../lib/schema-registry';
 import { useResizablePanel } from '../hooks/useResizablePanel';
+import { useViewMode } from '../hooks/useViewMode';
 import { ResizeDivider } from '../components/ResizeDivider';
 
 interface AppRuntimeSectionProps {
   activeScenario: number;
 }
 
-type ViewMode = 'split' | 'full';
-type FullContent = 'preview' | 'code';
-
 
 export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(APP_MANIFEST_SCENARIOS[0].manifest, null, 2));
-  const [viewMode, setViewMode] = useState<ViewMode>('split');
-  const [fullContent, setFullContent] = useState<FullContent>('preview');
+  const { viewMode, fullContent, setFull, setSplit, toggleFullContent } = useViewMode();
   const { width: editorWidth, startDrag } = useResizablePanel(380);
 
   useEffect(() => {
@@ -43,16 +40,16 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
   const manifestFields = useMemo(() => extractContractFields(CellManifestV1Schema, SCHEMA_REGISTRY), []);
 
   return (
-    <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
+    <div className="flex h-full flex-col overflow-hidden">
 
       {/* ── Section toolbar ── */}
       <div className="ide-toolbar">
         <span className="ide-toolbar-label">App Runtime</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="flex items-center gap-1.5">
           {viewMode === 'full' && (
             <button
               className="ide-action-btn"
-              onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
+              onClick={toggleFullContent}
               title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
             >
               {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
@@ -60,23 +57,28 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
             </button>
           )}
           <div className="ide-seg">
-            {(['split', 'full'] as const).map((mode) => (
-              <button
-                key={mode}
-                className={`ide-seg-btn ${viewMode === mode ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
-                onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
-                title={mode === 'split' ? 'Split view' : 'Full view'}
-              >
-                {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
-                {mode === 'split' ? 'Split' : 'Full'}
-              </button>
-            ))}
+            <button
+              className={`ide-seg-btn ${viewMode === 'split' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setSplit}
+              title="Split view"
+            >
+              <Columns2 size={11} />
+              Split
+            </button>
+            <button
+              className={`ide-seg-btn ${viewMode === 'full' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setFull}
+              title="Full view"
+            >
+              <Maximize2 size={11} />
+              Full
+            </button>
           </div>
         </div>
       </div>
 
       {/* ── Panels ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="flex flex-1 overflow-hidden">
 
         {/* CENTER: JSON editor
             - split mode: resizable panel
@@ -84,13 +86,10 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
             - full-preview: hidden */}
         {(viewMode === 'split' || fullContent === 'code') && (
           <div
+            className="shrink-0 flex flex-col overflow-hidden"
             style={{
               width: viewMode === 'full' ? undefined : `${editorWidth}px`,
               flex: viewMode === 'full' ? 1 : undefined,
-              flexShrink: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
             }}
           >
             <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
@@ -118,13 +117,13 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
             - full-preview: fills remaining space
             - full-code: hidden */}
         {(viewMode === 'split' || fullContent === 'preview') && (
-          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
             <div className="ide-panel-tab">
               <span className="ide-dot" />
               <span className="ide-filename" style={{ fontFamily: 'inherit' }}>Rendered Preview</span>
               <span className="ide-badge">live</span>
             </div>
-            <div style={{ flex: 1, overflow: 'hidden' }}>
+            <div className="flex-1 overflow-hidden">
               <AppPreview json={json} />
             </div>
           </div>

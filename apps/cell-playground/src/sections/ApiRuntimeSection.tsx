@@ -1,9 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Columns2, Maximize2, Code2, Eye } from 'lucide-react';
-import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary/cell-engine';
 import { EntityDefinitionSchema } from '@ikary/cell-contract';
-import type { EntityDefinition, FieldDefinition } from '@ikary/cell-contract';
 import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
 import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
 import { extractContractFields } from '../lib/schema-introspection';
@@ -17,6 +15,8 @@ import { EditFieldsTab } from '../components/api-runtime/EditFieldsTab';
 import { ScopeRegistryTab } from '../components/api-runtime/ScopeRegistryTab';
 import { RelationDiagramTab } from '../components/api-runtime/RelationDiagramTab';
 import { useResizablePanel } from '../hooks/useResizablePanel';
+import { useViewMode } from '../hooks/useViewMode';
+import { useEntityDerivedData } from '../hooks/useEntityDerivedData';
 import { ResizeDivider } from '../components/ResizeDivider';
 
 interface ApiRuntimeSectionProps {
@@ -24,8 +24,6 @@ interface ApiRuntimeSectionProps {
 }
 
 type OutputTab = 'overview' | 'api-explorer' | 'create-fields' | 'edit-fields' | 'scope-registry' | 'relations';
-type ViewMode = 'split' | 'full';
-type FullContent = 'preview' | 'code';
 
 const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }> = [
   {
@@ -65,8 +63,7 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
 
 export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(API_ENTITY_SCENARIOS[0].entity, null, 2));
-  const [viewMode, setViewMode] = useState<ViewMode>('split');
-  const [fullContent, setFullContent] = useState<FullContent>('preview');
+  const { viewMode, fullContent, setFull, setSplit, toggleFullContent } = useViewMode();
   const [searchParams, setSearchParams] = useSearchParams();
   const { width: editorWidth, startDrag } = useResizablePanel(380);
 
@@ -78,43 +75,23 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
   const outputTab: OutputTab = tabParam && OUTPUT_TABS.some((t) => t.key === tabParam) ? tabParam : 'overview';
   const setOutputTab = (t: OutputTab) => setSearchParams(t === 'overview' ? {} : { tab: t }, { replace: true });
 
-  const { entity, parseError } = useMemo(() => {
-    try {
-      return { entity: JSON.parse(json) as EntityDefinition, parseError: null };
-    } catch (e) {
-      return { entity: null, parseError: String(e) };
-    }
-  }, [json]);
-
-  const derived = useMemo(() => {
-    if (!entity) return null;
-    try {
-      const fields = (entity.fields ?? []) as FieldDefinition[];
-      return {
-        createFields: deriveCreateFields(fields),
-        editFields: deriveEditFields(fields),
-        scopes: deriveEntityScopeRegistry(entity),
-      };
-    } catch (e) {
-      return null;
-    }
-  }, [entity]);
+  const { entity, parseError, derived } = useEntityDerivedData(json);
 
   const currentTab = OUTPUT_TABS.find((t) => t.key === outputTab)!;
 
   const entityFields = useMemo(() => extractContractFields(EntityDefinitionSchema, SCHEMA_REGISTRY), []);
 
   return (
-    <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
+    <div className="flex h-full flex-col overflow-hidden">
 
       {/* ── Section toolbar ── */}
       <div className="ide-toolbar">
         <span className="ide-toolbar-label">API Runtime</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div className="flex items-center gap-1.5">
           {viewMode === 'full' && (
             <button
               className="ide-action-btn"
-              onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
+              onClick={toggleFullContent}
               title={fullContent === 'preview' ? 'Show JSON editor' : 'Show outputs'}
             >
               {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
@@ -122,23 +99,28 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
             </button>
           )}
           <div className="ide-seg">
-            {(['split', 'full'] as const).map((mode) => (
-              <button
-                key={mode}
-                className={`ide-seg-btn ${viewMode === mode ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
-                onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
-                title={mode === 'split' ? 'Split view' : 'Full view'}
-              >
-                {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
-                {mode === 'split' ? 'Split' : 'Full'}
-              </button>
-            ))}
+            <button
+              className={`ide-seg-btn ${viewMode === 'split' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setSplit}
+              title="Split view"
+            >
+              <Columns2 size={11} />
+              Split
+            </button>
+            <button
+              className={`ide-seg-btn ${viewMode === 'full' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setFull}
+              title="Full view"
+            >
+              <Maximize2 size={11} />
+              Full
+            </button>
           </div>
         </div>
       </div>
 
       {/* ── Panels ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+      <div className="flex flex-1 overflow-hidden">
 
         {/* CENTER: JSON editor
             - split mode: resizable panel
@@ -146,13 +128,10 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
             - full-preview: not rendered */}
         {(viewMode === 'split' || fullContent === 'code') && (
           <div
+            className="shrink-0 flex flex-col overflow-hidden"
             style={{
               width: viewMode === 'full' ? undefined : `${editorWidth}px`,
               flex: viewMode === 'full' ? 1 : undefined,
-              flexShrink: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
             }}
           >
             <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
@@ -180,7 +159,7 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
             - full-preview: fills remaining space
             - full-code: not rendered */}
         {(viewMode === 'split' || fullContent === 'preview') && (
-          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <div className="flex flex-1 min-w-0 flex-col">
             {/* Outputs panel — tab bar IS the panel header */}
             <div className="ide-output-tabs">
               {OUTPUT_TABS.map((t) => (

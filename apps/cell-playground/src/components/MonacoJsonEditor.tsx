@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import { useSchemaFetch } from '../hooks/useSchemaFetch';
+import { useMonacoTheme, getTheme } from '../hooks/useMonacoTheme';
 
 interface MonacoJsonEditorProps {
   value: string;
@@ -14,11 +15,6 @@ interface MonacoJsonEditorProps {
   minWidth?: string;
 }
 
-/** Resolves the Monaco theme name from the current dark-mode state. */
-function getTheme() {
-  return document.documentElement.classList.contains('dark') ? 'vs-dark' : 'vs';
-}
-
 export function MonacoJsonEditor({
   value,
   onChange,
@@ -29,6 +25,7 @@ export function MonacoJsonEditor({
 }: MonacoJsonEditorProps) {
   const monaco = useMonaco();
   const schema = useSchemaFetch(schemaUrl);
+  useMonacoTheme(monaco);
 
   // Register the JSON Schema with Monaco's language service whenever it arrives
   useEffect(() => {
@@ -57,30 +54,10 @@ export function MonacoJsonEditor({
     });
   }, [monaco, schema, schemaUrl, modelUri]);
 
-  // Sync Monaco theme whenever the <html> dark class changes
-  useEffect(() => {
-    if (!monaco) return;
-    monaco.editor.setTheme(getTheme());
-
-    const observer = new MutationObserver(() => {
-      monaco.editor.setTheme(getTheme());
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-    return () => observer.disconnect();
-  }, [monaco]);
-
   return (
     <div
-      style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        minWidth,
-        overflow: 'hidden',
-      }}
+      className="flex flex-1 flex-col overflow-hidden"
+      style={{ minWidth }}
     >
       <Editor
         language="json"
@@ -106,17 +83,7 @@ export function MonacoJsonEditor({
         }}
       />
       {error && (
-        <div
-          style={{
-            flexShrink: 0,
-            padding: '4px 12px',
-            background: 'rgba(239,68,68,0.08)',
-            color: '#ef4444',
-            fontSize: '11px',
-            borderTop: '1px solid rgba(239,68,68,0.3)',
-            fontFamily: 'monospace',
-          }}
-        >
+        <div className="shrink-0 px-3 py-1 bg-[rgba(239,68,68,0.08)] text-[#ef4444] text-[11px] border-t border-[rgba(239,68,68,0.3)] font-mono">
           {error}
         </div>
       )}
