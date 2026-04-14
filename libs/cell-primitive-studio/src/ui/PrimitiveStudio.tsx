@@ -192,11 +192,74 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
     }
   }
 
-  const panelsHidden = fullscreen || propsCollapsed;
-  // In fullscreen mode, show code panel instead of preview when fullContent === 'code'
-  const showCodePanel = !panelsHidden || (fullscreen && fullContent === 'code');
-  const showPreviewPanel = !fullscreen || fullContent === 'preview';
+  const panelsHidden = propsCollapsed;
 
+  const toolbarProps = {
+    primitiveKey: selectedKey,
+    version: selectedVersion,
+    catalog,
+    onVersionChange: setSelectedVersion,
+    propsCollapsed,
+    onToggleProps: () => setPropsCollapsed((c) => !c),
+    fullscreen,
+    fullContent,
+    onToggleFullContent: () => setFullContent((c) => (c === 'preview' ? 'code' : 'preview')),
+    onToggleFullscreen: () => {
+      setFullscreen((f) => !f);
+      setFullContent('preview');
+      if (!fullscreen) setPropsCollapsed(false);
+    },
+  };
+
+  // ── Fullscreen layout: toolbar spans full width, content below ──────────
+  if (fullscreen) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          fontSize: '13px',
+          backgroundColor: 'hsl(var(--background))',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Toolbar always visible — toggle is accessible regardless of fullContent */}
+        <PrimitivePreviewToolbar {...toolbarProps} />
+        {/* Content: code editor or live preview */}
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          {fullContent === 'code' ? (
+            <PropsEditor
+              propsState={propsState}
+              runtimeState={runtimeState}
+              onPropsChange={onPropsChange}
+              onRuntimeChange={onRuntimeChange}
+              scenarios={scenarios}
+              activeScenario={activeScenario}
+              onScenarioSelect={handleScenarioSelect}
+              contractFields={selectedKey ? contractFieldsByKey[selectedKey] : undefined}
+              renderContractEditor={
+                renderContractEditor
+                  ? (p) => renderContractEditor({ ...p, primitiveKey: selectedKey })
+                  : undefined
+              }
+              renderRuntimeEditor={renderRuntimeEditor}
+            />
+          ) : (
+            <PrimitivePreview
+              primitiveKey={selectedKey}
+              version={selectedVersion}
+              props={propsState.live}
+              runtime={runtimeState.live}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Split layout: sidebar | props editor | divider | preview ────────────
   return (
     <div
       style={{
@@ -209,16 +272,9 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         overflow: 'hidden',
       }}
     >
-      {/* Left: primitive list (hidden in fullscreen or when hideSidebar is true) */}
+      {/* Left: primitive list */}
       {!hideSidebar && (
-        <div
-          style={{
-            width: fullscreen ? '0' : '220px',
-            flexShrink: 0,
-            overflow: 'hidden',
-            transition: 'width 0.2s ease',
-          }}
-        >
+        <div style={{ width: '220px', flexShrink: 0, overflow: 'hidden' }}>
           <PrimitiveSidebar
             entries={catalog}
             selectedKey={selectedKey}
@@ -227,12 +283,11 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         </div>
       )}
 
-      {/* Center: props editor (collapsible + resizable; fills full width in fullscreen-code mode) */}
-      {showCodePanel && (
+      {/* Center: props editor (collapsible + resizable) */}
+      {!panelsHidden && (
         <div
           style={{
-            width: fullscreen ? undefined : `${propsWidth}px`,
-            flex: fullscreen ? 1 : undefined,
+            width: `${propsWidth}px`,
             flexShrink: 0,
             overflow: 'hidden',
             display: 'flex',
@@ -258,36 +313,19 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         </div>
       )}
 
-      {/* Drag divider — only shown in split mode */}
-      {!panelsHidden && showPreviewPanel && <ResizeDivider onMouseDown={startDrag} />}
+      {/* Drag divider */}
+      {!panelsHidden && <ResizeDivider onMouseDown={startDrag} />}
 
       {/* Right: live preview */}
-      {showPreviewPanel && (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <PrimitivePreviewToolbar
-            primitiveKey={selectedKey}
-            version={selectedVersion}
-            catalog={catalog}
-            onVersionChange={setSelectedVersion}
-            propsCollapsed={propsCollapsed}
-            onToggleProps={() => setPropsCollapsed((c) => !c)}
-            fullscreen={fullscreen}
-            fullContent={fullContent}
-            onToggleFullContent={() => setFullContent((c) => (c === 'preview' ? 'code' : 'preview'))}
-            onToggleFullscreen={() => {
-              setFullscreen((f) => !f);
-              setFullContent('preview');
-              if (!fullscreen) setPropsCollapsed(false);
-            }}
-          />
-          <PrimitivePreview
-            primitiveKey={selectedKey}
-            version={selectedVersion}
-            props={propsState.live}
-            runtime={runtimeState.live}
-          />
-        </div>
-      )}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <PrimitivePreviewToolbar {...toolbarProps} />
+        <PrimitivePreview
+          primitiveKey={selectedKey}
+          version={selectedVersion}
+          props={propsState.live}
+          runtime={runtimeState.live}
+        />
+      </div>
     </div>
   );
 }
@@ -348,8 +386,8 @@ function PrimitivePreviewToolbar({
 
       {/* Right-side controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}>
-        {/* View Code / View Preview toggle — only in full mode */}
-        {isFull && (
+        {/* View Code / View Preview toggle — only in fullscreen mode */}
+        {fullscreen && (
           <button
             className="ide-action-btn"
             onClick={onToggleFullContent}
