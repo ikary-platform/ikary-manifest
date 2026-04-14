@@ -129,7 +129,7 @@ function ContractReference({ fields }: { fields: ContractField[] }) {
     <div
       style={{
         flex: collapsed ? '0 0 28px' : '1 1 0',
-        minHeight: collapsed ? undefined : '200px',
+        minHeight: collapsed ? undefined : '150px',
         display: 'flex',
         flexDirection: 'column',
         borderTop: '1px solid hsl(var(--border))',
