@@ -2,8 +2,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Columns2, Maximize2, Code2, Eye } from 'lucide-react';
 import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary/cell-engine';
+import { EntityDefinitionSchema } from '@ikary/cell-contract';
 import type { EntityDefinition, FieldDefinition } from '@ikary/cell-contract';
 import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
+import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
+import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
 import { MCP_API_URL } from '../lib/config';
 import { API_ENTITY_SCENARIOS } from '../data/api-sample-entities';
 import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';
@@ -58,21 +62,6 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
   },
 ];
 
-const BTN_STYLE: React.CSSProperties = {
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '20px',
-  height: '20px',
-  borderRadius: '4px',
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--background))',
-  cursor: 'pointer',
-  color: 'hsl(var(--muted-foreground))',
-  fontSize: '12px',
-  lineHeight: 1,
-};
 
 export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(API_ENTITY_SCENARIOS[0].entity, null, 2));
@@ -113,88 +102,39 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
 
   const currentTab = OUTPUT_TABS.find((t) => t.key === outputTab)!;
 
+  const entityFields = useMemo(() => extractContractFields(EntityDefinitionSchema, SCHEMA_REGISTRY), []);
+
   return (
     <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
 
-      {/* ── Section header bar — spans full width ── */}
-      <div
-        style={{
-          height: '36px',
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 12px',
-          borderBottom: '1px solid hsl(var(--border))',
-          background: 'hsl(var(--muted))',
-          gap: '8px',
-        }}
-      >
-        {/* Split / Full segmented toggle */}
-        <div
-          style={{
-            display: 'flex',
-            flexShrink: 0,
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '5px',
-            overflow: 'hidden',
-          }}
-        >
-          {(['split', 'full'] as const).map((mode, i) => (
+      {/* ── Section toolbar ── */}
+      <div className="ide-toolbar">
+        <span className="ide-toolbar-label">API Runtime</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {viewMode === 'full' && (
             <button
-              key={mode}
-              onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
-              title={mode === 'split' ? 'Split view' : 'Full view'}
-              style={{
-                padding: '2px 10px',
-                border: 'none',
-                borderRight: i === 0 ? '1px solid hsl(var(--border))' : 'none',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: viewMode === mode ? 600 : 400,
-                background: viewMode === mode ? '#3b82f6' : 'hsl(var(--background))',
-                color: viewMode === mode ? '#fff' : 'hsl(var(--muted-foreground))',
-                transition: 'background 0.1s, color 0.1s',
-              }}
+              className="ide-action-btn"
+              onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
+              title={fullContent === 'preview' ? 'Show JSON editor' : 'Show outputs'}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
+              {fullContent === 'preview' ? 'View Code' : 'View Preview'}
+            </button>
+          )}
+          <div className="ide-seg">
+            {(['split', 'full'] as const).map((mode) => (
+              <button
+                key={mode}
+                className={`ide-seg-btn ${viewMode === mode ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+                onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
+                title={mode === 'split' ? 'Split view' : 'Full view'}
+              >
                 {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
                 {mode === 'split' ? 'Split' : 'Full'}
-              </span>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
-
-        <span
-          style={{
-            fontSize: '10px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'hsl(var(--muted-foreground))',
-            flex: 1,
-          }}
-        >
-          API Runtime
-        </span>
-
-        {/* Full mode: toggle on the right */}
-        {viewMode === 'full' && (
-          <button
-            onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
-            title={fullContent === 'preview' ? 'Show JSON editor' : 'Show outputs'}
-            style={{
-              ...BTN_STYLE,
-              width: 'auto',
-              padding: '0 8px',
-              gap: '5px',
-              fontSize: '11px',
-              fontWeight: 500,
-            }}
-          >
-            {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
-            {fullContent === 'preview' ? 'View Code' : 'View Preview'}
-          </button>
-        )}
       </div>
 
       {/* ── Panels ── */}
@@ -215,23 +155,10 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
               overflow: 'hidden',
             }}
           >
-            <div
-              style={{
-                height: '36px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 12px',
-                borderBottom: '1px solid hsl(var(--border))',
-                background: 'hsl(var(--muted))',
-                minWidth: `${editorWidth}px`,
-              }}
-            >
-              <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))' }}>
-                Entity Definition
-              </span>
-              <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>JSON</span>
+            <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
+              <span className="ide-dot" />
+              <span className="ide-filename">entity.json</span>
+              <span className="ide-badge">EntityDefinition</span>
             </div>
             <MonacoJsonEditor
               value={json}
@@ -241,6 +168,7 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
               modelUri="entity://active.json"
               minWidth={`${editorWidth}px`}
             />
+            <ContractSchemaPanel fields={entityFields} schemaName="EntityDefinitionSchema" />
           </div>
         )}
 
@@ -253,44 +181,23 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
             - full-code: not rendered */}
         {(viewMode === 'split' || fullContent === 'preview') && (
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-            {/* Panel header */}
-            <div
-              style={{
-                height: '36px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 12px',
-                borderBottom: '1px solid hsl(var(--border))',
-                background: 'hsl(var(--muted))',
-                gap: '8px',
-              }}
-            >
-              <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))' }}>
-                Outputs
-              </span>
-            </div>
-
-            {/* Tab bar */}
-            <div className="shrink-0 flex border-b border-gray-200 dark:border-gray-700 px-2 pt-1 gap-0.5 overflow-x-auto">
+            {/* Outputs panel — tab bar IS the panel header */}
+            <div className="ide-output-tabs">
               {OUTPUT_TABS.map((t) => (
                 <button
                   key={t.key}
                   onClick={() => setOutputTab(t.key)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-t border-b-2 transition-colors whitespace-nowrap ${
-                    outputTab === t.key
-                      ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-                  }`}
+                  title={t.description}
+                  className={`ide-output-tab ${outputTab === t.key ? 'ide-output-tab--active' : ''}`}
                 >
                   {t.label}
                 </button>
               ))}
             </div>
 
-            {/* Description */}
-            <div className="shrink-0 px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900">
-              <p className="text-xs text-blue-700 dark:text-blue-400">{currentTab.description}</p>
+            {/* Description strip */}
+            <div className="ide-tab-desc">
+              {currentTab.description}
             </div>
 
             {/* Output */}

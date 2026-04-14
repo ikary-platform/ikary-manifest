@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Columns2, Maximize2, Code2, Eye } from 'lucide-react';
+import { CellManifestV1Schema } from '@ikary/cell-contract';
 import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
+import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
 import { AppPreview } from '../components/app-runtime/AppPreview';
 import { MCP_API_URL } from '../lib/config';
 import { APP_MANIFEST_SCENARIOS } from '../data/app-manifest-loader';
+import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
 import { useResizablePanel } from '../hooks/useResizablePanel';
 import { ResizeDivider } from '../components/ResizeDivider';
 
@@ -14,21 +18,6 @@ interface AppRuntimeSectionProps {
 type ViewMode = 'split' | 'full';
 type FullContent = 'preview' | 'code';
 
-const BTN_STYLE: React.CSSProperties = {
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '20px',
-  height: '20px',
-  borderRadius: '4px',
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--background))',
-  cursor: 'pointer',
-  color: 'hsl(var(--muted-foreground))',
-  fontSize: '12px',
-  lineHeight: 1,
-};
 
 export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(APP_MANIFEST_SCENARIOS[0].manifest, null, 2));
@@ -51,88 +40,39 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
 
   const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
 
+  const manifestFields = useMemo(() => extractContractFields(CellManifestV1Schema, SCHEMA_REGISTRY), []);
+
   return (
     <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
 
-      {/* ── Section header bar — spans full width ── */}
-      <div
-        style={{
-          height: '36px',
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 12px',
-          borderBottom: '1px solid hsl(var(--border))',
-          background: 'hsl(var(--muted))',
-          gap: '8px',
-        }}
-      >
-        {/* Split / Full segmented toggle */}
-        <div
-          style={{
-            display: 'flex',
-            flexShrink: 0,
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '5px',
-            overflow: 'hidden',
-          }}
-        >
-          {(['split', 'full'] as const).map((mode, i) => (
+      {/* ── Section toolbar ── */}
+      <div className="ide-toolbar">
+        <span className="ide-toolbar-label">App Runtime</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {viewMode === 'full' && (
             <button
-              key={mode}
-              onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
-              title={mode === 'split' ? 'Split view' : 'Full view'}
-              style={{
-                padding: '2px 10px',
-                border: 'none',
-                borderRight: i === 0 ? '1px solid hsl(var(--border))' : 'none',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: viewMode === mode ? 600 : 400,
-                background: viewMode === mode ? '#3b82f6' : 'hsl(var(--background))',
-                color: viewMode === mode ? '#fff' : 'hsl(var(--muted-foreground))',
-                transition: 'background 0.1s, color 0.1s',
-              }}
+              className="ide-action-btn"
+              onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
+              title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
+              {fullContent === 'preview' ? 'View Code' : 'View Preview'}
+            </button>
+          )}
+          <div className="ide-seg">
+            {(['split', 'full'] as const).map((mode) => (
+              <button
+                key={mode}
+                className={`ide-seg-btn ${viewMode === mode ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+                onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
+                title={mode === 'split' ? 'Split view' : 'Full view'}
+              >
                 {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
                 {mode === 'split' ? 'Split' : 'Full'}
-              </span>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
-
-        <span
-          style={{
-            fontSize: '10px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'hsl(var(--muted-foreground))',
-            flex: 1,
-          }}
-        >
-          App Runtime
-        </span>
-
-        {/* Full mode: toggle on the right */}
-        {viewMode === 'full' && (
-          <button
-            onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
-            title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
-            style={{
-              ...BTN_STYLE,
-              width: 'auto',
-              padding: '0 8px',
-              gap: '5px',
-              fontSize: '11px',
-              fontWeight: 500,
-            }}
-          >
-            {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
-            {fullContent === 'preview' ? 'View Code' : 'View Preview'}
-          </button>
-        )}
       </div>
 
       {/* ── Panels ── */}
@@ -153,23 +93,10 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
               overflow: 'hidden',
             }}
           >
-            <div
-              style={{
-                height: '36px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 12px',
-                borderBottom: '1px solid hsl(var(--border))',
-                background: 'hsl(var(--muted))',
-                minWidth: `${editorWidth}px`,
-              }}
-            >
-              <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '6px' }}>
-                {activeLabel}
-              </span>
-              <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap' }}>CellManifestV1</span>
+            <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
+              <span className="ide-dot" />
+              <span className="ide-filename">{activeLabel || 'active.manifest.json'}</span>
+              <span className="ide-badge">CellManifestV1</span>
             </div>
             <MonacoJsonEditor
               value={json}
@@ -179,6 +106,7 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
               modelUri="manifest://active.json"
               minWidth={`${editorWidth}px`}
             />
+            <ContractSchemaPanel fields={manifestFields} schemaName="CellManifestV1Schema" />
           </div>
         )}
 
@@ -191,24 +119,10 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
             - full-code: hidden */}
         {(viewMode === 'split' || fullContent === 'preview') && (
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <div
-              style={{
-                height: '36px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 12px',
-                borderBottom: '1px solid hsl(var(--border))',
-                background: 'hsl(var(--muted))',
-                gap: '8px',
-              }}
-            >
-              <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))' }}>
-                Preview
-              </span>
-              <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>
-                Select a manifest or edit JSON directly.
-              </span>
+            <div className="ide-panel-tab">
+              <span className="ide-dot" />
+              <span className="ide-filename" style={{ fontFamily: 'inherit' }}>Rendered Preview</span>
+              <span className="ide-badge">live</span>
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>
               <AppPreview json={json} />

@@ -1,0 +1,244 @@
+{
+  "apiVersion": "ikary.co/v1alpha1",
+  "kind": "Cell",
+  "metadata": {
+    "key": "testing2",
+    "name": "CRM",
+    "version": "1.0.0",
+    "description": "CRM to manage accounts, contacts, and deals"
+  },
+  "spec": {
+    "mount": {
+      "mountPath": "/",
+      "landingPage": "dashboard"
+    },
+    "entities": [
+      {
+        "key": "account",
+        "name": "Account",
+        "pluralName": "Accounts",
+        "fields": [
+          { "key": "name", "type": "string", "name": "Company Name" },
+          { "key": "industry", "type": "enum", "name": "Industry", "enumValues": ["technology", "finance", "healthcare", "retail", "manufacturing", "other"] },
+          { "key": "website", "type": "string", "name": "Website" },
+          { "key": "phone", "type": "string", "name": "Phone" },
+          { "key": "status", "type": "enum", "name": "Status", "enumValues": ["active", "inactive"] }
+        ],
+        "relations": [
+          { "key": "contacts", "relation": "has_many", "entity": "contact", "foreignKey": "account_id" },
+          { "key": "deals", "relation": "has_many", "entity": "deal", "foreignKey": "account_id" }
+        ],
+        "lifecycle": {
+          "field": "status",
+          "initial": "active",
+          "states": ["active", "inactive"],
+          "transitions": [
+            { "key": "deactivate", "from": "active", "to": "inactive" },
+            { "key": "reactivate", "from": "inactive", "to": "active" }
+          ]
+        },
+        "policies": {
+          "view": { "scope": "workspace" },
+          "create": { "scope": "role", "condition": "admin" },
+          "update": { "scope": "role", "condition": "admin" },
+          "delete": { "scope": "role", "condition": "admin" }
+        }
+      },
+      {
+        "key": "contact",
+        "name": "Contact",
+        "pluralName": "Contacts",
+        "fields": [
+          { "key": "first_name", "type": "string", "name": "First Name" },
+          { "key": "last_name", "type": "string", "name": "Last Name" },
+          { "key": "email", "type": "string", "name": "Email" },
+          { "key": "phone", "type": "string", "name": "Phone" },
+          { "key": "title", "type": "string", "name": "Job Title" }
+        ],
+        "relations": [
+          { "key": "account_id", "relation": "belongs_to", "entity": "account", "foreignKey": "account_id" }
+        ],
+        "policies": {
+          "view": { "scope": "workspace" },
+          "create": { "scope": "role", "condition": "admin" },
+          "update": { "scope": "role", "condition": "admin" },
+          "delete": { "scope": "role", "condition": "admin" }
+        }
+      },
+      {
+        "key": "deal",
+        "name": "Deal",
+        "pluralName": "Deals",
+        "fields": [
+          { "key": "title", "type": "string", "name": "Deal Title" },
+          { "key": "amount", "type": "number", "name": "Amount" },
+          { "key": "stage", "type": "enum", "name": "Stage", "enumValues": ["prospect", "qualified", "proposal", "negotiation", "closed_won", "closed_lost"] },
+          { "key": "close_date", "type": "date", "name": "Expected Close Date" },
+          { "key": "probability", "type": "number", "name": "Probability (%)" }
+        ],
+        "relations": [
+          { "key": "account_id", "relation": "belongs_to", "entity": "account", "foreignKey": "account_id" }
+        ],
+        "lifecycle": {
+          "field": "stage",
+          "initial": "prospect",
+          "states": ["prospect", "qualified", "proposal", "negotiation", "closed_won", "closed_lost"],
+          "transitions": [
+            { "key": "qualify", "from": "prospect", "to": "qualified" },
+            { "key": "propose", "from": "qualified", "to": "proposal" },
+            { "key": "negotiate", "from": "proposal", "to": "negotiation" },
+            { "key": "win", "from": "negotiation", "to": "closed_won" },
+            { "key": "lose", "from": "negotiation", "to": "closed_lost" },
+            { "key": "reopen", "from": "closed_lost", "to": "prospect" }
+          ]
+        },
+        "policies": {
+          "view": { "scope": "workspace" },
+          "create": { "scope": "role", "condition": "admin" },
+          "update": { "scope": "role", "condition": "admin" },
+          "delete": { "scope": "role", "condition": "admin" }
+        }
+      }
+    ],
+    "pages": [
+      {
+        "key": "dashboard",
+        "type": "dashboard",
+        "title": "Dashboard",
+        "path": "/dashboard"
+      },
+      {
+        "key": "account_list",
+        "type": "entity-list",
+        "title": "Accounts",
+        "path": "/accounts",
+        "entity": "account"
+      },
+      {
+        "key": "account_detail",
+        "type": "entity-detail",
+        "title": "Account Detail",
+        "path": "/accounts/:id",
+        "entity": "account"
+      },
+      {
+        "key": "account_create",
+        "type": "entity-create",
+        "title": "New Account",
+        "path": "/accounts/new",
+        "entity": "account"
+      },
+      {
+        "key": "account_edit",
+        "type": "entity-edit",
+        "title": "Edit Account",
+        "path": "/accounts/:id/edit",
+        "entity": "account"
+      },
+      {
+        "key": "contact_list",
+        "type": "entity-list",
+        "title": "Contacts",
+        "path": "/contacts",
+        "entity": "contact"
+      },
+      {
+        "key": "contact_detail",
+        "type": "entity-detail",
+        "title": "Contact Detail",
+        "path": "/contacts/:id",
+        "entity": "contact"
+      },
+      {
+        "key": "contact_create",
+        "type": "entity-create",
+        "title": "New Contact",
+        "path": "/contacts/new",
+        "entity": "contact"
+      },
+      {
+        "key": "contact_edit",
+        "type": "entity-edit",
+        "title": "Edit Contact",
+        "path": "/contacts/:id/edit",
+        "entity": "contact"
+      },
+      {
+        "key": "deal_list",
+        "type": "entity-list",
+        "title": "Deals",
+        "path": "/deals",
+        "entity": "deal"
+      },
+      {
+        "key": "deal_detail",
+        "type": "entity-detail",
+        "title": "Deal Detail",
+        "path": "/deals/:id",
+        "entity": "deal"
+      },
+      {
+        "key": "deal_create",
+        "type": "entity-create",
+        "title": "New Deal",
+        "path": "/deals/new",
+        "entity": "deal"
+      },
+      {
+        "key": "deal_edit",
+        "type": "entity-edit",
+        "title": "Edit Deal",
+        "path": "/deals/:id/edit",
+        "entity": "deal"
+      }
+    ],
+    "navigation": {
+      "items": [
+        {
+          "type": "page",
+          "key": "nav_dashboard",
+          "pageKey": "dashboard",
+          "label": "Dashboard",
+          "icon": "home"
+        },
+        {
+          "type": "page",
+          "key": "nav_account_list",
+          "pageKey": "account_list",
+          "label": "Accounts",
+          "icon": "building"
+        },
+        {
+          "type": "page",
+          "key": "nav_contact_list",
+          "pageKey": "contact_list",
+          "label": "Contacts",
+          "icon": "users"
+        },
+        {
+          "type": "page",
+          "key": "nav_deal_list",
+          "pageKey": "deal_list",
+          "label": "Deals",
+          "icon": "trending-up"
+        }
+      ]
+    },
+    "roles": [
+      {
+        "key": "admin",
+        "name": "Admin",
+        "scopes": [
+          "testing2.admin"
+        ]
+      },
+      {
+        "key": "viewer",
+        "name": "Viewer",
+        "scopes": [
+          "testing2.view"
+        ]
+      }
+    ]
+  }
+}
