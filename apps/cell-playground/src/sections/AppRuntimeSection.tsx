@@ -1,25 +1,30 @@
-import { useState } from 'react';
-import { JsonEditor } from '../components/JsonEditor';
+import { useState, useEffect, useMemo } from 'react';
+import { Columns2, Maximize2, Code2, Eye } from 'lucide-react';
+import { CellManifestV1Schema } from '@ikary/cell-contract';
+import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
+import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
 import { AppPreview } from '../components/app-runtime/AppPreview';
-import { APP_MANIFEST_SCENARIOS, MANIFEST_CATEGORY_LABELS, MANIFEST_CATEGORY_ORDER } from '../data/app-manifest-loader';
-import type { AppManifestScenario } from '../data/app-manifest-loader';
+import { MCP_API_URL } from '../lib/config';
+import { APP_MANIFEST_SCENARIOS } from '../data/app-manifest-loader';
+import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
+import { useResizablePanel } from '../hooks/useResizablePanel';
+import { useViewMode } from '../hooks/useViewMode';
+import { ResizeDivider } from '../components/ResizeDivider';
 
-type Category = AppManifestScenario['category'];
-
-function groupScenarios() {
-  return MANIFEST_CATEGORY_ORDER.map((cat) => ({
-    category: cat,
-    label: MANIFEST_CATEGORY_LABELS[cat],
-    scenarios: APP_MANIFEST_SCENARIOS.map((s, i) => ({ ...s, index: i })).filter((s) => s.category === cat),
-  }));
+interface AppRuntimeSectionProps {
+  activeScenario: number;
 }
 
-const SCENARIO_GROUPS = groupScenarios();
 
-export function AppRuntimeSection() {
-  const [activeScenario, setActiveScenario] = useState(0);
-  const [collapsedCategories, setCollapsedCategories] = useState<Set<Category>>(new Set());
+export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(APP_MANIFEST_SCENARIOS[0].manifest, null, 2));
+  const { viewMode, fullContent, setFull, setSplit, toggleFullContent } = useViewMode();
+  const { width: editorWidth, startDrag } = useResizablePanel(380);
+
+  useEffect(() => {
+    setJson(JSON.stringify(APP_MANIFEST_SCENARIOS[activeScenario].manifest, null, 2));
+  }, [activeScenario]);
 
   const parseError = (() => {
     try {
@@ -30,211 +35,99 @@ export function AppRuntimeSection() {
     }
   })();
 
-  function selectScenario(index: number) {
-    setActiveScenario(index);
-    setJson(JSON.stringify(APP_MANIFEST_SCENARIOS[index].manifest, null, 2));
-  }
-
-  function toggleCategory(cat: Category) {
-    setCollapsedCategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  }
-
-  const [jsonCollapsed, setJsonCollapsed] = useState(false);
-
   const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
 
+  const manifestFields = useMemo(() => extractContractFields(CellManifestV1Schema, SCHEMA_REGISTRY), []);
+
   return (
-    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+    <div className="flex h-full flex-col overflow-hidden">
 
-      {/* ── Left sidebar: manifest list ── */}
-      <div
-        style={{
-          width: '220px',
-          flexShrink: 0,
-          borderRight: '1px solid hsl(var(--border))',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Sidebar header */}
-        <div
-          style={{
-            padding: '12px 12px 8px',
-            borderBottom: '1px solid hsl(var(--border))',
-            flexShrink: 0,
-          }}
-        >
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'hsl(var(--muted-foreground))',
-            }}
-          >
-            Manifests
-          </span>
-        </div>
-
-        {/* Manifest list grouped by category */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0 16px' }}>
-          {SCENARIO_GROUPS.map((group) => {
-            const collapsed = collapsedCategories.has(group.category);
-            return (
-              <div key={group.category}>
-                {/* Category header */}
-                <button
-                  onClick={() => toggleCategory(group.category)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    width: '100%',
-                    padding: '8px 12px 4px',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: 'hsl(var(--muted-foreground))',
-                    textAlign: 'left',
-                  }}
-                >
-                  <span style={{ fontSize: '8px', marginTop: '1px' }}>{collapsed ? '▶' : '▼'}</span>
-                  {group.label}
-                </button>
-
-                {/* Items */}
-                {!collapsed && group.scenarios.map((scenario) => {
-                  const isSelected = activeScenario === scenario.index;
-                  return (
-                    <button
-                      key={scenario.label}
-                      onClick={() => selectScenario(scenario.index)}
-                      title={scenario.description}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        width: '100%',
-                        padding: '5px 12px 5px 20px',
-                        background: isSelected ? 'hsl(var(--accent))' : 'transparent',
-                        border: 'none',
-                        borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        color: isSelected ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
-                        textAlign: 'left',
-                        fontWeight: isSelected ? 500 : 400,
-                      }}
-                    >
-                      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {scenario.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
+      {/* ── Section toolbar ── */}
+      <div className="ide-toolbar">
+        <span className="ide-toolbar-label">App Runtime</span>
+        <div className="flex items-center gap-1.5">
+          {viewMode === 'full' && (
+            <button
+              className="ide-action-btn"
+              onClick={toggleFullContent}
+              title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
+            >
+              {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
+              {fullContent === 'preview' ? 'View Code' : 'View Preview'}
+            </button>
+          )}
+          <div className="ide-seg">
+            <button
+              className={`ide-seg-btn ${viewMode === 'split' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setSplit}
+              title="Split view"
+            >
+              <Columns2 size={11} />
+              Split
+            </button>
+            <button
+              className={`ide-seg-btn ${viewMode === 'full' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setFull}
+              title="Full view"
+            >
+              <Maximize2 size={11} />
+              Full
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* ── Center: JSON editor (collapsible) ── */}
-      <div
-        style={{
-          width: jsonCollapsed ? '0' : '380px',
-          flexShrink: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          borderRight: jsonCollapsed ? 'none' : '1px solid hsl(var(--border))',
-          transition: 'width 0.2s ease',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '8px 12px',
-            borderBottom: '1px solid hsl(var(--border))',
-            background: 'hsl(var(--muted))',
-            minWidth: '380px',
-          }}
-        >
-          <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, marginRight: '6px' }}>
-            {activeLabel}
-          </span>
-          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))', whiteSpace: 'nowrap' }}>CellManifestV1</span>
-        </div>
-        <div style={{ flex: 1, minWidth: '380px', overflow: 'hidden' }}>
-          <JsonEditor value={json} onChange={setJson} error={parseError} />
-        </div>
-      </div>
+      {/* ── Panels ── */}
+      <div className="flex flex-1 overflow-hidden">
 
-      {/* ── Right: app preview ── */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        <div
-          style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            padding: '8px 12px',
-            borderBottom: '1px solid hsl(var(--border))',
-            background: 'hsl(var(--muted))',
-            gap: '8px',
-          }}
-        >
-          {/* JSON panel toggle — lives here so it's always reachable */}
-          <button
-            onClick={() => setJsonCollapsed((c) => !c)}
-            title={jsonCollapsed ? 'Show JSON editor' : 'Hide JSON editor'}
+        {/* CENTER: JSON editor
+            - split mode: resizable panel
+            - full-code: fills remaining space
+            - full-preview: hidden */}
+        {(viewMode === 'split' || fullContent === 'code') && (
+          <div
+            className="shrink-0 flex flex-col overflow-hidden"
             style={{
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '20px',
-              height: '20px',
-              borderRadius: '4px',
-              border: '1px solid hsl(var(--border))',
-              background: 'hsl(var(--background))',
-              cursor: 'pointer',
-              color: 'hsl(var(--muted-foreground))',
-              fontSize: '12px',
-              lineHeight: 1,
+              width: viewMode === 'full' ? undefined : `${editorWidth}px`,
+              flex: viewMode === 'full' ? 1 : undefined,
             }}
           >
-            {jsonCollapsed ? '›' : '‹'}
-          </button>
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'hsl(var(--muted-foreground))',
-            }}
-          >
-            Preview
-          </span>
-          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>
-            Select a manifest or edit JSON directly.
-          </span>
-        </div>
-        <div style={{ flex: 1, overflow: 'hidden' }}>
-          <AppPreview json={json} />
-        </div>
+            <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
+              <span className="ide-dot" />
+              <span className="ide-filename">{activeLabel || 'active.manifest.json'}</span>
+              <span className="ide-badge">CellManifestV1</span>
+            </div>
+            <MonacoJsonEditor
+              value={json}
+              onChange={setJson}
+              error={parseError}
+              schemaUrl={`${MCP_API_URL}/api/json-schema/manifest`}
+              modelUri="manifest://active.json"
+              minWidth={`${editorWidth}px`}
+            />
+            <ContractSchemaPanel fields={manifestFields} schemaName="CellManifestV1Schema" />
+          </div>
+        )}
+
+        {/* Drag divider — only in split mode */}
+        {viewMode === 'split' && <ResizeDivider onMouseDown={startDrag} />}
+
+        {/* RIGHT: preview
+            - split mode: flex-1
+            - full-preview: fills remaining space
+            - full-code: hidden */}
+        {(viewMode === 'split' || fullContent === 'preview') && (
+          <div className="flex flex-1 min-w-0 flex-col overflow-hidden">
+            <div className="ide-panel-tab">
+              <span className="ide-dot" />
+              <span className="ide-filename" style={{ fontFamily: 'inherit' }}>Rendered Preview</span>
+              <span className="ide-badge">live</span>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <AppPreview json={json} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

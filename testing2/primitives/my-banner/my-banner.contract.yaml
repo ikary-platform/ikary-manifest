@@ -1,0 +1,13 @@
+key: my-banner
+version: "1.0.0"
+label: My Banner
+description: A custom My Banner primitive
+category: custom
+breakingChanges: []
+props:
+  type: object
+  properties:
+    label:
+      type: string
+      description: Optional display label
+  required: []

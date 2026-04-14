@@ -1,0 +1,13 @@
+apiVersion: ikary.co/v1alpha1
+kind: PrimitiveConfig
+primitives:
+  - key: my-banner
+    version: 1.0.0
+    source: ./primitives/my-banner/MyBanner.register.ts
+    contract: ./primitives/my-banner/my-banner.contract.yaml
+    examples: ./primitives/my-banner/MyBanner.example.ts
+  - key: my-banner2
+    version: 1.0.0
+    source: ./primitives/my-banner2/MyBanner2.register.ts
+    contract: ./primitives/my-banner2/my-banner2.contract.yaml
+    examples: ./primitives/my-banner2/MyBanner2.example.ts

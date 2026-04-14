@@ -1,16 +1,27 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { deriveCreateFields, deriveEditFields, deriveEntityScopeRegistry } from '@ikary/cell-engine';
-import type { EntityDefinition, FieldDefinition } from '@ikary/cell-contract';
-import { JsonEditor } from '../components/JsonEditor';
-import { API_ENTITY_SCENARIOS, CATEGORY_LABELS } from '../data/api-sample-entities';
-import type { ApiEntityScenario } from '../data/api-sample-entities';
+import { Columns2, Maximize2, Code2, Eye } from 'lucide-react';
+import { EntityDefinitionSchema } from '@ikary/cell-contract';
+import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
+import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
+import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
+import { MCP_API_URL } from '../lib/config';
+import { API_ENTITY_SCENARIOS } from '../data/api-sample-entities';
 import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';
 import { ApiExplorerPanel } from '../components/api-explorer/ApiExplorerPanel';
 import { CreateFieldsTab } from '../components/api-runtime/CreateFieldsTab';
 import { EditFieldsTab } from '../components/api-runtime/EditFieldsTab';
 import { ScopeRegistryTab } from '../components/api-runtime/ScopeRegistryTab';
 import { RelationDiagramTab } from '../components/api-runtime/RelationDiagramTab';
+import { useResizablePanel } from '../hooks/useResizablePanel';
+import { useViewMode } from '../hooks/useViewMode';
+import { useEntityDerivedData } from '../hooks/useEntityDerivedData';
+import { ResizeDivider } from '../components/ResizeDivider';
+
+interface ApiRuntimeSectionProps {
+  activeScenario: number;
+}
 
 type OutputTab = 'overview' | 'api-explorer' | 'create-fields' | 'edit-fields' | 'scope-registry' | 'relations';
 
@@ -49,244 +60,142 @@ const OUTPUT_TABS: Array<{ key: OutputTab; label: string; description: string }>
   },
 ];
 
-type Category = ApiEntityScenario['category'];
 
-const CATEGORY_ORDER: Category[] = ['docs', 'crm', 'erp', 'projects', 'hr', 'finance'];
-
-function groupScenarios() {
-  return CATEGORY_ORDER.map((cat) => ({
-    category: cat,
-    label: CATEGORY_LABELS[cat],
-    scenarios: API_ENTITY_SCENARIOS.map((s, i) => ({ ...s, index: i })).filter((s) => s.category === cat),
-  }));
-}
-
-const SCENARIO_GROUPS = groupScenarios();
-
-export function ApiRuntimeSection() {
-  const [activeScenario, setActiveScenario] = useState(0);
-  const [collapsedCategories, setCollapsedCategories] = useState<Set<Category>>(new Set());
+export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
   const [json, setJson] = useState(() => JSON.stringify(API_ENTITY_SCENARIOS[0].entity, null, 2));
+  const { viewMode, fullContent, setFull, setSplit, toggleFullContent } = useViewMode();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { width: editorWidth, startDrag } = useResizablePanel(380);
+
+  useEffect(() => {
+    setJson(JSON.stringify(API_ENTITY_SCENARIOS[activeScenario].entity, null, 2));
+  }, [activeScenario]);
 
   const tabParam = searchParams.get('tab') as OutputTab | null;
   const outputTab: OutputTab = tabParam && OUTPUT_TABS.some((t) => t.key === tabParam) ? tabParam : 'overview';
   const setOutputTab = (t: OutputTab) => setSearchParams(t === 'overview' ? {} : { tab: t }, { replace: true });
 
-  const { entity, parseError } = useMemo(() => {
-    try {
-      return { entity: JSON.parse(json) as EntityDefinition, parseError: null };
-    } catch (e) {
-      return { entity: null, parseError: String(e) };
-    }
-  }, [json]);
-
-  const derived = useMemo(() => {
-    if (!entity) return null;
-    try {
-      const fields = (entity.fields ?? []) as FieldDefinition[];
-      return {
-        createFields: deriveCreateFields(fields),
-        editFields: deriveEditFields(fields),
-        scopes: deriveEntityScopeRegistry(entity),
-      };
-    } catch (e) {
-      return null;
-    }
-  }, [entity]);
+  const { entity, parseError, derived } = useEntityDerivedData(json);
 
   const currentTab = OUTPUT_TABS.find((t) => t.key === outputTab)!;
 
-  function selectScenario(index: number) {
-    setActiveScenario(index);
-    setJson(JSON.stringify(API_ENTITY_SCENARIOS[index].entity, null, 2));
-  }
-
-  function toggleCategory(cat: Category) {
-    setCollapsedCategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  }
+  const entityFields = useMemo(() => extractContractFields(EntityDefinitionSchema, SCHEMA_REGISTRY), []);
 
   return (
-    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+    <div className="flex h-full flex-col overflow-hidden">
 
-      {/* ── Left sidebar: entity list ── */}
-      <div
-        style={{
-          width: '220px',
-          flexShrink: 0,
-          borderRight: '1px solid hsl(var(--border))',
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Sidebar header */}
-        <div
-          style={{
-            padding: '12px 12px 8px',
-            borderBottom: '1px solid hsl(var(--border))',
-            flexShrink: 0,
-          }}
-        >
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'hsl(var(--muted-foreground))',
-            }}
-          >
-            Entities
-          </span>
-        </div>
-
-        {/* Entity list grouped by category */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0 16px' }}>
-          {SCENARIO_GROUPS.map((group) => {
-            const collapsed = collapsedCategories.has(group.category);
-            return (
-              <div key={group.category}>
-                {/* Category header */}
-                <button
-                  onClick={() => toggleCategory(group.category)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    width: '100%',
-                    padding: '8px 12px 4px',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: 'hsl(var(--muted-foreground))',
-                    textAlign: 'left',
-                  }}
-                >
-                  <span style={{ fontSize: '8px', marginTop: '1px' }}>{collapsed ? '▶' : '▼'}</span>
-                  {group.label}
-                </button>
-
-                {/* Items */}
-                {!collapsed && group.scenarios.map((scenario) => {
-                  const isSelected = activeScenario === scenario.index;
-                  return (
-                    <button
-                      key={scenario.label}
-                      onClick={() => selectScenario(scenario.index)}
-                      title={scenario.description}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        width: '100%',
-                        padding: '5px 12px 5px 20px',
-                        background: isSelected ? 'hsl(var(--accent))' : 'transparent',
-                        border: 'none',
-                        borderLeft: isSelected ? '2px solid #3b82f6' : '2px solid transparent',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        color: isSelected ? 'hsl(var(--accent-foreground))' : 'hsl(var(--foreground))',
-                        textAlign: 'left',
-                        fontWeight: isSelected ? 500 : 400,
-                      }}
-                    >
-                      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {scenario.label}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Center: JSON editor ── */}
-      <div
-        style={{
-          width: '380px',
-          flexShrink: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          borderRight: '1px solid hsl(var(--border))',
-        }}
-      >
-        <div
-          style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '8px 12px',
-            borderBottom: '1px solid hsl(var(--border))',
-            background: 'hsl(var(--muted))',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'hsl(var(--muted-foreground))',
-            }}
-          >
-            Entity Definition
-          </span>
-          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>JSON</span>
-        </div>
-        <JsonEditor value={json} onChange={setJson} error={parseError} />
-      </div>
-
-      {/* ── Right: output tabs ── */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        {/* Tab bar */}
-        <div className="shrink-0 flex border-b border-gray-200 dark:border-gray-700 px-2 pt-1 gap-0.5 overflow-x-auto">
-          {OUTPUT_TABS.map((t) => (
+      {/* ── Section toolbar ── */}
+      <div className="ide-toolbar">
+        <span className="ide-toolbar-label">API Runtime</span>
+        <div className="flex items-center gap-1.5">
+          {viewMode === 'full' && (
             <button
-              key={t.key}
-              onClick={() => setOutputTab(t.key)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-t border-b-2 transition-colors whitespace-nowrap ${
-                outputTab === t.key
-                  ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
-              }`}
+              className="ide-action-btn"
+              onClick={toggleFullContent}
+              title={fullContent === 'preview' ? 'Show JSON editor' : 'Show outputs'}
             >
-              {t.label}
+              {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
+              {fullContent === 'preview' ? 'View Code' : 'View Preview'}
             </button>
-          ))}
-        </div>
-
-        {/* Description */}
-        <div className="shrink-0 px-3 py-2 bg-blue-50 dark:bg-blue-950/30 border-b border-blue-100 dark:border-blue-900">
-          <p className="text-xs text-blue-700 dark:text-blue-400">{currentTab.description}</p>
-        </div>
-
-        {/* Output */}
-        {parseError ? (
-          <div className="flex-1 flex items-center justify-center p-6">
-            <p className="text-sm text-red-500">Fix the JSON error to see derived output.</p>
+          )}
+          <div className="ide-seg">
+            <button
+              className={`ide-seg-btn ${viewMode === 'split' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setSplit}
+              title="Split view"
+            >
+              <Columns2 size={11} />
+              Split
+            </button>
+            <button
+              className={`ide-seg-btn ${viewMode === 'full' ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+              onClick={setFull}
+              title="Full view"
+            >
+              <Maximize2 size={11} />
+              Full
+            </button>
           </div>
-        ) : entity && derived ? (
-          <div className="flex-1 overflow-y-auto p-4">
-            {outputTab === 'overview' && <EntityOverviewTab entity={entity} />}
-            {outputTab === 'api-explorer' && <ApiExplorerPanel entity={entity} />}
-            {outputTab === 'create-fields' && <CreateFieldsTab fields={derived.createFields} />}
-            {outputTab === 'edit-fields' && <EditFieldsTab fields={derived.editFields} />}
-            {outputTab === 'scope-registry' && <ScopeRegistryTab scopes={derived.scopes} />}
-            {outputTab === 'relations' && <RelationDiagramTab entity={entity} />}
+        </div>
+      </div>
+
+      {/* ── Panels ── */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* CENTER: JSON editor
+            - split mode: resizable panel
+            - full-code: fills remaining space
+            - full-preview: not rendered */}
+        {(viewMode === 'split' || fullContent === 'code') && (
+          <div
+            className="shrink-0 flex flex-col overflow-hidden"
+            style={{
+              width: viewMode === 'full' ? undefined : `${editorWidth}px`,
+              flex: viewMode === 'full' ? 1 : undefined,
+            }}
+          >
+            <div className="ide-panel-tab" style={{ minWidth: `${editorWidth}px` }}>
+              <span className="ide-dot" />
+              <span className="ide-filename">entity.json</span>
+              <span className="ide-badge">EntityDefinition</span>
+            </div>
+            <MonacoJsonEditor
+              value={json}
+              onChange={setJson}
+              error={parseError}
+              schemaUrl={`${MCP_API_URL}/api/json-schema/entity`}
+              modelUri="entity://active.json"
+              minWidth={`${editorWidth}px`}
+            />
+            <ContractSchemaPanel fields={entityFields} schemaName="EntityDefinitionSchema" />
           </div>
-        ) : null}
+        )}
+
+        {/* Drag divider — only in split mode */}
+        {viewMode === 'split' && <ResizeDivider onMouseDown={startDrag} />}
+
+        {/* RIGHT: outputs panel
+            - split mode: flex-1
+            - full-preview: fills remaining space
+            - full-code: not rendered */}
+        {(viewMode === 'split' || fullContent === 'preview') && (
+          <div className="flex flex-1 min-w-0 flex-col">
+            {/* Outputs panel — tab bar IS the panel header */}
+            <div className="ide-output-tabs">
+              {OUTPUT_TABS.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setOutputTab(t.key)}
+                  title={t.description}
+                  className={`ide-output-tab ${outputTab === t.key ? 'ide-output-tab--active' : ''}`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Description strip */}
+            <div className="ide-tab-desc">
+              {currentTab.description}
+            </div>
+
+            {/* Output */}
+            {parseError ? (
+              <div className="flex-1 flex items-center justify-center p-6">
+                <p className="text-sm text-red-500">Fix the JSON error to see derived output.</p>
+              </div>
+            ) : entity && derived ? (
+              <div className="flex-1 overflow-y-auto p-4">
+                {outputTab === 'overview' && <EntityOverviewTab entity={entity} />}
+                {outputTab === 'api-explorer' && <ApiExplorerPanel entity={entity} />}
+                {outputTab === 'create-fields' && <CreateFieldsTab fields={derived.createFields} />}
+                {outputTab === 'edit-fields' && <EditFieldsTab fields={derived.editFields} />}
+                {outputTab === 'scope-registry' && <ScopeRegistryTab scopes={derived.scopes} />}
+                {outputTab === 'relations' && <RelationDiagramTab entity={entity} />}
+              </div>
+            ) : null}
+          </div>
+        )}
       </div>
     </div>
   );

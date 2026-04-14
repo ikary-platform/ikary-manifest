@@ -12,9 +12,11 @@ export default defineConfig([
       '@ikary/cell-engine',
       '@ikary/cell-loader',
       '@ikary/cell-primitive-contract',
+      '@ikary/cell-presentation',
       '@ikary/system-db-core',
       '@ikary/system-log-core',
       '@ikary/system-migration-core',
+      'zod-to-json-schema',
     ],
     external: [
       '@nestjs/common',
