@@ -6,9 +6,10 @@ import { HeaderLogo } from './HeaderLogo';
 interface Props {
   streamState: StreamState;
   onRunLocally: () => void;
+  onOpenBranding: () => void;
 }
 
-export function AppHeader({ streamState, onRunLocally }: Props) {
+export function AppHeader({ streamState, onRunLocally, onOpenBranding }: Props) {
   return (
     <header className="app-header">
       <div className="app-header-left">
@@ -18,6 +19,7 @@ export function AppHeader({ streamState, onRunLocally }: Props) {
       <HeaderActions
         canRunLocally={streamState.manifest != null}
         onRunLocally={onRunLocally}
+        onOpenBranding={onOpenBranding}
       />
     </header>
   );

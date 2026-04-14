@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ikary/system-migration-core": "workspace:*",
+    "@ikary/cell-branding": "workspace:*",
     "@ikary/cell-runtime-core": "workspace:*",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",

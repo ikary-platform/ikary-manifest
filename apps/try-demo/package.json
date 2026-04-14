@@ -12,6 +12,7 @@
   "dependencies": {
     "@ikary/system-ikary-ui": "workspace:*",
     "@ikary/cell-ai": "workspace:*",
+    "@ikary/cell-branding": "workspace:*",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",
     "@ikary/cell-presentation": "workspace:*",

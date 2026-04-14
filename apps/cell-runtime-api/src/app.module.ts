@@ -23,6 +23,7 @@ import {
   AuthModule,
   AuthAuditService,
 } from '@ikary/system-auth';
+import { CellBrandingModule } from '@ikary/cell-branding/server';
 import { DatabaseModule } from './database.module.js';
 import type { RuntimeContext } from './runtime-context.js';
 
@@ -85,6 +86,10 @@ const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5
       },
       extraExports: [AuthAuditService],
     }),
+    CellBrandingModule.register({
+      databaseProviderToken: DatabaseService,
+      packageVersion: '0.3.0',
+    }),
   ],
   controllers: [HealthController, EntityController, PreviewAuthController],
   providers: [
@@ -135,6 +140,13 @@ const dbUrl = process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5
           migrationLog,
         );
         await authMigrations.migrate();
+
+        const brandingMigrations = new MigrationRunner(
+          dbService,
+          { packageName: '@ikary/cell-branding', migrationsRoot: resolveMigrationsRoot('@ikary/cell-branding') },
+          migrationLog,
+        );
+        await brandingMigrations.migrate();
 
         const schemaManager = new EntitySchemaManager(dbService);
         await schemaManager.initFromManifest(compiled as any);

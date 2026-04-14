@@ -1,11 +1,18 @@
 import { useState } from 'react';
-import { PanelLeft } from 'lucide-react';
+import { PanelLeft, Palette } from 'lucide-react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  BrandingDataHooksProvider,
+  CellBrandingProvider,
+  ThemeModeProvider,
+  createLocalStorageBrandingHooks,
+} from '@ikary/cell-branding/ui';
 import { ContractsSection } from './sections/ContractsSection';
 import { ApiRuntimeSection } from './sections/ApiRuntimeSection';
 import { UIRuntimeSection } from './sections/UIRuntimeSection';
 import { AppRuntimeSection } from './sections/AppRuntimeSection';
+import { BrandingDialog, PLAYGROUND_BRANDING_CELL_ID } from './components/BrandingDialog';
 import { ManifestsSidebarList } from './components/sidebar/ManifestsSidebarList';
 import { EntitiesSidebarList } from './components/sidebar/EntitiesSidebarList';
 import { UiRuntimeSidebar } from './components/sidebar/UiRuntimeSidebar';
@@ -16,6 +23,10 @@ import type { AppManifestScenario } from './data/app-manifest-loader';
 import type { ApiEntityScenario } from './data/api-sample-entities';
 
 const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+const brandingHooks = createLocalStorageBrandingHooks({
+  storageKey: 'ikary.playground.branding',
+});
 
 const TABS = [
   { label: 'App Runtime', path: '/app-runtime' },
@@ -41,8 +52,14 @@ export function App() {
   // Global sidebar collapsed state
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Branding dialog open state
+  const [brandingOpen, setBrandingOpen] = useState(false);
+
   return (
     <QueryClientProvider client={qc}>
+      <ThemeModeProvider>
+        <BrandingDataHooksProvider value={brandingHooks}>
+          <CellBrandingProvider cellId={PLAYGROUND_BRANDING_CELL_ID}>
       {/* Root: flex-row so sidebar spans full browser height */}
       <div
         className="flex h-screen text-[#071230] dark:text-[#f8fafc] bg-white dark:bg-[#081022]"
@@ -142,6 +159,16 @@ export function App() {
               </nav>
 
               <div className="flex items-center h-full ml-2 gap-0">
+                <button
+                  type="button"
+                  onClick={() => setBrandingOpen(true)}
+                  title="Customize branding"
+                  aria-label="Open branding settings"
+                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
+                >
+                  <Palette size={14} strokeWidth={1.8} />
+                  Branding
+                </button>
                 <a
                   href="https://documentation.ikary.co/"
                   target="_blank"
@@ -206,6 +233,10 @@ export function App() {
           </main>
         </div>
       </div>
+      <BrandingDialog open={brandingOpen} onClose={() => setBrandingOpen(false)} />
+          </CellBrandingProvider>
+        </BrandingDataHooksProvider>
+      </ThemeModeProvider>
     </QueryClientProvider>
   );
 }
