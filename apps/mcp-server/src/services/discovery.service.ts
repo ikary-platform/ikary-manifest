@@ -86,13 +86,22 @@ const ENTITY_SCHEMA: SchemaInfo = {
   ],
 };
 
+const PAGE_SLOT_ZONES: Record<string, string[]> = {
+  'entity-list': ['header', 'toolbar', 'table', 'footer'],
+  'entity-detail': ['header', 'navigation', 'content', 'footer'],
+  'dashboard': ['header', 'content', 'footer'],
+  'custom': ['content'],
+  'entity-create': [],
+  'entity-edit': [],
+};
+
 const PAGE_TYPES = [
-  { type: 'entity-list', entityRequired: true, description: 'Paginated list view for an entity' },
-  { type: 'entity-detail', entityRequired: true, description: 'Single record detail view with path param :id' },
-  { type: 'entity-create', entityRequired: true, description: 'Create form for an entity' },
-  { type: 'entity-edit', entityRequired: true, description: 'Edit form for an entity' },
-  { type: 'dashboard', entityRequired: false, description: 'Dashboard page with widgets' },
-  { type: 'custom', entityRequired: false, description: 'Custom page with arbitrary layout' },
+  { type: 'entity-list', entityRequired: true, description: 'Paginated list view for an entity', slotZones: PAGE_SLOT_ZONES['entity-list'] },
+  { type: 'entity-detail', entityRequired: true, description: 'Single record detail view with path param :id', slotZones: PAGE_SLOT_ZONES['entity-detail'] },
+  { type: 'entity-create', entityRequired: true, description: 'Create form for an entity', slotZones: PAGE_SLOT_ZONES['entity-create'] },
+  { type: 'entity-edit', entityRequired: true, description: 'Edit form for an entity', slotZones: PAGE_SLOT_ZONES['entity-edit'] },
+  { type: 'dashboard', entityRequired: false, description: 'Dashboard page with widgets', slotZones: PAGE_SLOT_ZONES['dashboard'] },
+  { type: 'custom', entityRequired: false, description: 'Custom page with arbitrary layout', slotZones: PAGE_SLOT_ZONES['custom'] },
 ];
 
 const PAGE_SCHEMA: SchemaInfo = {
@@ -108,6 +117,8 @@ const PAGE_SCHEMA: SchemaInfo = {
     { key: 'options', type: 'Record<string, unknown>', required: false, description: 'Arbitrary page options' },
     { key: 'dataContext', type: 'DataContextDefinition', required: false, description: 'Data binding context' },
     { key: 'dataProviders', type: 'DataProviderDefinition[]', required: false, description: 'Additional data providers' },
+    { key: 'slotBindings', type: 'SlotBinding[]', required: false, description: 'Slot bindings that inject registered primitives into named zones on this page. Each binding declares which zone to target (e.g. "header", "toolbar.before", "table.after") and which primitive to render there.' },
+    { key: 'primitive', type: 'string', required: false, description: 'Custom page only: the registered primitive key to render as the page body. Use with slotBindings to populate the content zone.' },
   ],
   semanticRules: [
     'Page keys must be unique across the manifest',
@@ -116,6 +127,8 @@ const PAGE_SCHEMA: SchemaInfo = {
     'Non-entity pages (dashboard, custom) must not have an entity field',
     'Only one page per entity per type (e.g., one entity-list for "customer")',
     'The landing page specified in spec.mount.landingPage must reference a defined page key',
+    'slotBindings[].primitive must reference a registered primitive key',
+    'slotBindings[].slot must match a zone declared by the page type (or zone.before / zone.after)',
   ],
 };
 
@@ -191,6 +204,29 @@ export class DiscoveryService {
       ...CAPABILITY_SCHEMA,
       capabilityTypes: CAPABILITY_TYPES,
     };
+  }
+
+  listSlotsForPageType(pageType: string) {
+    const zones = PAGE_SLOT_ZONES[pageType];
+    if (!zones) {
+      return {
+        error: `Unknown page type: "${pageType}". Valid types: ${Object.keys(PAGE_SLOT_ZONES).join(', ')}`,
+      };
+    }
+    if (zones.length === 0) {
+      return {
+        pageType,
+        zones: [],
+        bindings: [],
+        note: `Page type "${pageType}" does not declare any slot zones.`,
+      };
+    }
+    const bindings = zones.flatMap((zone) => [
+      { slot: `${zone}.before`, mode: 'prepend', description: `Prepend before the ${zone} zone` },
+      { slot: zone, mode: 'replace', description: `Replace the entire ${zone} zone` },
+      { slot: `${zone}.after`, mode: 'append', description: `Append after the ${zone} zone` },
+    ]);
+    return { pageType, zones, bindings };
   }
 
   getSchemaCatalog() {

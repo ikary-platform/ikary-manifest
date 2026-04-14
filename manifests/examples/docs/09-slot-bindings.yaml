@@ -1,0 +1,145 @@
+$schema: "../../cell-manifest.schema.yaml"
+
+apiVersion: ikary.co/v1alpha1
+kind: Cell
+metadata:
+  key: slot_bindings_demo
+  name: "Slot Bindings Demo"
+  version: "1.0.0"
+  description: "Demonstrates slot bindings: prepend, append, and replace on entity-list, entity-detail, and dashboard pages."
+spec:
+  mount:
+    mountPath: /
+    landingPage: dashboard
+  entities:
+    - key: task
+      name: Task
+      pluralName: Tasks
+      fields:
+        - key: title
+          name: Title
+          type: string
+          required: true
+          list:
+            visible: true
+            searchable: true
+          form:
+            visible: true
+        - key: status
+          name: Status
+          type: enum
+          enumValues: [todo, in_progress, done, cancelled]
+          required: true
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: priority
+          name: Priority
+          type: enum
+          enumValues: [low, medium, high]
+          list:
+            visible: true
+            filterable: true
+          form:
+            visible: true
+        - key: due_date
+          name: Due Date
+          type: date
+          list:
+            visible: true
+          form:
+            visible: true
+  pages:
+    - key: dashboard
+      type: dashboard
+      title: Task Dashboard
+      path: /dashboard
+      slotBindings:
+        - slot: header.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the dashboard header (header.before)"
+            variant: info
+        - slot: header.after
+          primitive: slot-demo-banner
+          props:
+            message: "Appended after the dashboard header (header.after)"
+            variant: success
+        - slot: footer.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the dashboard footer (footer.before)"
+            variant: warning
+
+    - key: task_list
+      type: entity-list
+      title: Tasks
+      path: /tasks
+      entity: task
+      slotBindings:
+        - slot: header.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the list header (header.before)"
+            variant: info
+        - slot: header.after
+          primitive: slot-demo-banner
+          props:
+            message: "Appended after the list header (header.after)"
+            variant: success
+        - slot: table.after
+          primitive: slot-demo-banner
+          props:
+            message: "Appended after the table (table.after)"
+            variant: warning
+        - slot: footer.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the footer (footer.before)"
+            variant: info
+
+    - key: task_detail
+      type: entity-detail
+      title: Task
+      path: /tasks/:id
+      entity: task
+      slotBindings:
+        - slot: header.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the detail header (header.before)"
+            variant: info
+        - slot: header.after
+          primitive: slot-demo-banner
+          props:
+            message: "Appended after the detail header (header.after)"
+            variant: success
+        - slot: content.after
+          primitive: slot-demo-banner
+          props:
+            message: "Appended after detail content (content.after)"
+            variant: warning
+        - slot: footer.before
+          primitive: slot-demo-banner
+          props:
+            message: "Prepended before the detail footer (footer.before)"
+            variant: info
+
+    - key: task_create
+      type: entity-create
+      title: New Task
+      path: /tasks/new
+      entity: task
+
+  navigation:
+    items:
+      - type: page
+        key: nav_dashboard
+        pageKey: dashboard
+        label: Dashboard
+      - type: page
+        key: nav_tasks
+        pageKey: task_list
+        label: Tasks

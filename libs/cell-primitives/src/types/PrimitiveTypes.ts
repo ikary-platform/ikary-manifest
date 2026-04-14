@@ -16,6 +16,8 @@ export type UIPrimitiveDefinition<ContractProps = unknown, ResolvedProps = unkno
   source?: 'core' | 'custom';
   category?: string;
   label?: string;
+  /** EntityTypeDefinition key(s) this primitive is designed for. Used for slot binding validation. */
+  entityBinding?: string | string[];
 };
 
 export type RegisterablePrimitive<ContractProps = unknown, ResolvedProps = unknown, Context = unknown> =

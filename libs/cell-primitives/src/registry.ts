@@ -1,3 +1,5 @@
+import './primitives/blank-slot/BlankSlot.register';
+import './primitives/slot-demo-banner/SlotDemoBanner.register';
 import './primitives/entity-header/index';
 import './actions/index';
 import './primitives/activity-feed/registerActivityFeed';

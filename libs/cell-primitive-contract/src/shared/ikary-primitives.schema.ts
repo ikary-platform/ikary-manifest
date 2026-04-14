@@ -7,6 +7,7 @@ export const PrimitiveSourceEntrySchema = z.object({
   contract: z.string().min(1),
   examples: z.string().optional(),
   overrides: z.string().optional(),
+  entityBinding: z.union([z.string(), z.array(z.string())]).optional(),
 });
 
 export type PrimitiveSourceEntry = z.infer<typeof PrimitiveSourceEntrySchema>;

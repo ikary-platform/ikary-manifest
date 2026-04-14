@@ -25,7 +25,7 @@ import type { CellMetadataSchema } from '../contract/manifest/CellMetadataSchema
 import type { CellSpecSchema } from '../contract/manifest/CellSpecSchema';
 import type { NavigationDefinitionSchema } from '../contract/manifest/navigation/NavigationDefinitionSchema';
 import type { NavigationItemSchema } from '../contract/manifest/navigation/NavigationItemSchema';
-import type { PageDefinitionSchema } from '../contract/manifest/page/PageDefinitionSchema';
+import type { PageDefinitionSchema, SlotBindingSchema } from '../contract/manifest/page/PageDefinitionSchema';
 import type { PageTypeSchema } from '../contract/manifest/page/PageTypeSchema';
 import type { AppShellDefinitionSchema } from '../contract/manifest/shell/AppShellDefinitionSchema';
 import type { CellMountDefinitionSchema } from '../contract/manifest/shell/CellMountDefinitionSchema';
@@ -121,6 +121,7 @@ export type DataProviderDefinition = z.infer<typeof DataProviderSchema>;
 // ── Page & Navigation ─────────────────────────────────────────────────────────
 export type PageType = z.infer<typeof PageTypeSchema>;
 export type PageDefinition = z.infer<typeof PageDefinitionSchema>;
+export type SlotBinding = z.infer<typeof SlotBindingSchema>;
 
 export type NavigationItem = z.infer<typeof NavigationItemSchema>;
 export type NavigationPageItem = Extract<NavigationItem, { type: 'page' }>;

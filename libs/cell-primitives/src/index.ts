@@ -2,6 +2,12 @@
 export { ThemeToggle, useTheme, THEME_PREFLIGHT_SCRIPT } from '@ikary/system-ikary-ui/ui';
 export type { ThemeToggleProps, ThemeMode, UseThemeReturn } from '@ikary/system-ikary-ui/ui';
 
+// ── Slot system ───────────────────────────────────────────────────────────────
+export type { SlotContext } from './shared/slot-context';
+export { SlotOutlet } from './slot-outlet/SlotOutlet';
+export type { SlotOutletProps } from './slot-outlet/SlotOutlet';
+export { BlankSlot } from './primitives/blank-slot/BlankSlot';
+
 export type { PrimitiveComponent, UIPrimitiveDefinition } from './types/PrimitiveTypes';
 export type { FieldBinding, ValueBinding, Binding } from './types/BindingTypes';
 export type { EntityField, EntitySchema } from './types/EntityTypes';

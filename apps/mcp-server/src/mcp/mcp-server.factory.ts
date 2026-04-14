@@ -17,7 +17,7 @@ export interface McpServices {
 
 export function registerAllTools(server: McpServer, services: McpServices): void {
   registerDiscoveryTools(server, services.discovery);
-  registerRegistryTools(server, services.registry);
+  registerRegistryTools(server, services.registry, services.discovery);
   registerGuidanceTools(server, services.guidance);
   registerValidationTools(server, services.validation);
 }

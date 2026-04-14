@@ -1,5 +1,7 @@
 import type { PageDefinition, FieldDefinition } from '@ikary/cell-contract';
 import { buildEntityListPath } from '@ikary/cell-engine';
+import { SlotOutlet } from '@ikary/cell-primitives';
+import type { SlotContext } from '@ikary/cell-primitives';
 import { useAppRuntime, useAppStore, useAppEntity } from '../AppRuntimeContext';
 
 interface Props {
@@ -50,62 +52,84 @@ export function EntityDetailPage({ page, params }: Props) {
 
   const fields = entity.fields ?? [];
 
+  const slotBindings = page.slotBindings ?? [];
+  const baseSlotCtx: Omit<SlotContext, 'slotZone' | 'slotMode'> = {
+    pageType: 'entity-detail',
+    pageTitle: page.title ?? '',
+    pageKey: page.key,
+    entityKey: entity.key,
+    entityName: entity.name,
+    entityPluralName: entity.pluralName,
+    entity,
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="flex flex-col h-full overflow-y-auto">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <SlotOutlet zone="header" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleBack}
+              className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                {entity.name}
+              </h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                {String(data[fields[0]?.key] ?? data.id)}
+              </p>
+            </div>
+          </div>
           <button
-            onClick={handleBack}
-            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            onClick={handleDelete}
+            className="text-xs font-medium px-3 py-1.5 rounded border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
+            Delete
           </button>
-          <div>
-            <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-              {entity.name}
-            </h1>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-              {String(data[fields[0]?.key] ?? data.id)}
-            </p>
+        </div>
+      </SlotOutlet>
+
+      {/* Content */}
+      <SlotOutlet zone="content" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <div className="p-6">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-800">
+            {fields.map((field) => (
+              <div key={field.key} className="flex px-4 py-3 gap-4">
+                <dt className="w-40 shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  {field.name}
+                </dt>
+                <dd className="text-xs text-gray-900 dark:text-gray-100 min-w-0">
+                  <DetailValue field={field} value={data[field.key]} />
+                </dd>
+              </div>
+            ))}
+
+            {Boolean(data.createdAt) && (
+              <div className="flex px-4 py-3 gap-4">
+                <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Created</dt>
+                <dd className="text-xs text-gray-500">{new Date(data.createdAt as string).toLocaleString()}</dd>
+              </div>
+            )}
+            {Boolean(data.updatedAt) && (
+              <div className="flex px-4 py-3 gap-4">
+                <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Updated</dt>
+                <dd className="text-xs text-gray-500">{new Date(data.updatedAt as string).toLocaleString()}</dd>
+              </div>
+            )}
           </div>
         </div>
-        <button
-          onClick={handleDelete}
-          className="text-xs font-medium px-3 py-1.5 rounded border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-        >
-          Delete
-        </button>
-      </div>
+      </SlotOutlet>
 
-      {/* Fields */}
-      <div className="rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-800">
-        {fields.map((field) => (
-          <div key={field.key} className="flex px-4 py-3 gap-4">
-            <dt className="w-40 shrink-0 text-xs font-medium text-gray-500 dark:text-gray-400">
-              {field.name}
-            </dt>
-            <dd className="text-xs text-gray-900 dark:text-gray-100 min-w-0">
-              <DetailValue field={field} value={data[field.key]} />
-            </dd>
-          </div>
-        ))}
-
-        {Boolean(data.createdAt) && (
-          <div className="flex px-4 py-3 gap-4">
-            <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Created</dt>
-            <dd className="text-xs text-gray-500">{new Date(data.createdAt as string).toLocaleString()}</dd>
-          </div>
-        )}
-        {Boolean(data.updatedAt) && (
-          <div className="flex px-4 py-3 gap-4">
-            <dt className="w-40 shrink-0 text-xs font-medium text-gray-400">Updated</dt>
-            <dd className="text-xs text-gray-500">{new Date(data.updatedAt as string).toLocaleString()}</dd>
-          </div>
-        )}
-      </div>
+      {/* Footer */}
+      <SlotOutlet zone="footer" bindings={slotBindings} slotContext={baseSlotCtx}>
+        {null}
+      </SlotOutlet>
     </div>
   );
 }

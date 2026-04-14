@@ -1,6 +1,8 @@
 import { useState, useMemo, useCallback } from 'react';
 import type { PageDefinition, FieldDefinition } from '@ikary/cell-contract';
 import { buildEntityDetailPath, buildEntityCreatePath } from '@ikary/cell-engine';
+import { SlotOutlet } from '@ikary/cell-primitives';
+import type { SlotContext } from '@ikary/cell-primitives';
 import { useAppRuntime, useAppStore, useAppEntity } from '../AppRuntimeContext';
 
 const PAGE_SIZE = 10;
@@ -66,9 +68,21 @@ export function EntityListPage({ page }: { page: PageDefinition }) {
     );
   }
 
+  const slotBindings = page.slotBindings ?? [];
+  const baseSlotCtx: Omit<SlotContext, 'slotZone' | 'slotMode'> = {
+    pageType: 'entity-list',
+    pageTitle: page.title ?? '',
+    pageKey: page.key,
+    entityKey: entity.key,
+    entityName: entity.name,
+    entityPluralName: entity.pluralName,
+    entity,
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
+      <SlotOutlet zone="header" bindings={slotBindings} slotContext={baseSlotCtx}>
       <div className="shrink-0 flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
         <div>
           <h1 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -94,8 +108,10 @@ export function EntityListPage({ page }: { page: PageDefinition }) {
           </button>
         </div>
       </div>
+      </SlotOutlet>
 
       {/* Table */}
+      <SlotOutlet zone="table" bindings={slotBindings} slotContext={baseSlotCtx}>
       <div className="flex-1 overflow-auto">
         <table className="w-full text-xs">
           <thead className="sticky top-0 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-200 dark:border-gray-700">
@@ -139,31 +155,34 @@ export function EntityListPage({ page }: { page: PageDefinition }) {
           </tbody>
         </table>
       </div>
+      </SlotOutlet>
 
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="shrink-0 flex items-center justify-between px-6 py-2 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <div className="flex gap-1">
-            <button
-              disabled={currentPage <= 1}
-              onClick={() => setCurrentPage((p) => p - 1)}
-              className="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 disabled:opacity-30 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              Prev
-            </button>
-            <button
-              disabled={currentPage >= totalPages}
-              onClick={() => setCurrentPage((p) => p + 1)}
-              className="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 disabled:opacity-30 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              Next
-            </button>
+      <SlotOutlet zone="footer" bindings={slotBindings} slotContext={baseSlotCtx}>
+        {totalPages > 1 ? (
+          <div className="shrink-0 flex items-center justify-between px-6 py-2 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <div className="flex gap-1">
+              <button
+                disabled={currentPage <= 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 disabled:opacity-30 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Prev
+              </button>
+              <button
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                className="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 disabled:opacity-30 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Next
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        ) : null}
+      </SlotOutlet>
     </div>
   );
 }

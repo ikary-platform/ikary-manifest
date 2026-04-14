@@ -1,9 +1,10 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import type { RegistryService } from '../../services/registry.service';
+import type { DiscoveryService } from '../../services/discovery.service';
 import { mcpResult, mcpError } from '../helpers';
 
-export function registerRegistryTools(server: McpServer, registry: RegistryService): void {
+export function registerRegistryTools(server: McpServer, registry: RegistryService, discovery?: DiscoveryService): void {
   server.tool(
     'list_primitives',
     'Returns the catalog of IKARY UI primitives with categories and descriptions. Includes core primitives and any custom primitives registered in ikary-primitives.yaml. Use this to discover available UI components for page layouts.',
@@ -47,13 +48,17 @@ export function registerRegistryTools(server: McpServer, registry: RegistryServi
           const propsText = Object.entries(c.props.properties)
             .map(([k, v]) => `  - **${k}** (${v.type})${v.required ? ' *required*' : ''}${v.description ? `: ${v.description}` : ''}`)
             .join('\n');
+          const slotsText = c.slots?.length
+            ? c.slots.map((s) => `  - **${s.name}**${s.description ? `: ${s.description}` : ''} (modes: ${s.allowedModes.join(', ')})`).join('\n')
+            : null;
           return mcpResult(
             `## Primitive: ${c.key} v${c.version} [custom]\n\n` +
             `**Label:** ${c.label}\n` +
             `**Category:** ${c.category}\n` +
             (c.description ? `**Description:** ${c.description}\n` : '') +
             (c.breakingChanges.length > 0 ? `**Breaking changes from:** ${c.breakingChanges.join(', ')}\n` : '') +
-            `\n**Props:**\n${propsText || '  (no props defined)'}`,
+            `\n**Props:**\n${propsText || '  (no props defined)'}` +
+            (slotsText ? `\n\n**Slots:**\n${slotsText}` : ''),
             contract,
           );
         }
@@ -185,4 +190,34 @@ export function registerRegistryTools(server: McpServer, registry: RegistryServi
       }
     },
   );
+
+  if (discovery) {
+    server.tool(
+      'list_slots_for_page_type',
+      'Returns the named slot zones for a given page type, along with all inferred binding points (zone, zone.before, zone.after). Use this before adding slotBindings to a page definition.',
+      {
+        pageType: z.enum(['entity-list', 'entity-detail', 'entity-create', 'entity-edit', 'dashboard', 'custom'])
+          .describe('The page type to query slot zones for'),
+      },
+      async ({ pageType }) => {
+        try {
+          const result = discovery.listSlotsForPageType(pageType);
+          if ('error' in result) return mcpError(result.error as string);
+          if ('note' in result) return mcpResult(`## Slot zones for: ${pageType}\n\n${result.note as string}`, result);
+
+          const bindingLines = (result.bindings as Array<{ slot: string; mode: string; description: string }>)
+            .map((b) => `- \`${b.slot}\` (${b.mode}) — ${b.description}`)
+            .join('\n');
+          return mcpResult(
+            `## Slot zones for page type: ${pageType}\n\n` +
+            `**Declared zones:** ${(result.zones as string[]).join(', ')}\n\n` +
+            `**All binding points:**\n${bindingLines}`,
+            result,
+          );
+        } catch (err) {
+          return mcpError(String(err));
+        }
+      },
+    );
+  }
 }

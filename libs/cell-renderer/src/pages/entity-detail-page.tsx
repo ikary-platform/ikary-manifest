@@ -14,6 +14,8 @@ import { useDetailPageEdit } from '../detail/hooks/useDetailPageEdit';
 import { resolveManifestEntity } from '../manifest/selectors';
 import type { CellPageRendererProps } from '../registry/cell-component-registry';
 import type { DetailTabDef } from '../detail/detail-tabs';
+import { SlotOutlet } from '@ikary/cell-primitives';
+import type { SlotContext } from '@ikary/cell-primitives';
 
 const STANDARD_TABS: DetailTabDef[] = [
   { key: 'overview', label: 'Overview', kind: 'overview', suffix: '' },
@@ -21,7 +23,7 @@ const STANDARD_TABS: DetailTabDef[] = [
   { key: 'audit', label: 'Audit Log', kind: 'audit', suffix: 'audit' },
 ];
 
-export function EntityDetailPage({ entity }: CellPageRendererProps) {
+export function EntityDetailPage({ page, entity }: CellPageRendererProps) {
   const { dataStore, dataMode } = useCellRuntime();
   const manifest = useCellManifest();
   const { id } = useParams<{ id: string }>();
@@ -94,27 +96,47 @@ export function EntityDetailPage({ entity }: CellPageRendererProps) {
   if (pathname.endsWith('/history')) activeTab = 'history';
   else if (pathname.endsWith('/audit')) activeTab = 'audit';
 
+  const baseSlotCtx: Omit<SlotContext, 'slotZone' | 'slotMode'> = {
+    pageType: 'entity-detail',
+    pageTitle: page.title,
+    pageKey: page.key,
+    entityKey: entity.key,
+    entityName: entity.name,
+    entityPluralName: entity.pluralName,
+    entity: entity,
+  };
+  const slotBindings = page.slotBindings ?? [];
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <DetailHeader
-        entity={entity}
-        record={record}
-        id={id}
-        activeTab={activeTab}
-        mode={mode}
-        onEnterEdit={onEnterEdit}
-      />
-      <DetailTabs tabs={STANDARD_TABS} basePath={basePath} />
-      <div className="flex-1 overflow-y-auto bg-muted/30 dark:bg-muted/10">
-        <Routes>
-          <Route
-            index
-            element={<OverviewTab entity={entity} record={record} recordId={id} mode={mode} form={form} />}
-          />
-          <Route path="history" element={<HistoryTab entity={entity} recordId={id} />} />
-          <Route path="audit" element={<AuditTab entity={entity} recordId={id} />} />
-        </Routes>
-      </div>
+      <SlotOutlet zone="header" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <DetailHeader
+          entity={entity}
+          record={record}
+          id={id}
+          activeTab={activeTab}
+          mode={mode}
+          onEnterEdit={onEnterEdit}
+        />
+      </SlotOutlet>
+      <SlotOutlet zone="navigation" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <DetailTabs tabs={STANDARD_TABS} basePath={basePath} />
+      </SlotOutlet>
+      <SlotOutlet zone="content" bindings={slotBindings} slotContext={baseSlotCtx}>
+        <div className="flex-1 overflow-y-auto bg-muted/30 dark:bg-muted/10">
+          <Routes>
+            <Route
+              index
+              element={<OverviewTab entity={entity} record={record} recordId={id} mode={mode} form={form} />}
+            />
+            <Route path="history" element={<HistoryTab entity={entity} recordId={id} />} />
+            <Route path="audit" element={<AuditTab entity={entity} recordId={id} />} />
+          </Routes>
+        </div>
+      </SlotOutlet>
+      <SlotOutlet zone="footer" bindings={slotBindings} slotContext={baseSlotCtx}>
+        {null}
+      </SlotOutlet>
     </div>
   );
 }

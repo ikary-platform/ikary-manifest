@@ -152,6 +152,56 @@ primitives:
 
 `ikary primitive add` appends to this file automatically. Edit it manually to adjust paths or add an `overrides` field to replace a core primitive.
 
+## Declaring slots
+
+Primitives that act as containers can expose named zones for further injection. Declare them in the `.contract.yaml` under a `slots` key:
+
+```yaml
+key: my-layout
+version: "1.0.0"
+label: My Layout
+category: layout
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      description: Layout title
+  required: [title]
+slots:
+  - name: header
+    description: Top area of the layout
+    allowedModes: [replace, prepend, append]
+  - name: body
+    description: Main content area
+    allowedModes: [replace, append]
+```
+
+Each slot entry requires `name`. The `description` field is optional but appears in the MCP tool output. The `allowedModes` field restricts which binding modes are valid. Omit it to allow all three: `replace`, `prepend`, `append`.
+
+Once declared, a manifest can target these slots using `slotBindings` on any page that renders the primitive.
+
+## entityBinding
+
+If your primitive is designed for a specific entity type, set `entityBinding` in `ikary-primitives.yaml`:
+
+```yaml
+primitives:
+  - key: product-summary
+    version: "1.0.0"
+    source: ./primitives/product-summary/ProductSummary.register.ts
+    contract: ./primitives/product-summary/product-summary.contract.yaml
+    entityBinding: product
+```
+
+Set it to an array to allow multiple entity types:
+
+```yaml
+entityBinding: [product, variant]
+```
+
+This is metadata only. The runtime does not block bindings that do not match. The `validate_slot_bindings` MCP tool uses it to generate warnings when a primitive is bound to a page whose entity differs.
+
 ## Building with Claude Code
 
 Run `ikary setup ai` once to configure Claude Code for the project. After that, use these slash commands inside Claude Code:
