@@ -21,6 +21,7 @@ export default defineConfig({
         'src/registry.ts',            // Top-level primitive registration side effects
         'src/data/**',                // Fake/test data files
         'src/types/**',               // Type-only declaration files
+        'src/chrome/**',              // App-chrome primitives (ThemeToggle, useTheme) - require full React + DOM test env
         'src/primitives/*/hooks/**',  // Complex React hooks requiring full test environment
         'src/primitives/form/hooks/**',
         'src/primitives/list-page/hooks/**',
