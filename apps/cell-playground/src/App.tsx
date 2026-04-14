@@ -94,23 +94,17 @@ export function App() {
 
           {/* Route-specific label */}
           <div
-            style={{
-              height: '36px',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0 12px',
-              borderBottom: '1px solid hsl(var(--border))',
-              flexShrink: 0,
-            }}
+            className="ide-toolbar"
+            style={{ borderLeft: 'none', paddingLeft: '12px' }}
           >
             <span
               style={{
-                fontSize: '10px',
+                fontSize: '11px',
                 fontWeight: 600,
-                letterSpacing: '0.08em',
+                letterSpacing: '0.06em',
                 textTransform: 'uppercase',
-                color: 'hsl(var(--muted-foreground))',
               }}
+              className="ide-toolbar-label"
             >
               {location.pathname.startsWith('/app-runtime') && 'Manifests'}
               {location.pathname.startsWith('/api-runtime') && 'Entities'}

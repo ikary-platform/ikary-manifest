@@ -107,6 +107,387 @@ body {
   border-bottom: 1px solid rgba(171, 193, 224, 0.1);
 }
 
+/* ── IDE chrome — IKARY brand palette ───────────────────────────────────── */
+/*
+ * Brand tokens (from docs theme / ikary.co):
+ *   Light blue:  #1d4ed8   Dark blue:  #78afff
+ *   Light text:  #071230   Dark text:  #f8fafc
+ *   Light text2: #62708c   Dark text2: #bcc8df
+ *   Dark bg elv: #111c34   Dark bg:    #0a1329
+ *   Light bg sf: #f1f5f9   Light bg:   #ffffff
+ *   Border L:    rgba(136,161,204,.30)
+ *   Border D:    rgba(136,161,204,.15)
+ */
+
+/* ── Section toolbar ─────────────────────────────────────────────────────── */
+.ide-toolbar {
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  /* Light: clean off-white with very subtle brand tint */
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid rgba(136, 161, 204, 0.3);
+  box-shadow: 0 1px 0 rgba(136, 161, 204, 0.08);
+}
+
+.dark .ide-toolbar {
+  /* Dark: IKARY elevated-bg with glass quality */
+  background: linear-gradient(180deg, rgba(24, 38, 68, 0.96) 0%, rgba(17, 28, 52, 0.98) 100%);
+  border-bottom: 1px solid rgba(136, 161, 204, 0.15);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ide-toolbar-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  /* Light: IKARY primary text */
+  color: #071230;
+}
+
+.dark .ide-toolbar-label {
+  color: #bcc8df;
+}
+
+/* ── Panel file-tab header ───────────────────────────────────────────────── */
+/* Sits directly above the editor / preview / output body */
+.ide-panel-tab {
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+  /* Light: pure white — panel body feel */
+  background: #ffffff;
+  border-top: 2px solid #1d4ed8;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.3);
+}
+
+.dark .ide-panel-tab {
+  /* Dark: IKARY "elevated" surface (#111c34) */
+  background: #111c34;
+  border-top: 2px solid #78afff;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.15);
+}
+
+/* ── Dot indicator ───────────────────────────────────────────────────────── */
+.ide-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #1d4ed8;
+}
+
+.dark .ide-dot {
+  background: #78afff;
+}
+
+/* ── Monospace filename ──────────────────────────────────────────────────── */
+.ide-filename {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  color: #071230;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dark .ide-filename {
+  color: #f8fafc;
+}
+
+/* ── Schema type badge ───────────────────────────────────────────────────── */
+.ide-badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  /* Light: IKARY icon bg/border/accent pattern */
+  background: rgba(29, 78, 216, 0.08);
+  color: #1d4ed8;
+  border: 1px solid rgba(29, 78, 216, 0.15);
+}
+
+.dark .ide-badge {
+  background: rgba(120, 175, 255, 0.08);
+  color: #78afff;
+  border: 1px solid rgba(120, 175, 255, 0.2);
+}
+
+/* ── Toolbar ghost action button ─────────────────────────────────────────── */
+.ide-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 9px;
+  height: 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  /* Light */
+  border: 1px solid rgba(136, 161, 204, 0.4);
+  background: rgba(255, 255, 255, 0.7);
+  color: #62708c;
+}
+.ide-action-btn:hover {
+  border-color: rgba(29, 78, 216, 0.3);
+  background: rgba(29, 78, 216, 0.05);
+  color: #1d4ed8;
+}
+
+.dark .ide-action-btn {
+  border: 1px solid rgba(120, 175, 255, 0.2);
+  background: rgba(120, 175, 255, 0.06);
+  color: #8a9aba;
+}
+.dark .ide-action-btn:hover {
+  border-color: rgba(120, 175, 255, 0.35);
+  background: rgba(120, 175, 255, 0.12);
+  color: #78afff;
+}
+
+/* ── Segmented Split / Full toggle ───────────────────────────────────────── */
+.ide-seg {
+  display: flex;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  /* Light */
+  border: 1px solid rgba(136, 161, 204, 0.4);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.dark .ide-seg {
+  border: 1px solid rgba(120, 175, 255, 0.15);
+  background: rgba(17, 28, 52, 0.6);
+}
+
+.ide-seg-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 400;
+  transition: background 0.12s, color 0.12s;
+  background: transparent;
+}
+.ide-seg-btn:not(:last-child) {
+  border-right: 1px solid rgba(136, 161, 204, 0.35);
+}
+.dark .ide-seg-btn:not(:last-child) {
+  border-right: 1px solid rgba(120, 175, 255, 0.12);
+}
+
+/* Light active */
+.ide-seg-btn--active {
+  background: #1d4ed8;
+  color: #ffffff;
+  font-weight: 600;
+}
+/* Dark active — IKARY glass button style */
+.dark .ide-seg-btn--active {
+  background: rgba(120, 175, 255, 0.18);
+  color: #78afff;
+  font-weight: 600;
+}
+
+.ide-seg-btn--inactive {
+  color: #62708c;
+}
+.ide-seg-btn--inactive:hover {
+  background: rgba(29, 78, 216, 0.06);
+  color: #1d4ed8;
+}
+
+.dark .ide-seg-btn--inactive {
+  color: #8a9aba;
+}
+.dark .ide-seg-btn--inactive:hover {
+  background: rgba(120, 175, 255, 0.1);
+  color: #bcc8df;
+}
+
+/* ── Output tab strip (API Runtime panel header) ─────────────────────────── */
+.ide-output-tabs {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  padding: 0 8px;
+  overflow-x: auto;
+  /* Light: same panel-tab treatment */
+  background: #ffffff;
+  border-top: 2px solid #1d4ed8;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.3);
+}
+
+.dark .ide-output-tabs {
+  background: #111c34;
+  border-top: 2px solid #78afff;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.15);
+}
+
+.ide-output-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 11px;
+  height: 34px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  transition: color 0.12s, border-color 0.12s;
+  color: #62708c;
+  margin-bottom: -2px; /* overlap the container's border-bottom */
+}
+.ide-output-tab:hover {
+  color: #1d4ed8;
+}
+
+.dark .ide-output-tab {
+  color: #8a9aba;
+}
+.dark .ide-output-tab:hover {
+  color: #bcc8df;
+}
+
+.ide-output-tab--active {
+  border-bottom: 2px solid #1d4ed8;
+  color: #071230;
+  font-weight: 600;
+}
+
+.dark .ide-output-tab--active {
+  border-bottom: 2px solid #78afff;
+  color: #f8fafc;
+}
+
+/* ── Editor sub-section header (Contract Props, Runtime Context, etc.) ──── */
+.ide-sub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  height: 28px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.2);
+}
+.ide-sub-header-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #62708c;
+}
+.dark .ide-sub-header-label {
+  color: #8a9aba;
+}
+.ide-sub-header--clickable {
+  cursor: pointer;
+  user-select: none;
+}
+.ide-sub-header--clickable:hover {
+  background: rgba(29, 78, 216, 0.05);
+}
+.dark .ide-sub-header--clickable:hover {
+  background: rgba(120, 175, 255, 0.08);
+}
+
+/* ── Scenario tabs (UI Runtime props panel) ──────────────────────────────── */
+.ide-scenario-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 8px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.25);
+}
+.dark .ide-scenario-tabs {
+  background: #111c34;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.15);
+}
+.ide-scenario-tab {
+  padding: 0 10px;
+  height: 30px;
+  font-size: 11px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  color: #62708c;
+  font-weight: 400;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  transition: color 0.12s, border-color 0.12s;
+}
+.ide-scenario-tab:hover { color: #1d4ed8; }
+.ide-scenario-tab--active {
+  border-bottom-color: #1d4ed8;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+.dark .ide-scenario-tab { color: #8a9aba; }
+.dark .ide-scenario-tab:hover { color: #bcc8df; }
+.dark .ide-scenario-tab--active {
+  border-bottom-color: #78afff;
+  color: #78afff;
+}
+
+/* ── Version select (UI Runtime preview toolbar) ─────────────────────────── */
+.ide-version-select {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(136, 161, 204, 0.4);
+  background: rgba(255, 255, 255, 0.7);
+  color: #62708c;
+  cursor: pointer;
+}
+.dark .ide-version-select {
+  border-color: rgba(120, 175, 255, 0.2);
+  background: rgba(17, 28, 52, 0.6);
+  color: #8a9aba;
+}
+
+/* ── Tab description strip ───────────────────────────────────────────────── */
+.ide-tab-desc {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-style: italic;
+  border-bottom: 1px solid rgba(136, 161, 204, 0.25);
+  background: rgba(29, 78, 216, 0.03);
+  color: #62708c;
+}
+.dark .ide-tab-desc {
+  background: rgba(120, 175, 255, 0.04);
+  border-bottom: 1px solid rgba(136, 161, 204, 0.12);
+  color: #8a9aba;
+}
+
 /* ── Prose code blocks in dark mode ───────────────────────────────────── */
 
 .dark .prose pre {

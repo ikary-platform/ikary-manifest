@@ -53,6 +53,9 @@ export function UIRuntimeSection() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      <div className="ide-toolbar">
+        <span className="ide-toolbar-label">UI Runtime</span>
+      </div>
       <PrimitiveStudio
         catalog={catalog}
         scenariosByKey={scenariosByKey}
@@ -67,6 +70,14 @@ export function UIRuntimeSection() {
             error={null}
             schemaUrl={key ? `${MCP_API_URL}/api/json-schema/primitive/${key}` : undefined}
             modelUri={`primitive://${key ?? 'none'}.json`}
+          />
+        )}
+        renderRuntimeEditor={({ value, onChange }) => (
+          <MonacoJsonEditor
+            value={value}
+            onChange={onChange}
+            error={null}
+            modelUri="primitive://runtime-context.json"
           />
         )}
       />

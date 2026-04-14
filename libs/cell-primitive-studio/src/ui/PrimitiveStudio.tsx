@@ -34,6 +34,12 @@ export interface PrimitiveStudioProps {
    */
   renderContractEditor?: (p: { value: string; onChange: (v: string) => void; primitiveKey: string | null }) => ReactNode;
   /**
+   * Optional custom renderer for the Runtime Context editor.
+   * Receives the current value and an onChange handler.
+   * When provided, replaces the default textarea with a custom editor (e.g. Monaco).
+   */
+  renderRuntimeEditor?: (p: { value: string; onChange: (v: string) => void }) => ReactNode;
+  /**
    * When true, the built-in primitives sidebar is not rendered.
    * Use this when the sidebar is provided externally (e.g. in a global layout sidebar).
    */
@@ -96,25 +102,26 @@ function ResizeDivider({ onMouseDown }: { onMouseDown: (e: React.MouseEvent) => 
 
 // ── Inline SVG icons (avoids lucide-react dep in the lib) ───────────────
 
-function IconMaximize() {
+function IconColumns() {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M1 4.5V1h3.5M7.5 1H11v3.5M11 7.5V11H7.5M4.5 11H1V7.5" />
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="1" width="4" height="10" rx="0.5" />
+      <rect x="7" y="1" width="4" height="10" rx="0.5" />
     </svg>
   );
 }
 
-function IconCode() {
+function IconExpand() {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 3.5L1.5 6 4 8.5M8 3.5L10.5 6 8 8.5M6.5 2l-1 8" />
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+      <path d="M1 4.5V1h3.5M7.5 1H11v3.5M11 7.5V11H7.5M4.5 11H1V7.5" />
     </svg>
   );
 }
 
 // ── Main component ──────────────────────────────────────────────────────
 
-export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsByKey = {}, initialKey = null, onSelectPrimitive, renderContractEditor, hideSidebar = false }: PrimitiveStudioProps) {
+export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsByKey = {}, initialKey = null, onSelectPrimitive, renderContractEditor, renderRuntimeEditor, hideSidebar = false }: PrimitiveStudioProps) {
   const [selectedKey, setSelectedKey] = useState<string | null>(initialKey);
 
   useEffect(() => {
@@ -175,9 +182,9 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         display: 'flex',
         height: '100%',
         fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
         fontSize: '13px',
-        backgroundColor: 'hsl(var(--muted))',
+        backgroundColor: 'hsl(var(--background))',
         overflow: 'hidden',
       }}
     >
@@ -224,6 +231,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
               ? (p) => renderContractEditor({ ...p, primitiveKey: selectedKey })
               : undefined
           }
+          renderRuntimeEditor={renderRuntimeEditor}
         />
       </div>
 
@@ -267,22 +275,6 @@ interface PrimitivePreviewToolbarProps {
   onToggleFullscreen: () => void;
 }
 
-const TOOLBAR_BTN: React.CSSProperties = {
-  flexShrink: 0,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '20px',
-  height: '20px',
-  borderRadius: '4px',
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--background))',
-  cursor: 'pointer',
-  color: 'hsl(var(--muted-foreground))',
-  fontSize: '12px',
-  lineHeight: 1,
-};
-
 function PrimitivePreviewToolbar({
   primitiveKey,
   version,
@@ -294,105 +286,70 @@ function PrimitivePreviewToolbar({
   onToggleFullscreen,
 }: PrimitivePreviewToolbarProps) {
   const entry = primitiveKey ? catalog.find((e) => e.key === primitiveKey) : null;
+  const isFull = fullscreen || propsCollapsed;
+
+  function handleSplit() {
+    if (fullscreen) onToggleFullscreen();
+    else if (propsCollapsed) onToggleProps();
+  }
+  function handleFull() {
+    if (!isFull) onToggleFullscreen();
+  }
 
   return (
-    <div
-      style={{
-        height: '36px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 12px',
-        borderBottom: '1px solid hsl(var(--border))',
-        backgroundColor: 'hsl(var(--muted))',
-        flexShrink: 0,
-        gap: '8px',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {/* Props panel toggle — hidden when in fullscreen */}
-        {!fullscreen && (
-          <button
-            onClick={onToggleProps}
-            title={propsCollapsed ? 'Show props editor' : 'Hide props editor'}
-            style={TOOLBAR_BTN}
-          >
-            {propsCollapsed ? '›' : '‹'}
-          </button>
-        )}
-
-        {/* Fullscreen / code toggle */}
-        <button
-          onClick={onToggleFullscreen}
-          title={fullscreen ? 'Back to split view' : 'Preview only'}
-          style={TOOLBAR_BTN}
-        >
-          {fullscreen ? <IconCode /> : <IconMaximize />}
-        </button>
-
-        <span
-          style={{
-            fontSize: '10px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color: 'hsl(var(--muted-foreground))',
-          }}
-        >
-          Preview
-        </span>
-        {entry && (
-          <>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'hsl(var(--foreground))' }}>
-              {entry.label}
-            </span>
-            {entry.source === 'custom' && (
-              <span
-                style={{
-                  fontSize: '10px',
-                  padding: '1px 6px',
-                  borderRadius: '10px',
-                  backgroundColor: 'rgba(251,191,36,0.15)',
-                  color: '#fcd34d',
-                  border: '1px solid rgba(251,191,36,0.4)',
-                }}
-              >
-                Custom
-              </span>
-            )}
-          </>
-        )}
-        {!entry && (
-          <span style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>
-            Select a primitive to preview.
-          </span>
-        )}
-      </div>
-
+    <div className="ide-panel-tab">
+      {/* Left: indicator + label + badge */}
+      <span className="ide-dot" />
+      <span className="ide-filename" style={{ fontFamily: 'inherit' }}>
+        {entry ? entry.label : 'Rendered Preview'}
+      </span>
       {entry && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <label style={{ fontSize: '11px', color: 'hsl(var(--muted-foreground))' }}>Version:</label>
-          <select
-            value={version ?? 'latest'}
-            onChange={(e) =>
-              onVersionChange(e.target.value === 'latest' ? undefined : e.target.value)
-            }
-            style={{
-              fontSize: '11px',
-              padding: '2px 6px',
-              border: '1px solid hsl(var(--border))',
-              borderRadius: '4px',
-              backgroundColor: 'hsl(var(--background))',
-              color: 'hsl(var(--foreground))',
-            }}
-          >
-            <option value="latest">latest</option>
-            {entry.version && entry.version !== 'latest' && (
-              <option value={entry.version}>{entry.version}</option>
-            )}
-          </select>
-        </div>
+        <span
+          className="ide-badge"
+          style={entry.source === 'custom'
+            ? { background: 'rgba(217,119,6,0.1)', color: '#d97706', borderColor: 'rgba(217,119,6,0.25)' }
+            : undefined}
+        >
+          {entry.source === 'custom' ? 'custom' : 'live'}
+        </span>
       )}
+
+      {/* Right-side controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}>
+        {/* Version selector */}
+        {entry && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ fontSize: '11px', color: '#62708c' }}>v</span>
+            <select
+              className="ide-version-select"
+              value={version ?? 'latest'}
+              onChange={(e) => onVersionChange(e.target.value === 'latest' ? undefined : e.target.value)}
+            >
+              <option value="latest">latest</option>
+              {entry.version && entry.version !== 'latest' && (
+                <option value={entry.version}>{entry.version}</option>
+              )}
+            </select>
+          </div>
+        )}
+        {/* Split / Full segmented toggle */}
+        <div className="ide-seg">
+          <button
+            className={`ide-seg-btn ${!isFull ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+            onClick={handleSplit}
+            title="Split view — show props editor"
+          >
+            <IconColumns /> Split
+          </button>
+          <button
+            className={`ide-seg-btn ${isFull ? 'ide-seg-btn--active' : 'ide-seg-btn--inactive'}`}
+            onClick={handleFull}
+            title="Full view — preview only"
+          >
+            <IconExpand /> Full
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
