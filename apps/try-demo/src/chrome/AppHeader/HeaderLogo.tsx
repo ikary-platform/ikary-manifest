@@ -1,8 +1,9 @@
+import { IkaryLogo } from '@ikary/system-ikary-ui/ui';
 import { EXTERNAL_LINKS } from '../../config/links';
 
 /**
- * Ikary brand lockup for the header. The two `<img>` tags swap via CSS
- * (`.dark` class), avoiding a render on theme change.
+ * IKARY brand lockup for the header. `IkaryLogo` swaps between the black
+ * and white wordmark via CSS (`.dark` class) — zero JS on theme change.
  */
 export function HeaderLogo() {
   return (
@@ -13,8 +14,7 @@ export function HeaderLogo() {
       rel="noreferrer"
       aria-label="Ikary"
     >
-      <img className="app-logo app-logo-light" src="/brand/black-full.svg" alt="Ikary" />
-      <img className="app-logo app-logo-dark" src="/brand/white-full.svg" alt="Ikary" />
+      <IkaryLogo variant="full-auto" height={22} />
       <span className="app-title-subdomain">try</span>
     </a>
   );

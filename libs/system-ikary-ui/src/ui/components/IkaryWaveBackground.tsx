@@ -8,9 +8,9 @@ import {
   WAVE_MID_VIEWBOX,
   WAVE_SLOW_PATH,
   WAVE_SLOW_VIEWBOX,
-} from './wave-paths';
+} from '../../shared/wave-paths';
 
-interface Props {
+export interface IkaryWaveBackgroundProps {
   /**
    * Layout mode. `fixed` (default) for the full-page shell; `absolute` when
    * the background must live inside a positioned ancestor (for example a
@@ -22,9 +22,14 @@ interface Props {
 /**
  * Animated ambient background: waves + radial glows + edge vignettes.
  * All positioning and colors are driven by CSS tokens declared in
- * `styles.css`; this component only composes the layers.
+ * `@ikary/system-ikary-ui/styles`; this component only composes the layers.
+ *
+ * Usage:
+ *   import '@ikary/system-ikary-ui/styles';
+ *   import { IkaryWaveBackground } from '@ikary/system-ikary-ui/ui';
+ *   <IkaryWaveBackground />
  */
-export function OnboardingBackground({ mode = 'fixed' }: Props) {
+export function IkaryWaveBackground({ mode = 'fixed' }: IkaryWaveBackgroundProps) {
   const modeClass = mode === 'absolute' ? 'ob-bg--absolute' : 'ob-bg--fixed';
   return (
     <div className={`ob-bg ${modeClass}`} aria-hidden="true">

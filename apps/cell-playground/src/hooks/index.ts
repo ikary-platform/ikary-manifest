@@ -1,4 +1,3 @@
-export { useDarkMode } from './useDarkMode';
 export { useResizablePanel } from './useResizablePanel';
 export { useSchemaFetch } from './useSchemaFetch';
 export { useViewMode } from './useViewMode';

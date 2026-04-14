@@ -76,6 +76,12 @@ Examples:
 | `@ikary/system-localization`  | react-intl + catalog build pipeline          |
 | `@ikary/system-log-core`      | Pino + DB-backed log sinks                   |
 | `@ikary/system-migration-core`| File-based Postgres migration engine         |
+| `@ikary/system-ikary-ui`      | IKARY brand: logo, theme toggle, wave bg, tokens |
+
+The `system-*` prefix also covers IKARY-wide platform utilities (brand, fonts,
+theme) with no Cell-domain knowledge. `system-ikary-ui` is the IKARY brand
+implementation; the `system-brand-*` namespace is reserved for a future
+white-label theming system.
 
 ### How to choose
 

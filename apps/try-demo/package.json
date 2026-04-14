@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ikary/system-ikary-ui": "workspace:*",
     "@ikary/cell-ai": "workspace:*",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",

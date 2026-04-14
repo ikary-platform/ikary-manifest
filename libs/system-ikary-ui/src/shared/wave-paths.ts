@@ -2,6 +2,8 @@
  * SVG path data for the three wave layers. Extracted so the component
  * markup stays trivially readable (no inline path strings) and the curves
  * are tweakable in one place without touching JSX.
+ *
+ * Import from `@ikary/system-ikary-ui` (root entry).
  */
 
 export const WAVE_SLOW_PATH =

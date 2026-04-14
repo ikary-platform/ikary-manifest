@@ -32,7 +32,8 @@
       "@ikary/system-ai",
       "@ikary/cell-ai",
       "@ikary/try-api",
-      "@ikary/try-demo"
+      "@ikary/try-demo",
+      "@ikary/system-ikary-ui"
     ]
   ],
   "linked": [],
