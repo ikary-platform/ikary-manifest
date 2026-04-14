@@ -1,24 +1,14 @@
 name: Deploy try.ikary.co
 
 on:
+  # Path filters were previously used here, but the Cloudflare Pages
+  # Function catch-all lives at `apps/try-demo/functions/api/[[path]].ts`
+  # and the literal `[` / `]` in that filename breaks GitHub Actions'
+  # push-event processing, so commits touching it never fire any
+  # workflow. Drop the filter until the upcoming CI-sequencing work
+  # rewires this trigger to `workflow_run` (gated on CI success).
   push:
     branches: [main]
-    paths:
-      - 'apps/try-demo/**'
-      - 'apps/try-api/**'
-      - 'libs/cell-ai/**'
-      - 'libs/cell-contract/**'
-      - 'libs/cell-engine/**'
-      - 'libs/cell-data/**'
-      - 'libs/cell-presentation/**'
-      - 'libs/cell-primitive-contract/**'
-      - 'libs/cell-primitives/**'
-      - 'libs/cell-renderer/**'
-      - 'libs/system-ai/**'
-      - 'libs/system-localization/**'
-      - 'manifests/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-try.yml'
   workflow_dispatch:
 
 concurrency:
