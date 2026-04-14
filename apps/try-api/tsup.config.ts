@@ -6,6 +6,7 @@ export default defineConfig({
   shims: true,
   clean: true,
   target: 'node20',
+  outExtension: () => ({ js: '.cjs' }),
   noExternal: [
     '@ikary/cell-ai',
     '@ikary/cell-contract',
