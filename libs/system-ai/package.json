@@ -1,0 +1,48 @@
+{
+  "name": "@ikary/system-ai",
+  "version": "0.3.0",
+  "description": "Provider abstraction, sanitization, and budget primitives for LLM access across Ikary surfaces.",
+  "license": "MIT",
+  "type": "module",
+  "microPackageKind": "mixed-shared-server",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./server": {
+      "types": "./src/server/index.ts",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/server/index.ts --format cjs,esm --dts --clean",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.0",
+    "openai": "^4.76.0",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ]
+}
