@@ -67,41 +67,6 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
           gap: '8px',
         }}
       >
-        {/* Split / Full segmented toggle */}
-        <div
-          style={{
-            display: 'flex',
-            flexShrink: 0,
-            border: '1px solid hsl(var(--border))',
-            borderRadius: '5px',
-            overflow: 'hidden',
-          }}
-        >
-          {(['split', 'full'] as const).map((mode, i) => (
-            <button
-              key={mode}
-              onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
-              title={mode === 'split' ? 'Split view' : 'Full view'}
-              style={{
-                padding: '2px 10px',
-                border: 'none',
-                borderRight: i === 0 ? '1px solid hsl(var(--border))' : 'none',
-                cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: viewMode === mode ? 600 : 400,
-                background: viewMode === mode ? '#3b82f6' : 'hsl(var(--background))',
-                color: viewMode === mode ? '#fff' : 'hsl(var(--muted-foreground))',
-                transition: 'background 0.1s, color 0.1s',
-              }}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
-                {mode === 'split' ? 'Split' : 'Full'}
-              </span>
-            </button>
-          ))}
-        </div>
-
         <span
           style={{
             fontSize: '10px',
@@ -115,24 +80,62 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
           App Runtime
         </span>
 
-        {/* Full mode: toggle on the right */}
-        {viewMode === 'full' && (
-          <button
-            onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
-            title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
+        {/* Right-side controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}>
+          {/* Full mode: View Code / View Preview */}
+          {viewMode === 'full' && (
+            <button
+              onClick={() => setFullContent((f) => f === 'preview' ? 'code' : 'preview')}
+              title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
+              style={{
+                ...BTN_STYLE,
+                width: 'auto',
+                padding: '0 8px',
+                gap: '5px',
+                fontSize: '11px',
+                fontWeight: 500,
+              }}
+            >
+              {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
+              {fullContent === 'preview' ? 'View Code' : 'View Preview'}
+            </button>
+          )}
+
+          {/* Split / Full segmented toggle */}
+          <div
             style={{
-              ...BTN_STYLE,
-              width: 'auto',
-              padding: '0 8px',
-              gap: '5px',
-              fontSize: '11px',
-              fontWeight: 500,
+              display: 'flex',
+              flexShrink: 0,
+              border: '1px solid hsl(var(--border))',
+              borderRadius: '5px',
+              overflow: 'hidden',
             }}
           >
-            {fullContent === 'preview' ? <Code2 size={11} /> : <Eye size={11} />}
-            {fullContent === 'preview' ? 'View Code' : 'View Preview'}
-          </button>
-        )}
+            {(['split', 'full'] as const).map((mode, i) => (
+              <button
+                key={mode}
+                onClick={() => { setViewMode(mode); if (mode === 'full') setFullContent('preview'); }}
+                title={mode === 'split' ? 'Split view' : 'Full view'}
+                style={{
+                  padding: '2px 10px',
+                  border: 'none',
+                  borderRight: i === 0 ? '1px solid hsl(var(--border))' : 'none',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: viewMode === mode ? 600 : 400,
+                  background: viewMode === mode ? '#3b82f6' : 'hsl(var(--background))',
+                  color: viewMode === mode ? '#fff' : 'hsl(var(--muted-foreground))',
+                  transition: 'background 0.1s, color 0.1s',
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {mode === 'split' ? <Columns2 size={11} /> : <Maximize2 size={11} />}
+                  {mode === 'split' ? 'Split' : 'Full'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* ── Panels ── */}

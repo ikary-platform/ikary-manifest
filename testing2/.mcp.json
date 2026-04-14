@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ikary-manifest": {
+      "type": "http",
+      "url": "https://public.ikary.co/mcp"
+    }
+  }
+}

@@ -1,0 +1,2485 @@
+[
+  {
+    "name": "accordion",
+    "description": "Vertically stacked set of interactive headings that can be toggled to reveal or hide associated content sections.",
+    "docUrl": "https://ui.shadcn.com/docs/components/accordion",
+    "installCommand": "npx shadcn-ui@latest add accordion",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic accordion with multiple collapsible items."
+      },
+      {
+        "name": "Multiple",
+        "description": "Accordion allowing multiple items to be open simultaneously."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Accordion,\n  AccordionItem,\n  AccordionTrigger,\n  AccordionContent,\n} from '@/components/ui/accordion'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Is it accessible?</AccordionTrigger>\n    <AccordionContent>\n      Yes. It adheres to the WAI-ARIA design pattern.\n    </AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"item-2\">\n    <AccordionTrigger>Is it styled?</AccordionTrigger>\n    <AccordionContent>\n      Yes. It comes with default styles you can customize.\n    </AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      },
+      {
+        "title": "Multiple Open Items",
+        "language": "jsx",
+        "code": "<Accordion type=\"multiple\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Item 1</AccordionTrigger>\n    <AccordionContent>Content 1</AccordionContent>\n  </AccordionItem>\n  <AccordionItem value=\"item-2\">\n    <AccordionTrigger>Item 2</AccordionTrigger>\n    <AccordionContent>Content 2</AccordionContent>\n  </AccordionItem>\n</Accordion>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Accordion", "AccordionItem", "AccordionTrigger", "AccordionContent"],
+    "props": {
+      "type": {
+        "type": "string",
+        "values": ["single", "multiple"]
+      },
+      "collapsible": {
+        "type": "boolean"
+      },
+      "value": {
+        "type": "string"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "alert",
+    "description": "Displays a callout message to the user, typically for important information or warnings.",
+    "docUrl": "https://ui.shadcn.com/docs/components/alert",
+    "installCommand": "npx shadcn-ui@latest add alert",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A standard alert with title and description."
+      },
+      {
+        "name": "Destructive",
+        "description": "An alert styled to indicate destructive or error states."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'\nimport { AlertCircle } from 'lucide-react'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Alert>\n  <AlertCircle className=\"h-4 w-4\" />\n  <AlertTitle>Heads up!</AlertTitle>\n  <AlertDescription>\n    You can add components to your app using the cli.\n  </AlertDescription>\n</Alert>"
+      },
+      {
+        "title": "Destructive Alert",
+        "language": "jsx",
+        "code": "<Alert variant=\"destructive\">\n  <AlertCircle className=\"h-4 w-4\" />\n  <AlertTitle>Error</AlertTitle>\n  <AlertDescription>\n    Your session has expired. Please log in again.\n  </AlertDescription>\n</Alert>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Alert", "AlertTitle", "AlertDescription"],
+    "props": {
+      "variant": {
+        "type": "string",
+        "values": ["default", "destructive"]
+      }
+    }
+  },
+  {
+    "name": "alert-dialog",
+    "description": "A modal dialog that interrupts the user with important content and expects a response.",
+    "docUrl": "https://ui.shadcn.com/docs/components/alert-dialog",
+    "installCommand": "npx shadcn-ui@latest add alert-dialog",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic alert dialog with action and cancel buttons."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  AlertDialog,\n  AlertDialogAction,\n  AlertDialogCancel,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogTitle,\n  AlertDialogTrigger,\n} from '@/components/ui/alert-dialog'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<AlertDialog>\n  <AlertDialogTrigger>Open</AlertDialogTrigger>\n  <AlertDialogContent>\n    <AlertDialogHeader>\n      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>\n      <AlertDialogDescription>\n        This action cannot be undone. This will permanently delete your\n        account and remove your data from our servers.\n      </AlertDialogDescription>\n    </AlertDialogHeader>\n    <AlertDialogFooter>\n      <AlertDialogCancel>Cancel</AlertDialogCancel>\n      <AlertDialogAction>Continue</AlertDialogAction>\n    </AlertDialogFooter>\n  </AlertDialogContent>\n</AlertDialog>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["AlertDialog", "AlertDialogTrigger", "AlertDialogContent", "AlertDialogHeader", "AlertDialogFooter", "AlertDialogTitle", "AlertDialogDescription", "AlertDialogAction", "AlertDialogCancel"],
+    "props": {}
+  },
+  {
+    "name": "aspect-ratio",
+    "description": "Displays content within a desired aspect ratio.",
+    "docUrl": "https://ui.shadcn.com/docs/components/aspect-ratio",
+    "installCommand": "npx shadcn-ui@latest add aspect-ratio",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "An image displayed with a 16:9 aspect ratio."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { AspectRatio } from '@/components/ui/aspect-ratio'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<AspectRatio ratio={16 / 9} className=\"bg-muted\">\n  <img\n    src=\"https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=800&q=80\"\n    alt=\"Photo\"\n    className=\"h-full w-full object-cover\"\n  />\n</AspectRatio>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["AspectRatio"],
+    "props": {
+      "ratio": {
+        "type": "number",
+        "description": "The aspect ratio as a decimal (e.g., 16/9)"
+      }
+    }
+  },
+  {
+    "name": "avatar",
+    "description": "An image element with a fallback for representing the user.",
+    "docUrl": "https://ui.shadcn.com/docs/components/avatar",
+    "installCommand": "npx shadcn-ui@latest add avatar",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic avatar with image and fallback text."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Avatar>\n  <AvatarImage src=\"https://github.com/shadcn.png\" alt=\"@shadcn\" />\n  <AvatarFallback>CN</AvatarFallback>\n</Avatar>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Avatar", "AvatarImage", "AvatarFallback"],
+    "props": {}
+  },
+  {
+    "name": "badge",
+    "description": "Displays a badge or label with optional variant styling.",
+    "docUrl": "https://ui.shadcn.com/docs/components/badge",
+    "installCommand": "npx shadcn-ui@latest add badge",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic badge with default styling."
+      },
+      {
+        "name": "Secondary",
+        "description": "A secondary variant badge."
+      },
+      {
+        "name": "Outline",
+        "description": "An outline variant badge."
+      },
+      {
+        "name": "Destructive",
+        "description": "A destructive variant badge."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Badge } from '@/components/ui/badge'"
+      },
+      {
+        "title": "Default Badge",
+        "language": "jsx",
+        "code": "<Badge>Badge</Badge>"
+      },
+      {
+        "title": "Badge Variants",
+        "language": "jsx",
+        "code": "<div className=\"flex gap-2\">\n  <Badge>Default</Badge>\n  <Badge variant=\"secondary\">Secondary</Badge>\n  <Badge variant=\"outline\">Outline</Badge>\n  <Badge variant=\"destructive\">Destructive</Badge>\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Badge"],
+    "props": {
+      "variant": {
+        "type": "string",
+        "values": ["default", "secondary", "outline", "destructive"]
+      }
+    }
+  },
+  {
+    "name": "breadcrumb",
+    "description": "Navigation breadcrumbs showing the current page location within a navigational hierarchy.",
+    "docUrl": "https://ui.shadcn.com/docs/components/breadcrumb",
+    "installCommand": "npx shadcn-ui@latest add breadcrumb",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic breadcrumb navigation."
+      },
+      {
+        "name": "Custom Separator",
+        "description": "Breadcrumb with custom separator icon."
+      },
+      {
+        "name": "Dropdown",
+        "description": "Breadcrumb with dropdown menu."
+      },
+      {
+        "name": "Collapsed",
+        "description": "Breadcrumb that collapses on smaller screens."
+      },
+      {
+        "name": "Link Component",
+        "description": "Breadcrumb using custom link component."
+      },
+      {
+        "name": "Responsive",
+        "description": "Responsive breadcrumb that adapts to screen size."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Breadcrumb,\n  BreadcrumbList,\n  BreadcrumbItem,\n  BreadcrumbLink,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n  BreadcrumbEllipsis,\n} from '@/components/ui/breadcrumb'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Breadcrumb>\n  <BreadcrumbList>\n    <BreadcrumbItem>\n      <BreadcrumbLink href=\"/\">Home</BreadcrumbLink>\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem>\n      <BreadcrumbLink href=\"/components\">Components</BreadcrumbLink>\n    </BreadcrumbItem>\n    <BreadcrumbSeparator />\n    <BreadcrumbItem>\n      <BreadcrumbPage>Breadcrumb</BreadcrumbPage>\n    </BreadcrumbItem>\n  </BreadcrumbList>\n</Breadcrumb>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Breadcrumb", "BreadcrumbList", "BreadcrumbItem", "BreadcrumbLink", "BreadcrumbPage", "BreadcrumbSeparator", "BreadcrumbEllipsis"],
+    "props": {}
+  },
+  {
+    "name": "button",
+    "description": "A clickable button element with customizable variants and sizes.",
+    "docUrl": "https://ui.shadcn.com/docs/components/button",
+    "installCommand": "npx shadcn-ui@latest add button",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic button with default styling."
+      },
+      {
+        "name": "Secondary",
+        "description": "A button with secondary styling."
+      },
+      {
+        "name": "Destructive",
+        "description": "A button styled for destructive actions."
+      },
+      {
+        "name": "Outline",
+        "description": "A button with outline styling."
+      },
+      {
+        "name": "Ghost",
+        "description": "A button with ghost/minimal styling."
+      },
+      {
+        "name": "Link",
+        "description": "A button styled as a text link."
+      },
+      {
+        "name": "Icon",
+        "description": "A button with only an icon."
+      },
+      {
+        "name": "With Icon",
+        "description": "A button with icon and text."
+      },
+      {
+        "name": "Loading",
+        "description": "A button in loading state."
+      },
+      {
+        "name": "As Child",
+        "description": "A button rendered as a different component."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Button } from '@/components/ui/button'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Button>Click me</Button>"
+      },
+      {
+        "title": "Button Variants",
+        "language": "jsx",
+        "code": "<div className=\"flex gap-2\">\n  <Button>Default</Button>\n  <Button variant=\"secondary\">Secondary</Button>\n  <Button variant=\"destructive\">Destructive</Button>\n  <Button variant=\"outline\">Outline</Button>\n  <Button variant=\"ghost\">Ghost</Button>\n  <Button variant=\"link\">Link</Button>\n</div>"
+      },
+      {
+        "title": "Button Sizes",
+        "language": "jsx",
+        "code": "<div className=\"flex gap-2\">\n  <Button size=\"sm\">Small</Button>\n  <Button size=\"default\">Default</Button>\n  <Button size=\"lg\">Large</Button>\n  <Button size=\"icon\"><Icon /></Button>\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "Variants"],
+    "subComponents": ["Button"],
+    "props": {
+      "variant": {
+        "type": "string",
+        "values": ["default", "secondary", "destructive", "outline", "ghost", "link"]
+      },
+      "size": {
+        "type": "string",
+        "values": ["default", "sm", "lg", "icon"]
+      },
+      "asChild": {
+        "type": "boolean",
+        "description": "Render as child element"
+      }
+    }
+  },
+  {
+    "name": "button-group",
+    "description": "A group of buttons displayed together.",
+    "docUrl": "https://ui.shadcn.com/docs/components/button-group",
+    "installCommand": "npx shadcn-ui@latest add button-group",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic group of buttons."
+      },
+      {
+        "name": "Outline",
+        "description": "A group of outline buttons."
+      },
+      {
+        "name": "Vertical",
+        "description": "A vertically stacked group of buttons."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { ButtonGroup } from '@/components/ui/button-group'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<ButtonGroup>\n  <Button>One</Button>\n  <Button>Two</Button>\n  <Button>Three</Button>\n</ButtonGroup>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["ButtonGroup"],
+    "props": {
+      "orientation": {
+        "type": "string",
+        "values": ["horizontal", "vertical"]
+      },
+      "size": {
+        "type": "string",
+        "values": ["default", "sm", "lg"]
+      }
+    }
+  },
+  {
+    "name": "calendar",
+    "description": "A date selection calendar component using react-day-picker.",
+    "docUrl": "https://ui.shadcn.com/docs/components/calendar",
+    "installCommand": "npx shadcn-ui@latest add calendar",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic calendar for date selection."
+      },
+      {
+        "name": "Form",
+        "description": "Calendar integrated with a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Calendar } from '@/components/ui/calendar'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Calendar } from '@/components/ui/calendar'\n\nexport function CalendarDemo() {\n  const [date, setDate] = useState<Date | undefined>(new Date())\n\n  return (\n    <Calendar\n      mode=\"single\"\n      selected={date}\n      onSelect={setDate}\n      className=\"rounded-md border\"\n    />\n  )\n}"
+      },
+      {
+        "title": "Date Range",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Calendar } from '@/components/ui/calendar'\nimport { DateRange } from 'react-day-picker'\n\nexport function CalendarRangeDemo() {\n  const [range, setRange] = useState<DateRange | undefined>()\n\n  return (\n    <Calendar\n      mode=\"range\"\n      selected={range}\n      onSelect={setRange}\n      numberOfMonths={2}\n      className=\"rounded-md border\"\n    />\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "About"],
+    "subComponents": ["Calendar"],
+    "props": {
+      "mode": {
+        "type": "string",
+        "values": ["single", "range", "multiple"]
+      },
+      "selected": {
+        "type": "Date | DateRange | Date[]"
+      },
+      "onSelect": {
+        "type": "function"
+      },
+      "disabled": {
+        "type": "boolean | ((date: Date) => boolean)"
+      }
+    }
+  },
+  {
+    "name": "card",
+    "description": "A container for grouped content.",
+    "docUrl": "https://ui.shadcn.com/docs/components/card",
+    "installCommand": "npx shadcn-ui@latest add card",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic card with header, content, and footer."
+      },
+      {
+        "name": "With Form",
+        "description": "A card containing a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Card,\n  CardHeader,\n  CardFooter,\n  CardTitle,\n  CardDescription,\n  CardContent,\n} from '@/components/ui/card'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Card>\n  <CardHeader>\n    <CardTitle>Card Title</CardTitle>\n    <CardDescription>Card Description</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p>Card content goes here</p>\n  </CardContent>\n  <CardFooter>\n    <Button>Save changes</Button>\n  </CardFooter>\n</Card>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Card", "CardHeader", "CardFooter", "CardTitle", "CardDescription", "CardContent"],
+    "props": {}
+  },
+  {
+    "name": "carousel",
+    "description": "A carousel/slideshow component for displaying multiple items.",
+    "docUrl": "https://ui.shadcn.com/docs/components/carousel",
+    "installCommand": "npx shadcn-ui@latest add carousel",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic carousel with navigation buttons."
+      },
+      {
+        "name": "Sizes",
+        "description": "Carousel with different item sizes."
+      },
+      {
+        "name": "Spacing",
+        "description": "Carousel with custom spacing between items."
+      },
+      {
+        "name": "Orientation",
+        "description": "Vertical carousel."
+      },
+      {
+        "name": "Dots",
+        "description": "Carousel with dot indicators."
+      },
+      {
+        "name": "Autoplay",
+        "description": "Carousel that auto-advances."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Carousel,\n  CarouselContent,\n  CarouselItem,\n  CarouselPrevious,\n  CarouselNext,\n} from '@/components/ui/carousel'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from '@/components/ui/carousel'\n\nexport function CarouselDemo() {\n  return (\n    <Carousel>\n      <CarouselContent>\n        {Array.from({ length: 5 }).map((_, index) => (\n          <CarouselItem key={index} className=\"basis-1/3\">\n            <div className=\"p-1\">\n              <div className=\"flex h-64 items-center justify-center rounded-md bg-slate-900\">\n                <span className=\"text-4xl font-semibold text-white\">{index + 1}</span>\n              </div>\n            </div>\n          </CarouselItem>\n        ))}\n      </CarouselContent>\n      <CarouselPrevious />\n      <CarouselNext />\n    </Carousel>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "API", "Options", "Events", "Plugins"],
+    "subComponents": ["Carousel", "CarouselContent", "CarouselItem", "CarouselPrevious", "CarouselNext"],
+    "props": {
+      "opts": {
+        "type": "object",
+        "description": "Embla carousel options"
+      },
+      "orientation": {
+        "type": "string",
+        "values": ["horizontal", "vertical"]
+      }
+    }
+  },
+  {
+    "name": "chart",
+    "description": "Chart components for data visualization using recharts.",
+    "docUrl": "https://ui.shadcn.com/docs/components/chart",
+    "installCommand": "npx shadcn-ui@latest add chart",
+    "examples": [
+      {
+        "name": "Area Chart",
+        "description": "An area chart visualization."
+      },
+      {
+        "name": "Bar Chart",
+        "description": "A bar chart visualization."
+      },
+      {
+        "name": "Line Chart",
+        "description": "A line chart visualization."
+      },
+      {
+        "name": "Pie Chart",
+        "description": "A pie chart visualization."
+      },
+      {
+        "name": "Radar Chart",
+        "description": "A radar chart visualization."
+      },
+      {
+        "name": "Radial Chart",
+        "description": "A radial chart visualization."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  ChartContainer,\n  ChartTooltip,\n  ChartTooltipContent,\n  ChartLegend,\n  ChartLegendContent,\n} from '@/components/ui/chart'"
+      },
+      {
+        "title": "Area Chart",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'\nimport { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'\n\nconst data = [\n  { name: 'Jan', value: 400 },\n  { name: 'Feb', value: 300 },\n  { name: 'Mar', value: 200 },\n]\n\nexport function AreaChartDemo() {\n  return (\n    <ChartContainer config={{}} className=\"h-[300px] w-full\">\n      <AreaChart data={data}>\n        <defs>\n          <linearGradient id=\"colorValue\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n            <stop offset=\"5%\" stopColor=\"#8884d8\" stopOpacity={0.8} />\n            <stop offset=\"95%\" stopColor=\"#8884d8\" stopOpacity={0} />\n          </linearGradient>\n        </defs>\n        <XAxis dataKey=\"name\" />\n        <YAxis />\n        <CartesianGrid strokeDasharray=\"3 3\" />\n        <ChartTooltip content={<ChartTooltipContent />} />\n        <Area type=\"monotone\" dataKey=\"value\" stroke=\"#8884d8\" fillOpacity={1} fill=\"url(#colorValue)\" />\n      </AreaChart>\n    </ChartContainer>\n  )\n}"
+      },
+      {
+        "title": "Bar Chart",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'\nimport { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'\n\nconst data = [\n  { name: 'A', value: 400 },\n  { name: 'B', value: 300 },\n  { name: 'C', value: 200 },\n]\n\nexport function BarChartDemo() {\n  return (\n    <ChartContainer config={{}} className=\"h-[300px] w-full\">\n      <BarChart data={data}>\n        <CartesianGrid strokeDasharray=\"3 3\" />\n        <XAxis dataKey=\"name\" />\n        <YAxis />\n        <ChartTooltip content={<ChartTooltipContent />} />\n        <Bar dataKey=\"value\" fill=\"#8884d8\" />\n      </BarChart>\n    </ChartContainer>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "Theming", "Colors"],
+    "subComponents": ["ChartContainer", "ChartTooltip", "ChartTooltipContent", "ChartLegend", "ChartLegendContent"],
+    "props": {
+      "config": {
+        "type": "object",
+        "description": "Chart configuration object"
+      },
+      "children": {
+        "type": "ReactNode"
+      }
+    }
+  },
+  {
+    "name": "checkbox",
+    "description": "A toggle checkbox control for boolean input.",
+    "docUrl": "https://ui.shadcn.com/docs/components/checkbox",
+    "installCommand": "npx shadcn-ui@latest add checkbox",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic checkbox."
+      },
+      {
+        "name": "With Text",
+        "description": "Checkbox with accompanying text."
+      },
+      {
+        "name": "Disabled",
+        "description": "A disabled checkbox."
+      },
+      {
+        "name": "Form",
+        "description": "Checkbox in a form context."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Checkbox } from '@/components/ui/checkbox'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div className=\"flex items-center space-x-2\">\n  <Checkbox id=\"terms\" />\n  <label\n    htmlFor=\"terms\"\n    className=\"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70\"\n  >\n    Accept terms and conditions\n  </label>\n</div>"
+      },
+      {
+        "title": "Controlled",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Checkbox } from '@/components/ui/checkbox'\n\nexport function CheckboxDemo() {\n  const [checked, setChecked] = useState(false)\n\n  return (\n    <div className=\"flex items-center space-x-2\">\n      <Checkbox\n        id=\"terms\"\n        checked={checked}\n        onCheckedChange={setChecked}\n      />\n      <label htmlFor=\"terms\">I accept</label>\n    </div>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Checkbox"],
+    "props": {
+      "checked": {
+        "type": "boolean | 'indeterminate'"
+      },
+      "onCheckedChange": {
+        "type": "function"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "collapsible",
+    "description": "An expandable and collapsible panel component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/collapsible",
+    "installCommand": "npx shadcn-ui@latest add collapsible",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic collapsible panel."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Collapsible,\n  CollapsibleTrigger,\n  CollapsibleContent,\n} from '@/components/ui/collapsible'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'\nimport { Button } from '@/components/ui/button'\nimport { ChevronsUpDown } from 'lucide-react'\n\nexport function CollapsibleDemo() {\n  const [isOpen, setIsOpen] = useState(false)\n\n  return (\n    <Collapsible\n      open={isOpen}\n      onOpenChange={setIsOpen}\n      className=\"w-full space-y-2\"\n    >\n      <div className=\"flex items-center justify-between space-x-4 px-4\">\n        <h4 className=\"text-sm font-semibold\">@peduarte starred 3 repositories</h4>\n        <CollapsibleTrigger asChild>\n          <Button variant=\"ghost\" size=\"sm\">\n            <ChevronsUpDown className=\"h-4 w-4\" />\n            <span className=\"sr-only\">Toggle</span>\n          </Button>\n        </CollapsibleTrigger>\n      </div>\n      <div className=\"rounded-md border px-4 py-2 font-mono text-sm\">\n        @radix-ui/primitives\n      </div>\n      <CollapsibleContent className=\"space-y-2\">\n        <div className=\"rounded-md border px-4 py-2 font-mono text-sm\">\n          @radix-ui/colors\n        </div>\n        <div className=\"rounded-md border px-4 py-2 font-mono text-sm\">\n          @stitches/react\n        </div>\n      </CollapsibleContent>\n    </Collapsible>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Collapsible", "CollapsibleTrigger", "CollapsibleContent"],
+    "props": {
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "combobox",
+    "description": "An autocomplete select component with search functionality.",
+    "docUrl": "https://ui.shadcn.com/docs/components/combobox",
+    "installCommand": "npx shadcn-ui@latest add combobox",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic combobox."
+      },
+      {
+        "name": "Popover",
+        "description": "Combobox with popover display."
+      },
+      {
+        "name": "Dropdown Menu",
+        "description": "Combobox with dropdown menu style."
+      },
+      {
+        "name": "Responsive",
+        "description": "Responsive combobox."
+      },
+      {
+        "name": "Form",
+        "description": "Combobox in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'\nimport { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'\nimport { Button } from '@/components/ui/button'"
+      },
+      {
+        "title": "Basic Combobox",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'\nimport { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'\nimport { Button } from '@/components/ui/button'\nimport { Check, ChevronsUpDown } from 'lucide-react'\n\nconst frameworks = [\n  { value: 'next.js', label: 'Next.js' },\n  { value: 'sveltekit', label: 'SvelteKit' },\n  { value: 'nuxt.js', label: 'Nuxt.js' },\n]\n\nexport function ComboboxDemo() {\n  const [open, setOpen] = useState(false)\n  const [value, setValue] = useState('')\n\n  return (\n    <Popover open={open} onOpenChange={setOpen}>\n      <PopoverTrigger asChild>\n        <Button\n          variant=\"outline\"\n          role=\"combobox\"\n          aria-expanded={open}\n          className=\"w-[200px] justify-between\"\n        >\n          {value ? frameworks.find(f => f.value === value)?.label : 'Select framework...'}\n          <ChevronsUpDown className=\"ml-2 h-4 w-4 shrink-0 opacity-50\" />\n        </Button>\n      </PopoverTrigger>\n      <PopoverContent className=\"w-[200px] p-0\">\n        <Command>\n          <CommandInput placeholder=\"Search framework...\" />\n          <CommandEmpty>No framework found.</CommandEmpty>\n          <CommandList>\n            <CommandGroup>\n              {frameworks.map(f => (\n                <CommandItem\n                  key={f.value}\n                  value={f.value}\n                  onSelect={currentValue => {\n                    setValue(currentValue === value ? '' : currentValue)\n                    setOpen(false)\n                  }}\n                >\n                  <Check className={`mr-2 h-4 w-4 ${value === f.value ? 'opacity-100' : 'opacity-0'}`} />\n                  {f.label}\n                </CommandItem>\n              ))}\n            </CommandGroup>\n          </CommandList>\n        </Command>\n      </PopoverContent>\n    </Popover>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": [],
+    "props": {}
+  },
+  {
+    "name": "command",
+    "description": "Command palette and menu component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/command",
+    "installCommand": "npx shadcn-ui@latest add command",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic command menu."
+      },
+      {
+        "name": "Dialog",
+        "description": "Command menu in a dialog."
+      },
+      {
+        "name": "Combobox",
+        "description": "Command used as a combobox."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Command,\n  CommandDialog,\n  CommandInput,\n  CommandList,\n  CommandEmpty,\n  CommandGroup,\n  CommandItem,\n  CommandShortcut,\n  CommandSeparator,\n} from '@/components/ui/command'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Command>\n  <CommandInput placeholder=\"Type a command or search...\" />\n  <CommandList>\n    <CommandEmpty>No results found.</CommandEmpty>\n    <CommandGroup heading=\"Suggestions\">\n      <CommandItem>Calendar</CommandItem>\n      <CommandItem>Search Emoji</CommandItem>\n      <CommandItem>Calculator</CommandItem>\n    </CommandGroup>\n    <CommandSeparator />\n    <CommandGroup heading=\"Settings\">\n      <CommandItem>Profile</CommandItem>\n      <CommandItem>Billing</CommandItem>\n      <CommandItem>Settings</CommandItem>\n    </CommandGroup>\n  </CommandList>\n</Command>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Command", "CommandDialog", "CommandInput", "CommandList", "CommandEmpty", "CommandGroup", "CommandItem", "CommandShortcut", "CommandSeparator"],
+    "props": {
+      "loop": {
+        "type": "boolean"
+      },
+      "label": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "name": "context-menu",
+    "description": "A context menu displayed on right-click.",
+    "docUrl": "https://ui.shadcn.com/docs/components/context-menu",
+    "installCommand": "npx shadcn-ui@latest add context-menu",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic context menu."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  ContextMenu,\n  ContextMenuTrigger,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuCheckboxItem,\n  ContextMenuRadioItem,\n  ContextMenuLabel,\n  ContextMenuSeparator,\n  ContextMenuShortcut,\n  ContextMenuGroup,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,\n  ContextMenuRadioGroup,\n} from '@/components/ui/context-menu'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<ContextMenu>\n  <ContextMenuTrigger>Right click</ContextMenuTrigger>\n  <ContextMenuContent>\n    <ContextMenuItem>Back</ContextMenuItem>\n    <ContextMenuItem>Forward</ContextMenuItem>\n    <ContextMenuSeparator />\n    <ContextMenuItem>Reload</ContextMenuItem>\n    <ContextMenuSeparator />\n    <ContextMenuItem>More Tools</ContextMenuItem>\n  </ContextMenuContent>\n</ContextMenu>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["ContextMenu", "ContextMenuTrigger", "ContextMenuContent", "ContextMenuItem", "ContextMenuCheckboxItem", "ContextMenuRadioItem", "ContextMenuLabel", "ContextMenuSeparator", "ContextMenuShortcut", "ContextMenuGroup", "ContextMenuSub", "ContextMenuSubContent", "ContextMenuSubTrigger", "ContextMenuRadioGroup"],
+    "props": {}
+  },
+  {
+    "name": "data-table",
+    "description": "A powerful table component built with TanStack React Table.",
+    "docUrl": "https://ui.shadcn.com/docs/components/data-table",
+    "installCommand": "npx shadcn-ui@latest add data-table",
+    "examples": [
+      {
+        "name": "Basic",
+        "description": "A basic data table with columns and rows."
+      },
+      {
+        "name": "Row Selection",
+        "description": "Table with row selection checkboxes."
+      },
+      {
+        "name": "Pagination",
+        "description": "Table with pagination controls."
+      },
+      {
+        "name": "Sorting",
+        "description": "Table with sortable columns."
+      },
+      {
+        "name": "Filtering",
+        "description": "Table with column filtering."
+      },
+      {
+        "name": "Visibility",
+        "description": "Table with column visibility toggle."
+      },
+      {
+        "name": "Row Actions",
+        "description": "Table with row action menus."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from '@/components/ui/table'\nimport { useReactTable, getCoreRowModel, ColumnDef } from '@tanstack/react-table'"
+      },
+      {
+        "title": "Basic Table",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useReactTable, getCoreRowModel, ColumnDef, flexRender } from '@tanstack/react-table'\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'\n\nconst columns: ColumnDef[] = [\n  {\n    accessorKey: 'status',\n    header: 'Status',\n  },\n  {\n    accessorKey: 'email',\n    header: 'Email',\n  },\n  {\n    accessorKey: 'amount',\n    header: 'Amount',\n  },\n]\n\nconst data = [\n  { status: 'pending', email: 'test@example.com', amount: 100 },\n  { status: 'processing', email: 'user@example.com', amount: 200 },\n]\n\nexport function DataTableDemo() {\n  const table = useReactTable({\n    data,\n    columns,\n    getCoreRowModel: getCoreRowModel(),\n  })\n\n  return (\n    <Table>\n      <TableHeader>\n        {table.getHeaderGroups().map(headerGroup => (\n          <TableRow key={headerGroup.id}>\n            {headerGroup.headers.map(header => (\n              <TableHead key={header.id}>\n                {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}\n              </TableHead>\n            ))}\n          </TableRow>\n        ))}\n      </TableHeader>\n      <TableBody>\n        {table.getRowModel().rows.map(row => (\n          <TableRow key={row.id}>\n            {row.getVisibleCells().map(cell => (\n              <TableCell key={cell.id}>\n                {flexRender(cell.column.columnDef.cell, cell.getContext())}\n              </TableCell>\n            ))}\n          </TableRow>\n        ))}\n      </TableBody>\n    </Table>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "Column Definitions", "Row Selection", "Pagination", "Sorting", "Filtering", "Visibility"],
+    "subComponents": [],
+    "props": {}
+  },
+  {
+    "name": "date-picker",
+    "description": "A date picker component using a popover and calendar.",
+    "docUrl": "https://ui.shadcn.com/docs/components/date-picker",
+    "installCommand": "npx shadcn-ui@latest add date-picker",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic date picker."
+      },
+      {
+        "name": "Date Range Picker",
+        "description": "A date range picker."
+      },
+      {
+        "name": "With Presets",
+        "description": "Date picker with preset ranges."
+      },
+      {
+        "name": "Form",
+        "description": "Date picker in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'\nimport { Calendar } from '@/components/ui/calendar'\nimport { Button } from '@/components/ui/button'"
+      },
+      {
+        "title": "Basic Date Picker",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'\nimport { Calendar } from '@/components/ui/calendar'\nimport { Button } from '@/components/ui/button'\nimport { CalendarIcon } from 'lucide-react'\nimport { format } from 'date-fns'\n\nexport function DatePickerDemo() {\n  const [date, setDate] = useState<Date>()\n\n  return (\n    <Popover>\n      <PopoverTrigger asChild>\n        <Button variant=\"outline\">\n          <CalendarIcon className=\"mr-2 h-4 w-4\" />\n          {date ? format(date, 'PPP') : 'Pick a date'}\n        </Button>\n      </PopoverTrigger>\n      <PopoverContent className=\"w-auto p-0\" align=\"start\">\n        <Calendar\n          mode=\"single\"\n          selected={date}\n          onSelect={setDate}\n          initialFocus\n        />\n      </PopoverContent>\n    </Popover>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": [],
+    "props": {}
+  },
+  {
+    "name": "dialog",
+    "description": "A modal dialog window component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/dialog",
+    "installCommand": "npx shadcn-ui@latest add dialog",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic dialog."
+      },
+      {
+        "name": "Custom Close Button",
+        "description": "Dialog with custom close button."
+      },
+      {
+        "name": "Scrollable",
+        "description": "A scrollable dialog for long content."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Dialog,\n  DialogTrigger,\n  DialogContent,\n  DialogHeader,\n  DialogFooter,\n  DialogTitle,\n  DialogDescription,\n  DialogClose,\n} from '@/components/ui/dialog'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Dialog>\n  <DialogTrigger asChild>\n    <Button variant=\"outline\">Open Dialog</Button>\n  </DialogTrigger>\n  <DialogContent>\n    <DialogHeader>\n      <DialogTitle>Are you absolutely sure?</DialogTitle>\n      <DialogDescription>\n        This action cannot be undone. This will permanently delete your account\n        and remove your data from our servers.\n      </DialogDescription>\n    </DialogHeader>\n    <DialogFooter>\n      <Button type=\"submit\">Continue</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "Notes"],
+    "subComponents": ["Dialog", "DialogTrigger", "DialogContent", "DialogHeader", "DialogFooter", "DialogTitle", "DialogDescription", "DialogClose"],
+    "props": {
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      }
+    }
+  },
+  {
+    "name": "drawer",
+    "description": "A drawer panel component that slides in from the side.",
+    "docUrl": "https://ui.shadcn.com/docs/components/drawer",
+    "installCommand": "npx shadcn-ui@latest add drawer",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic drawer panel."
+      },
+      {
+        "name": "Responsive Dialog",
+        "description": "Drawer that becomes a dialog on larger screens."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Drawer,\n  DrawerTrigger,\n  DrawerContent,\n  DrawerHeader,\n  DrawerFooter,\n  DrawerTitle,\n  DrawerDescription,\n  DrawerClose,\n} from '@/components/ui/drawer'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Drawer>\n  <DrawerTrigger asChild>\n    <Button>Open Drawer</Button>\n  </DrawerTrigger>\n  <DrawerContent>\n    <DrawerHeader>\n      <DrawerTitle>Are you absolutely sure?</DrawerTitle>\n      <DrawerDescription>This action cannot be undone.</DrawerDescription>\n    </DrawerHeader>\n    <DrawerFooter>\n      <Button>Submit</Button>\n      <DrawerClose asChild>\n        <Button variant=\"outline\">Cancel</Button>\n      </DrawerClose>\n    </DrawerFooter>\n  </DrawerContent>\n</Drawer>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Drawer", "DrawerTrigger", "DrawerContent", "DrawerHeader", "DrawerFooter", "DrawerTitle", "DrawerDescription", "DrawerClose"],
+    "props": {
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      },
+      "direction": {
+        "type": "string",
+        "values": ["left", "right", "top", "bottom"]
+      }
+    }
+  },
+  {
+    "name": "dropdown-menu",
+    "description": "A dropdown menu component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/dropdown-menu",
+    "installCommand": "npx shadcn-ui@latest add dropdown-menu",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic dropdown menu."
+      },
+      {
+        "name": "Checkboxes",
+        "description": "Dropdown menu with checkbox items."
+      },
+      {
+        "name": "Radio Group",
+        "description": "Dropdown menu with radio button items."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  DropdownMenu,\n  DropdownMenuTrigger,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuCheckboxItem,\n  DropdownMenuRadioItem,\n  DropdownMenuLabel,\n  DropdownMenuSeparator,\n  DropdownMenuShortcut,\n  DropdownMenuGroup,\n  DropdownMenuSub,\n  DropdownMenuSubContent,\n  DropdownMenuSubTrigger,\n  DropdownMenuRadioGroup,\n} from '@/components/ui/dropdown-menu'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent>\n    <DropdownMenuLabel>My Account</DropdownMenuLabel>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Billing</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem>Log out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["DropdownMenu", "DropdownMenuTrigger", "DropdownMenuContent", "DropdownMenuItem", "DropdownMenuCheckboxItem", "DropdownMenuRadioItem", "DropdownMenuLabel", "DropdownMenuSeparator", "DropdownMenuShortcut", "DropdownMenuGroup", "DropdownMenuSub", "DropdownMenuSubContent", "DropdownMenuSubTrigger", "DropdownMenuRadioGroup"],
+    "props": {}
+  },
+  {
+    "name": "empty",
+    "description": "An empty state placeholder component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/empty",
+    "installCommand": "npx shadcn-ui@latest add empty",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic empty state."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Empty } from '@/components/ui/empty'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Empty />"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Empty"],
+    "props": {
+      "icon": {
+        "type": "React.ReactNode"
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "name": "field",
+    "description": "A form field wrapper component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/field",
+    "installCommand": "npx shadcn-ui@latest add field",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic field wrapper."
+      },
+      {
+        "name": "With Description",
+        "description": "Field with description text."
+      },
+      {
+        "name": "With Error",
+        "description": "Field showing error state."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Field } from '@/components/ui/field'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Field>\n  <label>Email</label>\n  <input type=\"email\" />\n</Field>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Field"],
+    "props": {}
+  },
+  {
+    "name": "form",
+    "description": "Form component built with react-hook-form and zod.",
+    "docUrl": "https://ui.shadcn.com/docs/components/form",
+    "installCommand": "npx shadcn-ui@latest add form",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic form with validation."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { useForm } from 'react-hook-form'\nimport { z } from 'zod'\nimport { zodResolver } from '@hookform/resolvers/zod'\nimport {\n  Form,\n  FormField,\n  FormItem,\n  FormLabel,\n  FormControl,\n  FormDescription,\n  FormMessage,\n} from '@/components/ui/form'\nimport { Input } from '@/components/ui/input'\nimport { Button } from '@/components/ui/button'"
+      },
+      {
+        "title": "Basic Form",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useForm } from 'react-hook-form'\nimport { z } from 'zod'\nimport { zodResolver } from '@hookform/resolvers/zod'\nimport { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'\nimport { Input } from '@/components/ui/input'\nimport { Button } from '@/components/ui/button'\n\nconst formSchema = z.object({\n  username: z.string().min(2).max(50),\n})\n\nexport function FormDemo() {\n  const form = useForm<z.infer<typeof formSchema>>({\n    resolver: zodResolver(formSchema),\n    defaultValues: { username: '' },\n  })\n\n  function onSubmit(values: z.infer<typeof formSchema>) {\n    console.log(values)\n  }\n\n  return (\n    <Form {...form}>\n      <form onSubmit={form.handleSubmit(onSubmit)} className=\"space-y-8\">\n        <FormField\n          control={form.control}\n          name=\"username\"\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Username</FormLabel>\n              <FormControl>\n                <Input placeholder=\"shadcn\" {...field} />\n              </FormControl>\n              <FormMessage />\n            </FormItem>\n          )}\n        />\n        <Button type=\"submit\">Submit</Button>\n      </form>\n    </Form>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Form", "FormField", "FormItem", "FormLabel", "FormControl", "FormDescription", "FormMessage"],
+    "props": {}
+  },
+  {
+    "name": "hover-card",
+    "description": "A card component that appears on hover.",
+    "docUrl": "https://ui.shadcn.com/docs/components/hover-card",
+    "installCommand": "npx shadcn-ui@latest add hover-card",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic hover card."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  HoverCard,\n  HoverCardTrigger,\n  HoverCardContent,\n} from '@/components/ui/hover-card'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<HoverCard>\n  <HoverCardTrigger asChild>\n    <a href=\"#\">@nextjs</a>\n  </HoverCardTrigger>\n  <HoverCardContent>\n    <div className=\"space-y-4\">\n      <h4 className=\"text-sm font-semibold\">@nextjs</h4>\n      <p className=\"text-sm text-gray-600\">The React Framework for Production</p>\n    </div>\n  </HoverCardContent>\n</HoverCard>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["HoverCard", "HoverCardTrigger", "HoverCardContent"],
+    "props": {}
+  },
+  {
+    "name": "input",
+    "description": "A text input field component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/input",
+    "installCommand": "npx shadcn-ui@latest add input",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic text input."
+      },
+      {
+        "name": "File",
+        "description": "A file input."
+      },
+      {
+        "name": "Disabled",
+        "description": "A disabled input."
+      },
+      {
+        "name": "With Label",
+        "description": "Input with accompanying label."
+      },
+      {
+        "name": "With Button",
+        "description": "Input with button."
+      },
+      {
+        "name": "Form",
+        "description": "Input in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Input } from '@/components/ui/input'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Input type=\"email\" placeholder=\"Email\" />"
+      },
+      {
+        "title": "With Label",
+        "language": "jsx",
+        "code": "<div className=\"w-full max-w-sm space-y-2\">\n  <label htmlFor=\"email\" className=\"text-sm font-medium leading-none\">Email</label>\n  <Input type=\"email\" id=\"email\" placeholder=\"Email\" />\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Input"],
+    "props": {
+      "type": {
+        "type": "string",
+        "values": ["text", "email", "password", "number", "file", "date", "etc"]
+      },
+      "placeholder": {
+        "type": "string"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "input-group",
+    "description": "A grouped input with addons.",
+    "docUrl": "https://ui.shadcn.com/docs/components/input-group",
+    "installCommand": "npx shadcn-ui@latest add input-group",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic input group."
+      },
+      {
+        "name": "With Button",
+        "description": "Input group with button addon."
+      },
+      {
+        "name": "With Select",
+        "description": "Input group with select addon."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { InputGroup } from '@/components/ui/input-group'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<InputGroup>\n  <span className=\"text-gray-500\">https://</span>\n  <input type=\"text\" placeholder=\"example\" />\n  <span className=\"text-gray-500\">.com</span>\n</InputGroup>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["InputGroup"],
+    "props": {}
+  },
+  {
+    "name": "input-otp",
+    "description": "An one-time password input component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/input-otp",
+    "installCommand": "npx shadcn-ui@latest add input-otp",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic OTP input."
+      },
+      {
+        "name": "Pattern",
+        "description": "OTP input with pattern."
+      },
+      {
+        "name": "Separator",
+        "description": "OTP input with separators."
+      },
+      {
+        "name": "Controlled",
+        "description": "Controlled OTP input."
+      },
+      {
+        "name": "Form",
+        "description": "OTP input in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@/components/ui/input-otp'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp'\n\nexport function InputOTPDemo() {\n  const [otp, setOtp] = useState('')\n\n  return (\n    <InputOTP maxLength={6} value={otp} onChange={setOtp}>\n      <InputOTPGroup>\n        <InputOTPSlot index={0} />\n        <InputOTPSlot index={1} />\n        <InputOTPSlot index={2} />\n        <InputOTPSlot index={3} />\n        <InputOTPSlot index={4} />\n        <InputOTPSlot index={5} />\n      </InputOTPGroup>\n    </InputOTP>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "About"],
+    "subComponents": ["InputOTP", "InputOTPGroup", "InputOTPSlot", "InputOTPSeparator"],
+    "props": {
+      "maxLength": {
+        "type": "number"
+      },
+      "value": {
+        "type": "string"
+      },
+      "onChange": {
+        "type": "function"
+      },
+      "pattern": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "name": "item",
+    "description": "A generic item component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/item",
+    "installCommand": "npx shadcn-ui@latest add item",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic item."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Item } from '@/components/ui/item'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Item>Item content</Item>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Item"],
+    "props": {}
+  },
+  {
+    "name": "kbd",
+    "description": "A keyboard key indicator component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/kbd",
+    "installCommand": "npx shadcn-ui@latest add kbd",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic keyboard key indicator."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Kbd } from '@/components/ui/kbd'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div className=\"flex gap-2\">\n  <Kbd>⌘</Kbd>\n  <Kbd>K</Kbd>\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Kbd"],
+    "props": {}
+  },
+  {
+    "name": "label",
+    "description": "A text label for form fields.",
+    "docUrl": "https://ui.shadcn.com/docs/components/label",
+    "installCommand": "npx shadcn-ui@latest add label",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic label."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Label } from '@/components/ui/label'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div className=\"flex items-center space-x-2\">\n  <input type=\"checkbox\" id=\"terms\" />\n  <Label htmlFor=\"terms\">Accept terms and conditions</Label>\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Label"],
+    "props": {
+      "htmlFor": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "name": "menubar",
+    "description": "A menu bar component at the top of a window.",
+    "docUrl": "https://ui.shadcn.com/docs/components/menubar",
+    "installCommand": "npx shadcn-ui@latest add menubar",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic menu bar."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Menubar,\n  MenubarMenu,\n  MenubarTrigger,\n  MenubarContent,\n  MenubarItem,\n  MenubarSeparator,\n  MenubarShortcut,\n  MenubarCheckboxItem,\n  MenubarRadioGroup,\n  MenubarRadioItem,\n  MenubarSub,\n  MenubarSubContent,\n  MenubarSubTrigger,\n} from '@/components/ui/menubar'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>\n        New <MenubarShortcut>⌘N</MenubarShortcut>\n      </MenubarItem>\n      <MenubarItem>Open</MenubarItem>\n      <MenubarSeparator />\n      <MenubarItem>Exit</MenubarItem>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Undo <MenubarShortcut>⌘Z</MenubarShortcut></MenubarItem>\n      <MenubarItem>Redo <MenubarShortcut>⌘⇧Z</MenubarShortcut></MenubarItem>\n    </MenubarContent>\n  </MenubarMenu>\n</Menubar>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Menubar", "MenubarMenu", "MenubarTrigger", "MenubarContent", "MenubarItem", "MenubarSeparator", "MenubarShortcut", "MenubarCheckboxItem", "MenubarRadioGroup", "MenubarRadioItem", "MenubarSub", "MenubarSubContent", "MenubarSubTrigger"],
+    "props": {}
+  },
+  {
+    "name": "native-select",
+    "description": "A native HTML select element.",
+    "docUrl": "https://ui.shadcn.com/docs/components/native-select",
+    "installCommand": "npx shadcn-ui@latest add native-select",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic native select."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { NativeSelect } from '@/components/ui/native-select'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<NativeSelect>\n  <option value=\"\">Select an option</option>\n  <option value=\"option1\">Option 1</option>\n  <option value=\"option2\">Option 2</option>\n</NativeSelect>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["NativeSelect"],
+    "props": {
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "navigation-menu",
+    "description": "A navigation menu component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/navigation-menu",
+    "installCommand": "npx shadcn-ui@latest add navigation-menu",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic navigation menu."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  NavigationMenu,\n  NavigationMenuList,\n  NavigationMenuItem,\n  NavigationMenuContent,\n  NavigationMenuTrigger,\n  NavigationMenuLink,\n  NavigationMenuIndicator,\n  NavigationMenuViewport,\n} from '@/components/ui/navigation-menu'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<NavigationMenu>\n  <NavigationMenuList>\n    <NavigationMenuItem>\n      <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>\n      <NavigationMenuContent>\n        <ul className=\"grid w-[400px] gap-3 p-4\">\n          <li>\n            <NavigationMenuLink asChild>\n              <a href=\"#\">Documentation</a>\n            </NavigationMenuLink>\n          </li>\n        </ul>\n      </NavigationMenuContent>\n    </NavigationMenuItem>\n  </NavigationMenuList>\n</NavigationMenu>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["NavigationMenu", "NavigationMenuList", "NavigationMenuItem", "NavigationMenuContent", "NavigationMenuTrigger", "NavigationMenuLink", "NavigationMenuIndicator", "NavigationMenuViewport"],
+    "props": {}
+  },
+  {
+    "name": "pagination",
+    "description": "A pagination component for navigating pages.",
+    "docUrl": "https://ui.shadcn.com/docs/components/pagination",
+    "installCommand": "npx shadcn-ui@latest add pagination",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic pagination component."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Pagination,\n  PaginationContent,\n  PaginationItem,\n  PaginationLink,\n  PaginationPrevious,\n  PaginationNext,\n  PaginationEllipsis,\n} from '@/components/ui/pagination'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Pagination>\n  <PaginationContent>\n    <PaginationItem>\n      <PaginationPrevious href=\"#\" />\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink href=\"#\">1</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink href=\"#\" isActive>\n        2\n      </PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationLink href=\"#\">3</PaginationLink>\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationEllipsis />\n    </PaginationItem>\n    <PaginationItem>\n      <PaginationNext href=\"#\" />\n    </PaginationItem>\n  </PaginationContent>\n</Pagination>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Pagination", "PaginationContent", "PaginationItem", "PaginationLink", "PaginationPrevious", "PaginationNext", "PaginationEllipsis"],
+    "props": {}
+  },
+  {
+    "name": "popover",
+    "description": "A floating content portal that appears on user interaction.",
+    "docUrl": "https://ui.shadcn.com/docs/components/popover",
+    "installCommand": "npx shadcn-ui@latest add popover",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic popover."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Popover,\n  PopoverTrigger,\n  PopoverContent,\n} from '@/components/ui/popover'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Popover>\n  <PopoverTrigger asChild>\n    <Button variant=\"outline\">Open popover</Button>\n  </PopoverTrigger>\n  <PopoverContent>\n    <div className=\"space-y-4\">\n      <h4 className=\"font-medium leading-none\">Dimensions</h4>\n      <p className=\"text-sm text-gray-500\">Set the dimensions for the layer.</p>\n    </div>\n  </PopoverContent>\n</Popover>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Popover", "PopoverTrigger", "PopoverContent"],
+    "props": {
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      }
+    }
+  },
+  {
+    "name": "progress",
+    "description": "A progress indicator bar component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/progress",
+    "installCommand": "npx shadcn-ui@latest add progress",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic progress bar."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Progress } from '@/components/ui/progress'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Progress value={33} className=\"w-[60%]\" />"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Progress"],
+    "props": {
+      "value": {
+        "type": "number",
+        "description": "Progress percentage (0-100)"
+      }
+    }
+  },
+  {
+    "name": "radio-group",
+    "description": "A radio button group component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/radio-group",
+    "installCommand": "npx shadcn-ui@latest add radio-group",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic radio group."
+      },
+      {
+        "name": "Form",
+        "description": "Radio group in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'\nimport { Label } from '@/components/ui/label'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<RadioGroup defaultValue=\"option-one\">\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"option-one\" id=\"option-one\" />\n    <Label htmlFor=\"option-one\">Option One</Label>\n  </div>\n  <div className=\"flex items-center space-x-2\">\n    <RadioGroupItem value=\"option-two\" id=\"option-two\" />\n    <Label htmlFor=\"option-two\">Option Two</Label>\n  </div>\n</RadioGroup>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["RadioGroup", "RadioGroupItem"],
+    "props": {
+      "value": {
+        "type": "string"
+      },
+      "onValueChange": {
+        "type": "function"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "resizable",
+    "description": "A resizable panel layout component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/resizable",
+    "installCommand": "npx shadcn-ui@latest add resizable",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic resizable panel layout."
+      },
+      {
+        "name": "Vertical",
+        "description": "Vertically resizable panels."
+      },
+      {
+        "name": "With Handle",
+        "description": "Resizable panels with custom handle."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  ResizablePanelGroup,\n  ResizablePanel,\n  ResizableHandle,\n} from '@/components/ui/resizable'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<ResizablePanelGroup direction=\"horizontal\">\n  <ResizablePanel>Panel 1</ResizablePanel>\n  <ResizableHandle />\n  <ResizablePanel>Panel 2</ResizablePanel>\n</ResizablePanelGroup>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["ResizablePanelGroup", "ResizablePanel", "ResizableHandle"],
+    "props": {
+      "direction": {
+        "type": "string",
+        "values": ["horizontal", "vertical"]
+      }
+    }
+  },
+  {
+    "name": "scroll-area",
+    "description": "A custom scrollbar area component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/scroll-area",
+    "installCommand": "npx shadcn-ui@latest add scroll-area",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic scroll area."
+      },
+      {
+        "name": "Horizontal Scrolling",
+        "description": "A horizontally scrolling area."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<ScrollArea className=\"h-[200px] w-[350px] rounded-md border p-4\">\n  <div>\n    {Array.from({ length: 50 }).map((_, i) => (\n      <div key={i} className=\"text-sm\">Scrollable item {i + 1}</div>\n    ))}\n  </div>\n  <ScrollBar />\n</ScrollArea>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["ScrollArea", "ScrollBar"],
+    "props": {}
+  },
+  {
+    "name": "select",
+    "description": "A select dropdown component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/select",
+    "installCommand": "npx shadcn-ui@latest add select",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic select dropdown."
+      },
+      {
+        "name": "Scrollable",
+        "description": "A scrollable select with many options."
+      },
+      {
+        "name": "Form",
+        "description": "Select in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Select,\n  SelectGroup,\n  SelectValue,\n  SelectTrigger,\n  SelectContent,\n  SelectLabel,\n  SelectItem,\n  SelectSeparator,\n  SelectScrollUpButton,\n  SelectScrollDownButton,\n} from '@/components/ui/select'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Select>\n  <SelectTrigger className=\"w-[180px]\">\n    <SelectValue placeholder=\"Select a fruit\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectItem value=\"apple\">Apple</SelectItem>\n    <SelectItem value=\"banana\">Banana</SelectItem>\n    <SelectItem value=\"blueberry\">Blueberry</SelectItem>\n    <SelectItem value=\"grapes\">Grapes</SelectItem>\n    <SelectItem value=\"pineapple\">Pineapple</SelectItem>\n  </SelectContent>\n</Select>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Select", "SelectGroup", "SelectValue", "SelectTrigger", "SelectContent", "SelectLabel", "SelectItem", "SelectSeparator", "SelectScrollUpButton", "SelectScrollDownButton"],
+    "props": {
+      "value": {
+        "type": "string"
+      },
+      "onValueChange": {
+        "type": "function"
+      },
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      }
+    }
+  },
+  {
+    "name": "separator",
+    "description": "A visual divider component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/separator",
+    "installCommand": "npx shadcn-ui@latest add separator",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic separator."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Separator } from '@/components/ui/separator'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div>\n  <div>Item 1</div>\n  <Separator />\n  <div>Item 2</div>\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Separator"],
+    "props": {
+      "orientation": {
+        "type": "string",
+        "values": ["horizontal", "vertical"]
+      }
+    }
+  },
+  {
+    "name": "sheet",
+    "description": "A side panel overlay component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/sheet",
+    "installCommand": "npx shadcn-ui@latest add sheet",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic sheet panel."
+      },
+      {
+        "name": "Side",
+        "description": "Sheet positioned on the side."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Sheet,\n  SheetTrigger,\n  SheetContent,\n  SheetHeader,\n  SheetFooter,\n  SheetTitle,\n  SheetDescription,\n  SheetClose,\n} from '@/components/ui/sheet'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Sheet>\n  <SheetTrigger>Open</SheetTrigger>\n  <SheetContent>\n    <SheetHeader>\n      <SheetTitle>Are you absolutely sure?</SheetTitle>\n      <SheetDescription>\n        This action cannot be undone. This will permanently delete your account\n        and remove your data from our servers.\n      </SheetDescription>\n    </SheetHeader>\n    <SheetFooter>\n      <SheetClose asChild>\n        <Button>Cancel</Button>\n      </SheetClose>\n      <Button type=\"submit\">Submit</Button>\n    </SheetFooter>\n  </SheetContent>\n</Sheet>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Sheet", "SheetTrigger", "SheetContent", "SheetHeader", "SheetFooter", "SheetTitle", "SheetDescription", "SheetClose"],
+    "props": {
+      "open": {
+        "type": "boolean"
+      },
+      "onOpenChange": {
+        "type": "function"
+      },
+      "side": {
+        "type": "string",
+        "values": ["top", "right", "bottom", "left"]
+      }
+    }
+  },
+  {
+    "name": "sidebar",
+    "description": "An app sidebar navigation component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/sidebar",
+    "installCommand": "npx shadcn-ui@latest add sidebar",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic sidebar."
+      },
+      {
+        "name": "With Subitems",
+        "description": "Sidebar with nested menu items."
+      },
+      {
+        "name": "Collapsible",
+        "description": "Collapsible sidebar."
+      },
+      {
+        "name": "With Icons",
+        "description": "Sidebar with icon menu items."
+      },
+      {
+        "name": "Floating",
+        "description": "Floating sidebar."
+      },
+      {
+        "name": "Inset",
+        "description": "Inset sidebar layout."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Sidebar,\n  SidebarContent,\n  SidebarGroup,\n  SidebarGroupContent,\n  SidebarGroupLabel,\n  SidebarMenu,\n  SidebarMenuButton,\n  SidebarMenuItem,\n  SidebarProvider,\n  SidebarTrigger,\n  SidebarHeader,\n  SidebarFooter,\n  SidebarRail,\n  SidebarInset,\n  SidebarMenuSub,\n  SidebarMenuSubItem,\n  SidebarMenuSubButton,\n  SidebarSeparator,\n} from '@/components/ui/sidebar'"
+      },
+      {
+        "title": "Basic Sidebar",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'\n\nexport function SidebarDemo() {\n  return (\n    <SidebarProvider>\n      <Sidebar>\n        <SidebarContent>\n          <SidebarGroup>\n            <SidebarGroupLabel>Application</SidebarGroupLabel>\n            <SidebarGroupContent>\n              <SidebarMenu>\n                <SidebarMenuItem>\n                  <SidebarMenuButton asChild>\n                    <a href=\"#\">Home</a>\n                  </SidebarMenuButton>\n                </SidebarMenuItem>\n                <SidebarMenuItem>\n                  <SidebarMenuButton asChild>\n                    <a href=\"#\">Settings</a>\n                  </SidebarMenuButton>\n                </SidebarMenuItem>\n              </SidebarMenu>\n            </SidebarGroupContent>\n          </SidebarGroup>\n        </SidebarContent>\n      </Sidebar>\n    </SidebarProvider>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples", "Structure", "Theming"],
+    "subComponents": ["Sidebar", "SidebarContent", "SidebarGroup", "SidebarGroupContent", "SidebarGroupLabel", "SidebarMenu", "SidebarMenuButton", "SidebarMenuItem", "SidebarProvider", "SidebarTrigger", "SidebarHeader", "SidebarFooter", "SidebarRail", "SidebarInset", "SidebarMenuSub", "SidebarMenuSubItem", "SidebarMenuSubButton", "SidebarSeparator"],
+    "props": {
+      "collapsible": {
+        "type": "string",
+        "values": ["icon", "offcanvas"]
+      },
+      "variant": {
+        "type": "string",
+        "values": ["sidebar", "floating", "inset"]
+      }
+    }
+  },
+  {
+    "name": "skeleton",
+    "description": "A loading placeholder component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/skeleton",
+    "installCommand": "npx shadcn-ui@latest add skeleton",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic skeleton loader."
+      },
+      {
+        "name": "Card",
+        "description": "Skeleton card layout."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Skeleton } from '@/components/ui/skeleton'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div className=\"space-y-2\">\n  <Skeleton className=\"h-12 w-12 rounded-full\" />\n  <Skeleton className=\"h-4 w-[250px]\" />\n  <Skeleton className=\"h-4 w-[200px]\" />\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Skeleton"],
+    "props": {}
+  },
+  {
+    "name": "slider",
+    "description": "A range input slider component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/slider",
+    "installCommand": "npx shadcn-ui@latest add slider",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic slider."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Slider } from '@/components/ui/slider'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Slider } from '@/components/ui/slider'\n\nexport function SliderDemo() {\n  const [value, setValue] = useState([50])\n\n  return (\n    <div className=\"w-[200px]\">\n      <Slider value={value} onValueChange={setValue} max={100} step={1} />\n      <p className=\"text-center text-sm text-gray-500 mt-2\">{value[0]}</p>\n    </div>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Slider"],
+    "props": {
+      "value": {
+        "type": "number[]"
+      },
+      "onValueChange": {
+        "type": "function"
+      },
+      "min": {
+        "type": "number"
+      },
+      "max": {
+        "type": "number"
+      },
+      "step": {
+        "type": "number"
+      }
+    }
+  },
+  {
+    "name": "sonner",
+    "description": "Toast notification component using sonner library.",
+    "docUrl": "https://ui.shadcn.com/docs/components/sonner",
+    "installCommand": "npx shadcn-ui@latest add sonner",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic toast notification."
+      },
+      {
+        "name": "Destructive",
+        "description": "A destructive/error toast."
+      },
+      {
+        "name": "Action",
+        "description": "Toast with action button."
+      },
+      {
+        "name": "Description",
+        "description": "Toast with description."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Toaster, toast } from 'sonner'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { Toaster, toast } from 'sonner'\nimport { Button } from '@/components/ui/button'\n\nexport function ToasterDemo() {\n  return (\n    <>\n      <Toaster />\n      <Button onClick={() => toast('Event has been created')}>\n        Show Toast\n      </Button>\n    </>\n  )\n}"
+      },
+      {
+        "title": "With Action",
+        "language": "jsx",
+        "code": "toast('Event has been created', {\n  action: {\n    label: 'Undo',\n    onClick: () => console.log('Undo'),\n  },\n})"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Toaster"],
+    "props": {}
+  },
+  {
+    "name": "spinner",
+    "description": "A loading spinner indicator component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/spinner",
+    "installCommand": "npx shadcn-ui@latest add spinner",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic spinner."
+      },
+      {
+        "name": "Sizes",
+        "description": "Spinners in different sizes."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Spinner } from '@/components/ui/spinner'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Spinner />"
+      },
+      {
+        "title": "Sizes",
+        "language": "jsx",
+        "code": "<div className=\"flex gap-4\">\n  <Spinner size=\"sm\" />\n  <Spinner size=\"md\" />\n  <Spinner size=\"lg\" />\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Spinner"],
+    "props": {
+      "size": {
+        "type": "string",
+        "values": ["sm", "md", "lg"]
+      }
+    }
+  },
+  {
+    "name": "switch",
+    "description": "A toggle switch component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/switch",
+    "installCommand": "npx shadcn-ui@latest add switch",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic switch."
+      },
+      {
+        "name": "Form",
+        "description": "Switch in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Switch } from '@/components/ui/switch'\nimport { Label } from '@/components/ui/label'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<div className=\"flex items-center space-x-2\">\n  <Switch id=\"airplane-mode\" />\n  <Label htmlFor=\"airplane-mode\">Airplane Mode</Label>\n</div>"
+      },
+      {
+        "title": "Controlled",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Switch } from '@/components/ui/switch'\n\nexport function SwitchDemo() {\n  const [checked, setChecked] = useState(false)\n\n  return (\n    <Switch checked={checked} onCheckedChange={setChecked} />\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Switch"],
+    "props": {
+      "checked": {
+        "type": "boolean"
+      },
+      "onCheckedChange": {
+        "type": "function"
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "table",
+    "description": "An HTML table component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/table",
+    "installCommand": "npx shadcn-ui@latest add table",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic HTML table."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Table,\n  TableBody,\n  TableCaption,\n  TableCell,\n  TableFooter,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from '@/components/ui/table'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Table>\n  <TableCaption>A list of your recent invoices.</TableCaption>\n  <TableHeader>\n    <TableRow>\n      <TableHead>Invoice</TableHead>\n      <TableHead>Status</TableHead>\n      <TableHead>Amount</TableHead>\n    </TableRow>\n  </TableHeader>\n  <TableBody>\n    <TableRow>\n      <TableCell>INV-001</TableCell>\n      <TableCell>Paid</TableCell>\n      <TableCell>$250.00</TableCell>\n    </TableRow>\n  </TableBody>\n  <TableFooter>\n    <TableRow>\n      <TableCell colSpan={2}>Total</TableCell>\n      <TableCell>$250.00</TableCell>\n    </TableRow>\n  </TableFooter>\n</Table>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Table", "TableHeader", "TableBody", "TableFooter", "TableHead", "TableRow", "TableCell", "TableCaption"],
+    "props": {}
+  },
+  {
+    "name": "tabs",
+    "description": "A tabbed content panels component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/tabs",
+    "installCommand": "npx shadcn-ui@latest add tabs",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic tabs component."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Tabs defaultValue=\"account\" className=\"w-[400px]\">\n  <TabsList>\n    <TabsTrigger value=\"account\">Account</TabsTrigger>\n    <TabsTrigger value=\"password\">Password</TabsTrigger>\n  </TabsList>\n  <TabsContent value=\"account\">Make changes to your account here.</TabsContent>\n  <TabsContent value=\"password\">Change your password here.</TabsContent>\n</Tabs>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Tabs", "TabsList", "TabsTrigger", "TabsContent"],
+    "props": {
+      "value": {
+        "type": "string"
+      },
+      "onValueChange": {
+        "type": "function"
+      },
+      "defaultValue": {
+        "type": "string"
+      }
+    }
+  },
+  {
+    "name": "textarea",
+    "description": "A multi-line text input component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/textarea",
+    "installCommand": "npx shadcn-ui@latest add textarea",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic textarea."
+      },
+      {
+        "name": "Disabled",
+        "description": "A disabled textarea."
+      },
+      {
+        "name": "With Label",
+        "description": "Textarea with label."
+      },
+      {
+        "name": "With Text",
+        "description": "Textarea with helper text."
+      },
+      {
+        "name": "With Button",
+        "description": "Textarea with button."
+      },
+      {
+        "name": "Form",
+        "description": "Textarea in a form."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Textarea } from '@/components/ui/textarea'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<Textarea placeholder=\"Type your message here.\" />"
+      },
+      {
+        "title": "With Label",
+        "language": "jsx",
+        "code": "<div className=\"w-full max-w-sm space-y-2\">\n  <label htmlFor=\"message\" className=\"text-sm font-medium\">Your message</label>\n  <Textarea id=\"message\" placeholder=\"Type your message here.\" />\n</div>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Textarea"],
+    "props": {
+      "placeholder": {
+        "type": "string"
+      },
+      "disabled": {
+        "type": "boolean"
+      },
+      "rows": {
+        "type": "number"
+      }
+    }
+  },
+  {
+    "name": "toast",
+    "description": "Toast notification component (Deprecated - use sonner).",
+    "docUrl": "https://ui.shadcn.com/docs/components/toast",
+    "installCommand": "npx shadcn-ui@latest add toast",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic toast notification."
+      },
+      {
+        "name": "Destructive",
+        "description": "A destructive toast."
+      },
+      {
+        "name": "With Title",
+        "description": "Toast with title."
+      },
+      {
+        "name": "With Action",
+        "description": "Toast with action button."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Toast, ToastAction, Toaster, useToast } from '@/components/ui/toast'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useToast } from '@/components/ui/use-toast'\nimport { Button } from '@/components/ui/button'\n\nexport function ToastDemo() {\n  const { toast } = useToast()\n\n  return (\n    <>\n      <Button\n        onClick={() => {\n          toast({\n            title: 'Scheduled: Catch up',\n            description: 'Friday, February 10, 2023 at 5:57 PM',\n          })\n        }}\n      >\n        Show Toast\n      </Button>\n      <Toaster />\n    </>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Toast", "ToastAction", "Toaster"],
+    "props": {}
+  },
+  {
+    "name": "toggle",
+    "description": "A two-state button toggle component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/toggle",
+    "installCommand": "npx shadcn-ui@latest add toggle",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic toggle button."
+      },
+      {
+        "name": "Outline",
+        "description": "Toggle with outline variant."
+      },
+      {
+        "name": "With Text",
+        "description": "Toggle with text."
+      },
+      {
+        "name": "Small",
+        "description": "Small toggle button."
+      },
+      {
+        "name": "Large",
+        "description": "Large toggle button."
+      },
+      {
+        "name": "Disabled",
+        "description": "Disabled toggle button."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { Toggle } from '@/components/ui/toggle'\nimport { Bold } from 'lucide-react'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { useState } from 'react'\nimport { Toggle } from '@/components/ui/toggle'\nimport { Bold } from 'lucide-react'\n\nexport function ToggleDemo() {\n  const [pressed, setPressed] = useState(false)\n\n  return (\n    <Toggle pressed={pressed} onPressedChange={setPressed}>\n      <Bold className=\"h-4 w-4\" />\n    </Toggle>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["Toggle"],
+    "props": {
+      "pressed": {
+        "type": "boolean"
+      },
+      "onPressedChange": {
+        "type": "function"
+      },
+      "variant": {
+        "type": "string",
+        "values": ["default", "outline"]
+      },
+      "size": {
+        "type": "string",
+        "values": ["default", "sm", "lg"]
+      },
+      "disabled": {
+        "type": "boolean"
+      }
+    }
+  },
+  {
+    "name": "toggle-group",
+    "description": "A group of toggle buttons.",
+    "docUrl": "https://ui.shadcn.com/docs/components/toggle-group",
+    "installCommand": "npx shadcn-ui@latest add toggle-group",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic toggle group."
+      },
+      {
+        "name": "Outline",
+        "description": "Toggle group with outline variant."
+      },
+      {
+        "name": "Single",
+        "description": "Single selection toggle group."
+      },
+      {
+        "name": "Small",
+        "description": "Small toggle group."
+      },
+      {
+        "name": "Large",
+        "description": "Large toggle group."
+      },
+      {
+        "name": "Disabled",
+        "description": "Disabled toggle group."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'\nimport { Bold, Italic, Underline } from 'lucide-react'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "'use client'\n\nimport { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'\nimport { Bold, Italic, Underline } from 'lucide-react'\n\nexport function ToggleGroupDemo() {\n  return (\n    <ToggleGroup type=\"multiple\">\n      <ToggleGroupItem value=\"bold\" aria-label=\"Toggle bold\">\n        <Bold className=\"h-4 w-4\" />\n      </ToggleGroupItem>\n      <ToggleGroupItem value=\"italic\" aria-label=\"Toggle italic\">\n        <Italic className=\"h-4 w-4\" />\n      </ToggleGroupItem>\n      <ToggleGroupItem value=\"underline\" aria-label=\"Toggle underline\">\n        <Underline className=\"h-4 w-4\" />\n      </ToggleGroupItem>\n    </ToggleGroup>\n  )\n}"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": ["ToggleGroup", "ToggleGroupItem"],
+    "props": {
+      "type": {
+        "type": "string",
+        "values": ["single", "multiple"]
+      },
+      "value": {
+        "type": "string | string[]"
+      },
+      "onValueChange": {
+        "type": "function"
+      },
+      "size": {
+        "type": "string",
+        "values": ["default", "sm", "lg"]
+      },
+      "variant": {
+        "type": "string",
+        "values": ["default", "outline"]
+      }
+    }
+  },
+  {
+    "name": "tooltip",
+    "description": "A hover information popup component.",
+    "docUrl": "https://ui.shadcn.com/docs/components/tooltip",
+    "installCommand": "npx shadcn-ui@latest add tooltip",
+    "examples": [
+      {
+        "name": "Default",
+        "description": "A basic tooltip."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "Import",
+        "language": "typescript",
+        "code": "import {\n  Tooltip,\n  TooltipProvider,\n  TooltipTrigger,\n  TooltipContent,\n} from '@/components/ui/tooltip'"
+      },
+      {
+        "title": "Basic Usage",
+        "language": "jsx",
+        "code": "<TooltipProvider>\n  <Tooltip>\n    <TooltipTrigger>Hover</TooltipTrigger>\n    <TooltipContent>\n      <p>Add to library</p>\n    </TooltipContent>\n  </Tooltip>\n</TooltipProvider>"
+      }
+    ],
+    "headings": ["Installation", "Usage"],
+    "subComponents": ["Tooltip", "TooltipProvider", "TooltipTrigger", "TooltipContent"],
+    "props": {}
+  },
+  {
+    "name": "typography",
+    "description": "Text styling components for various typography levels.",
+    "docUrl": "https://ui.shadcn.com/docs/components/typography",
+    "installCommand": "npx shadcn-ui@latest add typography",
+    "examples": [
+      {
+        "name": "H1",
+        "description": "Heading level 1."
+      },
+      {
+        "name": "H2",
+        "description": "Heading level 2."
+      },
+      {
+        "name": "H3",
+        "description": "Heading level 3."
+      },
+      {
+        "name": "H4",
+        "description": "Heading level 4."
+      },
+      {
+        "name": "P",
+        "description": "Paragraph text."
+      },
+      {
+        "name": "Blockquote",
+        "description": "Blockquote text."
+      },
+      {
+        "name": "Table",
+        "description": "Table typography."
+      },
+      {
+        "name": "List",
+        "description": "List typography."
+      },
+      {
+        "name": "Inline Code",
+        "description": "Inline code text."
+      },
+      {
+        "name": "Lead",
+        "description": "Lead/intro text."
+      },
+      {
+        "name": "Large",
+        "description": "Large text."
+      },
+      {
+        "name": "Small",
+        "description": "Small text."
+      },
+      {
+        "name": "Muted",
+        "description": "Muted/secondary text."
+      }
+    ],
+    "codeBlocks": [
+      {
+        "title": "H1",
+        "language": "jsx",
+        "code": "<h1 className=\"scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl\">\n  Heading 1\n</h1>"
+      },
+      {
+        "title": "H2",
+        "language": "jsx",
+        "code": "<h2 className=\"scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0\">\n  Heading 2\n</h2>"
+      },
+      {
+        "title": "P",
+        "language": "jsx",
+        "code": "<p className=\"leading-7 [&:not(:first-child)]:mt-6\">\n  This is a paragraph\n</p>"
+      },
+      {
+        "title": "Lead",
+        "language": "jsx",
+        "code": "<p className=\"text-xl text-gray-600\">\n  Lead text\n</p>"
+      },
+      {
+        "title": "Large",
+        "language": "jsx",
+        "code": "<div className=\"text-lg font-semibold\">\n  Large text\n</div>"
+      },
+      {
+        "title": "Small",
+        "language": "jsx",
+        "code": "<small className=\"text-sm font-medium leading-none\">\n  Small text\n</small>"
+      },
+      {
+        "title": "Muted",
+        "language": "jsx",
+        "code": "<p className=\"text-sm text-gray-500\">\n  Muted text\n</p>"
+      },
+      {
+        "title": "Blockquote",
+        "language": "jsx",
+        "code": "<blockquote className=\"mt-6 border-l-2 pl-6 italic\">\n  Quote text here\n</blockquote>"
+      },
+      {
+        "title": "Inline Code",
+        "language": "jsx",
+        "code": "<code className=\"relative rounded bg-gray-100 px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold\">\n  code\n</code>"
+      }
+    ],
+    "headings": ["Installation", "Usage", "Examples"],
+    "subComponents": [],
+    "props": {}
+  }
+]
