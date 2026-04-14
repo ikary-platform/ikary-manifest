@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+export { THEME_PREFLIGHT_SCRIPT } from '../../shared/theme-preflight';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -49,16 +50,3 @@ export function useTheme(): UseThemeReturn {
   return { mode, setMode, toggle };
 }
 
-/**
- * Drop this snippet into the `<head>` of any SSR/static HTML page to pre-apply
- * the stored theme before React hydrates, preventing a flash of wrong theme.
- *
- * Re-exported from `@ikary/system-ikary-ui` (root entry) as a plain string.
- */
-export const THEME_PREFLIGHT_SCRIPT = `(() => {
-  try {
-    var s = localStorage.getItem('${STORAGE_KEY}');
-    var m = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (s === 'dark' || (!s && m)) document.documentElement.classList.add('${DARK_CLASS}');
-  } catch (_) {}
-})();`;

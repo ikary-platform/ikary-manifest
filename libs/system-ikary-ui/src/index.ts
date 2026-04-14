@@ -9,4 +9,4 @@ export {
   WAVE_FAST_VIEWBOX,
 } from './shared/wave-paths';
 
-export { THEME_PREFLIGHT_SCRIPT } from './ui/hooks/useTheme';
+export { THEME_PREFLIGHT_SCRIPT } from './shared/theme-preflight';
