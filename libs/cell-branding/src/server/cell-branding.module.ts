@@ -1,4 +1,4 @@
-import { Controller, DynamicModule, Module, Provider, Type, UseGuards } from '@nestjs/common';
+import { Controller, DynamicModule, Module, type ModuleMetadata, Provider, Type, UseGuards } from '@nestjs/common';
 import { CellBrandingController } from './cell-branding.controller.js';
 import { CellBrandingRepository } from './cell-branding.repository.js';
 import { CellBrandingService } from './cell-branding.service.js';
@@ -18,6 +18,12 @@ export type RegisterCellBrandingModuleOptions = Partial<CellBrandingModuleOption
    * writes. When omitted, routes are open (suitable for local dev only).
    */
   guards?: Type[];
+  /**
+   * Extra modules the branding controller depends on. Forward the host's
+   * AuthModule instance here when using `guards: [JwtAuthGuard]` so the
+   * guard can resolve its own dependencies (e.g. TokenService).
+   */
+  imports?: ModuleMetadata['imports'];
 };
 
 function makeController(routePrefix: string, guards: readonly Type[] = []): Type {
@@ -47,6 +53,7 @@ export class CellBrandingModule {
 
     return {
       module: CellBrandingModule,
+      imports: options.imports,
       controllers: [makeController(resolved.routePrefix, options.guards)],
       providers,
       exports: [CellBrandingRepository, CellBrandingService, CELL_BRANDING_MODULE_OPTIONS],
