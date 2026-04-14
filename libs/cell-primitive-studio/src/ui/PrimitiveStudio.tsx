@@ -119,6 +119,23 @@ function IconExpand() {
   );
 }
 
+function IconCode() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 3L1 6l3 3M8 3l3 3-3 3" />
+    </svg>
+  );
+}
+
+function IconEye() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 6C1 6 3 2 6 2s5 4 5 4-2 4-5 4-5-4-5-4z" />
+      <circle cx="6" cy="6" r="1.5" />
+    </svg>
+  );
+}
+
 // ── Main component ──────────────────────────────────────────────────────
 
 export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsByKey = {}, initialKey = null, onSelectPrimitive, renderContractEditor, renderRuntimeEditor, hideSidebar = false }: PrimitiveStudioProps) {
@@ -144,6 +161,7 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
 
   const [propsCollapsed, setPropsCollapsed] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [fullContent, setFullContent] = useState<'code' | 'preview'>('preview');
   const { width: propsWidth, startDrag } = useResizablePanel(320);
 
   const [propsState, onPropsChange, setProps] = usePropsEditorState<unknown>(initialProps);
@@ -175,6 +193,9 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
   }
 
   const panelsHidden = fullscreen || propsCollapsed;
+  // In fullscreen mode, show code panel instead of preview when fullContent === 'code'
+  const showCodePanel = !panelsHidden || (fullscreen && fullContent === 'code');
+  const showPreviewPanel = !fullscreen || fullContent === 'preview';
 
   return (
     <div
@@ -206,60 +227,67 @@ export function PrimitiveStudio({ catalog, scenariosByKey = {}, contractFieldsBy
         </div>
       )}
 
-      {/* Center: props editor (collapsible + resizable) */}
-      <div
-        style={{
-          width: panelsHidden ? '0' : `${propsWidth}px`,
-          flexShrink: 0,
-          overflow: 'hidden',
-          transition: 'width 0.2s ease',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <PropsEditor
-          propsState={propsState}
-          runtimeState={runtimeState}
-          onPropsChange={onPropsChange}
-          onRuntimeChange={onRuntimeChange}
-          scenarios={scenarios}
-          activeScenario={activeScenario}
-          onScenarioSelect={handleScenarioSelect}
-          contractFields={selectedKey ? contractFieldsByKey[selectedKey] : undefined}
-          renderContractEditor={
-            renderContractEditor
-              ? (p) => renderContractEditor({ ...p, primitiveKey: selectedKey })
-              : undefined
-          }
-          renderRuntimeEditor={renderRuntimeEditor}
-        />
-      </div>
+      {/* Center: props editor (collapsible + resizable; fills full width in fullscreen-code mode) */}
+      {showCodePanel && (
+        <div
+          style={{
+            width: fullscreen ? undefined : `${propsWidth}px`,
+            flex: fullscreen ? 1 : undefined,
+            flexShrink: 0,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <PropsEditor
+            propsState={propsState}
+            runtimeState={runtimeState}
+            onPropsChange={onPropsChange}
+            onRuntimeChange={onRuntimeChange}
+            scenarios={scenarios}
+            activeScenario={activeScenario}
+            onScenarioSelect={handleScenarioSelect}
+            contractFields={selectedKey ? contractFieldsByKey[selectedKey] : undefined}
+            renderContractEditor={
+              renderContractEditor
+                ? (p) => renderContractEditor({ ...p, primitiveKey: selectedKey })
+                : undefined
+            }
+            renderRuntimeEditor={renderRuntimeEditor}
+          />
+        </div>
+      )}
 
-      {/* Drag divider — only shown when props panel is visible */}
-      {!panelsHidden && <ResizeDivider onMouseDown={startDrag} />}
+      {/* Drag divider — only shown in split mode */}
+      {!panelsHidden && showPreviewPanel && <ResizeDivider onMouseDown={startDrag} />}
 
       {/* Right: live preview */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <PrimitivePreviewToolbar
-          primitiveKey={selectedKey}
-          version={selectedVersion}
-          catalog={catalog}
-          onVersionChange={setSelectedVersion}
-          propsCollapsed={propsCollapsed}
-          onToggleProps={() => setPropsCollapsed((c) => !c)}
-          fullscreen={fullscreen}
-          onToggleFullscreen={() => {
-            setFullscreen((f) => !f);
-            if (!fullscreen) setPropsCollapsed(false);
-          }}
-        />
-        <PrimitivePreview
-          primitiveKey={selectedKey}
-          version={selectedVersion}
-          props={propsState.live}
-          runtime={runtimeState.live}
-        />
-      </div>
+      {showPreviewPanel && (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <PrimitivePreviewToolbar
+            primitiveKey={selectedKey}
+            version={selectedVersion}
+            catalog={catalog}
+            onVersionChange={setSelectedVersion}
+            propsCollapsed={propsCollapsed}
+            onToggleProps={() => setPropsCollapsed((c) => !c)}
+            fullscreen={fullscreen}
+            fullContent={fullContent}
+            onToggleFullContent={() => setFullContent((c) => (c === 'preview' ? 'code' : 'preview'))}
+            onToggleFullscreen={() => {
+              setFullscreen((f) => !f);
+              setFullContent('preview');
+              if (!fullscreen) setPropsCollapsed(false);
+            }}
+          />
+          <PrimitivePreview
+            primitiveKey={selectedKey}
+            version={selectedVersion}
+            props={propsState.live}
+            runtime={runtimeState.live}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -272,6 +300,8 @@ interface PrimitivePreviewToolbarProps {
   propsCollapsed: boolean;
   onToggleProps: () => void;
   fullscreen: boolean;
+  fullContent: 'code' | 'preview';
+  onToggleFullContent: () => void;
   onToggleFullscreen: () => void;
 }
 
@@ -283,6 +313,8 @@ function PrimitivePreviewToolbar({
   propsCollapsed,
   onToggleProps,
   fullscreen,
+  fullContent,
+  onToggleFullContent,
   onToggleFullscreen,
 }: PrimitivePreviewToolbarProps) {
   const entry = primitiveKey ? catalog.find((e) => e.key === primitiveKey) : null;
@@ -316,6 +348,17 @@ function PrimitivePreviewToolbar({
 
       {/* Right-side controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: 'auto' }}>
+        {/* View Code / View Preview toggle — only in full mode */}
+        {isFull && (
+          <button
+            className="ide-action-btn"
+            onClick={onToggleFullContent}
+            title={fullContent === 'preview' ? 'Show JSON editor' : 'Show preview'}
+          >
+            {fullContent === 'preview' ? <IconCode /> : <IconEye />}
+            {fullContent === 'preview' ? 'View Code' : 'View Preview'}
+          </button>
+        )}
         {/* Version selector */}
         {entry && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
