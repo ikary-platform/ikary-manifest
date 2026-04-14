@@ -95,8 +95,13 @@ export type {
 // ── Zod schemas ───────────────────────────────────────────────────────────────
 export {
   CellManifestV1Schema,
+  CellMetadataSchema,
+  CellSpecSchema,
   AppShellDefinitionSchema,
   CellMountDefinitionSchema,
+  PageDefinitionSchema,
+  NavigationDefinitionSchema,
+  NavigationItemSchema,
   LifecycleTransitionDefinitionSchema,
   DomainEventActorTypeSchema,
   DomainEventActorSchema,

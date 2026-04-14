@@ -7,6 +7,7 @@ import { AppPreview } from '../components/app-runtime/AppPreview';
 import { MCP_API_URL } from '../lib/config';
 import { APP_MANIFEST_SCENARIOS } from '../data/app-manifest-loader';
 import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
 import { useResizablePanel } from '../hooks/useResizablePanel';
 import { ResizeDivider } from '../components/ResizeDivider';
 
@@ -39,7 +40,7 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
 
   const activeLabel = APP_MANIFEST_SCENARIOS[activeScenario]?.label ?? '';
 
-  const manifestFields = useMemo(() => extractContractFields(CellManifestV1Schema), []);
+  const manifestFields = useMemo(() => extractContractFields(CellManifestV1Schema, SCHEMA_REGISTRY), []);
 
   return (
     <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
@@ -105,7 +106,7 @@ export function AppRuntimeSection({ activeScenario }: AppRuntimeSectionProps) {
               modelUri="manifest://active.json"
               minWidth={`${editorWidth}px`}
             />
-            <ContractSchemaPanel fields={manifestFields} />
+            <ContractSchemaPanel fields={manifestFields} schemaName="CellManifestV1Schema" />
           </div>
         )}
 

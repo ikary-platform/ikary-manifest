@@ -7,6 +7,7 @@ import type { EntityDefinition, FieldDefinition } from '@ikary/cell-contract';
 import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
 import { ContractSchemaPanel } from '../components/ContractSchemaPanel';
 import { extractContractFields } from '../lib/schema-introspection';
+import { SCHEMA_REGISTRY } from '../lib/schema-registry';
 import { MCP_API_URL } from '../lib/config';
 import { API_ENTITY_SCENARIOS } from '../data/api-sample-entities';
 import { EntityOverviewTab } from '../components/api-runtime/EntityOverviewTab';
@@ -101,7 +102,7 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
 
   const currentTab = OUTPUT_TABS.find((t) => t.key === outputTab)!;
 
-  const entityFields = useMemo(() => extractContractFields(EntityDefinitionSchema), []);
+  const entityFields = useMemo(() => extractContractFields(EntityDefinitionSchema, SCHEMA_REGISTRY), []);
 
   return (
     <div style={{ display: 'flex', height: '100%', flexDirection: 'column', overflow: 'hidden' }}>
@@ -167,7 +168,7 @@ export function ApiRuntimeSection({ activeScenario }: ApiRuntimeSectionProps) {
               modelUri="entity://active.json"
               minWidth={`${editorWidth}px`}
             />
-            <ContractSchemaPanel fields={entityFields} />
+            <ContractSchemaPanel fields={entityFields} schemaName="EntityDefinitionSchema" />
           </div>
         )}
 

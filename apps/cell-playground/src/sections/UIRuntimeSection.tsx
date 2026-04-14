@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { listPrimitives } from '@ikary/cell-primitives';
 import '@ikary/cell-primitives/registry';
@@ -12,9 +12,19 @@ import { extractContractFields } from '../lib/schema-introspection';
 import { MonacoJsonEditor } from '../components/MonacoJsonEditor';
 import { MCP_API_URL } from '../lib/config';
 
+const DEFAULT_PRIMITIVE = 'list-page';
+
 export function UIRuntimeSection() {
   const [searchParams, setSearchParams] = useSearchParams();
   const primitiveKey = searchParams.get('primitive');
+
+  // Default to list-page when no primitive is selected
+  useEffect(() => {
+    if (!primitiveKey) {
+      setSearchParams({ primitive: DEFAULT_PRIMITIVE }, { replace: true });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const allPrimitives = useMemo(() => listPrimitives(), []);
 

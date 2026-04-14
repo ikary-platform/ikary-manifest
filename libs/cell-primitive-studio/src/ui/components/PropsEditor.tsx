@@ -8,6 +8,10 @@ export interface ContractField {
   type: string;
   required: boolean;
   description?: string;
+  /** Zod schema reference for the field's type — used for drill-down navigation in the playground. */
+  subSchema?: unknown;
+  /** Catalog name of the sub-schema (e.g. 'CellMetadataSchema') — used for the link icon. */
+  subSchemaName?: string;
 }
 
 interface PropsEditorProps {
