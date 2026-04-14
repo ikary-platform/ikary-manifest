@@ -6,6 +6,7 @@ import { CellAiModule } from '@ikary/cell-ai/server';
 import { HealthController } from './health.controller';
 import { ChatModule } from './chat/chat.module';
 import { BlueprintModule } from './blueprint/blueprint.module';
+import { DemoModule } from './demo/demo.module';
 import { buildAiRuntimeConfig, parseEnv } from './config/env.config';
 
 const env = parseEnv();
@@ -25,6 +26,7 @@ const examplesDir = env.EXAMPLES_DIR
     CellAiModule.forRoot({ blueprints: { examplesDir } }),
     ChatModule,
     BlueprintModule,
+    DemoModule,
   ],
   controllers: [HealthController],
 })
