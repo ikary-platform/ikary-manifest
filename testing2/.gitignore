@@ -1,8 +1,0 @@
-# Local database (created by ikary init and ikary local db migrate)
-local.db
-local.db-shm
-local.db-wal
-
-# OS / editor
-.DS_Store
-*.swp
