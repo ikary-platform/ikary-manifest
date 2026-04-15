@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { API_BASE, writeLifecycleManifest, deleteTestManifest, withAuth } from '../helpers/fixtures.js';
 import { startApiServer, type ServerHandle } from '../helpers/server-manager.js';
-import { queryOutbox, countOutbox } from '../helpers/db-query.js';
+import { queryOutbox } from '../helpers/db-query.js';
 
 const ARTICLES_URL = `${API_BASE}/entities/article/records`;
 

@@ -40,7 +40,7 @@ export class CapabilityController {
     @Inject(RUNTIME_CONTEXT_TOKEN) private readonly runtimeCtx: RuntimeContext,
     @Inject('OUTBOX_REPOSITORY') private readonly outbox: OutboxRepository,
   ) {
-    this.transitionService = new TransitionService(entityService, outbox);
+    this.transitionService = new TransitionService(entityService);
   }
 
   @Post(':capabilityKey')
@@ -74,10 +74,7 @@ export class CapabilityController {
     try {
       return await this.dispatch(entityKey, id, capability, ctx, body);
     } catch (err) {
-      if (err instanceof InvalidTransitionError) {
-        throw new HttpException(err.message, HttpStatus.CONFLICT);
-      }
-      if (err instanceof VersionConflictError) {
+      if (err instanceof InvalidTransitionError || err instanceof VersionConflictError) {
         throw new HttpException(err.message, HttpStatus.CONFLICT);
       }
       if (err instanceof EntityNotFoundError) {
@@ -130,6 +127,11 @@ export class CapabilityController {
       case 'workflow':
       case 'integration':
       case 'export': {
+        // Verify the record exists before queuing — async capabilities must not
+        // enqueue work for nonexistent or deleted entities.
+        const exists = await this.entityService.findById(entityKey, id);
+        if (!exists) throw new EntityNotFoundError(entityKey, id);
+
         // OSS emits an event to the outbox. The worker handles execution.
         const eventName = `capability.${capability.type}.triggered`;
         const event = this.buildCapabilityEnvelope(eventName, entityKey, id, capability, ctx, body);

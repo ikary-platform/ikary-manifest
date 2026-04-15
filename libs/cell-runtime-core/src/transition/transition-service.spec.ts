@@ -81,7 +81,7 @@ describe('TransitionService', () => {
     const audit = new AuditService(dbService);
     outboxRepo = new OutboxRepository(dbService);
     entityService = new EntityService(dbService, repo, audit, outboxRepo);
-    transitionService = new TransitionService(entityService, outboxRepo);
+    transitionService = new TransitionService(entityService);
   });
 
   afterEach(async () => {
@@ -151,7 +151,6 @@ describe('TransitionService', () => {
         LIFECYCLE.transitions.find((t) => t.key === 'send')!,
       );
 
-      const payRows = (await outboxRepo.listUnprocessed()).length;
       const mark_paid = LIFECYCLE.transitions.find((t) => t.key === 'mark_paid')!;
       await transitionService.execute('invoice', id, LIFECYCLE, mark_paid);
 
@@ -237,16 +236,37 @@ describe('TransitionService', () => {
 
   // ── without outbox ────────────────────────────────────────────────────────
 
-  describe('without outbox', () => {
-    it('executes transition without error even when no outbox is provided', async () => {
-      const noOutboxService = new TransitionService(entityService); // no outbox
+  describe('without outbox in EntityService', () => {
+    it('executes transition without error when EntityService has no outbox', async () => {
+      const repo = new EntityRepository(dbService);
+      const audit = new AuditService(dbService);
+      const noOutboxEntityService = new EntityService(dbService, repo, audit, /* outbox */ undefined);
+      const noOutboxTransitionService = new TransitionService(noOutboxEntityService);
 
-      const record = await entityService.create('invoice', { title: 'INV-010', status: 'draft' });
+      const record = await noOutboxEntityService.create('invoice', { title: 'INV-010', status: 'draft' });
       const id = record['id'] as string;
       const transition = LIFECYCLE.transitions.find((t) => t.key === 'send')!;
 
-      const result = await noOutboxService.execute('invoice', id, LIFECYCLE, transition);
+      const result = await noOutboxTransitionService.execute('invoice', id, LIFECYCLE, transition);
       expect(result['status']).toBe('sent');
+    });
+  });
+
+  // ── optimistic lock ───────────────────────────────────────────────────────
+
+  describe('optimistic lock', () => {
+    it('throws VersionConflictError when record is modified between read and write', async () => {
+      const record = await entityService.create('invoice', { title: 'INV-OL', status: 'draft' });
+      const id = record['id'] as string;
+      const transition = LIFECYCLE.transitions.find((t) => t.key === 'send')!;
+
+      // Simulate a concurrent write that increments the version
+      await entityService.update('invoice', id, { title: 'modified concurrently' });
+
+      // Now execute transitions — version has changed, lock should fire
+      await expect(
+        transitionService.execute('invoice', id, LIFECYCLE, transition),
+      ).rejects.toThrow(/version conflict/i);
     });
   });
 

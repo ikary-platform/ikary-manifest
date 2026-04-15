@@ -125,6 +125,8 @@ export class EntityService {
     patch: Record<string, unknown>,
     expectedVersion?: number,
     ctx?: EntityRuntimeContext,
+    /** Extra events written to the outbox in the same transaction — used by TransitionService for hook events. */
+    extraOutboxEvents: DomainEventEnvelope[] = [],
   ): Promise<Record<string, unknown>> {
     // Read current state outside the transaction — throws EntityNotFoundError early
     const before = await this.repository.findById(entityKey, id);
@@ -150,6 +152,9 @@ export class EntityService {
 
       if (this.outbox) {
         await this.outbox.insert(buildEnvelope('updated', entityKey, updated, before, ctx), trx);
+        for (const evt of extraOutboxEvents) {
+          await this.outbox.insert(evt, trx);
+        }
       }
 
       return updated;

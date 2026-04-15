@@ -17,10 +17,11 @@ import {
   TransitionService,
   EntityNotFoundError,
   InvalidTransitionError,
-  OutboxRepository,
+  VersionConflictError,
 } from '@ikary/cell-runtime-core';
-import { JwtAuthGuard, AuditInterceptor, UserService, type CurrentAuthValue } from '@ikary/system-auth';
+import { JwtAuthGuard, AuditInterceptor, type CurrentAuthValue } from '@ikary/system-auth';
 import { RUNTIME_CONTEXT_TOKEN, type RuntimeContext } from '../runtime-context.js';
+
 
 @ApiTags('transitions')
 @UseGuards(JwtAuthGuard)
@@ -31,11 +32,9 @@ export class TransitionController {
 
   constructor(
     @Inject('ENTITY_SERVICE') private readonly entityService: EntityService,
-    @Inject(UserService) private readonly userService: UserService,
     @Inject(RUNTIME_CONTEXT_TOKEN) private readonly runtimeCtx: RuntimeContext,
-    @Inject('OUTBOX_REPOSITORY') private readonly outbox: OutboxRepository,
   ) {
-    this.transitionService = new TransitionService(entityService, outbox);
+    this.transitionService = new TransitionService(entityService);
   }
 
   @Post(':transitionKey')
@@ -77,7 +76,7 @@ export class TransitionController {
     try {
       return await this.transitionService.execute(entityKey, id, lifecycle, transition, ctx);
     } catch (err) {
-      if (err instanceof InvalidTransitionError) {
+      if (err instanceof InvalidTransitionError || err instanceof VersionConflictError) {
         throw new HttpException(err.message, HttpStatus.CONFLICT);
       }
       if (err instanceof EntityNotFoundError) {

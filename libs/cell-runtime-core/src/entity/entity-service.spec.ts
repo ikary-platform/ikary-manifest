@@ -320,7 +320,7 @@ describe('EntityService', () => {
     });
 
     it('populates cell_id from ctx.cellId (falls back to "local" when absent)', async () => {
-      await service.create('order', { customer: 'No CellId' });
+      await service.create('order', { customer: 'No CellId' }); // side-effect: populates outbox
       const rows = await outboxRows();
       expect(payload(rows[0]!).cell_id).toBe('local');
       await dbService.db.deleteFrom('domain_event_outbox').execute();

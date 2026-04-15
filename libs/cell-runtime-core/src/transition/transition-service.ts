@@ -1,24 +1,22 @@
 import { randomUUID } from 'node:crypto';
 import type { LifecycleDefinition, LifecycleTransitionDefinition, DomainEventEnvelope } from '@ikary/cell-contract';
 import type { EntityService } from '../entity/entity-service.js';
-import type { OutboxRepository } from '../outbox/outbox-repository.js';
 import type { EntityRuntimeContext } from '../entity/entity-runtime-context.js';
 import { EntityNotFoundError, InvalidTransitionError } from '../errors.js';
 
 export class TransitionService {
-  constructor(
-    private readonly entityService: EntityService,
-    private readonly outbox?: OutboxRepository,
-  ) {}
+  constructor(private readonly entityService: EntityService) {}
 
   /**
    * Execute a lifecycle transition on an entity record.
    *
-   * - Validates current state matches `transition.from`
-   * - Applies `{ [lifecycle.field]: transition.to }` via EntityService.update
-   *   (which writes entity + audit + outbox atomically)
-   * - Emits a separate outbox event for each declared hook so the worker
-   *   can execute side-effects without coupling OSS to external services
+   * Uses optimistic locking (passes `record.version` as `expectedVersion`) so
+   * concurrent requests that both pass the state-guard can only one commit —
+   * the second gets `VersionConflictError` (HTTP 409).
+   *
+   * Hook outbox events are passed as `extraOutboxEvents` to `EntityService.update`
+   * so they land in the same database transaction as the entity write, audit entry,
+   * and transition event — all-or-nothing.
    */
   async execute(
     entityKey: string,
@@ -40,42 +38,41 @@ export class TransitionService {
       );
     }
 
-    // Resolve the event name for this transition
-    const eventNames = {
-      ...(ctx?.eventNames ?? {}),
-      updated: transition.event ?? `entity.transitioned`,
-    };
+    const currentVersion = record['version'] as number;
 
-    const updated = await this.entityService.update(
+    // Build hook envelopes using predicted new version (currentVersion + 1).
+    // These are inserted in the same transaction as the entity update via extraOutboxEvents.
+    const hookEnvelopes: DomainEventEnvelope[] = (transition.hooks ?? []).map((hookKey) =>
+      this.buildHookEnvelope(hookKey, entityKey, entityId, currentVersion + 1, ctx),
+    );
+
+    return this.entityService.update(
       entityKey,
       entityId,
       { [lifecycle.field]: transition.to },
-      undefined,
-      { ...ctx, eventNames },
+      currentVersion, // optimistic lock — prevents concurrent double-transition
+      {
+        ...ctx,
+        eventNames: {
+          ...(ctx?.eventNames ?? {}),
+          updated: transition.event ?? 'entity.transitioned',
+        },
+      },
+      hookEnvelopes, // written atomically with entity + audit + transition event
     );
-
-    // Emit hook events so the worker can run side-effects asynchronously.
-    // OSS never calls external services — it only writes to the outbox.
-    if (this.outbox && transition.hooks?.length) {
-      for (const hookKey of transition.hooks) {
-        await this.outbox.insert(this.buildHookEnvelope(hookKey, entityKey, entityId, updated, ctx));
-      }
-    }
-
-    return updated;
   }
 
   private buildHookEnvelope(
     hookKey: string,
     entityKey: string,
     entityId: string,
-    record: Record<string, unknown>,
+    version: number,
     ctx: EntityRuntimeContext | undefined,
   ): DomainEventEnvelope {
     return {
       event_id: randomUUID(),
       event_name: 'entity.hook.invoked',
-      version: record['version'] as number,
+      version,
       timestamp: new Date().toISOString(),
       tenant_id: ctx?.tenantId ?? 'local',
       workspace_id: ctx?.workspaceId ?? 'local',

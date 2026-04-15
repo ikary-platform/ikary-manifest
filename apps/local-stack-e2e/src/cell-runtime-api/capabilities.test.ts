@@ -176,8 +176,13 @@ describe('cell-runtime-api — capabilities', () => {
       expect(res.status).toBe(404);
     });
 
-    it('returns 404 for non-existent record id', async () => {
+    it('returns 404 for non-existent record id (transition capability)', async () => {
       const res = await executeCapability('00000000-0000-0000-0000-000000000000', 'publish_article');
+      expect(res.status).toBe(404);
+    });
+
+    it('returns 404 for non-existent record id (async/workflow capability)', async () => {
+      const res = await executeCapability('00000000-0000-0000-0000-000000000000', 'send_newsletter');
       expect(res.status).toBe(404);
     });
   });
