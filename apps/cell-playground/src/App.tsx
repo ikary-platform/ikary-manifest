@@ -173,7 +173,7 @@ export function App() {
                   href="https://try.ikary.co"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#1d4ed8] dark:text-[#78afff] hover:opacity-80 transition-opacity"
+                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#62708c] dark:text-[#bcc8df] hover:text-[#1d4ed8] dark:hover:text-[#78afff] transition-colors"
                 >
                   Try it live
                   <ExternalLinkIcon />
