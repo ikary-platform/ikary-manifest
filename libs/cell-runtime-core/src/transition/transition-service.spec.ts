@@ -249,4 +249,34 @@ describe('TransitionService', () => {
       expect(result['status']).toBe('sent');
     });
   });
+
+  // ── full EntityRuntimeContext ──────────────────────────────────────────────
+
+  describe('full EntityRuntimeContext', () => {
+    it('hook envelope uses actor.type=user and carries all ctx fields when provided', async () => {
+      const record = await entityService.create('invoice', { title: 'INV-011', status: 'draft' });
+      const id = record['id'] as string;
+      const transition = LIFECYCLE.transitions.find((t) => t.key === 'send')!;
+
+      await transitionService.execute('invoice', id, LIFECYCLE, transition, {
+        actorId: 'user-99',
+        requestId: 'req-abc',
+        tenantId: 'tenant-1',
+        workspaceId: 'workspace-1',
+        cellId: 'cell-1',
+      });
+
+      const rows = await outboxRepo.listUnprocessed();
+      const hookRow = rows.find(
+        (r) => (r.payload as DomainEventEnvelope).event_name === 'entity.hook.invoked',
+      );
+      const p = hookRow!.payload as DomainEventEnvelope;
+      expect(p.actor.type).toBe('user');
+      expect(p.actor.id).toBe('user-99');
+      expect(p.tenant_id).toBe('tenant-1');
+      expect(p.workspace_id).toBe('workspace-1');
+      expect(p.cell_id).toBe('cell-1');
+      expect((p.metadata as Record<string, unknown>)['requestId']).toBe('req-abc');
+    });
+  });
 });

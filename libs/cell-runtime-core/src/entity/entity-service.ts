@@ -42,7 +42,7 @@ function buildEnvelope(
   return {
     event_id: randomUUID(),
     event_name: ctx?.eventNames?.[operation] ?? `entity.${operation}`,
-    version: (record['version'] as number | undefined) ?? 1,
+    version: record['version'] as number,
     timestamp: new Date().toISOString(),
     // Fall back to 'local' in preview / OSS mode — platform populates real values
     tenant_id: ctx?.tenantId ?? 'local',

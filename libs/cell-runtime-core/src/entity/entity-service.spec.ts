@@ -284,13 +284,17 @@ describe('EntityService', () => {
       return dbService.db.selectFrom('domain_event_outbox').selectAll().execute();
     }
 
+    // pg auto-parses JSONB columns — payload arrives as a plain object, not a string
+    function payload(row: Awaited<ReturnType<typeof outboxRows>>[number]) {
+      return row.payload as Record<string, unknown>;
+    }
+
     it('writes one outbox row with event_name=entity.created after create', async () => {
       const record = await service.create('order', { customer: 'Outbox Create' });
       const rows = await outboxRows();
       expect(rows).toHaveLength(1);
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.event_name).toBe('entity.created');
-      expect(payload.entity.id).toBe(record['id']);
+      expect(payload(rows[0]!).event_name).toBe('entity.created');
+      expect((payload(rows[0]!).entity as Record<string, unknown>).id).toBe(record['id']);
     });
 
     it('uses custom event name from ctx.eventNames.created', async () => {
@@ -300,8 +304,7 @@ describe('EntityService', () => {
         { eventNames: { created: 'order.placed' } },
       );
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.event_name).toBe('order.placed');
+      expect(payload(rows[0]!).event_name).toBe('order.placed');
     });
 
     it('strips ctx.excludeFields from payload.data', async () => {
@@ -311,22 +314,31 @@ describe('EntityService', () => {
         { excludeFields: ['total'] },
       );
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.data['total']).toBeUndefined();
-      expect(payload.data['customer']).toBe('Exclude Test');
+      const data = payload(rows[0]!).data as Record<string, unknown>;
+      expect(data['total']).toBeUndefined();
+      expect(data['customer']).toBe('Exclude Test');
     });
 
     it('populates cell_id from ctx.cellId (falls back to "local" when absent)', async () => {
-      const record = await service.create('order', { customer: 'No CellId' });
+      await service.create('order', { customer: 'No CellId' });
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.cell_id).toBe('local');
+      expect(payload(rows[0]!).cell_id).toBe('local');
       await dbService.db.deleteFrom('domain_event_outbox').execute();
 
       await service.create('order', { customer: 'With CellId' }, { cellId: 'my-cell' });
       const rows2 = await outboxRows();
-      const payload2 = JSON.parse(rows2[0]!.payload as string);
-      expect(payload2.cell_id).toBe('my-cell');
+      expect(payload(rows2[0]!).cell_id).toBe('my-cell');
+    });
+
+    it('populates tenant_id and workspace_id from ctx when provided', async () => {
+      await service.create(
+        'order',
+        { customer: 'Tenant Test' },
+        { tenantId: 'tenant-abc', workspaceId: 'workspace-xyz' },
+      );
+      const rows = await outboxRows();
+      expect(payload(rows[0]!).tenant_id).toBe('tenant-abc');
+      expect(payload(rows[0]!).workspace_id).toBe('workspace-xyz');
     });
 
     it('writes entity.updated row with previous data after update', async () => {
@@ -336,10 +348,9 @@ describe('EntityService', () => {
 
       await service.update('order', id, { customer: 'After', total: 20 });
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.event_name).toBe('entity.updated');
-      expect(payload.previous['customer']).toBe('Before');
-      expect(payload.data['customer']).toBe('After');
+      expect(payload(rows[0]!).event_name).toBe('entity.updated');
+      expect((payload(rows[0]!).previous as Record<string, unknown>)['customer']).toBe('Before');
+      expect((payload(rows[0]!).data as Record<string, unknown>)['customer']).toBe('After');
     });
 
     it('writes entity.deleted row after delete', async () => {
@@ -349,8 +360,7 @@ describe('EntityService', () => {
 
       await service.delete('order', id);
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.event_name).toBe('entity.deleted');
+      expect(payload(rows[0]!).event_name).toBe('entity.deleted');
     });
 
     it('writes entity.rolled_back row after rollback', async () => {
@@ -361,8 +371,7 @@ describe('EntityService', () => {
 
       await service.rollback('order', id, 1);
       const rows = await outboxRows();
-      const payload = JSON.parse(rows[0]!.payload as string);
-      expect(payload.event_name).toBe('entity.rolled_back');
+      expect(payload(rows[0]!).event_name).toBe('entity.rolled_back');
     });
 
     it('does not write to outbox when EntityService is created without outbox arg', async () => {
