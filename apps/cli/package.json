@@ -43,7 +43,9 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "dev": "tsx src/bin/cli.ts"
+    "dev": "tsx src/bin/cli.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@ikary/system-migration-core": "workspace:*",
@@ -65,8 +67,10 @@
     "@ikary/cell-engine": "workspace:*",
     "@ikary/cell-loader": "workspace:*",
     "@types/prompts": "^2.4.9",
+    "@vitest/coverage-v8": "^3.0.0",
     "tsup": "^8.0.2",
     "tsx": "^4.19.0",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
   }
 }
