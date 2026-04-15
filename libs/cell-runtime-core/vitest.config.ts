@@ -13,6 +13,8 @@ export default defineConfig({
         'src/**/*.spec.ts',
         'src/**/index.ts',
         'src/db/schema.ts',
+        // Pure TypeScript interface — compiles to nothing, v8 reports 0/0 as 0%
+        'src/entity/entity-runtime-context.ts',
       ],
       thresholds: { lines: 100, branches: 100, functions: 100, statements: 100 },
     },

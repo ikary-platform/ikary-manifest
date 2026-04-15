@@ -35,7 +35,7 @@ export class TransitionService {
       throw new InvalidTransitionError(
         entityKey,
         transition.key,
-        currentState ?? '(undefined)',
+        String(currentState),
         transition.from,
       );
     }
@@ -75,7 +75,7 @@ export class TransitionService {
     return {
       event_id: randomUUID(),
       event_name: 'entity.hook.invoked',
-      version: (record['version'] as number | undefined) ?? 1,
+      version: record['version'] as number,
       timestamp: new Date().toISOString(),
       tenant_id: ctx?.tenantId ?? 'local',
       workspace_id: ctx?.workspaceId ?? 'local',
