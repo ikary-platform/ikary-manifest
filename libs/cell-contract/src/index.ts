@@ -196,5 +196,8 @@ export type { PresentationLayer } from './contract/manifest/PresentationLayerSch
 
 export { snakeCaseKeySchema } from './shared/identifiers';
 
+// ── Event emission port ───────────────────────────────────────────────────────
+export type { DomainEventPublisher } from './shared/domain-event-publisher';
+
 // ── API contracts (route params, response shapes, query types, URL helpers) ───
 export * from './api';

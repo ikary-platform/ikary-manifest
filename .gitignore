@@ -1,6 +1,9 @@
 node_modules/
 dist/
 .turbo/
+
+# Temporary worker scaffold — move to ikary-worker repo then delete
+_worker/
 apps/docs/.vitepress/cache/
 apps/docs/.vitepress/dist/
 apps/docs/public/playground/

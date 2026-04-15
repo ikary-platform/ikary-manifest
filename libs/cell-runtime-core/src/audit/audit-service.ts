@@ -1,4 +1,4 @@
-import type { DatabaseService } from '@ikary/system-db-core';
+import type { DatabaseService, Queryable } from '@ikary/system-db-core';
 import type { CellRuntimeDatabase, AuditLogRow, NewAuditLog } from '../db/schema.js';
 import type { AuditEntry } from '../shared/audit-entry.schema.js';
 
@@ -7,7 +7,7 @@ export type { AuditEntry };
 export class AuditService {
   constructor(private readonly dbService: DatabaseService<CellRuntimeDatabase>) {}
 
-  async insert(entry: AuditEntry): Promise<void> {
+  async insert(entry: AuditEntry, qb?: Queryable<CellRuntimeDatabase>): Promise<void> {
     const row: NewAuditLog = {
       entity_key: entry.entityKey,
       entity_id: entry.entityId,
@@ -21,7 +21,8 @@ export class AuditService {
       occurred_at: new Date().toISOString(),
     };
 
-    await this.dbService.db.insertInto('audit_log').values(row).execute();
+    const db = qb ?? this.dbService.db;
+    await db.insertInto('audit_log').values(row).execute();
   }
 
   async list(entityKey: string, entityId: string): Promise<AuditLogRow[]> {

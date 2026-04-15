@@ -50,6 +50,21 @@ export class EntitySchemaManager {
         occurred_at TIMESTAMPTZ NOT NULL
       )
     `.execute(this.dbService.db);
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS domain_event_outbox (
+        id            UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+        created_at    TIMESTAMPTZ  NOT NULL DEFAULT now(),
+        processed_at  TIMESTAMPTZ,
+        failed_at     TIMESTAMPTZ,
+        retry_count   INTEGER      NOT NULL DEFAULT 0,
+        event_name    TEXT         NOT NULL,
+        tenant_id     TEXT,
+        workspace_id  TEXT,
+        cell_id       TEXT,
+        payload       JSONB        NOT NULL
+      )
+    `.execute(this.dbService.db);
   }
 
   async initFromManifest(manifest: CellManifestV1): Promise<void> {

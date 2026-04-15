@@ -133,5 +133,5 @@ export async function startPreviewServer(
     throw err;
   }
 
-  return { manifestPath, stop };
+  return { manifestPath, token: null, stop };
 }
