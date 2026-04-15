@@ -1,4 +1,5 @@
-FROM node:20-slim AS base
+ARG NODE_VERSION=24.14.1
+FROM node:${NODE_VERSION}-slim AS base
 RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 WORKDIR /app
 

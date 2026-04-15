@@ -58,7 +58,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
@@ -111,6 +111,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build \
+            --build-arg NODE_VERSION="$(cat .nvmrc)" \
             -t ${{ env.API_IMAGE }}:${{ env.TARGET_SHA }} \
             -t ${{ env.API_IMAGE }}:latest \
             -f apps/try-api/Dockerfile .
