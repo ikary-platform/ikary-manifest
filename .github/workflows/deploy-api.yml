@@ -10,6 +10,7 @@ on:
       - 'libs/cell-loader/**'
       - 'manifests/**'
       - 'Dockerfile'
+      - '.nvmrc'
       - '.github/workflows/deploy-api.yml'
   workflow_dispatch:
 
