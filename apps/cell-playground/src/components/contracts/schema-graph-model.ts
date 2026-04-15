@@ -272,58 +272,6 @@ export function buildSchemaGraphViewModel(options: BuildSchemaGraphOptions): Sch
   };
 }
 
-export function toMermaid(viewModel: SchemaGraphViewModel): string {
-  const idMap = new Map<string, string>();
-  viewModel.nodes.forEach((node, index) => {
-    idMap.set(node.id, `n${index + 1}`);
-  });
-
-  const lines: string[] = ['graph LR'];
-
-  for (const node of viewModel.nodes) {
-    const mermaidId = idMap.get(node.id);
-    if (!mermaidId) {
-      continue;
-    }
-    lines.push(`  ${mermaidId}["${escapeMermaid(node.label)}"]`);
-  }
-
-  for (const edge of viewModel.edges) {
-    const from = idMap.get(edge.from);
-    const to = idMap.get(edge.to);
-    if (!from || !to) {
-      continue;
-    }
-    if (edge.kind === 'declared') {
-      lines.push(`  ${from} -- declared --> ${to}`);
-    } else {
-      lines.push(`  ${from} -. import .-> ${to}`);
-    }
-  }
-
-  return lines.join('\n');
-}
-
-export function buildGraphExportPayload(
-  viewModel: SchemaGraphViewModel,
-  options: BuildSchemaGraphOptions,
-): Record<string, unknown> {
-  return {
-    metadata: {
-      mode: options.mode,
-      scope: options.scope,
-      searchQuery: options.searchQuery ?? '',
-      categoryFilter: options.categoryFilter ?? 'all',
-      generatedAt: new Date().toISOString(),
-      version: 'schema-graph-v1',
-    },
-    metrics: viewModel.metrics,
-    nodes: viewModel.nodes,
-    edges: viewModel.edges,
-    diagnostics: viewModel.diagnostics,
-  };
-}
-
 function selectEdges(mode: GraphEdgeMode, scope: GraphNodeScope): readonly EdgeBase[] {
   const declared = scope === 'all_modules' ? DECLARED_EDGES_ALL_MODULES : DECLARED_EDGES_PUBLIC_ONLY;
   const imports = scope === 'all_modules' ? IMPORT_EDGES_ALL_MODULES : IMPORT_EDGES_PUBLIC_ONLY;
@@ -768,10 +716,6 @@ function severityWeight(severity: 'error' | 'warning' | 'info'): number {
     return 1;
   }
   return 2;
-}
-
-function escapeMermaid(value: string): string {
-  return value.split('"').join('\\"');
 }
 
 // Suppress unused-variable warnings for module-level constants that are used
