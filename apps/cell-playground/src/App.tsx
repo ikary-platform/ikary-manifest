@@ -170,6 +170,15 @@ export function App() {
                   Branding
                 </button>
                 <a
+                  href="https://try.ikary.co"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3 h-full flex items-center gap-1 text-sm font-medium text-[#1d4ed8] dark:text-[#78afff] hover:opacity-80 transition-opacity"
+                >
+                  Try it live
+                  <ExternalLinkIcon />
+                </a>
+                <a
                   href="https://documentation.ikary.co/"
                   target="_blank"
                   rel="noreferrer"

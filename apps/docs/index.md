@@ -7,6 +7,9 @@ hero:
   tagline: AI should generate manifests, not code.
   actions:
     - theme: brand
+      text: Try it live →
+      link: https://try.ikary.co
+    - theme: alt
       text: Start In 10 Minutes
       link: /tutorials/start-here-10-minutes
     - theme: alt
@@ -15,9 +18,6 @@ hero:
     - theme: alt
       text: CLI Reference
       link: /cli/
-    - theme: alt
-      text: API And MCP
-      link: /api/
 
 features:
   - icon:

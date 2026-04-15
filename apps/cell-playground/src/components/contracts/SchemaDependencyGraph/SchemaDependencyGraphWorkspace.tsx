@@ -1,4 +1,3 @@
-import { buildGraphExportPayload, toMermaid } from '../schema-graph-model';
 import { DependencyList } from './DependencyList';
 import { SchemaDependencyGraph } from './SchemaDependencyGraph';
 import { SchemaDiagnosticsPanel } from './SchemaDiagnosticsPanel';
@@ -19,7 +18,6 @@ export function SchemaDependencyGraphWorkspace() {
     setSortMode,
     selectedNodeId,
     setSelectedNodeId,
-    options,
     viewModel,
     selectedNode,
     sortedNodes,
@@ -27,28 +25,6 @@ export function SchemaDependencyGraphWorkspace() {
     outboundEdges,
     nodeById,
   } = useDependencyGraph();
-
-  async function handleCopyMermaid() {
-    if (typeof navigator === 'undefined' || !navigator.clipboard) {
-      return;
-    }
-    await navigator.clipboard.writeText(toMermaid(viewModel));
-  }
-
-  function handleDownloadJson() {
-    const payload = buildGraphExportPayload(viewModel, options);
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'schema-dependency-graph-v1.json';
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    URL.revokeObjectURL(url);
-  }
 
   const selectClass = 'h-8 rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-2 text-xs text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500';
 
@@ -60,7 +36,7 @@ export function SchemaDependencyGraphWorkspace() {
           <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">Dependencies Workspace</h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Inspect schema dependency structure with hybrid edges and diagnostics.</p>
         </div>
-        <div className="px-4 pb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+        <div className="px-4 pb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           <input
             type="text"
             value={searchQuery}
@@ -108,22 +84,6 @@ export function SchemaDependencyGraphWorkspace() {
             <option value="leaf_first">Leaf nodes first</option>
             <option value="hotspot_first">Hotspots first</option>
           </select>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => void handleCopyMermaid()}
-              className="px-3 py-1 text-xs border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
-            >
-              Copy Mermaid
-            </button>
-            <button
-              type="button"
-              onClick={handleDownloadJson}
-              className="px-3 py-1 text-xs border border-gray-200 dark:border-gray-700 rounded hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400"
-            >
-              Download JSON
-            </button>
-          </div>
         </div>
       </div>
 

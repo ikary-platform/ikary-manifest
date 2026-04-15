@@ -163,6 +163,7 @@ export default defineConfig({
         ],
       },
       { text: 'Playground', link: '/playground' },
+      { text: 'Try it →', link: 'https://try.ikary.co', target: '_blank' },
       {
         text: 'More',
         items: [
