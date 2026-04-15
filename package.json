@@ -29,7 +29,8 @@
     "docs:check:freshness": "node scripts/check-docs-freshness.mjs",
     "docs:check:commands": "pnpm --filter @ikary/cli build && node scripts/check-docs-command-smoke.mjs",
     "docs:check": "pnpm docs:build && pnpm docs:check:freshness && pnpm docs:check:commands",
-    "capture-cli-output": "tsx scripts/capture-cli-output.ts"
+    "capture-cli-output": "tsx scripts/capture-cli-output.ts",
+    "check:node-version": "node scripts/check-node-version.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
@@ -48,7 +49,7 @@
     "zod-to-json-schema": "^3.24.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "packageManager": "pnpm@9.15.9"
 }
