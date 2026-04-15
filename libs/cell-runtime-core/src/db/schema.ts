@@ -34,9 +34,32 @@ export interface EntityBaseTable {
 }
 
 // ---------------------------------------------------------------------------
+// Transactional outbox — durable event staging before broker dispatch
+// ---------------------------------------------------------------------------
+
+export interface OutboxTable {
+  id: Generated<string>;
+  created_at: ColumnType<string, string | undefined, never>;
+  processed_at: string | null;
+  failed_at: string | null;
+  retry_count: Generated<number>;
+  event_name: string;
+  /** Multi-tenancy dimensions — nullable in local/preview mode. */
+  tenant_id: string | null;
+  workspace_id: string | null;
+  cell_id: string | null;
+  /** Full serialised DomainEventEnvelope (JSONB). */
+  payload: unknown;
+}
+
+export type OutboxRow = Selectable<OutboxTable>;
+export type NewOutbox = Insertable<OutboxTable>;
+
+// ---------------------------------------------------------------------------
 // Top-level DB interface
 // ---------------------------------------------------------------------------
 
 export interface CellRuntimeDatabase {
   audit_log: AuditLogTable;
+  domain_event_outbox: OutboxTable;
 }

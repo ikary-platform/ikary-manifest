@@ -4,6 +4,8 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { Module } from '@nestjs/common';
 import { EntityController } from './entity/entity.controller.js';
+import { TransitionController } from './transition/transition.controller.js';
+import { CapabilityController } from './capability/capability.controller.js';
 import { HealthController } from './health/health.controller.js';
 import { PreviewAuthController } from './preview/preview-auth.controller.js';
 import { PreviewBootstrapService } from './preview/preview-bootstrap.service.js';
@@ -13,6 +15,7 @@ import {
   EntityRepository,
   EntityService,
   AuditService,
+  OutboxRepository,
 } from '@ikary/cell-runtime-core';
 import { DatabaseService } from '@ikary/system-db-core';
 import { MigrationRunner } from '@ikary/system-migration-core';
@@ -100,7 +103,7 @@ const authModule = AuthModule.register({
       imports: [authModule],
     }),
   ],
-  controllers: [HealthController, EntityController, PreviewAuthController],
+  controllers: [HealthController, EntityController, TransitionController, CapabilityController, PreviewAuthController],
   providers: [
     {
       provide: RUNTIME_CONTEXT_TOKEN,
@@ -167,13 +170,22 @@ const authModule = AuthModule.register({
       inject: [DatabaseService, LogService],
     },
     {
+      provide: 'OUTBOX_REPOSITORY',
+      useFactory: (ctx: RuntimeContext): OutboxRepository => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return new OutboxRepository(ctx.dbService as any);
+      },
+      inject: [RUNTIME_CONTEXT_TOKEN],
+    },
+    {
       provide: 'ENTITY_SERVICE',
       useFactory: (ctx: RuntimeContext, logger: LogService): EntityService => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const db = ctx.dbService as any;
         const repo = new EntityRepository(db);
         const audit = new AuditService(db);
-        return new EntityService(repo, audit, logger);
+        const outbox = new OutboxRepository(db);
+        return new EntityService(db, repo, audit, outbox, logger);
       },
       inject: [RUNTIME_CONTEXT_TOKEN, LogService],
     },

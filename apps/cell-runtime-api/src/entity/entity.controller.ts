@@ -20,6 +20,7 @@ import type { EntityService, EntityRuntimeContext } from '@ikary/cell-runtime-co
 import type { AuditLogRow } from '@ikary/cell-runtime-core';
 import { EntityNotFoundError, VersionConflictError } from '@ikary/cell-runtime-core';
 import { JwtAuthGuard, AuditInterceptor, UserService, type CurrentAuthValue } from '@ikary/system-auth';
+import { RUNTIME_CONTEXT_TOKEN, type RuntimeContext } from '../runtime-context.js';
 
 @ApiTags('entities')
 @UseGuards(JwtAuthGuard)
@@ -29,14 +30,25 @@ export class EntityController {
   constructor(
     @Inject('ENTITY_SERVICE') private readonly entityService: EntityService,
     @Inject(UserService) private readonly userService: UserService,
+    @Inject(RUNTIME_CONTEXT_TOKEN) private readonly runtimeCtx: RuntimeContext,
   ) {}
 
-  private buildCtx(request: { auth?: CurrentAuthValue; headers?: Record<string, string | string[] | undefined> }): EntityRuntimeContext {
+  private buildCtx(
+    entityKey: string,
+    request: { auth?: CurrentAuthValue; headers?: Record<string, string | string[] | undefined> },
+  ): EntityRuntimeContext {
     const rawRequestId = request.headers?.['x-request-id'];
     const requestId = Array.isArray(rawRequestId) ? rawRequestId[0] : rawRequestId;
+
+    const entityDef = this.runtimeCtx.manifest.spec.entities?.find((e) => e.key === entityKey);
+    const eventDef = entityDef?.events;
+
     return {
       actorId: request.auth?.userId,
       requestId,
+      cellId: this.runtimeCtx.manifest.metadata.key,
+      eventNames: eventDef?.names,
+      excludeFields: eventDef?.exclude,
     };
   }
 
@@ -74,7 +86,7 @@ export class EntityController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an entity record' })
   async create(@Param('entityKey') entityKey: string, @Body() body: Record<string, unknown>, @Req() req: any) {
-    return this.entityService.create(entityKey, body, this.buildCtx(req));
+    return this.entityService.create(entityKey, body, this.buildCtx(entityKey, req));
   }
 
   @Patch(':id')
@@ -87,7 +99,7 @@ export class EntityController {
   ) {
     const { expectedVersion, ...patch } = body;
     try {
-      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined, this.buildCtx(req));
+      return await this.entityService.update(entityKey, id, patch, expectedVersion as number | undefined, this.buildCtx(entityKey, req));
     } catch (err) {
       if (err instanceof VersionConflictError) {
         throw new HttpException(err.message, HttpStatus.CONFLICT);
@@ -113,7 +125,7 @@ export class EntityController {
         entityKey,
         id,
         expectedVersion !== undefined ? Number(expectedVersion) : undefined,
-        req ? this.buildCtx(req) : undefined,
+        req ? this.buildCtx(entityKey, req) : undefined,
       );
     } catch (err) {
       if (err instanceof VersionConflictError) {
@@ -172,7 +184,7 @@ export class EntityController {
         id,
         body.targetVersion,
         body.expectedVersion,
-        this.buildCtx(req),
+        this.buildCtx(entityKey, req),
       );
     } catch (err) {
       if (err instanceof EntityNotFoundError) {
