@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DatabaseService, databaseConnectionOptionsSchema, sql } from '@ikary/system-db-core';
 import { EntitySchemaManager } from '../entity/entity-schema-manager.js';
 import { EntityRepository } from '../entity/entity-repository.js';
@@ -6,7 +6,7 @@ import { EntityService } from '../entity/entity-service.js';
 import { AuditService } from '../audit/audit-service.js';
 import { OutboxRepository } from '../outbox/outbox-repository.js';
 import { TransitionService } from './transition-service.js';
-import { EntityNotFoundError, InvalidTransitionError } from '../errors.js';
+import { EntityNotFoundError, InvalidTransitionError, VersionConflictError } from '../errors.js';
 import type { CellRuntimeDatabase } from '../db/schema.js';
 import type { CellManifestV1 } from '@ikary/cell-contract';
 import type { LifecycleDefinition, LifecycleTransitionDefinition } from '@ikary/cell-contract';
@@ -260,13 +260,22 @@ describe('TransitionService', () => {
       const id = record['id'] as string;
       const transition = LIFECYCLE.transitions.find((t) => t.key === 'send')!;
 
-      // Simulate a concurrent write that increments the version
-      await entityService.update('invoice', id, { title: 'modified concurrently' });
+      // Simulate the TOCTOU race: TransitionService's findById returns stale version 1
+      // while the DB has already advanced to version 2.
+      // The internal findById inside EntityService.update (which is NOT mocked) reads
+      // the real DB value (v2), causing the expectedVersion(1) check to throw.
+      vi.spyOn(entityService, 'findById').mockResolvedValueOnce({ ...record });
 
-      // Now execute transitions — version has changed, lock should fire
+      // Advance the DB to version 2
+      await entityService.update('invoice', id, { title: 'concurrent write' });
+
+      // execute → reads stale v1 (mocked) → passes state check → update with expectedVersion=1
+      // → internal findById sees v2 in DB → VersionConflictError
       await expect(
         transitionService.execute('invoice', id, LIFECYCLE, transition),
-      ).rejects.toThrow(/version conflict/i);
+      ).rejects.toThrow(VersionConflictError);
+
+      vi.restoreAllMocks();
     });
   });
 
