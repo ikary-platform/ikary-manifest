@@ -96,7 +96,7 @@ export async function localStartCommand(
 
   const { code, stderr } = await runCompose(
     ['up', '--build', '--pull', 'always', '-d'],
-    composePath,
+    composePath!, // non-null: !composeOk set ok=false → early return above
     { env: { IKARY_MANIFEST_DIR: manifestDir, IKARY_MANIFEST_FILE: manifestFile } },
   );
 

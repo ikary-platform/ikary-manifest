@@ -114,7 +114,7 @@ export function createProgram(): Command {
 
   localDb
     .command('migrate')
-    .description('Apply pending database migrations')
+    .description('Apply pending database migrations for all installed @ikary/* packages')
     .option(
       '--database-url <url>',
       'Database connection URL (default: DATABASE_URL env or postgres://ikary:ikary@localhost:5432/ikary)',

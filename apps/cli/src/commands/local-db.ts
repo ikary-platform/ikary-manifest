@@ -1,29 +1,81 @@
 import { resolve } from 'node:path';
 import { createRequire } from 'node:module';
+import { existsSync } from 'node:fs';
 import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
 import { MigrationRunner } from '@ikary/system-migration-core';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 
-function resolveMigrationsRoot(): string {
-  const req = createRequire(import.meta.url);
-  const pkgJson = req.resolve('@ikary/cell-runtime-core/package.json');
-  return resolve(pkgJson, '..', 'migrations');
+/**
+ * All @ikary/* packages that ship database migrations, in dependency order.
+ *
+ * The CLI tries to resolve each package from the current working directory.
+ * Packages not installed in the active project are silently skipped — so this
+ * command works correctly from both ikary-manifest and ikary-worker (or any
+ * other repo that depends on a subset of these packages).
+ *
+ * The shared `ikary_schema_versions` table makes every run idempotent:
+ * if ikary-manifest already applied cell-runtime-core@v0.3.0, running this
+ * command from ikary-worker will skip those versions automatically.
+ *
+ * When adding a new package with migrations, append its name here.
+ */
+const MIGRATION_PACKAGES = [
+  '@ikary/cell-runtime-core',  // outbox + audit tables
+  '@ikary/system-log-core',     // log settings, sinks, and entries tables
+] as const;
+
+interface MigrationSource {
+  packageName: string;
+  migrationsRoot: string;
+}
+
+/**
+ * Resolve the migrations directory for a package.
+ * Resolution starts from process.cwd() so the CLI works from any project
+ * that has the package installed, not just from within ikary-manifest.
+ * Returns null when the package is not installed or has no migrations/.
+ */
+function resolveMigrationSource(packageName: string): MigrationSource | null {
+  try {
+    const req = createRequire(resolve(process.cwd(), '__cwd_resolver__.js'));
+    const pkgJsonPath = req.resolve(`${packageName}/package.json`);
+    const migrationsRoot = resolve(pkgJsonPath, '..', 'migrations');
+    if (!existsSync(migrationsRoot)) return null;
+    return { packageName, migrationsRoot };
+  } catch {
+    return null; // Package not installed in this project — skip
+  }
 }
 
 function getDbUrl(override?: string): string {
   return override ?? process.env['DATABASE_URL'] ?? 'postgres://ikary:ikary@localhost:5432/ikary';
 }
 
-function createRunnerAndDb(dbUrl: string): { runner: MigrationRunner; dbService: DatabaseService } {
+interface Runners {
+  sources: MigrationSource[];
+  runners: MigrationRunner[];
+  dbService: DatabaseService;
+}
+
+function buildRunners(dbUrl: string): Runners {
   const dbService = new DatabaseService(
     databaseConnectionOptionsSchema.parse({ connectionString: dbUrl }),
   );
-  const runner = new MigrationRunner(dbService, {
-    packageName: '@ikary/cell-runtime-core',
-    migrationsRoot: resolveMigrationsRoot(),
-  });
-  return { runner, dbService };
+
+  const sources = MIGRATION_PACKAGES
+    .map(resolveMigrationSource)
+    .filter((s): s is MigrationSource => s !== null);
+
+  const runners = sources.map(
+    (source) =>
+      new MigrationRunner(dbService, {
+        packageName: source.packageName,
+        migrationsRoot: source.migrationsRoot,
+      }),
+  );
+
+  return { sources, runners, dbService };
 }
 
 export async function localDbMigrateCommand(options: {
@@ -41,18 +93,40 @@ export async function localDbMigrateCommand(options: {
   spinner.start();
 
   try {
-    const { runner, dbService } = createRunnerAndDb(dbUrl);
+    const { sources, runners, dbService } = buildRunners(dbUrl);
 
-    spinner.text = options.dryRun ? 'Checking pending migrations...' : 'Applying migrations...';
+    if (sources.length === 0) {
+      spinner.warn(theme.body('No migration packages found in this project.'));
+      fmt.newline();
+      await dbService.destroy();
+      return;
+    }
 
-    const result = await runner.migrate({ dryRun: options.dryRun, force: options.force });
+    let totalApplied = 0;
 
-    if (result.applied === 0) {
+    for (let i = 0; i < runners.length; i++) {
+      const source = sources[i]!;
+      const runner = runners[i]!;
+
+      spinner.text = options.dryRun
+        ? `Checking ${source.packageName}…`
+        : `Applying ${source.packageName}…`;
+
+      const result = await runner.migrate({ dryRun: options.dryRun, force: options.force });
+      totalApplied += result.applied;
+
+      if (result.applied > 0) {
+        const label = options.dryRun ? 'pending' : 'applied';
+        spinner.info(theme.body(`${source.packageName}  ${result.applied} migration(s) ${label}`));
+      }
+    }
+
+    if (totalApplied === 0) {
       spinner.succeed(theme.success('Database is up to date'));
     } else if (options.dryRun) {
-      spinner.succeed(theme.success(`${result.applied} migration(s) pending`));
+      spinner.succeed(theme.success(`${totalApplied} migration(s) pending across ${sources.length} package(s)`));
     } else {
-      spinner.succeed(theme.success(`Applied ${result.applied} migration(s)`));
+      spinner.succeed(theme.success(`Applied ${totalApplied} migration(s) across ${sources.length} package(s)`));
     }
 
     await dbService.destroy();
@@ -74,29 +148,35 @@ export async function localDbStatusCommand(options: { databaseUrl?: string }): P
   fmt.newline();
 
   try {
-    const { runner, dbService } = createRunnerAndDb(dbUrl);
-    const status = await runner.status();
+    const { sources, runners, dbService } = buildRunners(dbUrl);
 
-    fmt.body(`Applied   (${status.applied.length}):`);
-    if (status.applied.length === 0) {
-      fmt.muted('  — none —');
-    } else {
-      for (const v of status.applied) {
-        fmt.body(`  ${theme.success('✓')} ${v}`);
-      }
+    if (sources.length === 0) {
+      fmt.muted('No migration packages found in this project.');
+      fmt.newline();
+      await dbService.destroy();
+      return;
     }
 
-    fmt.newline();
-    fmt.body(`Pending   (${status.pending.length}):`);
-    if (status.pending.length === 0) {
-      fmt.muted('  — none —');
-    } else {
-      for (const v of status.pending) {
-        fmt.body(`  ${theme.warning('○')} ${v}`);
+    for (let i = 0; i < runners.length; i++) {
+      const source = sources[i]!;
+      const runner = runners[i]!;
+
+      fmt.body(`${source.packageName}`);
+      const status = await runner.status();
+
+      if (status.applied.length === 0 && status.pending.length === 0) {
+        fmt.muted('  — no migrations found —');
+      } else {
+        for (const v of status.applied) {
+          fmt.body(`  ${theme.success('✓')} ${v}`);
+        }
+        for (const v of status.pending) {
+          fmt.body(`  ${theme.muted('○')} ${v}`);
+        }
       }
+      fmt.newline();
     }
 
-    fmt.newline();
     await dbService.destroy();
   } catch (err) {
     fmt.error(err instanceof Error ? err.message : String(err));
@@ -127,8 +207,14 @@ export async function localDbResetCommand(options: {
   spinner.start();
 
   try {
-    const { runner, dbService } = createRunnerAndDb(dbUrl);
-    await runner.reset();
+    const { sources, runners, dbService } = buildRunners(dbUrl);
+
+    for (let i = 0; i < runners.length; i++) {
+      const source = sources[i]!;
+      await runners[i]!.reset();
+      spinner.info(theme.body(`${source.packageName}  tracking cleared`));
+    }
+
     spinner.succeed(theme.success('Migration state cleared'));
     fmt.newline();
     fmt.muted("Run 'ikary local db migrate' to re-apply migrations.");
