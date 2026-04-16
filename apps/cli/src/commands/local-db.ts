@@ -21,8 +21,12 @@ import { theme } from '../output/theme.js';
  * When adding a new package with migrations, append its name here.
  */
 const MIGRATION_PACKAGES = [
-  '@ikary/cell-runtime-core',  // outbox + audit tables
-  '@ikary/system-log-core',     // log settings, sinks, and entries tables
+  '@ikary/cell-runtime-core',    // outbox + audit tables
+  '@ikary/system-log-core',      // log settings, sinks, and entries tables
+  '@ikary/worker-consumer',      // consumer receipts + offsets tables
+  '@ikary/worker-audit',         // ikary_audit_entries
+  '@ikary/worker-analytics',     // ikary_analytics_buckets_hourly
+  '@ikary/worker-activity-feed', // ikary_activity_entries
 ] as const;
 
 interface MigrationSource {
