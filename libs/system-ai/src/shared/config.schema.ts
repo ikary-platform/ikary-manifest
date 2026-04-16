@@ -31,10 +31,31 @@ export const taskModelValueSchema = z.union([
 ]);
 export type TaskModelValue = z.infer<typeof taskModelValueSchema>;
 
+export const aiTaskRouteStepSchema = z.object({
+  provider: providerNameSchema.optional(),
+  model: z.string().min(1),
+});
+export type AiTaskRouteStep = z.infer<typeof aiTaskRouteStepSchema>;
+
+export const taskRouteValueSchema = z.union([
+  taskModelValueSchema,
+  z.array(aiTaskRouteStepSchema).min(1),
+]);
+export type TaskRouteValue = z.infer<typeof taskRouteValueSchema>;
+
+export const aiExecutionProfileSchema = z.object({
+  providerOrder: z.array(providerNameSchema).min(1),
+  taskRoutes: z.record(z.string(), taskRouteValueSchema).default({}),
+});
+export type AiExecutionProfile = z.infer<typeof aiExecutionProfileSchema>;
+
 export const aiRuntimeConfigSchema = z.object({
   providerOrder: z.array(providerNameSchema).min(1),
   providers: z.record(providerNameSchema, providerCredsSchema),
   modelByTask: z.record(z.string(), taskModelValueSchema),
+  taskRoutes: z.record(z.string(), taskRouteValueSchema).default({}),
+  profiles: z.record(z.string(), aiExecutionProfileSchema).default({}),
+  activeProfile: z.string().min(1).optional(),
   budgets: budgetEnvelopeSchema.default({}),
   featureAiEnabled: z.boolean().default(true),
 });
@@ -43,4 +64,47 @@ export type AiRuntimeConfig = z.infer<typeof aiRuntimeConfigSchema>;
 export function normalizeModelChain(value: TaskModelValue | undefined): string[] {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
+}
+
+export function normalizeTaskRoute(value: TaskRouteValue | undefined): AiTaskRouteStep[] {
+  if (!value) return [];
+  if (typeof value === 'string') return [{ model: value }];
+  if (Array.isArray(value) && value.every((entry) => typeof entry === 'string')) {
+    return (value as string[]).map((model) => ({ model }));
+  }
+  return value as AiTaskRouteStep[];
+}
+
+export function resolveActiveProfile(config: AiRuntimeConfig): { name: string; profile: AiExecutionProfile } {
+  if (config.activeProfile) {
+    const active = config.profiles[config.activeProfile];
+    if (active) {
+      return {
+        name: config.activeProfile,
+        profile: active,
+      };
+    }
+  }
+
+  const profileNames = Object.keys(config.profiles);
+  if (profileNames.length > 0) {
+    const name = profileNames[0]!;
+    return {
+      name,
+      profile: config.profiles[name]!,
+    };
+  }
+
+  return {
+    name: 'default',
+    profile: {
+      providerOrder: config.providerOrder,
+      taskRoutes: {
+        ...Object.fromEntries(
+          Object.entries(config.modelByTask).map(([taskId, model]) => [taskId, model]),
+        ),
+        ...config.taskRoutes,
+      },
+    },
+  };
 }

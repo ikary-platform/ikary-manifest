@@ -12,12 +12,16 @@ export default defineConfig({
   server: {
     port: 4504,
     strictPort: true,
+    fs: {
+      allow: [path.resolve(__dirname, '../..')],
+    },
   },
   preview: {
     port: 4504,
   },
   resolve: {
     alias: {
+      '@ikary/system-prompt': path.resolve(__dirname, `${LIBS}/system-prompt/src/index.ts`),
       '@ikary/cell-presentation': path.resolve(__dirname, `${LIBS}/cell-presentation/src/index.ts`),
       '@ikary/cell-contract': path.resolve(__dirname, `${LIBS}/cell-contract/src/index.ts`),
       '@ikary/cell-engine': path.resolve(__dirname, `${LIBS}/cell-engine/src/index.ts`),

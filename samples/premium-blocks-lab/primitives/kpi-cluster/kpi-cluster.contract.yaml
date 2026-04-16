@@ -1,0 +1,59 @@
+key: kpi-cluster
+version: "1.0.0"
+label: KPI Cluster
+description: Responsive grid of KPI tiles with optional trend deltas and tone surfaces.
+category: data
+breakingChanges: []
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      description: Optional eyebrow rendered above the grid.
+    kpis:
+      type: array
+      required: true
+      description: Between 1 and 8 KPI tiles.
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+            required: true
+          value:
+            type: string
+            required: true
+            description: Pre-formatted display value (e.g. "$1.2M", "94%").
+          helper:
+            type: string
+            description: Optional one-line tip under the value.
+          trend:
+            type: object
+            properties:
+              direction:
+                type: string
+                enum: [up, down, neutral]
+                required: true
+              value:
+                type: string
+                required: true
+                description: Delta display (e.g. "+12%").
+              label:
+                type: string
+          tone:
+            type: string
+            enum: [default, positive, negative, warning]
+            default: default
+    columns:
+      type: string
+      enum: [auto, "2", "3", "4"]
+      default: auto
+      description: Column count. `auto` responds to viewport.
+  required: [kpis]
+slots:
+  - name: actions
+    description: Header-right actions (e.g. "Export", "Open report").
+    allowedModes: [replace, prepend, append]
+  - name: footer
+    description: Footnote under the grid (e.g. "As of 14:00 UTC").
+    allowedModes: [replace, prepend, append]

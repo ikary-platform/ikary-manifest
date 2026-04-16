@@ -15,6 +15,7 @@
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",
     "@ikary/cell-presentation": "workspace:*",
+    "@ikary/system-prompt": "workspace:*",
     "@ikary/cell-primitive-contract": "workspace:*",
     "@ikary/cell-primitive-studio": "workspace:*",
     "@ikary/cell-primitives": "workspace:*",

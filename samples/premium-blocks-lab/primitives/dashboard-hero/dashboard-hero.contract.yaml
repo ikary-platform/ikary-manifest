@@ -1,0 +1,47 @@
+key: dashboard-hero
+version: "1.0.0"
+label: Dashboard Hero
+description: Screen-opening hero for dashboards and overview pages. Title, subtitle, meta strip, and three composable slot regions.
+category: layout
+breakingChanges: []
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      required: true
+      description: Main screen title.
+    eyebrow:
+      type: string
+      description: Short uppercase label rendered above the title.
+    subtitle:
+      type: string
+      description: One or two sentence description of the screen.
+    meta:
+      type: array
+      description: Small key/value strip rendered under the title. Maximum six items.
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+            required: true
+          value:
+            type: string
+            required: true
+    tone:
+      type: string
+      enum: [default, subtle, emphasis]
+      default: default
+      description: Visual surface treatment. `emphasis` uses a subtle brand gradient.
+  required: [title]
+slots:
+  - name: actions
+    description: Primary action cluster (save, export, share). Rendered top-right.
+    allowedModes: [replace, prepend, append]
+  - name: secondary
+    description: Secondary row under the title — tabs, segmented control, or chips.
+    allowedModes: [replace, prepend, append]
+  - name: aside
+    description: Optional context card floated alongside the title (stat, tip, status).
+    allowedModes: [replace, prepend, append]

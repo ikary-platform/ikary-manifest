@@ -12,6 +12,7 @@ export const generateChatInputSchema = z.object({
   systemPrompt: z.string().optional(),
   maxTokens: z.number().int().positive().optional(),
   temperature: z.number().min(0).max(2).optional(),
+  responseFormat: z.enum(['text', 'json']).optional(),
 });
 export type GenerateChatInput = z.infer<typeof generateChatInputSchema>;
 

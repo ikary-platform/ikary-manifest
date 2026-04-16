@@ -1,12 +1,21 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import type { AiProvider } from '../../shared/provider.interface';
-import { normalizeModelChain, type AiRuntimeConfig, type ProviderName } from '../../shared/config.schema';
+import {
+  normalizeTaskRoute,
+  resolveActiveProfile,
+  type AiRuntimeConfig,
+  type ProviderName,
+} from '../../shared/config.schema';
 import { AI_ERROR_CODES } from '../../shared/error-codes';
+import { AnthropicProvider } from './anthropic.provider';
+import { OpenAiProvider } from './openai.provider';
 import { OpenRouterProvider } from './openrouter.provider';
 
 export interface ResolvedProvider {
   provider: AiProvider;
+  providerName: string;
   model: string;
+  profile: string;
 }
 
 @Injectable()
@@ -40,28 +49,41 @@ export class ProviderRouter {
         message: 'AI feature disabled by operator.',
       });
     }
-    const models = normalizeModelChain(this.config.modelByTask[taskName]);
-    if (models.length === 0) {
+    const activeProfile = resolveActiveProfile(this.config);
+    const routeValue =
+      activeProfile.profile.taskRoutes[taskName]
+      ?? this.config.taskRoutes[taskName]
+      ?? this.config.modelByTask[taskName];
+    const steps = normalizeTaskRoute(routeValue);
+    if (steps.length === 0) {
       throw new ServiceUnavailableException({
         code: AI_ERROR_CODES.NO_PROVIDER_AVAILABLE,
         message: `No model configured for task "${taskName}".`,
       });
     }
-    let provider: AiProvider | undefined;
-    for (const name of this.config.providerOrder) {
-      const inst = this.instances.get(name);
-      if (inst) {
-        provider = inst;
-        break;
-      }
-    }
-    if (!provider) {
+    const resolved = steps
+      .map((step) => {
+        const providerName = step.provider ?? findFirstAvailableProvider(activeProfile.profile.providerOrder, this.instances);
+        if (!providerName) return null;
+        const provider = this.instances.get(providerName);
+        if (!provider) return null;
+        return {
+          provider,
+          providerName,
+          model: step.model,
+          profile: activeProfile.name,
+        };
+      })
+      .filter((value): value is ResolvedProvider => value !== null);
+
+    if (resolved.length === 0) {
       throw new ServiceUnavailableException({
         code: AI_ERROR_CODES.NO_PROVIDER_AVAILABLE,
-        message: 'No configured provider is available.',
+        message: `No configured provider is available for task "${taskName}".`,
       });
     }
-    return models.map((model) => ({ provider: provider!, model }));
+
+    return resolved;
   }
 
   private bootstrapInstances(): void {
@@ -78,9 +100,19 @@ export class ProviderRouter {
       case 'openrouter':
         return new OpenRouterProvider(apiKey, baseUrl);
       case 'anthropic':
+        return new AnthropicProvider(apiKey, baseUrl);
       case 'openai':
-        // Week 2 adapters - not yet wired.
-        return null;
+        return new OpenAiProvider(apiKey, baseUrl);
     }
   }
+}
+
+function findFirstAvailableProvider(
+  providerOrder: string[],
+  instances: Map<string, AiProvider>,
+): string | null {
+  for (const name of providerOrder) {
+    if (instances.has(name)) return name;
+  }
+  return null;
 }

@@ -1,0 +1,50 @@
+key: timeline-audit-rail
+version: "1.0.0"
+label: Timeline Audit Rail
+description: Vertical timeline of events with group headings, tone dots, and per-item trailing content. Fits dashboards and detail aside panels.
+category: data
+breakingChanges: []
+props:
+  type: object
+  properties:
+    items:
+      type: array
+      required: true
+      description: Timeline events, rendered top-down in the order supplied.
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            required: true
+          timestamp:
+            type: string
+            required: true
+            description: Pre-formatted display timestamp (e.g. "14:32", "2 min ago").
+          title:
+            type: string
+            required: true
+          description:
+            type: string
+          actor:
+            type: string
+          actorInitials:
+            type: string
+          tone:
+            type: string
+            enum: [default, positive, warning, negative, info]
+            default: default
+          groupHeading:
+            type: string
+            description: Consecutive items sharing a groupHeading render under a single header (e.g. "Today", "Yesterday").
+  required: [items]
+slots:
+  - name: header
+    description: Header content above the rail (title, filter, date range).
+    allowedModes: [replace, prepend, append]
+  - name: footer
+    description: Footer content below the rail (load-more, last-synced note).
+    allowedModes: [replace, prepend, append]
+  - name: item-trailing
+    description: Render-per-item slot. Receives the timeline item and returns trailing content (chevron, badge, quick-action).
+    allowedModes: [replace]

@@ -12,3 +12,25 @@ export type {
 
 export { blueprintMetadataSchema } from './shared/blueprint.schema';
 export type { BlueprintMetadata } from './shared/blueprint.schema';
+
+export {
+  manifestTaskTypeSchema,
+  clarificationModeSchema,
+  clarifyingQuestionSchema,
+  knowledgeItemSchema,
+  contextAssemblySchema,
+  validationStageResultSchema,
+  executionTraceSchema,
+  manifestTaskInputSchema,
+} from './shared/pipeline.schema';
+export type {
+  ManifestTaskType,
+  ClarificationMode,
+  ClarifyingQuestion,
+  KnowledgeItem,
+  ContextAssembly,
+  ValidationStageResult,
+  ExecutionTrace,
+  ManifestTaskInput,
+  EvalExecutionResult,
+} from './shared/pipeline.schema';

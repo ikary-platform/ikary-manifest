@@ -30,22 +30,32 @@
     "docs:check:commands": "pnpm --filter @ikary/cli build && node scripts/check-docs-command-smoke.mjs",
     "docs:check": "pnpm docs:build && pnpm docs:check:freshness && pnpm docs:check:commands",
     "capture-cli-output": "tsx scripts/capture-cli-output.ts",
-    "check:node-version": "node scripts/check-node-version.mjs"
+    "check:node-version": "node scripts/check-node-version.mjs",
+    "evals:build-deps": "pnpm --filter @ikary/cell-contract build && pnpm --filter @ikary/cell-engine build && pnpm --filter @ikary/system-ai build && pnpm --filter @ikary/system-prompt build && pnpm --filter @ikary/cell-ai build",
+    "evals:run": "pnpm evals:build-deps && tsx evals/scripts/run.ts",
+    "evals:report": "tsx evals/scripts/report.ts",
+    "evals:test": "vitest run --workspace vitest.workspace.ts --project @ikary/evals"
   },
   "devDependencies": {
+    "@nestjs/common": "^11.1.0",
     "@changesets/cli": "^2.30.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@vitest/coverage-v8": "^3.0.0",
     "concurrently": "^9.2.1",
+    "handlebars": "^4.7.8",
     "jsdom": "^24.1.3",
+    "partial-json": "^0.1.7",
     "prettier": "^3.3.0",
+    "reflect-metadata": "^0.2.2",
     "tsup": "^8.0.2",
     "tsx": "^4.19.0",
     "turbo": "^2.8.0",
     "typescript": "^5.5.3",
     "vitepress": "^1.6.0",
     "vitest": "^3.0.0",
+    "yaml": "^2.7.0",
+    "zod": "^3.23.8",
     "zod-to-json-schema": "^3.24.0"
   },
   "engines": {
