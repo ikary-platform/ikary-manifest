@@ -3,11 +3,13 @@ import { createRequire } from 'node:module';
 import { existsSync } from 'node:fs';
 import { DatabaseService, databaseConnectionOptionsSchema } from '@ikary/system-db-core';
 import { MigrationRunner } from '@ikary/system-migration-core';
+import { IkaryConfigError, loadIkaryConfig } from '../config/load-ikary-config.js';
 import * as fmt from '../output/format.js';
 import { theme } from '../output/theme.js';
 
 /**
- * All @ikary/* packages that ship database migrations, in dependency order.
+ * Built-in `@ikary/*` packages that ship database migrations, in dependency
+ * order.
  *
  * The CLI tries to resolve each package from the current working directory.
  * Packages not installed in the active project are silently skipped — so this
@@ -18,9 +20,13 @@ import { theme } from '../output/theme.js';
  * if ikary-manifest already applied cell-runtime-core@v0.3.0, running this
  * command from ikary-worker will skip those versions automatically.
  *
- * When adding a new package with migrations, append its name here.
+ * Downstream projects can extend this list without a PR to this repo:
+ *   - `--package <name>` CLI flag (repeatable) on migrate/status/reset
+ *   - `ikary.config.json` in the project root, under `migrate.packages`
+ *
+ * Both extension points are additive — defaults are always included.
  */
-const MIGRATION_PACKAGES = [
+export const DEFAULT_MIGRATION_PACKAGES = [
   '@ikary/cell-runtime-core',    // outbox + audit tables
   '@ikary/system-log-core',      // log settings, sinks, and entries tables
   '@ikary/worker-consumer',      // consumer receipts + offsets tables
@@ -32,6 +38,25 @@ const MIGRATION_PACKAGES = [
 interface MigrationSource {
   packageName: string;
   migrationsRoot: string;
+}
+
+/**
+ * Merge the built-in defaults with extras from `ikary.config.json` and the
+ * CLI's `--package` flag. Preserves the first-occurrence order so migration
+ * dependencies (e.g. cell-runtime-core before packages that reference it)
+ * stay correct, and deduplicates so a package can't be tried twice.
+ */
+export function resolveMigrationPackages(cliPackages: readonly string[] = []): string[] {
+  const configPackages = loadIkaryConfig().migrate?.packages ?? [];
+  const seen = new Set<string>();
+  const ordered: string[] = [];
+  for (const name of [...DEFAULT_MIGRATION_PACKAGES, ...configPackages, ...cliPackages]) {
+    if (!seen.has(name)) {
+      seen.add(name);
+      ordered.push(name);
+    }
+  }
+  return ordered;
 }
 
 /**
@@ -62,12 +87,12 @@ interface Runners {
   dbService: DatabaseService;
 }
 
-function buildRunners(dbUrl: string): Runners {
+function buildRunners(dbUrl: string, cliPackages: readonly string[] = []): Runners {
   const dbService = new DatabaseService(
     databaseConnectionOptionsSchema.parse({ connectionString: dbUrl }),
   );
 
-  const sources = MIGRATION_PACKAGES
+  const sources = resolveMigrationPackages(cliPackages)
     .map(resolveMigrationSource)
     .filter((s): s is MigrationSource => s !== null);
 
@@ -82,10 +107,25 @@ function buildRunners(dbUrl: string): Runners {
   return { sources, runners, dbService };
 }
 
+/**
+ * Shared guard so every command handler reports the same friendly error when
+ * `ikary.config.json` is malformed.
+ */
+function reportConfigError(err: unknown): boolean {
+  if (err instanceof IkaryConfigError) {
+    fmt.error(err.message);
+    fmt.newline();
+    process.exitCode = 1;
+    return true;
+  }
+  return false;
+}
+
 export async function localDbMigrateCommand(options: {
   databaseUrl?: string;
   dryRun?: boolean;
   force?: boolean;
+  package?: string[];
 }): Promise<void> {
   const dbUrl = getDbUrl(options.databaseUrl);
 
@@ -97,7 +137,7 @@ export async function localDbMigrateCommand(options: {
   spinner.start();
 
   try {
-    const { sources, runners, dbService } = buildRunners(dbUrl);
+    const { sources, runners, dbService } = buildRunners(dbUrl, options.package ?? []);
 
     if (sources.length === 0) {
       spinner.warn(theme.body('No migration packages found in this project.'));
@@ -138,13 +178,18 @@ export async function localDbMigrateCommand(options: {
   } catch (err) {
     spinner.fail(theme.error('Migration failed'));
     fmt.newline();
-    fmt.error(err instanceof Error ? err.message : String(err));
-    fmt.newline();
+    if (!reportConfigError(err)) {
+      fmt.error(err instanceof Error ? err.message : String(err));
+      fmt.newline();
+    }
     process.exitCode = 1;
   }
 }
 
-export async function localDbStatusCommand(options: { databaseUrl?: string }): Promise<void> {
+export async function localDbStatusCommand(options: {
+  databaseUrl?: string;
+  package?: string[];
+}): Promise<void> {
   const dbUrl = getDbUrl(options.databaseUrl);
 
   fmt.section('Migration status');
@@ -152,7 +197,7 @@ export async function localDbStatusCommand(options: { databaseUrl?: string }): P
   fmt.newline();
 
   try {
-    const { sources, runners, dbService } = buildRunners(dbUrl);
+    const { sources, runners, dbService } = buildRunners(dbUrl, options.package ?? []);
 
     if (sources.length === 0) {
       fmt.muted('No migration packages found in this project.');
@@ -183,15 +228,18 @@ export async function localDbStatusCommand(options: { databaseUrl?: string }): P
 
     await dbService.destroy();
   } catch (err) {
-    fmt.error(err instanceof Error ? err.message : String(err));
-    fmt.newline();
-    process.exitCode = 1;
+    if (!reportConfigError(err)) {
+      fmt.error(err instanceof Error ? err.message : String(err));
+      fmt.newline();
+      process.exitCode = 1;
+    }
   }
 }
 
 export async function localDbResetCommand(options: {
   databaseUrl?: string;
   yes?: boolean;
+  package?: string[];
 }): Promise<void> {
   if (!options.yes) {
     fmt.error('--yes flag is required to confirm the reset.');
@@ -211,7 +259,7 @@ export async function localDbResetCommand(options: {
   spinner.start();
 
   try {
-    const { sources, runners, dbService } = buildRunners(dbUrl);
+    const { sources, runners, dbService } = buildRunners(dbUrl, options.package ?? []);
 
     for (let i = 0; i < runners.length; i++) {
       const source = sources[i]!;
@@ -227,8 +275,10 @@ export async function localDbResetCommand(options: {
   } catch (err) {
     spinner.fail(theme.error('Reset failed'));
     fmt.newline();
-    fmt.error(err instanceof Error ? err.message : String(err));
-    fmt.newline();
+    if (!reportConfigError(err)) {
+      fmt.error(err instanceof Error ? err.message : String(err));
+      fmt.newline();
+    }
     process.exitCode = 1;
   }
 }

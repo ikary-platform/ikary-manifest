@@ -35,9 +35,36 @@ ikary local status             # Show container status
 ikary local logs [service]     # Stream logs (-f to follow)
 ikary local reset-data         # Clear the local PostgreSQL volume
 ikary local db migrate         # Run pending database migrations
+ikary local db status          # Show applied and pending migrations per package
+ikary local db reset --yes     # Clear migration tracking (dev only)
 ```
 
 Requires Docker Desktop or Podman.
+
+#### Extending the migration package list
+
+The `ikary local db migrate | status | reset` commands discover `@ikary/*`
+migrations by iterating a built-in default list. Downstream projects can add
+their own packages two ways — both additive, and both safe to use together:
+
+- Repeatable `--package <name>` flag:
+
+  ```bash
+  ikary local db migrate --package @acme/enterprise-worker
+  ```
+
+- `ikary.config.json` in the project root:
+
+  ```json
+  {
+    "migrate": {
+      "packages": ["@acme/enterprise-worker", "@acme/billing-worker"]
+    }
+  }
+  ```
+
+Packages not installed in the active project are silently skipped, so the same
+command works across a repo that installs a full set or just a subset.
 
 ### Custom primitives
 
