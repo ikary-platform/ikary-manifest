@@ -27,7 +27,9 @@
   },
   "dependencies": {
     "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
     "@ikary/system-ai": "workspace:*",
+    "@ikary/system-prompt": "workspace:*",
     "@nestjs/common": "^11.1.0",
     "partial-json": "^0.1.7",
     "yaml": "^2.7.0",

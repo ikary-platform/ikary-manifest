@@ -1,0 +1,26 @@
+{
+  "name": "@ikary/evals",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ikary/cell-ai": "workspace:*",
+    "@ikary/cell-contract": "workspace:*",
+    "@ikary/cell-engine": "workspace:*",
+    "@ikary/system-ai": "workspace:*",
+    "@ikary/system-prompt": "workspace:*",
+    "@nestjs/common": "^11.1.0",
+    "partial-json": "^0.1.7",
+    "reflect-metadata": "^0.2.2",
+    "yaml": "^2.7.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  }
+}

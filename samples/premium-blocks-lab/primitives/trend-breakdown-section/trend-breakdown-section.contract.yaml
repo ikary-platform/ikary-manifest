@@ -1,0 +1,40 @@
+key: trend-breakdown-section
+version: "1.0.0"
+label: Trend Breakdown Section
+description: Section container with a large chart region and a narrower breakdown list, plus header, aside, and footer slots. Chart-library agnostic.
+category: layout
+breakingChanges: []
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      description: Optional section title rendered unless the `header` slot overrides it.
+    subtitle:
+      type: string
+    density:
+      type: string
+      enum: [default, compact]
+      default: default
+    breakdownPosition:
+      type: string
+      enum: [left, right]
+      default: right
+      description: Where the breakdown sits relative to the chart on wide viewports.
+  required: []
+slots:
+  - name: header
+    description: Replaces the default title/subtitle header. Use for richer composite headers.
+    allowedModes: [replace, prepend, append]
+  - name: aside
+    description: Header-right utilities (e.g. period selector, tab switcher).
+    allowedModes: [replace, prepend, append]
+  - name: footer
+    description: Footnote row under the chart (legend, caveats, "as of" stamps).
+    allowedModes: [replace, prepend, append]
+  - name: chart
+    description: Chart surface. Any chart library can render here.
+    allowedModes: [replace, prepend, append]
+  - name: breakdown
+    description: Ranked list or categorical breakdown beside the chart.
+    allowedModes: [replace, prepend, append]

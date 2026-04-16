@@ -1,0 +1,33 @@
+apiVersion: ikary.co/v1alpha1
+kind: PrimitiveConfig
+primitives:
+  - key: dashboard-hero
+    version: "1.0.0"
+    source: ./primitives/dashboard-hero/DashboardHero.register.ts
+    contract: ./primitives/dashboard-hero/dashboard-hero.contract.yaml
+    examples: ./primitives/dashboard-hero/DashboardHero.example.ts
+  - key: kpi-cluster
+    version: "1.0.0"
+    source: ./primitives/kpi-cluster/KpiCluster.register.ts
+    contract: ./primitives/kpi-cluster/kpi-cluster.contract.yaml
+    examples: ./primitives/kpi-cluster/KpiCluster.example.ts
+  - key: trend-breakdown-section
+    version: "1.0.0"
+    source: ./primitives/trend-breakdown-section/TrendBreakdownSection.register.ts
+    contract: ./primitives/trend-breakdown-section/trend-breakdown-section.contract.yaml
+    examples: ./primitives/trend-breakdown-section/TrendBreakdownSection.example.ts
+  - key: entity-detail-hero
+    version: "1.0.0"
+    source: ./primitives/entity-detail-hero/EntityDetailHero.register.ts
+    contract: ./primitives/entity-detail-hero/entity-detail-hero.contract.yaml
+    examples: ./primitives/entity-detail-hero/EntityDetailHero.example.ts
+  - key: timeline-audit-rail
+    version: "1.0.0"
+    source: ./primitives/timeline-audit-rail/TimelineAuditRail.register.ts
+    contract: ./primitives/timeline-audit-rail/timeline-audit-rail.contract.yaml
+    examples: ./primitives/timeline-audit-rail/TimelineAuditRail.example.ts
+  - key: filtered-workspace
+    version: "1.0.0"
+    source: ./primitives/filtered-workspace/FilteredWorkspace.register.ts
+    contract: ./primitives/filtered-workspace/filtered-workspace.contract.yaml
+    examples: ./primitives/filtered-workspace/FilteredWorkspace.example.ts

@@ -1,0 +1,196 @@
+{
+  "apiVersion": "ikary.co/v1alpha1",
+  "kind": "Cell",
+  "metadata": {
+    "key": "premium_blocks_lab",
+    "name": "Premium Blocks Lab",
+    "version": "1.0.0",
+    "description": "Sandbox cell for designing premium dashboard/detail/workspace primitives."
+  },
+  "spec": {
+    "mount": {
+      "mountPath": "/",
+      "landingPage": "overview"
+    },
+    "entities": [
+      {
+        "key": "account",
+        "name": "Account",
+        "pluralName": "Accounts",
+        "fields": [
+          { "key": "name", "type": "string", "name": "Name", "required": true },
+          { "key": "tier", "type": "enum", "name": "Tier", "enumValues": ["starter", "growth", "enterprise"] },
+          { "key": "owner", "type": "string", "name": "Owner" },
+          { "key": "arr", "type": "number", "name": "ARR" },
+          { "key": "renewal_at", "type": "string", "name": "Renewal date" }
+        ]
+      },
+      {
+        "key": "opportunity",
+        "name": "Opportunity",
+        "pluralName": "Opportunities",
+        "fields": [
+          { "key": "title", "type": "string", "name": "Title", "required": true },
+          { "key": "stage", "type": "enum", "name": "Stage", "enumValues": ["prospecting", "qualification", "proposal", "negotiation", "closed_won", "closed_lost"] },
+          { "key": "amount", "type": "number", "name": "Amount" },
+          { "key": "close_at", "type": "string", "name": "Expected close" }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "key": "overview",
+        "type": "dashboard",
+        "title": "Revenue overview",
+        "path": "/overview",
+        "slotBindings": [
+          {
+            "slot": "content",
+            "primitive": "dashboard-hero",
+            "mode": "replace",
+            "props": {
+              "eyebrow": "Revenue overview",
+              "title": "Q4 pipeline, forecast, and realized revenue",
+              "subtitle": "Track bookings, active renewals, and pipeline health across Enterprise North.",
+              "tone": "default",
+              "meta": [
+                { "label": "Period", "value": "Q4 2026" },
+                { "label": "Owner", "value": "Pierre" },
+                { "label": "Region", "value": "Enterprise North" },
+                { "label": "Updated", "value": "14 min ago" }
+              ]
+            }
+          },
+          {
+            "slot": "content.after",
+            "primitive": "kpi-cluster",
+            "props": {
+              "title": "This quarter",
+              "columns": "auto",
+              "kpis": [
+                { "label": "Bookings", "value": "$4.82M", "tone": "default", "trend": { "direction": "up", "value": "+12%" }, "description": "Trending up this quarter", "helper": "Bookings for the last 3 months" },
+                { "label": "Net new ARR", "value": "$1.14M", "tone": "default", "trend": { "direction": "up", "value": "+8%" }, "description": "Healthy expansion", "helper": "Outpacing the forecast" },
+                { "label": "Gross churn", "value": "$312k", "tone": "default", "trend": { "direction": "down", "value": "-3%" }, "description": "Churn cooling off", "helper": "Lower is better" },
+                { "label": "At-risk accounts", "value": "9", "tone": "default", "trend": { "direction": "up", "value": "+2" }, "description": "Needs attention", "helper": "2 renew in the next 30 days" }
+              ]
+            }
+          },
+          {
+            "slot": "content.after",
+            "primitive": "trend-breakdown-section",
+            "props": {
+              "title": "Pipeline by stage",
+              "subtitle": "Weighted by probability, trailing 4 weeks.",
+              "breakdownPosition": "right",
+              "density": "default"
+            }
+          },
+          {
+            "slot": "content.after",
+            "primitive": "timeline-audit-rail",
+            "props": {
+              "density": "default",
+              "items": [
+                { "id": "1", "groupHeading": "Today", "timestamp": "14:32", "title": "Invoice #INV-4821 issued", "description": "Delivered to accounts@montclair.com.", "actor": "Alice Moreau", "actorInitials": "AM", "tone": "positive" },
+                { "id": "2", "groupHeading": "Today", "timestamp": "11:12", "title": "Renewal probability updated", "description": "Orbit Labs moved from 60% to 38% after usage drop.", "actor": "Automation", "tone": "warning" },
+                { "id": "3", "groupHeading": "Yesterday", "timestamp": "17:48", "title": "Three accounts moved to Proposal", "actor": "System", "tone": "info" }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "key": "account-detail",
+        "type": "entity-detail",
+        "title": "Account",
+        "path": "/accounts/:id",
+        "entity": "account",
+        "slotBindings": [
+          {
+            "slot": "content",
+            "primitive": "entity-detail-hero",
+            "mode": "replace",
+            "props": {
+              "name": "Montclair Industries",
+              "subtitle": "Enterprise · Industrial manufacturing · 2,400 employees",
+              "avatarFallback": "MI",
+              "status": { "label": "Healthy", "tone": "positive" }
+            }
+          },
+          {
+            "slot": "content.after",
+            "primitive": "kpi-cluster",
+            "props": {
+              "title": "Health signals",
+              "columns": "auto",
+              "kpis": [
+                { "label": "Usage score", "value": "84", "tone": "default", "trend": { "direction": "up", "value": "+6" }, "description": "Climbing this week", "helper": "Rolling 7-day active seats" },
+                { "label": "Active seats", "value": "480", "tone": "default", "trend": { "direction": "up", "value": "+24" }, "description": "Near full capacity", "helper": "of 500 provisioned" },
+                { "label": "Support tickets", "value": "3", "tone": "default", "trend": { "direction": "down", "value": "-4" }, "description": "Volume down", "helper": "1 ticket still open" },
+                { "label": "NPS", "value": "62", "tone": "default", "trend": { "direction": "neutral", "value": "0" }, "description": "Steady performance", "helper": "Last 90-day rolling score" }
+              ]
+            }
+          },
+          {
+            "slot": "content.after",
+            "primitive": "timeline-audit-rail",
+            "props": {
+              "density": "default",
+              "items": [
+                { "id": "a1", "groupHeading": "Today", "timestamp": "16:02", "title": "Usage score lifted to 84", "description": "Daily active seats +18% over trailing 7 days.", "actor": "Automation", "tone": "positive" },
+                { "id": "a2", "groupHeading": "Today", "timestamp": "09:11", "title": "Renewal meeting scheduled", "description": "Mar 02, 14:00 CET with Pierre and Montclair procurement.", "actor": "Pierre J.", "actorInitials": "PJ", "tone": "info" },
+                { "id": "a3", "groupHeading": "Last week", "timestamp": "Mon 10:42", "title": "Invoice #INV-4810 paid", "actor": "System", "tone": "default" }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "key": "pipeline",
+        "type": "entity-list",
+        "title": "Pipeline",
+        "path": "/pipeline",
+        "entity": "opportunity",
+        "slotBindings": [
+          {
+            "slot": "header",
+            "primitive": "kpi-cluster",
+            "mode": "replace",
+            "props": {
+              "title": "Pipeline snapshot",
+              "columns": "auto",
+              "kpis": [
+                { "label": "Open value", "value": "$2.78M", "tone": "default", "trend": { "direction": "up", "value": "+6%" }, "description": "Pipeline widening", "helper": "All stages combined" },
+                { "label": "Weighted forecast", "value": "$1.44M", "tone": "default", "trend": { "direction": "up", "value": "+4%" }, "description": "Forecast lifting", "helper": "Probability-adjusted" },
+                { "label": "Avg. cycle", "value": "52d", "tone": "default", "trend": { "direction": "down", "value": "-3d" }, "description": "Closing faster", "helper": "Trailing 8-week average" },
+                { "label": "Win rate", "value": "41%", "tone": "default", "trend": { "direction": "up", "value": "+2pp" }, "description": "Conversion improving", "helper": "Quarter-to-date" }
+              ]
+            }
+          },
+          {
+            "slot": "table",
+            "primitive": "filtered-workspace",
+            "mode": "replace",
+            "props": {
+              "title": "Pipeline",
+              "resultCount": 5,
+              "isEmpty": false,
+              "isLoading": false,
+              "asidePosition": "right"
+            }
+          }
+        ]
+      }
+    ],
+    "navigation": {
+      "items": [
+        { "type": "page", "key": "overview-nav", "pageKey": "overview", "icon": "home" },
+        { "type": "page", "key": "pipeline-nav", "pageKey": "pipeline", "icon": "filter" }
+      ]
+    },
+    "roles": [
+      { "key": "admin", "name": "Admin", "scopes": ["premium_blocks_lab.admin"] },
+      { "key": "viewer", "name": "Viewer", "scopes": ["premium_blocks_lab.view"] }
+    ]
+  }
+}

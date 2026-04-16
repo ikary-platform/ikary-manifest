@@ -1,17 +1,6 @@
 import type { StudioCurrentArtifactSet, StudioMessageRecord, StudioPhase } from './contracts';
 import { responseJsonSchemaForPhase, responseZodJsonSchemaForPhase } from './phase-schemas';
-import { renderPromptTemplate } from './prompts/template-engine';
-import {
-  BASE_SYSTEM_RULES_PROMPT,
-  CANONICAL_SCHEMA_PRIMER_PROMPT,
-  PHASE1_DEFINE_SYSTEM_PROMPT,
-  PHASE2_PLAN_SYSTEM_PROMPT,
-  PHASE3_GENERATE_SYSTEM_PROMPT,
-  PHASE4_TWEAK_SYSTEM_PROMPT,
-  REPAIR_TURN_PROMPT_TEMPLATE,
-  SYSTEM_PROMPT_TEMPLATE,
-  USER_TURN_PROMPT_TEMPLATE,
-} from './prompts/templates';
+import { studioPromptRegistry } from './prompts/registry';
 
 function compactHistory(messages: StudioMessageRecord[]): string {
   return messages
@@ -45,27 +34,27 @@ function safeSerialize(value: unknown): string {
   }
 }
 
-function phaseInstructionPrompt(phase: StudioPhase): string {
+function phaseInstructionPromptName(phase: StudioPhase): string {
   switch (phase) {
     case 'phase1_define':
-      return PHASE1_DEFINE_SYSTEM_PROMPT;
+      return 'cell-playground/phase1-define';
     case 'phase2_plan':
-      return PHASE2_PLAN_SYSTEM_PROMPT;
+      return 'cell-playground/phase2-plan';
     case 'phase3_generate':
-      return PHASE3_GENERATE_SYSTEM_PROMPT;
+      return 'cell-playground/phase3-generate';
     case 'phase4_tweak':
-      return PHASE4_TWEAK_SYSTEM_PROMPT;
+      return 'cell-playground/phase4-tweak';
   }
 }
 
 export function buildSystemPrompt(phase: StudioPhase): string {
-  const baseRules = renderPromptTemplate(BASE_SYSTEM_RULES_PROMPT, {
+  const baseRules = studioPromptRegistry.render('cell-playground/base-system-rules', {
     zod_output_schema: compactZodOutputSchema(phase),
   });
-
-  return renderPromptTemplate(SYSTEM_PROMPT_TEMPLATE, {
+  const phaseInstruction = studioPromptRegistry.render(phaseInstructionPromptName(phase));
+  return studioPromptRegistry.render('cell-playground/system', {
     base_rules: baseRules,
-    phase_instruction: phaseInstructionPrompt(phase),
+    phase_instruction: phaseInstruction,
   });
 }
 
@@ -75,17 +64,13 @@ export function buildUserPrompt(input: {
   messages: StudioMessageRecord[];
   currentArtifacts: StudioCurrentArtifactSet;
 }): string {
-  const history = compactHistory(input.messages);
-  const artifacts = compactArtifacts(input.currentArtifacts);
-  const phaseSchema = compactPhaseSchema(input.phase);
-
-  return renderPromptTemplate(USER_TURN_PROMPT_TEMPLATE, {
+  return studioPromptRegistry.render('cell-playground/user-turn', {
     phase: input.phase,
-    canonical_schema_primer: CANONICAL_SCHEMA_PRIMER_PROMPT,
-    phase_schema: phaseSchema,
+    canonical_schema_primer: studioPromptRegistry.render('cell-playground/canonical-schema-primer'),
+    phase_schema: compactPhaseSchema(input.phase),
     user_message: input.userMessage,
-    conversation_history: history || 'No prior messages.',
-    current_artifacts: artifacts,
+    conversation_history: compactHistory(input.messages) || 'No prior messages.',
+    current_artifacts: compactArtifacts(input.currentArtifacts),
   });
 }
 
@@ -97,18 +82,14 @@ export function buildRepairPrompt(input: {
   messages: StudioMessageRecord[];
   currentArtifacts: StudioCurrentArtifactSet;
 }): string {
-  const history = compactHistory(input.messages);
-  const artifacts = compactArtifacts(input.currentArtifacts);
-  const phaseSchema = compactPhaseSchema(input.phase);
-
-  return renderPromptTemplate(REPAIR_TURN_PROMPT_TEMPLATE, {
+  return studioPromptRegistry.render('cell-playground/repair-turn', {
     phase: input.phase,
-    canonical_schema_primer: CANONICAL_SCHEMA_PRIMER_PROMPT,
-    phase_schema: phaseSchema,
+    canonical_schema_primer: studioPromptRegistry.render('cell-playground/canonical-schema-primer'),
+    phase_schema: compactPhaseSchema(input.phase),
     validation_error: input.validationError,
     previous_invalid_output: safeSerialize(input.previousAttemptPayload),
     user_message: input.userMessage,
-    conversation_history: history || 'No prior messages.',
-    current_artifacts: artifacts,
+    conversation_history: compactHistory(input.messages) || 'No prior messages.',
+    current_artifacts: compactArtifacts(input.currentArtifacts),
   });
 }
