@@ -121,12 +121,24 @@ export function createProgram(): Command {
     )
     .option('--dry-run', 'Print pending migrations without applying them')
     .option('--force', 'Re-apply all migrations even if already tracked')
+    .option(
+      '--package <name>',
+      'Additional migration package (repeatable). Merged with built-in defaults and ikary.config.json.',
+      (value: string, prev: string[]) => [...prev, value],
+      [] as string[],
+    )
     .action(localDbMigrateCommand);
 
   localDb
     .command('status')
     .description('Show which migrations have been applied')
     .option('--database-url <url>', 'Database connection URL')
+    .option(
+      '--package <name>',
+      'Additional migration package (repeatable). Merged with built-in defaults and ikary.config.json.',
+      (value: string, prev: string[]) => [...prev, value],
+      [] as string[],
+    )
     .action(localDbStatusCommand);
 
   localDb
@@ -134,6 +146,12 @@ export function createProgram(): Command {
     .description('Clear migration tracking so all migrations run again (dev only)')
     .option('--database-url <url>', 'Database connection URL')
     .option('--yes', 'Confirm the reset without prompting')
+    .option(
+      '--package <name>',
+      'Additional migration package (repeatable). Merged with built-in defaults and ikary.config.json.',
+      (value: string, prev: string[]) => [...prev, value],
+      [] as string[],
+    )
     .action(localDbResetCommand);
 
   const primitive = program

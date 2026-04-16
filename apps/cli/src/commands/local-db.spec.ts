@@ -4,11 +4,12 @@ import { existsSync } from 'node:fs';
 import { DatabaseService } from '@ikary/system-db-core';
 import { MigrationRunner } from '@ikary/system-migration-core';
 import * as fmt from '../output/format.js';
+import { IkaryConfigError, loadIkaryConfig } from '../config/load-ikary-config.js';
 
 // ── Module mocks ───────────────────────────────────────────────────────────
 
 vi.mock('node:module', () => ({ createRequire: vi.fn() }));
-vi.mock('node:fs', () => ({ existsSync: vi.fn() }));
+vi.mock('node:fs', () => ({ existsSync: vi.fn(), readFileSync: vi.fn() }));
 
 vi.mock('@ikary/system-db-core', () => ({
   DatabaseService: vi.fn(),
@@ -18,6 +19,20 @@ vi.mock('@ikary/system-db-core', () => ({
 vi.mock('@ikary/system-migration-core', () => ({
   MigrationRunner: vi.fn(),
 }));
+
+vi.mock('../config/load-ikary-config.js', () => {
+  class IkaryConfigError extends Error {
+    constructor(message: string, readonly configPath: string) {
+      super(message);
+      this.name = 'IkaryConfigError';
+    }
+  }
+  return {
+    IkaryConfigError,
+    loadIkaryConfig: vi.fn(),
+    IKARY_CONFIG_FILENAME: 'ikary.config.json',
+  };
+});
 
 vi.mock('../output/format.js', () => ({
   section: vi.fn(),
@@ -98,6 +113,9 @@ beforeEach(() => {
   // Default: both packages installed, migrations dir exists
   vi.mocked(createRequire).mockReturnValue(makeReq() as any);
   vi.mocked(existsSync).mockReturnValue(true);
+
+  // Default: no ikary.config.json → empty defaults
+  vi.mocked(loadIkaryConfig).mockReturnValue({ migrate: { packages: [] } } as any);
 });
 
 afterEach(() => {
@@ -107,9 +125,13 @@ afterEach(() => {
 
 // ── Import after mocks are set up ──────────────────────────────────────────
 // Dynamic import ensures vi.mock hoisting is in effect before the module loads.
-const { localDbMigrateCommand, localDbStatusCommand, localDbResetCommand } = await import(
-  './local-db.js'
-);
+const {
+  localDbMigrateCommand,
+  localDbStatusCommand,
+  localDbResetCommand,
+  resolveMigrationPackages,
+  DEFAULT_MIGRATION_PACKAGES,
+} = await import('./local-db.js');
 
 // ── localDbMigrateCommand ─────────────────────────────────────────────────
 
@@ -339,6 +361,142 @@ describe('localDbResetCommand', () => {
     await localDbResetCommand({ yes: true });
 
     expect(mockSpinner.fail).toHaveBeenCalled();
+    expect(process.exitCode).toBe(1);
+  });
+});
+
+// ── resolveMigrationPackages ──────────────────────────────────────────────
+
+describe('resolveMigrationPackages', () => {
+  it('returns the built-in defaults when config has no extras and no flags passed', () => {
+    const result = resolveMigrationPackages();
+
+    expect(result).toEqual([...DEFAULT_MIGRATION_PACKAGES]);
+  });
+
+  it('merges packages from ikary.config.json after the defaults', () => {
+    vi.mocked(loadIkaryConfig).mockReturnValue({
+      migrate: { packages: ['@acme/enterprise-worker', '@acme/billing-worker'] },
+    } as any);
+
+    const result = resolveMigrationPackages();
+
+    expect(result).toEqual([
+      ...DEFAULT_MIGRATION_PACKAGES,
+      '@acme/enterprise-worker',
+      '@acme/billing-worker',
+    ]);
+  });
+
+  it('merges CLI --package flags after config packages', () => {
+    vi.mocked(loadIkaryConfig).mockReturnValue({
+      migrate: { packages: ['@acme/from-config'] },
+    } as any);
+
+    const result = resolveMigrationPackages(['@acme/from-cli']);
+
+    expect(result).toEqual([
+      ...DEFAULT_MIGRATION_PACKAGES,
+      '@acme/from-config',
+      '@acme/from-cli',
+    ]);
+  });
+
+  it('deduplicates overlapping entries across defaults, config, and CLI', () => {
+    vi.mocked(loadIkaryConfig).mockReturnValue({
+      migrate: { packages: ['@ikary/cell-runtime-core', '@acme/extra'] },
+    } as any);
+
+    const result = resolveMigrationPackages(['@acme/extra', '@ikary/worker-audit']);
+
+    // Every package should appear exactly once.
+    const counts = result.reduce<Record<string, number>>((acc, name) => {
+      acc[name] = (acc[name] ?? 0) + 1;
+      return acc;
+    }, {});
+    for (const [name, count] of Object.entries(counts)) {
+      expect(count, `${name} duplicated`).toBe(1);
+    }
+
+    // Preserve first-occurrence order (defaults keep their slot).
+    expect(result.indexOf('@ikary/cell-runtime-core')).toBeLessThan(result.indexOf('@acme/extra'));
+  });
+
+  it('tolerates an undefined migrate block from loadIkaryConfig', () => {
+    vi.mocked(loadIkaryConfig).mockReturnValue({} as any);
+
+    const result = resolveMigrationPackages();
+
+    expect(result).toEqual([...DEFAULT_MIGRATION_PACKAGES]);
+  });
+});
+
+// ── Config-driven extensibility through commands ──────────────────────────
+
+describe('extensibility through commands', () => {
+  it('localDbMigrateCommand passes config packages to MigrationRunner when installed', async () => {
+    vi.mocked(loadIkaryConfig).mockReturnValue({
+      migrate: { packages: ['@acme/extra-worker'] },
+    } as any);
+    vi.mocked(createRequire).mockReturnValue(
+      makeReq(['@ikary/cell-runtime-core', '@acme/extra-worker']) as any,
+    );
+
+    await localDbMigrateCommand({});
+
+    // Two runners: cell-runtime-core + acme/extra-worker
+    expect(vi.mocked(MigrationRunner)).toHaveBeenCalledTimes(2);
+    const packageNames = vi
+      .mocked(MigrationRunner)
+      .mock.calls.map(([, opts]) => (opts as { packageName: string }).packageName);
+    expect(packageNames).toContain('@acme/extra-worker');
+  });
+
+  it('localDbMigrateCommand passes --package flag extras to MigrationRunner', async () => {
+    vi.mocked(createRequire).mockReturnValue(
+      makeReq(['@ikary/cell-runtime-core', '@acme/cli-pkg']) as any,
+    );
+
+    await localDbMigrateCommand({ package: ['@acme/cli-pkg'] });
+
+    const packageNames = vi
+      .mocked(MigrationRunner)
+      .mock.calls.map(([, opts]) => (opts as { packageName: string }).packageName);
+    expect(packageNames).toContain('@acme/cli-pkg');
+  });
+
+  it('localDbMigrateCommand surfaces IkaryConfigError through fmt.error', async () => {
+    vi.mocked(loadIkaryConfig).mockImplementation(() => {
+      throw new IkaryConfigError('ikary.config.json is invalid:\n  - migrate.packages: too short', '/fake/ikary.config.json');
+    });
+
+    await localDbMigrateCommand({});
+
+    expect(mockSpinner.fail).toHaveBeenCalled();
+    expect(vi.mocked(fmt.error)).toHaveBeenCalledWith(expect.stringContaining('ikary.config.json is invalid'));
+    expect(process.exitCode).toBe(1);
+  });
+
+  it('localDbStatusCommand surfaces IkaryConfigError through fmt.error', async () => {
+    vi.mocked(loadIkaryConfig).mockImplementation(() => {
+      throw new IkaryConfigError('bad config', '/fake/ikary.config.json');
+    });
+
+    await localDbStatusCommand({});
+
+    expect(vi.mocked(fmt.error)).toHaveBeenCalledWith(expect.stringContaining('bad config'));
+    expect(process.exitCode).toBe(1);
+  });
+
+  it('localDbResetCommand surfaces IkaryConfigError through fmt.error', async () => {
+    vi.mocked(loadIkaryConfig).mockImplementation(() => {
+      throw new IkaryConfigError('bad config', '/fake/ikary.config.json');
+    });
+
+    await localDbResetCommand({ yes: true });
+
+    expect(mockSpinner.fail).toHaveBeenCalled();
+    expect(vi.mocked(fmt.error)).toHaveBeenCalledWith(expect.stringContaining('bad config'));
     expect(process.exitCode).toBe(1);
   });
 });
