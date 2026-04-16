@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { aiRuntimeConfigSchema, type AiRuntimeConfig } from '../shared/config.schema';
 import { ProviderRouter } from './providers/provider.router';
+import { AiTaskRunner } from './task-runner/ai-task-runner.service';
 import { PromptSanitizer } from './sanitization/prompt-sanitizer';
 import { PiiDetector } from './sanitization/pii-detector';
 import { InputSizeGuard } from './sanitization/input-size-guard';
@@ -19,8 +20,8 @@ export class SystemAiModule {
     return {
       module: SystemAiModule,
       global: true,
-      providers: [configProvider, routerProvider, PromptSanitizer, PiiDetector, InputSizeGuard],
-      exports: [ProviderRouter, PromptSanitizer, PiiDetector, InputSizeGuard, SYSTEM_AI_CONFIG],
+      providers: [configProvider, routerProvider, AiTaskRunner, PromptSanitizer, PiiDetector, InputSizeGuard],
+      exports: [ProviderRouter, AiTaskRunner, PromptSanitizer, PiiDetector, InputSizeGuard, SYSTEM_AI_CONFIG],
     };
   }
 }

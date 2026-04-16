@@ -1,0 +1,23 @@
+{
+  "name": "@ikary/cell-premium-blocks-lab",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Sandbox cell for designing premium dashboard/detail/workspace primitives.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "validate": "node ../../apps/cli/dist/cli.js validate manifest.json",
+    "primitives:validate": "node ../../apps/cli/dist/cli.js primitive validate"
+  },
+  "dependencies": {
+    "@ikary/cell-primitives": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.5.3"
+  }
+}

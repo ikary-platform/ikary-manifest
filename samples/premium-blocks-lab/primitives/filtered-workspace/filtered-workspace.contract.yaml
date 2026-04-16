@@ -1,0 +1,46 @@
+key: filtered-workspace
+version: "1.0.0"
+label: Filtered Workspace
+description: Workspace shell with toolbar, summary, content, aside, and empty slots. Handles loading and empty states.
+category: layout
+breakingChanges: []
+props:
+  type: object
+  properties:
+    title:
+      type: string
+    resultCount:
+      type: number
+      description: Renders a pill with the result count in the header.
+    isEmpty:
+      type: boolean
+      default: false
+      description: When true, renders the `empty` slot (or a sensible default) instead of `content`.
+    isLoading:
+      type: boolean
+      default: false
+      description: When true, renders a skeleton loader and suppresses the empty slot.
+    asidePosition:
+      type: string
+      enum: [right, hidden]
+      default: right
+  required: []
+slots:
+  - name: toolbar-leading
+    description: Left side of the toolbar. Filter pills, search inputs, segmented controls.
+    allowedModes: [replace, prepend, append]
+  - name: toolbar-trailing
+    description: Right side of the toolbar. Primary actions (New, Export, Settings).
+    allowedModes: [replace, prepend, append]
+  - name: summary
+    description: Applied-filter chips or a one-line "showing X of Y" strip.
+    allowedModes: [replace, prepend, append]
+  - name: content
+    description: Main results area (list, grid, table).
+    allowedModes: [replace, prepend, append]
+  - name: aside
+    description: Secondary context panel beside the content (filters, saved views, tips).
+    allowedModes: [replace, prepend, append]
+  - name: empty
+    description: Empty-state content when `isEmpty` is true.
+    allowedModes: [replace, prepend, append]

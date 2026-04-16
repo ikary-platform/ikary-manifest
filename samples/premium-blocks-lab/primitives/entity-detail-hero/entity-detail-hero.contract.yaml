@@ -1,0 +1,43 @@
+key: entity-detail-hero
+version: "1.0.0"
+label: Entity Detail Hero
+description: Detail-screen hero for a single entity. Avatar, name, subtitle, status pill, badges, facts, and aside slots.
+category: layout
+breakingChanges: []
+props:
+  type: object
+  properties:
+    name:
+      type: string
+      required: true
+    subtitle:
+      type: string
+    avatarUrl:
+      type: string
+    avatarFallback:
+      type: string
+      description: Initials used when avatarUrl is unset. Capped at 4 characters.
+    status:
+      type: object
+      properties:
+        label:
+          type: string
+          required: true
+        tone:
+          type: string
+          enum: [neutral, positive, warning, danger]
+          default: neutral
+  required: [name]
+slots:
+  - name: actions
+    description: Primary actions (edit, message, archive). Rendered top-right.
+    allowedModes: [replace, prepend, append]
+  - name: badges
+    description: Inline tag/badge row under the subtitle (tier, labels, plan).
+    allowedModes: [replace, prepend, append]
+  - name: aside
+    description: Right-side context card (owner, quick stat, last-touched).
+    allowedModes: [replace, prepend, append]
+  - name: facts
+    description: Structured key/value strip. Use the exported `EntityFact` helper for each row.
+    allowedModes: [replace, prepend, append]

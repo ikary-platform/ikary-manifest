@@ -1,0 +1,61 @@
+{
+  "name": "@ikary/system-prompt",
+  "version": "0.3.0",
+  "description": "Centralized prompt registry: loads .prompt.md files with YAML frontmatter at boot, renders them via Handlebars, and applies sanitization on user-provided arguments.",
+  "license": "MIT",
+  "type": "module",
+  "microPackageKind": "mixed-shared-server",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./server": {
+      "types": "./src/server/index.ts",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "peerDependenciesMeta": {
+    "@nestjs/common": {
+      "optional": true
+    },
+    "reflect-metadata": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@ikary/system-ai": "workspace:*",
+    "handlebars": "^4.7.8",
+    "yaml": "^2.7.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^11.1.0",
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.5.3",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ]
+}
