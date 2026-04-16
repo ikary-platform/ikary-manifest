@@ -5,7 +5,6 @@ import type {
 } from './TimelineAuditRailPresentationSchema';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,

@@ -766,6 +766,9 @@ importers:
       '@ikary/system-ai':
         specifier: workspace:*
         version: link:../libs/system-ai
+      '@ikary/system-prompt':
+        specifier: workspace:*
+        version: link:../libs/system-prompt
       '@nestjs/common':
         specifier: ^11.1.0
         version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)

@@ -11,6 +11,7 @@
     "@ikary/cell-contract": "workspace:*",
     "@ikary/cell-engine": "workspace:*",
     "@ikary/system-ai": "workspace:*",
+    "@ikary/system-prompt": "workspace:*",
     "@nestjs/common": "^11.1.0",
     "partial-json": "^0.1.7",
     "reflect-metadata": "^0.2.2",

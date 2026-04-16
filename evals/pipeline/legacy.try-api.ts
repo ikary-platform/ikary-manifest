@@ -4,7 +4,7 @@ import { PromptSanitizer, InputSizeGuard } from '@ikary/system-ai/server';
 import type { EvalCase } from '../core/case-schema';
 import type { EvalPipelineAdapter, EvalPipelineContext, EvalPipelineResult } from './types';
 import { FixtureManifestTaskExecutor } from '../providers/fixture-manifest.executor';
-import { createSystemAiTaskRunner } from './common';
+import { createSystemAiTaskRunner, getPromptService } from './common';
 
 export class LegacyTryApiPipeline implements EvalPipelineAdapter {
   readonly name = 'legacy.try-api';
@@ -37,11 +37,13 @@ export class LegacyTryApiPipeline implements EvalPipelineAdapter {
       });
     }
 
+    const promptService = await getPromptService(context.repoRoot);
     const service = new ManifestGeneratorService(
       createSystemAiTaskRunner(context.profile),
       new PromptSanitizer(),
       new InputSizeGuard(),
       new PartialManifestAssembler(),
+      promptService,
     );
 
     const correlationId = randomUUID();

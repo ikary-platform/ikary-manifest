@@ -11,14 +11,21 @@ import {
   type KnowledgeProvider,
   type ManifestTaskExecutor,
 } from '@ikary/cell-ai/server';
-import { AiTaskRunner, ProviderRouter, buildAiRuntimeConfigFromEnv } from '@ikary/system-ai/server';
+import {
+  AiTaskRunner,
+  InputSizeGuard,
+  PromptSanitizer,
+  ProviderRouter,
+  buildAiRuntimeConfigFromEnv,
+} from '@ikary/system-ai/server';
 import { PromptRegistry } from '@ikary/system-prompt';
-import { loadPromptFiles } from '@ikary/system-prompt/server';
+import { PromptRegistryService, loadPromptFiles } from '@ikary/system-prompt/server';
 import type { EvalPipelineContext } from './types';
 import { FixtureManifestTaskExecutor } from '../providers/fixture-manifest.executor';
 import { EvalSystemAiManifestTaskExecutor } from './system-ai-manifest-task.executor';
 
 let cachedRegistry: Promise<PromptRegistry> | null = null;
+let cachedPromptService: Promise<PromptRegistryService> | null = null;
 
 export function getPromptRegistry(repoRoot: string): Promise<PromptRegistry> {
   if (!cachedRegistry) {
@@ -27,6 +34,20 @@ export function getPromptRegistry(repoRoot: string): Promise<PromptRegistry> {
     );
   }
   return cachedRegistry;
+}
+
+export function getPromptService(repoRoot: string): Promise<PromptRegistryService> {
+  if (!cachedPromptService) {
+    const sanitizer = new PromptSanitizer();
+    const sizeGuard = new InputSizeGuard();
+    const service = new PromptRegistryService(
+      { promptsDir: resolve(repoRoot, 'prompts') },
+      sanitizer,
+      sizeGuard,
+    );
+    cachedPromptService = service.onModuleInit().then(() => service);
+  }
+  return cachedPromptService;
 }
 
 export function createBlueprintLoader(repoRoot: string): BlueprintLoaderService {
