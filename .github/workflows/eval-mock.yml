@@ -1,0 +1,74 @@
+name: Eval (mock)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-mock-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval-mock:
+    name: Eval harness (fixture mode)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run eval harness in fixture mode
+        run: pnpm evals:run
+
+      - name: Verify report has at least one completed execution
+        run: |
+          set -euo pipefail
+          report=evals/reports/eval-report.json
+          if [ ! -s "$report" ]; then
+            echo "::error::$report missing or empty"
+            exit 1
+          fi
+          total=$(jq '.summary.totalCases' "$report")
+          completed=$(jq '.summary.completedCases' "$report")
+          echo "totalCases=$total completedCases=$completed"
+          if [ "$total" -lt 1 ] || [ "$completed" -lt 1 ]; then
+            echo "::error::Eval report has 0 executions or 0 completed cases"
+            exit 1
+          fi
+
+      - name: Append markdown report to job summary
+        if: always()
+        run: |
+          if [ -f evals/reports/eval-report.md ]; then
+            echo "## Eval harness (fixture mode)" >> "$GITHUB_STEP_SUMMARY"
+            cat evals/reports/eval-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::evals/reports/eval-report.md missing"
+          fi
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-mock-report
+          path: |
+            evals/reports/eval-report.json
+            evals/reports/eval-report.md
+            evals/reports/eval-report.html
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,6 +1,6 @@
 # IKARY Eval Report
 
-Generated: 2026-04-16T11:03:31.012Z
+Generated: 2026-04-16T16:12:34.185Z
 Profile: fixture
 
 ## Summary
@@ -82,8 +82,8 @@ Average assembled context size: 1826.29 chars
 
 ## Latency And Cost
 
-Average latency: 17.79 ms
-Max latency: 49.00 ms
+Average latency: 18.18 ms
+Max latency: 52.00 ms
 Total cost: $0.00
 Total input tokens: 846
 Total output tokens: 33874

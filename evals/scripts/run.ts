@@ -2,6 +2,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadCases } from '../core/load-cases';
 import { buildEvalReport, renderMarkdownReport } from '../core/reporting';
+import { renderHtmlReport } from '../core/html-renderer';
 import { evalRunnerOptionsSchema, type EvalRunnerOptions } from '../core/runner-schema';
 import { buildManifestTaskInput } from '../core/task-input';
 import { createPipelineRegistry } from '../pipeline';
@@ -33,11 +34,13 @@ async function main(): Promise<void> {
   await mkdir(options.reportsDir, { recursive: true });
   const jsonPath = resolve(options.reportsDir, options.outputJsonFile);
   const markdownPath = resolve(options.reportsDir, options.outputMarkdownFile);
+  const htmlPath = resolve(options.reportsDir, 'eval-report.html');
   await writeFile(jsonPath, JSON.stringify(report, null, 2), 'utf8');
   await writeFile(markdownPath, renderMarkdownReport(report), 'utf8');
+  await writeFile(htmlPath, renderHtmlReport(report), 'utf8');
 
   // eslint-disable-next-line no-console
-  console.log(`Eval run complete. JSON: ${jsonPath} | Markdown: ${markdownPath}`);
+  console.log(`Eval run complete. JSON: ${jsonPath} | Markdown: ${markdownPath} | HTML: ${htmlPath}`);
 }
 
 async function executeCase(
