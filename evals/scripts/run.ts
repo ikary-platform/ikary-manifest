@@ -7,6 +7,7 @@ import { evalRunnerOptionsSchema, type EvalRunnerOptions } from '../core/runner-
 import { buildManifestTaskInput } from '../core/task-input';
 import { createPipelineRegistry } from '../pipeline';
 import type { EvalCaseExecution } from '../core/case-schema';
+import { computeWeightedScore } from '../core/aggregation';
 import type { EvalPipelineAdapter, EvalPipelineContext, EvalPipelineResult, EvalRunArtifact } from '../pipeline/types';
 import { runDefaultScorers } from '../scorers';
 
@@ -21,12 +22,14 @@ async function main(): Promise<void> {
   const executions: EvalCaseExecution[] = [];
   for (const pipeline of pipelines) {
     for (const testCase of cases) {
-      executions.push(await executeCase(pipeline, testCase, {
+      const execution = await executeCase(pipeline, testCase, {
         repoRoot,
         profile: options.profile,
         clarificationMode: options.clarificationMode,
         runtimeMode: options.runtimeMode,
-      }));
+      });
+      executions.push(execution);
+      if (options.verbose) printVerbose(execution);
     }
   }
 
@@ -126,6 +129,7 @@ function parseRunnerOptions(repoRoot: string, args: string[]): EvalRunnerOptions
     else if (key === 'profile') values.profile = value;
     else if (key === 'clarification-mode') values.clarificationMode = value;
     else if (key === 'runtime-mode') values.runtimeMode = value;
+    else if (key === 'verbose') values.verbose = true;
     else if (key === 'reports-dir') values.reportsDir = resolve(repoRoot, value);
     else if (key === 'cases-dir') values.casesDir = resolve(repoRoot, value);
   }
@@ -144,6 +148,38 @@ function filterCases(
     if (options.tags.length > 0 && !options.tags.every((tag) => testCase.metadata.tags.includes(tag))) return false;
     return true;
   });
+}
+
+function printVerbose(execution: EvalCaseExecution): void {
+  const raw = (execution.rawResult ?? {}) as Record<string, unknown>;
+  const final = (raw.finalResult ?? raw) as Record<string, unknown>;
+  const trace = (final.trace ?? {}) as Record<string, unknown>;
+
+  const systemPrompt = typeof trace.systemPrompt === 'string' ? trace.systemPrompt : '';
+  const assembledContext = typeof trace.assembledContext === 'string' ? trace.assembledContext : '';
+  const rawResponse = typeof trace.rawResponse === 'string' ? trace.rawResponse : '';
+  const model = typeof trace.model === 'string' ? trace.model : '-';
+  const provider = typeof trace.provider === 'string' ? trace.provider : '-';
+  const inputTokens = typeof trace.inputTokens === 'number' ? trace.inputTokens : 0;
+  const outputTokens = typeof trace.outputTokens === 'number' ? trace.outputTokens : 0;
+  const timingMs = typeof trace.timingMs === 'number' ? trace.timingMs : 0;
+
+  const score = execution.scorers.length > 0 ? computeWeightedScore(execution) : 0;
+  const failed = execution.scorers.filter((s) => !s.passed).length;
+
+  const trunc = (s: string, max: number) => (s.length > max ? s.slice(0, max) + '...' : s);
+
+  // eslint-disable-next-line no-console
+  console.log([
+    `\n--- ${execution.pipeline} / ${execution.caseId} [${execution.status}] ---`,
+    systemPrompt ? `SYSTEM PROMPT (${systemPrompt.length} chars):\n  ${trunc(systemPrompt, 500)}` : '',
+    assembledContext ? `USER MESSAGE (${assembledContext.length} chars):\n  ${trunc(assembledContext, 500)}` : '',
+    rawResponse
+      ? `RESPONSE (${rawResponse.length} chars, model=${model}, ${inputTokens} in / ${outputTokens} out, ${timingMs} ms):\n  ${trunc(rawResponse, 500)}`
+      : `RESPONSE: (none) model=${model} provider=${provider}`,
+    `Score: ${score.toFixed(2)} (${execution.scorers.length} scorers, ${failed} failed)`,
+    execution.skipReason ? `Skip reason: ${execution.skipReason}` : '',
+  ].filter(Boolean).join('\n'));
 }
 
 void main();

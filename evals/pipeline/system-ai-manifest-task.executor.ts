@@ -16,15 +16,16 @@ export class EvalSystemAiManifestTaskExecutor implements ManifestTaskExecutor {
     task: ManifestTaskInput;
     context: { promptContext: string };
   }): Promise<ManifestExecutorResult> {
+    const systemPrompt = this.prompts.render(
+      'cell-ai/manifest-task',
+      { task_type: input.task.type },
+      { taskName: 'cell-ai/manifest-task' },
+    );
     try {
       const aiResult = await this.aiTaskRunner.runTask({
         taskId: toTaskId(input.task.type),
         promptPayload: input.context.promptContext,
-        systemPrompt: this.prompts.render(
-          'cell-ai/manifest-task',
-          { task_type: input.task.type },
-          { taskName: 'cell-ai/manifest-task' },
-        ),
+        systemPrompt,
         temperature: 0.1,
         maxTokens: 3000,
         metadata: input.task.metadata,
@@ -37,10 +38,12 @@ export class EvalSystemAiManifestTaskExecutor implements ManifestTaskExecutor {
       return {
         manifest: aiResult.structured ?? aiResult.text,
         aiResult,
+        systemPrompt,
       };
     } catch (error) {
       return {
         error: error instanceof Error ? error.message : String(error),
+        systemPrompt,
       };
     }
   }

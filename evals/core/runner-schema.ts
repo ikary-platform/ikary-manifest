@@ -13,6 +13,7 @@ export const evalRunnerOptionsSchema = z.object({
   caseIds: z.array(z.string()).default([]),
   clarificationMode: clarificationModeSchema.default('disabled'),
   runtimeMode: z.enum(['compile-only', 'preview']).default('compile-only'),
+  verbose: z.boolean().default(false),
   outputJsonFile: z.string().default('eval-report.json'),
   outputMarkdownFile: z.string().default('eval-report.md'),
 });

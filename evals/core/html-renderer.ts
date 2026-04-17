@@ -43,6 +43,8 @@ interface TraceShape {
   readonly timingMs: number;
   readonly contextSummary: string;
   readonly assembledContext: string;
+  readonly systemPrompt: string;
+  readonly rawResponse: string;
   readonly diagnostics: string[];
   readonly retrievalHits: Array<{ id: string; type: string; title: string; summary?: string; source?: string; score?: number }>;
   readonly policyDecisions: string[];
@@ -69,6 +71,8 @@ function readTrace(rawResult: unknown): TraceShape {
     timingMs: numberOr(trace.timingMs, 0),
     contextSummary: typeof trace.contextSummary === 'string' ? trace.contextSummary : '',
     assembledContext: typeof trace.assembledContext === 'string' ? trace.assembledContext : '',
+    systemPrompt: typeof trace.systemPrompt === 'string' ? trace.systemPrompt : '',
+    rawResponse: typeof trace.rawResponse === 'string' ? trace.rawResponse : '',
     diagnostics: arrayOfStrings(trace.diagnostics),
     retrievalHits: arrayOfRetrievalHits(trace.retrievalHits),
     policyDecisions: arrayOfStrings(trace.policyDecisions),
@@ -399,8 +403,14 @@ function renderCaseDetail(view: CaseView): string {
   const skipBlock = execution.skipReason
     ? `<div class="skip-reason"><strong>Skipped:</strong> ${escapeHtml(execution.skipReason)}</div>`
     : '';
+  const systemPromptBlock = trace.systemPrompt
+    ? `<details class="nested"><summary>System prompt (${trace.systemPrompt.length} chars)</summary><pre>${escapeHtml(trace.systemPrompt)}</pre></details>`
+    : '';
   const contextBlock = trace.assembledContext
     ? `<details class="nested"><summary>Assembled context (${trace.assembledContext.length} chars)</summary><pre>${escapeHtml(trace.assembledContext)}</pre></details>`
+    : '';
+  const rawResponseBlock = trace.rawResponse
+    ? `<details class="nested"><summary>Raw response (${trace.rawResponse.length} chars)</summary><pre>${escapeHtml(trace.rawResponse)}</pre></details>`
     : '';
 
   return `
@@ -431,7 +441,9 @@ function renderCaseDetail(view: CaseView): string {
           ${policies}
           ${assumptions}
           ${diagnostics}
+          ${systemPromptBlock}
           ${contextBlock}
+          ${rawResponseBlock}
         </div>
       </details>
     </li>`;

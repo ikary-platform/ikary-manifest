@@ -54,6 +54,7 @@ export interface ManifestExecutorResult {
   readonly manifest?: unknown;
   readonly error?: string;
   readonly aiResult?: AiTaskRunResult<unknown>;
+  readonly systemPrompt?: string;
 }
 
 export interface ManifestTaskExecutor {

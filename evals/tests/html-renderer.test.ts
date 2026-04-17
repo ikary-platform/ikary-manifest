@@ -38,6 +38,8 @@ function execution(over: Partial<EvalCaseExecution> = {}): EvalCaseExecution {
           ],
           contextSummary: 'Used 1 example manifest',
           assembledContext: 'Plain prompt context.',
+          systemPrompt: 'You generate IKARY Cell manifests.',
+          rawResponse: '{"apiVersion":"ikary.co/v1alpha1"}',
           policyDecisions: ['Proceeded without clarification'],
           assumptions: ['Assumed snake_case keys'],
           timingMs: 12,
@@ -242,6 +244,14 @@ describe('renderHtmlReport', () => {
     if (linkMatch) {
       expect(html).toContain(`id="${linkMatch[1]}"`);
     }
+  });
+
+  it('renders system prompt and raw response collapsible blocks when present in the trace', () => {
+    const html = renderHtmlReport(report());
+    expect(html).toContain('System prompt (');
+    expect(html).toContain('You generate IKARY Cell manifests.');
+    expect(html).toContain('Raw response (');
+    expect(html).toContain('ikary.co/v1alpha1');
   });
 
   it('falls back gracefully when the trace is missing or malformed', () => {
