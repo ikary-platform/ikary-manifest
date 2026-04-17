@@ -8,10 +8,10 @@ import { HealthController } from './health.controller';
 import { ChatModule } from './chat/chat.module';
 import { BlueprintModule } from './blueprint/blueprint.module';
 import { DemoModule } from './demo/demo.module';
-import { buildAiRuntimeConfig, parseEnv } from './config/env.config';
+import { buildTryApiAiRuntimeConfig, parseEnv } from './config/env.config';
 
 const env = parseEnv();
-const aiConfig = buildAiRuntimeConfig(env);
+const aiConfig = buildTryApiAiRuntimeConfig(env);
 
 const cwdExamples = resolve(process.cwd(), 'manifests', 'examples');
 const repoExamples = resolve(__dirname, '..', '..', '..', 'manifests', 'examples');

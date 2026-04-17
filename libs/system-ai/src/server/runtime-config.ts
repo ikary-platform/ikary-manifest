@@ -59,7 +59,10 @@ export function parseAiRuntimeEnv(source: NodeJS.ProcessEnv = process.env): AiRu
 }
 
 export function buildAiRuntimeConfigFromEnv(source: NodeJS.ProcessEnv = process.env): AiRuntimeConfig {
-  const env = parseAiRuntimeEnv(source);
+  return buildAiRuntimeConfig(parseAiRuntimeEnv(source));
+}
+
+export function buildAiRuntimeConfig(env: AiRuntimeEnv): AiRuntimeConfig {
   const providerOrder = parseProviderOrder(env.AI_PROVIDER_ORDER);
   const taskRoutes = buildTaskRoutes(env);
 
