@@ -48,11 +48,11 @@ describe('useLanguage', () => {
       React.createElement(
         QueryClientProvider,
         { client: queryClient },
-        React.createElement(
-          LocalizationProvider,
-          { config, loaders },
-          React.createElement(LanguageProvider, { apiClient }, children),
-        ),
+        React.createElement(LocalizationProvider, {
+          config,
+          loaders,
+          children: React.createElement(LanguageProvider, { apiClient, children }),
+        }),
       );
 
     const { result } = renderHook(() => useLanguage(), { wrapper });

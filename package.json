@@ -31,7 +31,7 @@
     "docs:check": "pnpm docs:build && pnpm docs:check:freshness && pnpm docs:check:commands",
     "capture-cli-output": "tsx scripts/capture-cli-output.ts",
     "check:node-version": "node scripts/check-node-version.mjs",
-    "evals:build-deps": "pnpm --filter @ikary/cell-contract build && pnpm --filter @ikary/cell-engine build && pnpm --filter @ikary/system-ai build && pnpm --filter @ikary/system-prompt build && pnpm --filter @ikary/cell-ai build",
+    "evals:build-deps": "pnpm --filter @ikary/cell-contract build && pnpm --filter @ikary/cell-engine build && pnpm --filter @ikary/system-ai build && pnpm --filter @ikary/system-mcp build && pnpm --filter @ikary/system-prompt build && pnpm --filter @ikary/cell-ai build",
     "evals:run": "pnpm evals:build-deps && tsx --env-file-if-exists=.env.local evals/scripts/run.ts",
     "evals:report": "tsx evals/scripts/report.ts",
     "evals:test": "vitest run --workspace vitest.workspace.ts --project @ikary/evals",

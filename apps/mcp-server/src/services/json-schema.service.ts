@@ -45,7 +45,7 @@ export class JsonSchemaService {
     return this.memo('manifest', () =>
       zodToJsonSchema(CellManifestV1Schema, {
         $refStrategy: 'none',
-        target: 'draft-07',
+        target: 'jsonSchema7',
       }),
     );
   }
@@ -54,7 +54,7 @@ export class JsonSchemaService {
     return this.memo('entity', () =>
       zodToJsonSchema(EntityDefinitionSchema, {
         $refStrategy: 'none',
-        target: 'draft-07',
+        target: 'jsonSchema7',
       }),
     );
   }
@@ -93,7 +93,7 @@ export class JsonSchemaService {
     if (zodSchema) {
       return zodToJsonSchema(zodSchema, {
         $refStrategy: 'none',
-        target: 'draft-07',
+        target: 'jsonSchema7',
       });
     }
 

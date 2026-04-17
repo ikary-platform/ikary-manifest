@@ -1,9 +1,9 @@
 import { z } from 'zod';
+import type { AiRuntimeConfig } from '@ikary/system-ai';
 import {
-  buildAiRuntimeConfigFromEnv,
+  buildAiRuntimeConfig,
   redactAiRuntimeConfig,
   aiRuntimeEnvSchema,
-  type AiRuntimeConfig,
   type AiRuntimeEnv,
 } from '@ikary/system-ai/server';
 
@@ -20,8 +20,8 @@ export function parseEnv(source: NodeJS.ProcessEnv = process.env): ParsedEnv {
   return envSchema.parse(source);
 }
 
-export function buildAiRuntimeConfig(env: ParsedEnv): AiRuntimeConfig {
-  return buildAiRuntimeConfigFromEnv(env as NodeJS.ProcessEnv & AiRuntimeEnv);
+export function buildTryApiAiRuntimeConfig(env: ParsedEnv): AiRuntimeConfig {
+  return buildAiRuntimeConfig(env as AiRuntimeEnv);
 }
 
 export function logResolvedConfig(env: ParsedEnv, config: AiRuntimeConfig): void {

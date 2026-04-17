@@ -13,6 +13,7 @@
     "@ikary/cell-ai": "workspace:*",
     "@ikary/cell-contract": "workspace:*",
     "@ikary/system-ai": "workspace:*",
+    "@ikary/system-mcp": "workspace:*",
     "@ikary/system-prompt": "workspace:*",
     "@nestjs/common": "^11.1.0",
     "@nestjs/core": "^11.1.0",

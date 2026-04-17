@@ -30,6 +30,7 @@
       "@ikary/system-localization",
       "@ikary/system-log-core",
       "@ikary/system-ai",
+      "@ikary/system-mcp",
       "@ikary/system-prompt",
       "@ikary/cell-ai",
       "@ikary/cell-branding",

@@ -1,12 +1,16 @@
 import { LegacyStudioContextAssembler } from './legacy-studio-context.assembler';
-import { LegacyStudioTaskExecutor } from './legacy-studio-task.executor';
 import {
   createBlueprintLoader,
   createSystemAiTaskRunner,
   createDefaultModularPipeline,
-  getPromptRegistry,
+  getIkaryMcpClient,
+  getPromptService,
 } from './common';
-import { DefaultKnowledgeProvider, HeuristicClarificationPolicy } from '@ikary/cell-ai/server';
+import {
+  DefaultKnowledgeProvider,
+  HeuristicClarificationPolicy,
+  SystemAiManifestTaskExecutor,
+} from '@ikary/cell-ai/server';
 import type { EvalCase } from '../core/case-schema';
 import type { EvalPipelineAdapter, EvalPipelineContext, EvalPipelineResult } from './types';
 import { FixtureManifestTaskExecutor } from '../providers/fixture-manifest.executor';
@@ -21,7 +25,7 @@ export class LegacyStudioReplayPipeline implements EvalPipelineAdapter {
 
   async execute(task: Parameters<EvalPipelineAdapter['execute']>[0], context: EvalPipelineContext): Promise<EvalPipelineResult> {
     const blueprintLoader = createBlueprintLoader(context.repoRoot);
-    const registry = await getPromptRegistry(context.repoRoot);
+    const promptService = await getPromptService(context.repoRoot);
     const pipeline = await createDefaultModularPipeline(context, {
       knowledgeProvider: new DefaultKnowledgeProvider(blueprintLoader),
       contextAssembler: new LegacyStudioContextAssembler(),
@@ -31,7 +35,11 @@ export class LegacyStudioReplayPipeline implements EvalPipelineAdapter {
             name: this.name,
             model: `fixture/${this.name}`,
           })
-        : new LegacyStudioTaskExecutor(createSystemAiTaskRunner(context.profile), registry),
+        : new SystemAiManifestTaskExecutor(
+            createSystemAiTaskRunner(context.profile),
+            promptService,
+            getIkaryMcpClient(),
+          ),
     });
 
     return pipeline.execute(task);

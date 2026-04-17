@@ -114,7 +114,14 @@ describe('compileCellApp', () => {
   it('uses explicit capability.scope when provided', () => {
     const entity = {
       ...validManifest.spec.entities![0],
-      capabilities: [{ key: 'assign', type: 'workflow' as const, workflow: 'assign-ticket', scope: 'global.assign' }],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'global' as const,
+        },
+      ],
     };
     const scopes = deriveEntityScopeRegistry(entity);
     expect(scopes).toContain('global.assign');

@@ -8,6 +8,7 @@ export { OpenRouterProvider } from './providers/openrouter.provider';
 export {
   AI_TASK_ROUTE_ENV_MAP,
   aiRuntimeEnvSchema,
+  buildAiRuntimeConfig,
   buildAiRuntimeConfigFromEnv,
   parseAiRuntimeEnv,
   redactAiRuntimeConfig,

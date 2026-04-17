@@ -133,8 +133,16 @@ describe('deriveOpenAPISpec', () => {
     const entity = {
       ...minimalEntity,
       fields: [
-        { key: 'status', type: 'enum', name: 'Status', enumValues: [{ key: 'active', label: 'Active' }, { key: 'inactive', label: 'Inactive' }] },
-      ] as FieldDefinition[],
+        {
+          key: 'status',
+          type: 'enum',
+          name: 'Status',
+          enumValues: [
+            { key: 'active', label: 'Active' },
+            { key: 'inactive', label: 'Inactive' },
+          ],
+        },
+      ] as unknown as FieldDefinition[],
     } as EntityDefinition;
 
     const spec = deriveOpenAPISpec(entity);

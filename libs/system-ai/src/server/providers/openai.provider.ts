@@ -3,10 +3,13 @@ import type {
   AiProvider,
   GenerateChatInput,
   GenerateChatOutput,
+  ProviderRateLimitHeaders,
 } from '../../shared/provider.interface';
 import { readSseData } from './sse';
+import { RateLimitedException, parseRetryAfterMs } from './rate-limited-exception';
 
 const OPENAI_BASE_URL = 'https://api.openai.com/v1';
+const DEFAULT_RETRY_AFTER_MS = 5_000;
 
 interface OpenAiCompatibleProviderOptions {
   readonly name: string;
@@ -43,9 +46,10 @@ export class OpenAiCompatibleProvider implements AiProvider {
       signal,
     });
 
+    const rateLimitHeaders = readRateLimitHeaders(response);
     const body = await response.json().catch(() => null);
     if (!response.ok) {
-      throw new ServiceUnavailableException(buildProviderError(this.name, response.status, body));
+      this.throwErrorForStatus(response.status, body, rateLimitHeaders);
     }
 
     const message = (body as { choices?: Array<{ message?: { content?: string | Array<{ text?: string }> } }> })
@@ -58,6 +62,7 @@ export class OpenAiCompatibleProvider implements AiProvider {
       model: (body as { model?: string })?.model ?? input.model,
       provider: this.name,
       latencyMs: Date.now() - startedAt,
+      headers: rateLimitHeaders,
     };
   }
 
@@ -83,8 +88,9 @@ export class OpenAiCompatibleProvider implements AiProvider {
     });
 
     if (!response.ok) {
+      const rateLimitHeaders = readRateLimitHeaders(response);
       const body = await response.json().catch(() => null);
-      throw new ServiceUnavailableException(buildProviderError(this.name, response.status, body));
+      this.throwErrorForStatus(response.status, body, rateLimitHeaders);
     }
 
     if (!response.body) {
@@ -105,6 +111,45 @@ export class OpenAiCompatibleProvider implements AiProvider {
   tokenCount(text: string): number {
     return Math.ceil(text.length / 4);
   }
+
+  private throwErrorForStatus(status: number, body: unknown, headers: ProviderRateLimitHeaders | undefined): never {
+    const message = buildProviderError(this.name, status, body);
+    if (status === 429) {
+      throw new RateLimitedException({
+        message,
+        provider: this.name,
+        retryAfterMs: headers?.retryAfterMs ?? DEFAULT_RETRY_AFTER_MS,
+        headers,
+      });
+    }
+    throw new ServiceUnavailableException(message);
+  }
+}
+
+function readRateLimitHeaders(response: Response): ProviderRateLimitHeaders | undefined {
+  const retryAfter = response.headers.get('retry-after');
+  const tokensRemaining = toInt(
+    response.headers.get('x-ratelimit-remaining-tokens') ?? response.headers.get('x-ratelimit-remaining'),
+  );
+  const tokensReset =
+    response.headers.get('x-ratelimit-reset-tokens') ?? response.headers.get('x-ratelimit-reset');
+  const requestsRemaining = toInt(response.headers.get('x-ratelimit-remaining-requests'));
+  const requestsReset = response.headers.get('x-ratelimit-reset-requests');
+
+  const headers: ProviderRateLimitHeaders = {};
+  if (retryAfter) headers.retryAfterMs = parseRetryAfterMs(retryAfter, DEFAULT_RETRY_AFTER_MS);
+  if (tokensRemaining !== undefined) headers.tokensRemaining = tokensRemaining;
+  if (tokensReset) headers.tokensReset = tokensReset;
+  if (requestsRemaining !== undefined) headers.requestsRemaining = requestsRemaining;
+  if (requestsReset) headers.requestsReset = requestsReset;
+
+  return Object.keys(headers).length > 0 ? headers : undefined;
+}
+
+function toInt(value: string | null): number | undefined {
+  if (value === null) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? Math.trunc(parsed) : undefined;
 }
 
 export class OpenAiProvider extends OpenAiCompatibleProvider {

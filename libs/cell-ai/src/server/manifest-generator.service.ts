@@ -1,16 +1,20 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { AiTaskRunner, PromptSanitizer, InputSizeGuard } from '@ikary/system-ai/server';
+import { IkaryMcpClient } from '@ikary/system-mcp/server';
 import { PromptRegistryService } from '@ikary/system-prompt/server';
 import { CELL_AI_TASKS } from '../shared/task-id';
 import type { ManifestGenerationInput, ManifestStreamEvent } from '../shared/manifest-generation.schema';
 import { PartialManifestAssembler } from './partial-manifest-assembler';
 
 const MAX_PROMPT_BYTES = 8_000;
-const DEFAULT_MAX_OUTPUT_TOKENS = 2000;
+const DEFAULT_MAX_OUTPUT_TOKENS = 6000;
+const FALLBACK_SCHEMA_REFERENCE =
+  'Schema reference temporarily unavailable; rely on the REFERENCE EXAMPLE below for shape.';
 
 @Injectable()
 export class ManifestGeneratorService {
   private readonly logger = new Logger(ManifestGeneratorService.name);
+  private schemaReferencePromise: Promise<string> | null = null;
 
   constructor(
     @Inject(AiTaskRunner) private readonly taskRunner: AiTaskRunner,
@@ -18,6 +22,7 @@ export class ManifestGeneratorService {
     @Inject(InputSizeGuard) private readonly sizeGuard: InputSizeGuard,
     @Inject(PartialManifestAssembler) private readonly assembler: PartialManifestAssembler,
     @Inject(PromptRegistryService) private readonly prompts: PromptRegistryService,
+    @Optional() @Inject(IkaryMcpClient) private readonly mcp?: IkaryMcpClient,
   ) {}
 
   async *streamManifest(
@@ -29,10 +34,11 @@ export class ManifestGeneratorService {
     const userMessage = buildUserMessage(input, userPrompt);
     const state = this.assembler.create();
     const maxOutputTokens = Number(process.env.AI_BUDGET_PER_TURN_OUTPUT_TOKENS) || DEFAULT_MAX_OUTPUT_TOKENS;
+    const schemaReference = await this.getSchemaReference();
 
     const systemPrompt = this.prompts.render(
-      'cell-ai/manifest-generation',
-      {},
+      'cell-ai/manifest',
+      { task_type: 'create', schema_reference: schemaReference },
       { correlationId, taskName: CELL_AI_TASKS.MANIFEST_GENERATE },
     );
 
@@ -126,6 +132,25 @@ export class ManifestGeneratorService {
       taskName: CELL_AI_TASKS.MANIFEST_GENERATE,
       correlationId,
     });
+  }
+
+  private async getSchemaReference(): Promise<string> {
+    if (!this.mcp) return FALLBACK_SCHEMA_REFERENCE;
+    if (!this.schemaReferencePromise) {
+      const mcp = this.mcp;
+      this.schemaReferencePromise = (async () => {
+        try {
+          const text = await mcp.getManifestSchemaText();
+          return text.length > 0 ? text : FALLBACK_SCHEMA_REFERENCE;
+        } catch (error) {
+          this.logger.warn(
+            `Could not fetch MCP schema reference, using fallback: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          return FALLBACK_SCHEMA_REFERENCE;
+        }
+      })();
+    }
+    return this.schemaReferencePromise;
   }
 }
 

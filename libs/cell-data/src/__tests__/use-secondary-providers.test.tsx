@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, type RenderHookOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
+import type { ReactNode } from 'react';
 import type { DataProviderDefinition } from '@ikary/cell-contract';
 import type { EntityRouteParams } from '@ikary/cell-contract';
 
@@ -31,11 +31,13 @@ const ROUTE: Omit<EntityRouteParams, 'entityKey'> = {
   cellKey: 'crm',
 };
 
-function makeWrapper() {
+type HookWrapper = NonNullable<RenderHookOptions<unknown>['wrapper']>;
+
+function makeWrapper(): HookWrapper {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return function Wrapper({ children }: { children: React.ReactNode }) {
-    return <QueryClientProvider client={qc}>{children}</QueryClientProvider>;
-  };
+  return (({ children }: { children?: ReactNode }) => (
+    <QueryClientProvider client={qc}>{children as any}</QueryClientProvider>
+  )) as unknown as HookWrapper;
 }
 
 // ── Tests ─────────────────────────────────────────────────────────────────────

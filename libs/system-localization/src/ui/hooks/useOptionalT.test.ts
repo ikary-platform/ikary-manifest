@@ -32,7 +32,7 @@ function withProviderWrapper({ children }: { children: React.ReactNode }) {
   return React.createElement(
     QueryClientProvider,
     { client: queryClient },
-    React.createElement(LocalizationProvider, { config, loaders }, children),
+    React.createElement(LocalizationProvider, { config, loaders, children }),
   );
 }
 
@@ -116,11 +116,12 @@ describe('useOptionalT — non-default locale', () => {
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      React.createElement(
-        LocalizationProvider,
-        { config: multiConfig, loaders: multiLoaders, initialLocale: 'fr' },
+      React.createElement(LocalizationProvider, {
+        config: multiConfig,
+        loaders: multiLoaders,
+        initialLocale: 'fr',
         children,
-      ),
+      }),
     );
   }
 

@@ -30,7 +30,7 @@ export const aiRuntimeEnvSchema = z.object({
   AI_MODEL_MANIFEST_GENERATE: z
     .string()
     .default(
-      'openai/gpt-oss-120b:free,qwen/qwen3-next-80b-a3b-instruct:free,google/gemma-4-31b-it:free,anthropic/claude-sonnet-4-5',
+      'claude-haiku-4-5;claude-sonnet-4-6;nvidia/nemotron-3-super-120b-a12b:free;google/gemma-4-31b-it:free',
     ),
   AI_MODEL_MANIFEST_FIX: z.string().optional(),
   AI_MODEL_MANIFEST_UPDATE: z.string().optional(),
@@ -42,10 +42,17 @@ export const aiRuntimeEnvSchema = z.object({
   AI_TASK_ROUTE_MANIFEST_CLARIFY: z.string().optional(),
   AI_TASK_ROUTE_CHAT_CONVERSE: z.string().optional(),
   AI_BUDGET_PER_TURN_INPUT_TOKENS: z.coerce.number().int().positive().default(2000),
-  AI_BUDGET_PER_TURN_OUTPUT_TOKENS: z.coerce.number().int().positive().default(2000),
+  AI_BUDGET_PER_TURN_OUTPUT_TOKENS: z.coerce.number().int().positive().default(6000),
   AI_BUDGET_PER_SESSION_TOKENS: z.coerce.number().int().positive().default(40000),
   AI_BUDGET_PER_SESSION_MESSAGES: z.coerce.number().int().positive().default(6),
   AI_BUDGET_GLOBAL_DAILY_USD: z.coerce.number().positive().default(20),
+  AI_PROMPT_CACHE_ENABLED: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((value) => value === 'true'),
+  AI_RATE_LIMIT_RETRY_AFTER_MAX_MS: z.coerce.number().int().nonnegative().default(30_000),
+  AI_RATE_LIMIT_MAX_RETRIES_SAME_MODEL: z.coerce.number().int().nonnegative().default(2),
+  AI_RATE_LIMIT_BACKOFF_BASE_MS: z.coerce.number().int().nonnegative().default(500),
   FEATURE_AI_ENABLED: z
     .enum(['true', 'false'])
     .default('true')
@@ -59,7 +66,10 @@ export function parseAiRuntimeEnv(source: NodeJS.ProcessEnv = process.env): AiRu
 }
 
 export function buildAiRuntimeConfigFromEnv(source: NodeJS.ProcessEnv = process.env): AiRuntimeConfig {
-  const env = parseAiRuntimeEnv(source);
+  return buildAiRuntimeConfig(parseAiRuntimeEnv(source));
+}
+
+export function buildAiRuntimeConfig(env: AiRuntimeEnv): AiRuntimeConfig {
   const providerOrder = parseProviderOrder(env.AI_PROVIDER_ORDER);
   const taskRoutes = buildTaskRoutes(env);
 
@@ -162,31 +172,31 @@ function buildProviders(env: AiRuntimeEnv): Record<ProviderName, ProviderCreds> 
 }
 
 function buildLegacyModelByTask(env: AiRuntimeEnv): Record<string, string | string[]> {
+  const generate = parseModelChain(env.AI_MODEL_MANIFEST_GENERATE);
   return {
-    'manifest.generate': parseModelChain(env.AI_MODEL_MANIFEST_GENERATE),
-    'manifest.create': parseModelChain(env.AI_MODEL_MANIFEST_GENERATE),
-    ...(env.AI_MODEL_MANIFEST_FIX ? { 'manifest.fix': parseModelChain(env.AI_MODEL_MANIFEST_FIX) } : {}),
-    ...(env.AI_MODEL_MANIFEST_UPDATE ? { 'manifest.update': parseModelChain(env.AI_MODEL_MANIFEST_UPDATE) } : {}),
+    'manifest.generate': generate,
+    'manifest.create': generate,
+    'manifest.fix': env.AI_MODEL_MANIFEST_FIX ? parseModelChain(env.AI_MODEL_MANIFEST_FIX) : generate,
+    'manifest.update': env.AI_MODEL_MANIFEST_UPDATE ? parseModelChain(env.AI_MODEL_MANIFEST_UPDATE) : generate,
     'manifest.clarify': parseModelChain(env.AI_MODEL_MANIFEST_CLARIFY),
     'chat.converse': parseModelChain(env.AI_MODEL_CHAT_CONVERSE),
   };
 }
 
 function buildTaskRoutes(env: AiRuntimeEnv): Record<string, AiTaskRouteStep[]> {
+  const generateRoute = normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_GENERATE));
   const routes: Record<string, AiTaskRouteStep[]> = {
-    'manifest.create': normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_GENERATE)),
-    'manifest.generate': normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_GENERATE)),
+    'manifest.create': generateRoute,
+    'manifest.generate': generateRoute,
+    'manifest.fix': env.AI_MODEL_MANIFEST_FIX
+      ? normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_FIX))
+      : generateRoute,
+    'manifest.update': env.AI_MODEL_MANIFEST_UPDATE
+      ? normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_UPDATE))
+      : generateRoute,
     'manifest.clarify': normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_CLARIFY)),
     'chat.converse': normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_CHAT_CONVERSE)),
   };
-
-  if (env.AI_MODEL_MANIFEST_FIX) {
-    routes['manifest.fix'] = normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_FIX));
-  }
-
-  if (env.AI_MODEL_MANIFEST_UPDATE) {
-    routes['manifest.update'] = normalizeLegacyTaskRoute(parseModelChain(env.AI_MODEL_MANIFEST_UPDATE));
-  }
 
   for (const [envKey, taskId] of Object.entries(AI_TASK_ROUTE_ENV_MAP)) {
     const parsed = parseTaskRoute(env[envKey as keyof AiRuntimeEnv] as string | undefined);
@@ -230,7 +240,7 @@ function parseTaskRoute(value: string | undefined): AiTaskRouteStep[] | undefine
 
 function parseModelChain(value: string): string | string[] {
   const parts = value
-    .split(',')
+    .split(';')
     .map((entry) => entry.trim())
     .filter(Boolean);
 

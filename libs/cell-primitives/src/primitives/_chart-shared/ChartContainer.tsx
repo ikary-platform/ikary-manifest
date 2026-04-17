@@ -1,5 +1,7 @@
 import { ResponsiveContainer } from 'recharts';
-import type { CSSProperties, ReactNode } from 'react';
+import type { ComponentProps, CSSProperties } from 'react';
+
+type ResponsiveContainerChild = ComponentProps<typeof ResponsiveContainer>['children'];
 
 export interface ChartConfig {
   [key: string]: { label: string; color?: string };
@@ -8,7 +10,7 @@ export interface ChartConfig {
 interface ChartContainerProps {
   config: ChartConfig;
   height: number;
-  children: ReactNode;
+  children: ResponsiveContainerChild;
 }
 
 export function ChartContainer({ config, height, children }: ChartContainerProps) {
@@ -22,7 +24,7 @@ export function ChartContainer({ config, height, children }: ChartContainerProps
   return (
     <div style={{ width: '100%', fontFamily: 'inherit', fontSize: '12px', ...cssVars }}>
       <ResponsiveContainer width="100%" height={height}>
-        {children as React.ReactElement}
+        {children}
       </ResponsiveContainer>
     </div>
   );

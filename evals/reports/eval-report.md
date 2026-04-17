@@ -1,54 +1,69 @@
 # IKARY Eval Report
 
-Generated: 2026-04-17T07:22:20.545Z
-Profile: fixture
+Generated: 2026-04-17T14:27:06.927Z
+Profile: live
 
 ## Summary
 
-Total cases: 1
-Completed: 1
+Total cases: 28
+Completed: 27
 Failed: 0
 Needs clarification: 0
-Skipped: 0
-Average score: 1.00
+Skipped: 1
+Average score: 0.94
 Pass rate: 100.0%
 
 ## Pipelines
 
 | Key | Total | Completed | Failed | Clarification | Skipped | Avg Score | Pass Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| refactored.default | 1 | 1 | 0 | 0 | 0 | 1.00 | 100.0% |
+| baseline.no-rag | 7 | 7 | 0 | 0 | 0 | 0.94 | 100.0% |
+| legacy.studio-replay | 7 | 7 | 0 | 0 | 0 | 0.93 | 100.0% |
+| legacy.try-api | 7 | 6 | 0 | 0 | 1 | 0.91 | 100.0% |
+| refactored.default | 7 | 7 | 0 | 0 | 0 | 0.99 | 100.0% |
 
 ## Suites
 
 | Key | Total | Completed | Failed | Clarification | Skipped | Avg Score | Pass Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| create | 1 | 1 | 0 | 0 | 0 | 1.00 | 100.0% |
+| clarification | 4 | 3 | 0 | 0 | 1 | 0.91 | 100.0% |
+| context | 4 | 4 | 0 | 0 | 0 | 0.95 | 100.0% |
+| create | 4 | 4 | 0 | 0 | 0 | 0.91 | 100.0% |
+| e2e | 4 | 4 | 0 | 0 | 0 | 0.94 | 100.0% |
+| fix | 4 | 4 | 0 | 0 | 0 | 1.00 | 100.0% |
+| retrieval | 4 | 4 | 0 | 0 | 0 | 0.92 | 100.0% |
+| update | 4 | 4 | 0 | 0 | 0 | 0.97 | 100.0% |
 
 ## Task Families
 
 | Key | Total | Completed | Failed | Clarification | Skipped | Avg Score | Pass Rate |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| create | 1 | 1 | 0 | 0 | 0 | 1.00 | 100.0% |
+| clarification | 4 | 3 | 0 | 0 | 1 | 0.91 | 100.0% |
+| context | 4 | 4 | 0 | 0 | 0 | 0.95 | 100.0% |
+| create | 4 | 4 | 0 | 0 | 0 | 0.91 | 100.0% |
+| e2e | 4 | 4 | 0 | 0 | 0 | 0.94 | 100.0% |
+| fix | 4 | 4 | 0 | 0 | 0 | 1.00 | 100.0% |
+| retrieval | 4 | 4 | 0 | 0 | 0 | 0.92 | 100.0% |
+| update | 4 | 4 | 0 | 0 | 0 | 0.97 | 100.0% |
 
 ## Scorers
 
 | Scorer | Avg Score | Pass Rate | Failures |
 | --- | ---: | ---: | ---: |
-| assumptionsScorer | 1.00 | 100.0% | 0 |
-| clarificationDecisionScorer | 1.00 | 100.0% | 0 |
+| assumptionsScorer | 0.85 | 85.2% | 4 |
+| clarificationDecisionScorer | 0.89 | 88.9% | 3 |
 | clarificationQuestionShapeScorer | 1.00 | 100.0% | 0 |
-| contextAssemblyScorer | 1.00 | 100.0% | 0 |
+| contextAssemblyScorer | 0.52 | 48.1% | 14 |
 | e2eSuccessScorer | 1.00 | 100.0% | 0 |
-| expectedEntitiesScorer | 1.00 | 100.0% | 0 |
-| expectedPagesScorer | 1.00 | 100.0% | 0 |
+| expectedEntitiesScorer | 0.99 | 96.3% | 1 |
+| expectedPagesScorer | 0.99 | 96.3% | 1 |
 | expectedPrimitivesScorer | 1.00 | 100.0% | 0 |
 | expectedRelationsScorer | 1.00 | 100.0% | 0 |
 | forbiddenItemsScorer | 1.00 | 100.0% | 0 |
 | parseValidScorer | 1.00 | 100.0% | 0 |
 | preservationScorer | 1.00 | 100.0% | 0 |
 | requiredFieldsScorer | 1.00 | 100.0% | 0 |
-| retrievalAlignmentScorer | 1.00 | 100.0% | 0 |
+| retrievalAlignmentScorer | 0.78 | 77.8% | 6 |
 | runtimeScorer | 1.00 | 100.0% | 0 |
 | schemaValidScorer | 1.00 | 100.0% | 0 |
 | semanticValidScorer | 1.00 | 100.0% | 0 |
@@ -61,22 +76,40 @@ Successful after clarification: 0
 
 ## Retrieval And Context
 
-Average retrieval hits: 5.00
-Cases with retrieval hits: 1
-Average assembled context size: 780.00 chars
+Average retrieval hits: 2.50
+Cases with retrieval hits: 14
+Average assembled context size: 1826.29 chars
 
 ## Latency And Cost
 
-Average latency: 54.00 ms
-Max latency: 54.00 ms
+Average latency: 22.43 ms
+Max latency: 64.00 ms
 Total cost: $0.00
-Total input tokens: 50
-Total output tokens: 1391
+Total input tokens: 57575
+Total output tokens: 53283
 
 ## Common Failure Reasons
 
-- None
+- Retrieved Context (9)
+- Task Type: create (7)
+- projects/01-task-tracker (6)
+- Use sensible CRUD defaults unless the prompt explicitly requests otherwise. (4)
+- Expected shouldAsk=true but got status completed. (3)
+- Prompt: (2)
+- Existing Manifest (2)
+- Task Type: update (2)
+- activity (1)
+- activity_list (1)
 
 ## Worst Cases
 
-- refactored.default / create.task-tracker: completed @ 1.00
+- legacy.try-api / create.task-tracker: completed @ 0.84 — projects/01-task-tracker
+- baseline.no-rag / retrieval.task-tracker: completed @ 0.88 — projects/01-task-tracker
+- legacy.try-api / e2e.task-tracker: completed @ 0.88 — projects/01-task-tracker
+- legacy.try-api / retrieval.task-tracker: completed @ 0.88 — projects/01-task-tracker
+- legacy.studio-replay / clarification.minimal-crm: completed @ 0.88 — Task Type: create
+- baseline.no-rag / create.task-tracker: completed @ 0.91 — projects/01-task-tracker
+- legacy.try-api / context.task-tracker: completed @ 0.91 — Task Type: create
+- legacy.studio-replay / context.task-tracker: completed @ 0.91 — Task Type: create
+- legacy.studio-replay / create.task-tracker: completed @ 0.91 — Task Type: create
+- baseline.no-rag / clarification.minimal-crm: completed @ 0.91 — activity

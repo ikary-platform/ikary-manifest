@@ -1,13 +1,14 @@
 # /prompts/cell-ai
 
-Prompts consumed by `@ikary/cell-ai`. They drive the two manifest-generation flows on the production server (`apps/try-api`) and inside the modular pipeline used by `evals/`.
+Prompts consumed by `@ikary/cell-ai`. One prompt drives every manifest generation, fix, and update flow across both the streaming production path (`apps/try-api`) and the modular pipeline used by `evals/`.
 
 ## Files
 
 | File | Purpose | Arguments |
 |---|---|---|
-| [`manifest-generation.prompt.md`](./manifest-generation.prompt.md) | System prompt for the streaming manifest generation flow. The 95-line CellManifestV1 contract and worked example. | none |
-| [`manifest-task.prompt.md`](./manifest-task.prompt.md) | System prompt for the modular pipeline. Selects CREATE / FIX / UPDATE rules from `task_type`. | `task_type` (system, required) |
+| [`manifest.prompt.md`](./manifest.prompt.md) | Single system prompt for CREATE / FIX / UPDATE. Schema constraints, naming rules, navigation rules, and a worked CellManifestV1 example, with three Handlebars variants selected by `task_type`. | `task_type` (system, required) |
+
+Per-pipeline differences (retrieval, clarification, framing) live in the user-message context assembled by each pipeline. The system prompt stays the same.
 
 ## Orchestration
 
@@ -17,12 +18,7 @@ flowchart TD
   Boot --> Loader["loadPromptFiles(promptsDir)<br/>(libs/system-prompt/src/server/prompt-loader.ts)"]
   Loader --> Registry[(PromptRegistry cache)]
 
-  subgraph PromptFiles["/prompts/cell-ai/"]
-    PA["manifest-generation.prompt.md"]
-    PB["manifest-task.prompt.md"]
-  end
-  PA --> Loader
-  PB --> Loader
+  PA["manifest.prompt.md"] --> Loader
 
   subgraph Streaming["Streaming path (apps/try-api demo, chat)"]
     HTTP1["HTTP request<br/>(ChatController, DemoController)"]
@@ -32,30 +28,20 @@ flowchart TD
 
   subgraph Pipeline["Modular pipeline path (production + evals)"]
     Pipe["ModularManifestPipeline.execute(task)<br/>(libs/cell-ai/src/server/pipeline)"]
-    Exec["SystemAiManifestTaskExecutor.execute<br/>(production NestJS)"]
-    EvalExec["EvalSystemAiManifestTaskExecutor.execute<br/>(evals/pipeline)"]
+    Exec["SystemAiManifestTaskExecutor.execute"]
     Pipe --> Exec
-    Pipe -.eval profile.-> EvalExec
   end
 
-  Registry -- "render('cell-ai/manifest-generation')" --> MGS
-  Registry -- "render('cell-ai/manifest-task', { task_type })" --> Exec
-  Registry -- "render('cell-ai/manifest-task', { task_type })" --> EvalExec
+  Registry -- "render('cell-ai/manifest', { task_type: 'create' })" --> MGS
+  Registry -- "render('cell-ai/manifest', { task_type })" --> Exec
 
   MGS --> Runner1["AiTaskRunner.streamTask<br/>(@ikary/system-ai/server)"]
   Exec --> Runner2["AiTaskRunner.runTask"]
-  EvalExec --> Runner3["AiTaskRunner.runTask"]
 ```
 
-## Notes per prompt
+## Notes
 
-### `manifest-generation.prompt.md`
-
-Fixed system prompt with no template variables. `arguments: []`. Used as the system message of `AiTaskRunner.streamTask` so the model streams a single CellManifestV1 JSON object back. The body includes the canonical schema rules, naming rules, navigation rules, and a worked example.
-
-### `manifest-task.prompt.md`
-
-One file with three Handlebars conditional blocks. `task_type` (declared `source: system` because it comes from the closed `'create' | 'fix' | 'update'` enum) selects which block to emit:
+`task_type` is declared `source: system` because it comes from the closed `'create' | 'fix' | 'update'` enum. The three Handlebars conditionals select the matching rule block:
 
 ```handlebars
 {{#if (eq task_type "create")}}CREATE RULES: ...{{/if}}
@@ -63,8 +49,4 @@ One file with three Handlebars conditional blocks. `task_type` (declared `source
 {{#if (eq task_type "update")}}UPDATE RULES: ...{{/if}}
 ```
 
-The shared preamble (`OUTPUT RULES`) lives at the top, outside the conditionals, so the three variants cannot drift apart. This replaced a switch-based string-builder in `pipeline/task-prompts.ts` that concatenated a `common` constant with one of three per-type tails.
-
-## Verification
-
-The migration preserved the rendered text byte-for-byte against the deleted TS constants. Both prompts are exercised in the regular pipeline tests; the registry itself is covered to 100% in `libs/system-prompt`.
+The shared preamble (output rules, schema constraints, naming rules, navigation rules, reference example) sits above the conditionals, so the three variants cannot drift apart.

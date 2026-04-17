@@ -20,8 +20,13 @@ async function main(): Promise<void> {
     .filter((pipeline) => options.pipelines.length === 0 || options.pipelines.includes(pipeline.name));
 
   const executions: EvalCaseExecution[] = [];
+  let firstCase = true;
   for (const pipeline of pipelines) {
     for (const testCase of cases) {
+      if (!firstCase && options.rateLimitDelayMs > 0) {
+        await sleep(options.rateLimitDelayMs);
+      }
+      firstCase = false;
       const execution = await executeCase(pipeline, testCase, {
         repoRoot,
         profile: options.profile,
@@ -144,6 +149,7 @@ function parseRunnerOptions(repoRoot: string, args: string[]): EvalRunnerOptions
     else if (key === 'clarification-mode') values.clarificationMode = value;
     else if (key === 'runtime-mode') values.runtimeMode = value;
     else if (key === 'verbose') values.verbose = true;
+    else if (key === 'rate-limit-delay-ms') values.rateLimitDelayMs = Number(value);
     else if (key === 'reports-dir') values.reportsDir = resolve(repoRoot, value);
     else if (key === 'cases-dir') values.casesDir = resolve(repoRoot, value);
   }
@@ -205,6 +211,22 @@ function printVerbose(execution: EvalCaseExecution): void {
 
   const errorMsg = typeof final.error === 'string' ? final.error : '';
   const diagnostics = Array.isArray(trace.diagnostics) ? (trace.diagnostics as string[]).join('; ') : '';
+  const attempts = Array.isArray(trace.attempts) ? trace.attempts as Array<Record<string, unknown>> : [];
+  const rotationLine = attempts.length > 1
+    ? `ROTATION (${attempts.length} attempts): ${attempts.map((a) => {
+        const cache = formatCacheBadge(a);
+        const wait = typeof a.waitedMs === 'number' && a.waitedMs > 0 ? ` waited=${a.waitedMs}ms` : '';
+        return `[${a.attempt}] ${a.provider}/${a.configuredModel} → ${a.status}${cache}${wait}${a.error ? ` (${String(a.error).slice(0, 80)})` : ''}`;
+      }).join(' | ')}`
+    : '';
+  const cacheTotals = attempts.reduce((acc, a) => {
+    if (typeof a.cacheReadTokens === 'number') acc.read += a.cacheReadTokens;
+    if (typeof a.cacheWriteTokens === 'number') acc.write += a.cacheWriteTokens;
+    return acc;
+  }, { read: 0, write: 0 });
+  const cacheLine = cacheTotals.read + cacheTotals.write > 0
+    ? `CACHE: read=${cacheTotals.read} write=${cacheTotals.write}`
+    : '';
 
   // eslint-disable-next-line no-console
   console.log([
@@ -214,11 +236,24 @@ function printVerbose(execution: EvalCaseExecution): void {
     rawResponse
       ? `RESPONSE (${rawResponse.length} chars, model=${model}, ${inputTokens} in / ${outputTokens} out, ${timingMs} ms):\n  ${trunc(rawResponse, 500)}`
       : `RESPONSE: (none) model=${model} provider=${provider}`,
+    rotationLine,
+    cacheLine,
     errorMsg ? `ERROR: ${errorMsg}` : '',
     diagnostics ? `DIAGNOSTICS: ${diagnostics}` : '',
     `Score: ${score.toFixed(2)} (${execution.scorers.length} scorers, ${failed} failed)`,
     execution.skipReason ? `Skip reason: ${execution.skipReason}` : '',
   ].filter(Boolean).join('\n'));
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatCacheBadge(attempt: Record<string, unknown>): string {
+  const read = typeof attempt.cacheReadTokens === 'number' ? attempt.cacheReadTokens : 0;
+  const write = typeof attempt.cacheWriteTokens === 'number' ? attempt.cacheWriteTokens : 0;
+  if (read === 0 && write === 0) return '';
+  return ` cache=r${read}/w${write}`;
 }
 
 void main();

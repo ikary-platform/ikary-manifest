@@ -30,11 +30,12 @@ function createWrapper(initialLocale: string) {
     return React.createElement(
       QueryClientProvider,
       { client: queryClient },
-      React.createElement(
-        LocalizationProvider,
-        { config, loaders, initialLocale },
+      React.createElement(LocalizationProvider, {
+        config,
+        loaders,
+        initialLocale,
         children,
-      ),
+      }),
     );
   };
 }

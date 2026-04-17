@@ -41,6 +41,32 @@ export const validationStageResultSchema = z.object({
 });
 export type ValidationStageResult = z.infer<typeof validationStageResultSchema>;
 
+export const providerRateLimitHeadersSchema = z.object({
+  tokensRemaining: z.number().int().nonnegative().optional(),
+  tokensReset: z.string().optional(),
+  requestsRemaining: z.number().int().nonnegative().optional(),
+  requestsReset: z.string().optional(),
+  retryAfterMs: z.number().int().nonnegative().optional(),
+});
+export type ProviderRateLimitHeaders = z.infer<typeof providerRateLimitHeadersSchema>;
+
+export const modelAttemptSchema = z.object({
+  attempt: z.number().int().positive(),
+  provider: z.string(),
+  configuredModel: z.string(),
+  resolvedModel: z.string().optional(),
+  status: z.enum(['succeeded', 'provider_error', 'structured_output_invalid', 'rate_limited']),
+  latencyMs: z.number().int().nonnegative(),
+  inputTokens: z.number().int().nonnegative(),
+  outputTokens: z.number().int().nonnegative(),
+  cacheReadTokens: z.number().int().nonnegative().optional(),
+  cacheWriteTokens: z.number().int().nonnegative().optional(),
+  headers: providerRateLimitHeadersSchema.optional(),
+  waitedMs: z.number().int().nonnegative().optional(),
+  error: z.string().optional(),
+});
+export type ModelAttempt = z.infer<typeof modelAttemptSchema>;
+
 export const executionTraceSchema = z.object({
   taskType: manifestTaskTypeSchema,
   retrievalHits: z.array(knowledgeItemSchema).default([]),
@@ -50,6 +76,7 @@ export const executionTraceSchema = z.object({
   assumptions: z.array(z.string()).default([]),
   provider: z.string().optional(),
   model: z.string().optional(),
+  attempts: z.array(modelAttemptSchema).default([]),
   timingMs: z.number().int().nonnegative().default(0),
   inputTokens: z.number().int().nonnegative().optional(),
   outputTokens: z.number().int().nonnegative().optional(),

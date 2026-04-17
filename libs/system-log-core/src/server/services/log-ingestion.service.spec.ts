@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LogIngestionService } from './log-ingestion.service.js';
 import type { LogEntry } from '../log.types.js';
+import type { LogSinkRow } from '../repositories/log-sinks.repository.js';
 
 const TENANT_ID = '00000000-0000-0000-0000-000000000001';
 
-const makeSink = (overrides: Partial<ReturnType<typeof makeSink>> = {}) => ({
+const makeSink = (overrides: Partial<LogSinkRow> = {}): LogSinkRow => ({
   id: 'sink-1',
   tenant_id: TENANT_ID,
   workspace_id: null,
@@ -13,7 +14,7 @@ const makeSink = (overrides: Partial<ReturnType<typeof makeSink>> = {}) => ({
   sink_type: 'persistent' as const,
   retention_hours: 72,
   config: {},
-  is_enabled: 1,
+  is_enabled: true,
   version: 1,
   created_at: new Date(),
   updated_at: new Date(),
