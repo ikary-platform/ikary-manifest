@@ -128,6 +128,38 @@ describe('compileCellApp', () => {
     expect(scopes).not.toContain('ticket.assign');
   });
 
+  it('uses entity-scoped capabilities with the entity namespace', () => {
+    const entity = {
+      ...validManifest.spec.entities![0],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'entity' as const,
+        },
+      ],
+    };
+    const scopes = deriveEntityScopeRegistry(entity);
+    expect(scopes).toContain('ticket.assign');
+  });
+
+  it('uses selection-scoped capabilities with the entity namespace', () => {
+    const entity = {
+      ...validManifest.spec.entities![0],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'selection' as const,
+        },
+      ],
+    };
+    const scopes = deriveEntityScopeRegistry(entity);
+    expect(scopes).toContain('ticket.assign');
+  });
+
   it('builds entity paths from manifest pages', () => {
     const listPath = buildEntityListPath(validManifest, 'ticket');
     const detailPath = buildEntityDetailPath(validManifest, 'ticket', '123');
