@@ -203,6 +203,9 @@ function printVerbose(execution: EvalCaseExecution): void {
 
   const trunc = (s: string, max: number) => (s.length > max ? s.slice(0, max) + '...' : s);
 
+  const errorMsg = typeof final.error === 'string' ? final.error : '';
+  const diagnostics = Array.isArray(trace.diagnostics) ? (trace.diagnostics as string[]).join('; ') : '';
+
   // eslint-disable-next-line no-console
   console.log([
     `\n--- ${execution.pipeline} / ${execution.caseId} [${execution.status}] ---`,
@@ -211,6 +214,8 @@ function printVerbose(execution: EvalCaseExecution): void {
     rawResponse
       ? `RESPONSE (${rawResponse.length} chars, model=${model}, ${inputTokens} in / ${outputTokens} out, ${timingMs} ms):\n  ${trunc(rawResponse, 500)}`
       : `RESPONSE: (none) model=${model} provider=${provider}`,
+    errorMsg ? `ERROR: ${errorMsg}` : '',
+    diagnostics ? `DIAGNOSTICS: ${diagnostics}` : '',
     `Score: ${score.toFixed(2)} (${execution.scorers.length} scorers, ${failed} failed)`,
     execution.skipReason ? `Skip reason: ${execution.skipReason}` : '',
   ].filter(Boolean).join('\n'));

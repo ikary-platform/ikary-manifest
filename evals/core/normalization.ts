@@ -55,7 +55,10 @@ export function hasFieldPath(manifest: unknown, fieldPath: string): boolean {
 }
 
 export function containsIdentifier(manifest: unknown, identifier: string): boolean {
-  return JSON.stringify(normalizeManifestForComparison(manifest)).toLowerCase().includes(identifier.toLowerCase());
+  if (!identifier) return false;
+  const serialized = JSON.stringify(normalizeManifestForComparison(manifest));
+  if (!serialized) return false;
+  return serialized.toLowerCase().includes(identifier.toLowerCase());
 }
 
 function extractByPath(manifest: unknown, path: string[], key: string): string[] {
