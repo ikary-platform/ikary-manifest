@@ -35,15 +35,29 @@ async function main(): Promise<void> {
 
   const report = buildEvalReport(executions, options);
   await mkdir(options.reportsDir, { recursive: true });
+
+  const model = detectPrimaryModel(executions);
+  const stamp = buildReportStamp(options.profile, model);
+  const jsonContent = JSON.stringify(report, null, 2);
+  const mdContent = renderMarkdownReport(report);
+  const htmlContent = renderHtmlReport(report);
+
   const jsonPath = resolve(options.reportsDir, options.outputJsonFile);
   const markdownPath = resolve(options.reportsDir, options.outputMarkdownFile);
   const htmlPath = resolve(options.reportsDir, 'eval-report.html');
-  await writeFile(jsonPath, JSON.stringify(report, null, 2), 'utf8');
-  await writeFile(markdownPath, renderMarkdownReport(report), 'utf8');
-  await writeFile(htmlPath, renderHtmlReport(report), 'utf8');
+  await writeFile(jsonPath, jsonContent, 'utf8');
+  await writeFile(markdownPath, mdContent, 'utf8');
+  await writeFile(htmlPath, htmlContent, 'utf8');
+
+  const stampedJson = resolve(options.reportsDir, `eval-report_${stamp}.json`);
+  const stampedMd = resolve(options.reportsDir, `eval-report_${stamp}.md`);
+  const stampedHtml = resolve(options.reportsDir, `eval-report_${stamp}.html`);
+  await writeFile(stampedJson, jsonContent, 'utf8');
+  await writeFile(stampedMd, mdContent, 'utf8');
+  await writeFile(stampedHtml, htmlContent, 'utf8');
 
   // eslint-disable-next-line no-console
-  console.log(`Eval run complete. JSON: ${jsonPath} | Markdown: ${markdownPath} | HTML: ${htmlPath}`);
+  console.log(`Eval run complete.\n  Latest: ${jsonPath}\n  Stamped: ${stampedJson}`);
 }
 
 async function executeCase(
@@ -148,6 +162,26 @@ function filterCases(
     if (options.tags.length > 0 && !options.tags.every((tag) => testCase.metadata.tags.includes(tag))) return false;
     return true;
   });
+}
+
+function detectPrimaryModel(executions: EvalCaseExecution[]): string {
+  for (const execution of executions) {
+    if (execution.status === 'skipped') continue;
+    const raw = (execution.rawResult ?? {}) as Record<string, unknown>;
+    const final = (raw.finalResult ?? raw) as Record<string, unknown>;
+    const trace = (final.trace ?? {}) as Record<string, unknown>;
+    if (typeof trace.model === 'string' && trace.model) return trace.model;
+  }
+  return 'unknown';
+}
+
+function sanitizeForFilename(value: string): string {
+  return value.replace(/[/:@\\]/g, '-').replace(/[^a-zA-Z0-9._-]/g, '').replace(/-+/g, '-').slice(0, 60);
+}
+
+function buildReportStamp(profile: string, model: string): string {
+  const ts = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+  return `${sanitizeForFilename(profile)}_${sanitizeForFilename(model)}_${ts}`;
 }
 
 function printVerbose(execution: EvalCaseExecution): void {
