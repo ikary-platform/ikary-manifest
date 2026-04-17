@@ -90,6 +90,18 @@ describe('IkaryMcpClient', () => {
     expect(await client.getManifestSchemaText()).toBe('Manifest must have apiVersion ...');
   });
 
+  it('throws when the MCP tool result has isError set, even with non-empty content', async () => {
+    const fake = fakeClient(() => ({
+      content: [{ type: 'text' as const, text: 'tool blew up' }],
+      isError: true,
+    }));
+    const client = new IkaryMcpClient({
+      config: { url: 'http://t/mcp' },
+      clientFactory: asFactory(async () => fake),
+    });
+    await expect(client.getManifestSchemaText()).rejects.toThrow(/tool .* returned an error.*tool blew up/);
+  });
+
   it('explainErrors forwards the error array verbatim', async () => {
     const handler = vi.fn((_name: string, _args: Record<string, unknown>): FakeResult => ({
       content: [

@@ -128,8 +128,12 @@ export class IkaryMcpClient {
 
   private async callRaw(name: string, args: Record<string, unknown>): Promise<McpToolResult> {
     const connection = await this.connect();
-    const result = await connection.client.callTool({ name, arguments: args });
-    return result as McpToolResult;
+    const result = (await connection.client.callTool({ name, arguments: args })) as McpToolResult;
+    if (result.isError) {
+      const detail = result.content?.[0]?.text ?? 'unknown MCP tool error';
+      throw new Error(`Ikary MCP tool "${name}" returned an error: ${detail}`);
+    }
+    return result;
   }
 }
 
