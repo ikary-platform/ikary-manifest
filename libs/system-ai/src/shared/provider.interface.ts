@@ -16,13 +16,25 @@ export const generateChatInputSchema = z.object({
 });
 export type GenerateChatInput = z.infer<typeof generateChatInputSchema>;
 
+export const providerRateLimitHeadersSchema = z.object({
+  tokensRemaining: z.number().int().nonnegative().optional(),
+  tokensReset: z.string().optional(),
+  requestsRemaining: z.number().int().nonnegative().optional(),
+  requestsReset: z.string().optional(),
+  retryAfterMs: z.number().int().nonnegative().optional(),
+});
+export type ProviderRateLimitHeaders = z.infer<typeof providerRateLimitHeadersSchema>;
+
 export const generateChatOutputSchema = z.object({
   text: z.string(),
   inputTokens: z.number().int().nonnegative(),
   outputTokens: z.number().int().nonnegative(),
+  cacheReadTokens: z.number().int().nonnegative().optional(),
+  cacheWriteTokens: z.number().int().nonnegative().optional(),
   model: z.string(),
   provider: z.string(),
   latencyMs: z.number().int().nonnegative(),
+  headers: providerRateLimitHeadersSchema.optional(),
 });
 export type GenerateChatOutput = z.infer<typeof generateChatOutputSchema>;
 

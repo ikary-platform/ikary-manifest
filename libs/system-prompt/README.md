@@ -17,9 +17,9 @@ Create a file ending in `.prompt.md` under the configured prompts directory (the
 
 ```markdown
 ---
-name: cell-ai/manifest-generation
+name: cell-ai/manifest
 description: System prompt for generating a fresh CellManifestV1.
-usage: Used by ManifestGeneratorService.streamManifest as the system message.
+usage: Used by SystemAiManifestTaskExecutor and ManifestGeneratorService as the system message.
 version: 1.0.0
 arguments:
   - name: user_role
@@ -85,9 +85,9 @@ Render a prompt from any service:
 constructor(private readonly prompts: PromptRegistryService) {}
 
 const systemPrompt = this.prompts.render(
-  'cell-ai/manifest-generation',
+  'cell-ai/manifest',
   { user_role: untrustedInput },
-  { correlationId, taskName: 'cell-ai/manifest-generation' },
+  { correlationId, taskName: 'cell-ai/manifest' },
 );
 ```
 

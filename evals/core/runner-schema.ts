@@ -14,6 +14,11 @@ export const evalRunnerOptionsSchema = z.object({
   clarificationMode: clarificationModeSchema.default('disabled'),
   runtimeMode: z.enum(['compile-only', 'preview']).default('compile-only'),
   verbose: z.boolean().default(false),
+  rateLimitDelayMs: z.coerce
+    .number()
+    .int()
+    .nonnegative()
+    .default(Number(process.env.EVAL_RATE_LIMIT_DELAY_MS) || 0),
   outputJsonFile: z.string().default('eval-report.json'),
   outputMarkdownFile: z.string().default('eval-report.md'),
 });

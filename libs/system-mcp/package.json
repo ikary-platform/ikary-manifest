@@ -1,7 +1,7 @@
 {
-  "name": "@ikary/cell-ai",
+  "name": "@ikary/system-mcp",
   "version": "0.3.0",
-  "description": "Cell-domain AI intelligence: manifest generation, schema-RAG, blueprint loading.",
+  "description": "Typed client for the Ikary MCP server. Resolves a local-first endpoint with public fallback and exposes the validate / schema / explain tools as typed methods.",
   "license": "MIT",
   "type": "module",
   "microPackageKind": "mixed-shared-server",
@@ -21,26 +21,32 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts src/server/index.ts --format cjs,esm --dts --clean",
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@ikary/cell-contract": "workspace:*",
-    "@ikary/cell-engine": "workspace:*",
-    "@ikary/system-ai": "workspace:*",
-    "@ikary/system-mcp": "workspace:*",
-    "@ikary/system-prompt": "workspace:*",
-    "@nestjs/common": "^11.1.0",
-    "partial-json": "^0.1.7",
-    "yaml": "^2.7.0",
-    "zod": "^3.23.8"
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src"
   },
   "peerDependencies": {
+    "@nestjs/common": "^10.0.0 || ^11.0.0",
     "reflect-metadata": "^0.2.2"
   },
+  "peerDependenciesMeta": {
+    "@nestjs/common": {
+      "optional": true
+    },
+    "reflect-metadata": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
+    "@nestjs/common": "^11.1.0",
     "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.5.3",
     "vitest": "^3.0.0"

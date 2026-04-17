@@ -37,10 +37,11 @@ export class ProviderRouter {
    * `{provider, model}` pair; callers iterate and move to the next attempt
    * when a provider call fails or produces unusable output.
    *
-   * For now every model in the chain is served by the first available
-   * configured provider (OpenRouter fronts all free/paid models under one API).
-   * When direct Anthropic/OpenAI adapters land, this function should match
-   * model name prefix to provider name.
+   * Per-step provider selection (when the step does not pin one explicitly):
+   * `provider/model` style ids route to openrouter (its native namespacing),
+   * bare `claude-*` to anthropic, `gpt-*`/`o*` to openai. If the inferred
+   * provider is not configured, falls back to the first available provider
+   * in providerOrder.
    */
   resolveChainForTask(taskName: string): ResolvedProvider[] {
     if (!this.config.featureAiEnabled) {
@@ -63,7 +64,8 @@ export class ProviderRouter {
     }
     const resolved = steps
       .map((step) => {
-        const providerName = step.provider ?? findFirstAvailableProvider(activeProfile.profile.providerOrder, this.instances);
+        const providerName = step.provider
+          ?? pickProviderForModel(step.model, activeProfile.profile.providerOrder, this.instances);
         if (!providerName) return null;
         const provider = this.instances.get(providerName);
         if (!provider) return null;
@@ -115,4 +117,21 @@ function findFirstAvailableProvider(
     if (instances.has(name)) return name;
   }
   return null;
+}
+
+function inferProviderFromModel(model: string): ProviderName | null {
+  if (model.includes('/')) return 'openrouter';
+  if (/^claude-/i.test(model)) return 'anthropic';
+  if (/^(gpt-|o\d)/i.test(model)) return 'openai';
+  return null;
+}
+
+function pickProviderForModel(
+  model: string,
+  providerOrder: string[],
+  instances: Map<string, AiProvider>,
+): string | null {
+  const inferred = inferProviderFromModel(model);
+  if (inferred && instances.has(inferred)) return inferred;
+  return findFirstAvailableProvider(providerOrder, instances);
 }

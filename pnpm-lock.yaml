@@ -641,6 +641,9 @@ importers:
       '@ikary/system-ai':
         specifier: workspace:*
         version: link:../../libs/system-ai
+      '@ikary/system-mcp':
+        specifier: workspace:*
+        version: link:../../libs/system-mcp
       '@ikary/system-prompt':
         specifier: workspace:*
         version: link:../../libs/system-prompt
@@ -778,6 +781,9 @@ importers:
       '@ikary/system-ai':
         specifier: workspace:*
         version: link:../libs/system-ai
+      '@ikary/system-mcp':
+        specifier: workspace:*
+        version: link:../libs/system-mcp
       '@ikary/system-prompt':
         specifier: workspace:*
         version: link:../libs/system-prompt
@@ -818,6 +824,9 @@ importers:
       '@ikary/system-ai':
         specifier: workspace:*
         version: link:../system-ai
+      '@ikary/system-mcp':
+        specifier: workspace:*
+        version: link:../system-mcp
       '@ikary/system-prompt':
         specifier: workspace:*
         version: link:../system-prompt
@@ -1485,6 +1494,37 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.0
         version: 19.2.3(@types/react@19.2.14)
+      '@vitest/coverage-v8':
+        specifier: ^3.0.0
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
+      tsup:
+        specifier: ^8.0.2
+        version: 8.5.1(@swc/core@1.15.24)(jiti@2.6.1)(postcss@8.5.8)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
+      typescript:
+        specifier: ^5.5.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3)
+
+  libs/system-mcp:
+    dependencies:
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.12.1
+        version: 1.29.0(zod@3.25.76)
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      zod:
+        specifier: ^3.23.8
+        version: 3.25.76
+    devDependencies:
+      '@nestjs/common':
+        specifier: ^11.1.0
+        version: 11.1.18(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
       '@vitest/coverage-v8':
         specifier: ^3.0.0
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.13)(@types/node@20.19.39)(jiti@2.6.1)(jsdom@29.0.1)(tsx@4.21.0)(yaml@2.8.3))
