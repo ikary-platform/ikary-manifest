@@ -84,6 +84,8 @@ export class ModularManifestPipeline implements ManifestPipeline {
           outputTokens: execution.aiResult?.outputTokens,
           candidateManifest: execution.aiResult?.structured ?? execution.aiResult?.text,
           diagnostics: execution.error ? [execution.error] : [],
+          systemPrompt: execution.systemPrompt,
+          rawResponse: execution.aiResult?.text,
         },
       };
     }
@@ -108,6 +110,8 @@ export class ModularManifestPipeline implements ManifestPipeline {
           candidateManifest: execution.manifest,
           compiledManifest: validation.compiledManifest,
           diagnostics: ['Manifest validation failed.'],
+          systemPrompt: execution.systemPrompt,
+          rawResponse: execution.aiResult?.text,
         },
       };
     }
@@ -125,6 +129,8 @@ export class ModularManifestPipeline implements ManifestPipeline {
         validation: validation.stages,
         candidateManifest: execution.manifest,
         compiledManifest: validation.compiledManifest,
+        systemPrompt: execution.systemPrompt,
+        rawResponse: execution.aiResult?.text,
       },
     };
   }

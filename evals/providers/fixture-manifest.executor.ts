@@ -62,6 +62,7 @@ export class FixtureManifestTaskExecutor implements ManifestTaskExecutor {
     return {
       manifest,
       aiResult,
+      systemPrompt: '(fixture)',
     };
   }
 }

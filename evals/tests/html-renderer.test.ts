@@ -38,6 +38,8 @@ function execution(over: Partial<EvalCaseExecution> = {}): EvalCaseExecution {
           ],
           contextSummary: 'Used 1 example manifest',
           assembledContext: 'Plain prompt context.',
+          systemPrompt: 'You generate IKARY Cell manifests.',
+          rawResponse: '{"apiVersion":"ikary.co/v1alpha1"}',
           policyDecisions: ['Proceeded without clarification'],
           assumptions: ['Assumed snake_case keys'],
           timingMs: 12,
@@ -151,7 +153,7 @@ describe('renderHtmlReport', () => {
     expect(html).toContain('expectedEntitiesScorer');
     expect(html).toContain('Missing entity: project');
     expect(html).toContain('Task Tracker example');
-    expect(html).toContain('Assembled context');
+    expect(html).toContain('Messages (system + user + AI)');
   });
 
   it('escapes HTML special characters in case-supplied strings', () => {
@@ -242,6 +244,17 @@ describe('renderHtmlReport', () => {
     if (linkMatch) {
       expect(html).toContain(`id="${linkMatch[1]}"`);
     }
+  });
+
+  it('renders the messages section with SYSTEM, USER, and AI RESPONSE roles', () => {
+    const html = renderHtmlReport(report());
+    expect(html).toContain('Messages (system + user + AI)');
+    expect(html).toContain('SYSTEM');
+    expect(html).toContain('You generate IKARY Cell manifests.');
+    expect(html).toContain('USER');
+    expect(html).toContain('Plain prompt context.');
+    expect(html).toContain('AI RESPONSE');
+    expect(html).toContain('ikary.co/v1alpha1');
   });
 
   it('falls back gracefully when the trace is missing or malformed', () => {

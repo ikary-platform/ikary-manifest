@@ -15,3 +15,11 @@ coverage/
 # Local env files
 .env.local
 .env.*.local
+
+# Local databases and generated eval reports
+local.db
+mcp-server.db
+evals/reports/eval-report.html
+evals/reports/eval-report.json
+evals/reports/eval-report.md
+evals/reports/eval-report_*

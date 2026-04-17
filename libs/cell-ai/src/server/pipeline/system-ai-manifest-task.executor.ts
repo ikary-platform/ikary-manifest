@@ -40,10 +40,12 @@ export class SystemAiManifestTaskExecutor implements ManifestTaskExecutor {
       return {
         manifest: aiResult.structured ?? aiResult.text,
         aiResult,
+        systemPrompt,
       };
     } catch (error) {
       return {
         error: error instanceof Error ? error.message : String(error),
+        systemPrompt,
       };
     }
   }

@@ -11,6 +11,27 @@ This folder contains a deterministic evaluation and refactoring harness for IKAR
 
 ## Architecture
 
+```mermaid
+flowchart TD
+  CLI["run.ts<br/>(CLI runner)"] --> Cases["Load cases<br/>(cases/)"]
+  CLI --> Reg["Pipeline registry<br/>(pipeline/index.ts)"]
+  Cases --> Exec["Execute each case<br/>x each pipeline"]
+
+  subgraph Pipeline["Pipeline stages (libs/cell-ai)"]
+    K["KnowledgeProvider<br/>(retrieval)"]
+    CA["ContextAssembler<br/>(prompt building)"]
+    CL["ClarificationPolicy<br/>(ask / proceed / fail)"]
+    E["ManifestTaskExecutor<br/>(LLM call via system-ai)"]
+    V["ValidationPipeline<br/>(parse, schema, semantic, compile)"]
+    K --> CA --> CL --> E --> V
+  end
+
+  Reg --> Pipeline
+  Exec --> Pipeline
+  V --> Score["Run 17 scorers<br/>(scorers/)"]
+  Score --> Report["Build report<br/>(JSON + Markdown + HTML)"]
+```
+
 The reusable manifest workflow contracts live in `libs/cell-ai/src/server/pipeline`.
 
 - `KnowledgeProvider`

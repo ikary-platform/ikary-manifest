@@ -15,5 +15,7 @@ libs/system-db-core/coverage
 libs/cell-migration-core/coverage
 apps/cli
 apps/ikary
+evals
+samples
 *.md
 !manifests/**

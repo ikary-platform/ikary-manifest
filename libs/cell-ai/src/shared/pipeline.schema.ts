@@ -59,6 +59,8 @@ export const executionTraceSchema = z.object({
   compiledManifest: z.unknown().optional(),
   runtime: z.unknown().optional(),
   diagnostics: z.array(z.string()).default([]),
+  systemPrompt: z.string().optional(),
+  rawResponse: z.string().optional(),
 });
 export type ExecutionTrace = z.infer<typeof executionTraceSchema>;
 

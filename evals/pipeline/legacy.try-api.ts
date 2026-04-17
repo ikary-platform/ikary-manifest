@@ -34,6 +34,7 @@ export class LegacyTryApiPipeline implements EvalPipelineAdapter {
         model: execution.aiResult?.model,
         inputTokens: execution.aiResult?.inputTokens,
         outputTokens: execution.aiResult?.outputTokens,
+        rawResponse: execution.aiResult?.text,
       });
     }
 
@@ -92,6 +93,8 @@ export class LegacyTryApiPipeline implements EvalPipelineAdapter {
           outputTokens,
           validation: [],
           diagnostics: error ? [error] : [],
+          systemPrompt: '(embedded in ManifestGeneratorService)',
+          rawResponse: undefined,
         },
       };
     }
@@ -104,6 +107,7 @@ export class LegacyTryApiPipeline implements EvalPipelineAdapter {
       model,
       inputTokens,
       outputTokens,
+      rawResponse: JSON.stringify(manifest),
     });
   }
 }
@@ -140,6 +144,7 @@ function validateLegacyResult(
     model?: string;
     inputTokens?: number;
     outputTokens?: number;
+    rawResponse?: string;
   },
 ): EvalPipelineResult {
   const validation = new StandardValidationPipeline();
@@ -164,6 +169,8 @@ function validateLegacyResult(
             candidateManifest: manifest,
             compiledManifest: result.compiledManifest,
             diagnostics: [],
+            systemPrompt: '(embedded in ManifestGeneratorService)',
+            rawResponse: traceSeed.rawResponse,
           },
         }
       : {
@@ -185,6 +192,8 @@ function validateLegacyResult(
             candidateManifest: manifest,
             compiledManifest: result.compiledManifest,
             diagnostics: ['Manifest validation failed.'],
+            systemPrompt: '(embedded in ManifestGeneratorService)',
+            rawResponse: traceSeed.rawResponse,
           },
         }
   ));
