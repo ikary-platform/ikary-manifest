@@ -1,14 +1,8 @@
 # /prompts/evals
 
-Prompts consumed by the eval harness in `evals/`. Currently one file: the legacy-studio replay system prompt.
+Holding folder for eval-only prompts. Currently empty. Every eval pipeline now renders the production prompt `cell-ai/manifest`.
 
-## Files
-
-| File | Purpose | Arguments |
-|---|---|---|
-| [`legacy-studio-task.prompt.md`](./legacy-studio-task.prompt.md) | System prompt for the `legacy.studio-replay` eval pipeline. Selects discovery / repair / tweak guidance from `task_type`. | `task_type` (system, required) |
-
-## Orchestration
+## How eval pipelines reach the prompt
 
 ```mermaid
 flowchart TD
@@ -19,44 +13,47 @@ flowchart TD
   subgraph Adapters["Pipeline adapters"]
     Refactored["RefactoredDefaultPipeline"]
     Baseline["BaselineNoRagPipeline"]
-    Legacy["LegacyStudioReplayPipeline"]
+    LegacyStudio["LegacyStudioReplayPipeline"]
+    LegacyTry["LegacyTryApiPipeline"]
   end
   Pipelines --> Adapters
 
   subgraph Common["evals/pipeline/common.ts"]
-    GetReg["getPromptRegistry(repoRoot)<br/>= loadPromptFiles('prompts/') + new PromptRegistry"]
-    Reg[(PromptRegistry singleton)]
-    GetReg --> Reg
+    GetSvc["getPromptService(repoRoot)<br/>= new PromptRegistryService(...)"]
+    Svc[(PromptRegistryService singleton)]
+    GetSvc --> Svc
   end
 
   Refactored --> Common
   Baseline --> Common
-  Legacy --> Common
+  LegacyStudio --> Common
+  LegacyTry --> Common
 
-  subgraph Executors["Manifest executors"]
-    SysExec["EvalSystemAiManifestTaskExecutor<br/>(refactored.default + baseline.no-rag)<br/>renders 'cell-ai/manifest-task'"]
-    LegacyExec["LegacyStudioTaskExecutor<br/>(legacy.studio-replay)<br/>renders 'evals/legacy-studio-task'"]
-  end
+  Exec["SystemAiManifestTaskExecutor<br/>(@ikary/cell-ai/server)"]
+  MGS["ManifestGeneratorService<br/>(@ikary/cell-ai/server)"]
 
-  Refactored --> SysExec
-  Baseline --> SysExec
-  Legacy --> LegacyExec
+  Refactored --> Exec
+  Baseline --> Exec
+  LegacyStudio --> Exec
+  LegacyTry --> MGS
 
-  Reg -- "render('cell-ai/manifest-task', { task_type })" --> SysExec
-  Reg -- "render('evals/legacy-studio-task', { task_type })" --> LegacyExec
+  Svc -- "render('cell-ai/manifest', { task_type })" --> Exec
+  Svc -- "render('cell-ai/manifest', { task_type: 'create' })" --> MGS
 
-  SysExec --> Runner1["AiTaskRunner.runTask"]
-  LegacyExec --> Runner2["AiTaskRunner.runTask"]
+  Exec --> Runner1["AiTaskRunner.runTask"]
+  MGS --> Runner2["AiTaskRunner.streamTask"]
 ```
 
-## Notes
+## Why eval pipelines now share one prompt
 
-The eval harness shares the same `/prompts` tree as production. Two adapters (`refactored.default`, `baseline.no-rag`) reuse the production prompt `cell-ai/manifest-task`, so changes there immediately affect both production manifest generation and these eval runs. The `legacy.studio-replay` adapter renders `evals/legacy-studio-task` (lives in this folder), kept separate so its discovery / repair / tweak voicing does not pollute the production prompt.
+Earlier each pipeline had its own prompt and executor. Differences in retrieval, clarification framing, and user-message shape were entangled with the system prompt, which made schema fixes have to land in three places.
 
-`getPromptRegistry(repoRoot)` builds the registry once per process and caches it. Sanitization runs through the same hook as production: any `source: user` argument is size-guarded and passed through `PromptSanitizer` from `@ikary/system-ai`.
+The current layout pushes all per-pipeline differences into the `ContextAssembler` of each pipeline. The system prompt, the executor, and the rotation chain stay identical across pipelines.
 
 ## Adding a new eval-only prompt
 
+Only add a file here when an eval needs guidance the production prompt should not carry. Most cases are better solved by adjusting the pipeline's `ContextAssembler` to inject the framing into the user message.
+
 1. Add a `*.prompt.md` file under `prompts/evals/`.
-2. Render it from your executor with `registry.render('evals/<id>', args, { taskName: 'evals/<id>' })`.
-3. Construct the executor in `evals/pipeline/common.ts` so it receives the cached `PromptRegistry`.
+2. Render it from your executor with `service.render('evals/<id>', args, { taskName: 'evals/<id>' })`.
+3. Wire the executor in `evals/pipeline/common.ts` so it receives the cached `PromptRegistryService`.

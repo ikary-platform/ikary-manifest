@@ -1,4 +1,4 @@
-import type { AiTaskRunResult } from '@ikary/system-ai';
+import type { AiTaskAttemptTrace, AiTaskRunResult } from '@ikary/system-ai';
 import type {
   ClarifyingQuestion,
   ContextAssembly,
@@ -55,6 +55,12 @@ export interface ManifestExecutorResult {
   readonly error?: string;
   readonly aiResult?: AiTaskRunResult<unknown>;
   readonly systemPrompt?: string;
+  /**
+   * Rotation history when every attempt failed. On the success path attempts
+   * live on `aiResult.trace.attempts`; this field carries them through when
+   * the runner exhausted the chain and threw.
+   */
+  readonly attempts?: AiTaskAttemptTrace[];
 }
 
 export interface ManifestTaskExecutor {

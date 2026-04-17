@@ -37,6 +37,7 @@ export class ModularManifestPipeline implements ManifestPipeline {
       assembledContext: context.promptContext,
       policyDecisions: [clarification.policySummary],
       assumptions,
+      attempts: [],
       timingMs: Date.now() - startedAt,
       validation: [],
       candidateManifest: input.manifest,
@@ -71,6 +72,8 @@ export class ModularManifestPipeline implements ManifestPipeline {
       assumptions,
     });
 
+    const attempts = execution.aiResult?.trace.attempts ?? execution.attempts ?? [];
+
     if (!execution.manifest) {
       return {
         status: 'failed',
@@ -80,6 +83,7 @@ export class ModularManifestPipeline implements ManifestPipeline {
           ...baseTrace,
           provider: execution.aiResult?.provider,
           model: execution.aiResult?.model,
+          attempts,
           inputTokens: execution.aiResult?.inputTokens,
           outputTokens: execution.aiResult?.outputTokens,
           candidateManifest: execution.aiResult?.structured ?? execution.aiResult?.text,
@@ -104,6 +108,7 @@ export class ModularManifestPipeline implements ManifestPipeline {
           ...baseTrace,
           provider: execution.aiResult?.provider,
           model: execution.aiResult?.model,
+          attempts,
           inputTokens: execution.aiResult?.inputTokens,
           outputTokens: execution.aiResult?.outputTokens,
           validation: validation.stages,
@@ -124,6 +129,7 @@ export class ModularManifestPipeline implements ManifestPipeline {
         ...baseTrace,
         provider: execution.aiResult?.provider,
         model: execution.aiResult?.model,
+        attempts,
         inputTokens: execution.aiResult?.inputTokens,
         outputTokens: execution.aiResult?.outputTokens,
         validation: validation.stages,

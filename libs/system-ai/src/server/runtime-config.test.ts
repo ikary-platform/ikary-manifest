@@ -34,6 +34,24 @@ describe('buildAiRuntimeConfigFromEnv', () => {
     expect(provider.apiKeys[0]).not.toContain('super-secret-key');
   });
 
+  it('parses semicolon-separated model fallback chain and inherits fix/update from generate', () => {
+    const config = buildAiRuntimeConfigFromEnv({
+      AI_PROVIDER_ORDER: 'openrouter',
+      AI_OPENROUTER_API_KEYS: 'or-key',
+      AI_MODEL_MANIFEST_GENERATE: 'a:free;b:free;c-paid',
+      FEATURE_AI_ENABLED: 'true',
+    });
+
+    expect(config.taskRoutes['manifest.create']).toEqual([
+      { model: 'a:free' },
+      { model: 'b:free' },
+      { model: 'c-paid' },
+    ]);
+    expect(config.taskRoutes['manifest.fix']).toEqual(config.taskRoutes['manifest.create']);
+    expect(config.taskRoutes['manifest.update']).toEqual(config.taskRoutes['manifest.create']);
+  });
+
+
   it('builds config from parsed env values', () => {
     const config = buildAiRuntimeConfig({
       AI_PROFILE: 'parsed',

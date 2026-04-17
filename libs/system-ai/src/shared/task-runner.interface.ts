@@ -1,5 +1,5 @@
 import type { ZodType } from 'zod';
-import type { ChatMessage } from './provider.interface';
+import type { ChatMessage, ProviderRateLimitHeaders } from './provider.interface';
 
 export type AiPromptPayload =
   | string
@@ -26,15 +26,26 @@ export interface AiTaskRunInput<T = unknown> {
   readonly structuredOutput?: StructuredOutputSpec<T>;
 }
 
+export type AiTaskAttemptStatus =
+  | 'succeeded'
+  | 'provider_error'
+  | 'structured_output_invalid'
+  | 'rate_limited';
+
 export interface AiTaskAttemptTrace {
   readonly attempt: number;
   readonly provider: string;
   readonly configuredModel: string;
   readonly resolvedModel?: string;
-  readonly status: 'succeeded' | 'provider_error' | 'structured_output_invalid';
+  readonly status: AiTaskAttemptStatus;
   readonly latencyMs: number;
   readonly inputTokens: number;
   readonly outputTokens: number;
+  readonly cacheReadTokens?: number;
+  readonly cacheWriteTokens?: number;
+  readonly headers?: ProviderRateLimitHeaders;
+  /** Present on rate_limited attempts: how long we waited before continuing. */
+  readonly waitedMs?: number;
   readonly error?: string;
 }
 

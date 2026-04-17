@@ -6,6 +6,7 @@ import {
   HeuristicClarificationPolicy,
   ModularManifestPipeline,
   StandardValidationPipeline,
+  SystemAiManifestTaskExecutor,
   type ClarificationPolicy,
   type ContextAssembler,
   type KnowledgeProvider,
@@ -18,14 +19,22 @@ import {
   ProviderRouter,
   buildAiRuntimeConfigFromEnv,
 } from '@ikary/system-ai/server';
+import { IkaryMcpClient, parseIkaryMcpEnvConfig } from '@ikary/system-mcp/server';
 import { PromptRegistry } from '@ikary/system-prompt';
 import { PromptRegistryService, loadPromptFiles } from '@ikary/system-prompt/server';
 import type { EvalPipelineContext } from './types';
 import { FixtureManifestTaskExecutor } from '../providers/fixture-manifest.executor';
-import { EvalSystemAiManifestTaskExecutor } from './system-ai-manifest-task.executor';
 
 let cachedRegistry: Promise<PromptRegistry> | null = null;
 let cachedPromptService: Promise<PromptRegistryService> | null = null;
+let cachedMcpClient: IkaryMcpClient | null = null;
+
+export function getIkaryMcpClient(): IkaryMcpClient {
+  if (!cachedMcpClient) {
+    cachedMcpClient = new IkaryMcpClient({ config: parseIkaryMcpEnvConfig() });
+  }
+  return cachedMcpClient;
+}
 
 export function getPromptRegistry(repoRoot: string): Promise<PromptRegistry> {
   if (!cachedRegistry) {
@@ -100,6 +109,10 @@ export async function createManifestExecutor(
     });
   }
 
-  const registry = await getPromptRegistry(context.repoRoot);
-  return new EvalSystemAiManifestTaskExecutor(createSystemAiTaskRunner(context.profile), registry);
+  const promptService = await getPromptService(context.repoRoot);
+  return new SystemAiManifestTaskExecutor(
+    createSystemAiTaskRunner(context.profile),
+    promptService,
+    getIkaryMcpClient(),
+  );
 }

@@ -10,9 +10,9 @@ Each file has a YAML frontmatter block followed by the prompt body. The body is 
 
 ```markdown
 ---
-name: cell-ai/manifest-generation
+name: cell-ai/manifest
 description: System prompt for generating a fresh CellManifestV1 from a user idea.
-usage: Used by ManifestGeneratorService.streamManifest as the system message.
+usage: Used by SystemAiManifestTaskExecutor and ManifestGeneratorService as the system message.
 version: 1.0.0
 arguments:
   - name: user_role
