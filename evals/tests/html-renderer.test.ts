@@ -153,7 +153,7 @@ describe('renderHtmlReport', () => {
     expect(html).toContain('expectedEntitiesScorer');
     expect(html).toContain('Missing entity: project');
     expect(html).toContain('Task Tracker example');
-    expect(html).toContain('Assembled context');
+    expect(html).toContain('Messages (system + user + AI)');
   });
 
   it('escapes HTML special characters in case-supplied strings', () => {
@@ -246,11 +246,14 @@ describe('renderHtmlReport', () => {
     }
   });
 
-  it('renders system prompt and raw response collapsible blocks when present in the trace', () => {
+  it('renders the messages section with SYSTEM, USER, and AI RESPONSE roles', () => {
     const html = renderHtmlReport(report());
-    expect(html).toContain('System prompt (');
+    expect(html).toContain('Messages (system + user + AI)');
+    expect(html).toContain('SYSTEM');
     expect(html).toContain('You generate IKARY Cell manifests.');
-    expect(html).toContain('Raw response (');
+    expect(html).toContain('USER');
+    expect(html).toContain('Plain prompt context.');
+    expect(html).toContain('AI RESPONSE');
     expect(html).toContain('ikary.co/v1alpha1');
   });
 

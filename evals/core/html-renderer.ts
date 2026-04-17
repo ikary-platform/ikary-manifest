@@ -403,15 +403,7 @@ function renderCaseDetail(view: CaseView): string {
   const skipBlock = execution.skipReason
     ? `<div class="skip-reason"><strong>Skipped:</strong> ${escapeHtml(execution.skipReason)}</div>`
     : '';
-  const systemPromptBlock = trace.systemPrompt
-    ? `<details class="nested"><summary>System prompt (${trace.systemPrompt.length} chars)</summary><pre>${escapeHtml(trace.systemPrompt)}</pre></details>`
-    : '';
-  const contextBlock = trace.assembledContext
-    ? `<details class="nested"><summary>Assembled context (${trace.assembledContext.length} chars)</summary><pre>${escapeHtml(trace.assembledContext)}</pre></details>`
-    : '';
-  const rawResponseBlock = trace.rawResponse
-    ? `<details class="nested"><summary>Raw response (${trace.rawResponse.length} chars)</summary><pre>${escapeHtml(trace.rawResponse)}</pre></details>`
-    : '';
+  const messagesBlock = renderMessagesBlock(trace);
 
   return `
     <li>
@@ -435,18 +427,55 @@ function renderCaseDetail(view: CaseView): string {
         <div class="case-detail">
           ${skipBlock}
           ${traceList}
+          ${messagesBlock}
           ${scorers}
           ${validation}
           ${retrieval}
           ${policies}
           ${assumptions}
           ${diagnostics}
-          ${systemPromptBlock}
-          ${contextBlock}
-          ${rawResponseBlock}
         </div>
       </details>
     </li>`;
+}
+
+function renderMessagesBlock(trace: TraceShape): string {
+  const hasContent = trace.systemPrompt || trace.assembledContext || trace.rawResponse;
+  if (!hasContent) return '';
+
+  const msgs: string[] = [];
+  if (trace.systemPrompt) {
+    msgs.push(`
+      <div class="msg msg-system">
+        <div class="msg-header"><span class="msg-role">SYSTEM</span> <span class="msg-meta">${trace.systemPrompt.length} chars</span></div>
+        <pre class="msg-body">${escapeHtml(trace.systemPrompt)}</pre>
+      </div>`);
+  }
+  if (trace.assembledContext) {
+    msgs.push(`
+      <div class="msg msg-user">
+        <div class="msg-header"><span class="msg-role">USER</span> <span class="msg-meta">${trace.assembledContext.length} chars</span></div>
+        <pre class="msg-body">${escapeHtml(trace.assembledContext)}</pre>
+      </div>`);
+  }
+  if (trace.rawResponse) {
+    const meta = [
+      trace.model ? `model: ${trace.model}` : '',
+      trace.inputTokens ? `${trace.inputTokens} in` : '',
+      trace.outputTokens ? `${trace.outputTokens} out` : '',
+      trace.timingMs ? `${trace.timingMs} ms` : '',
+    ].filter(Boolean).join(' / ');
+    msgs.push(`
+      <div class="msg msg-ai">
+        <div class="msg-header"><span class="msg-role">AI RESPONSE</span> <span class="msg-meta">${trace.rawResponse.length} chars${meta ? ` / ${meta}` : ''}</span></div>
+        <pre class="msg-body">${escapeHtml(trace.rawResponse)}</pre>
+      </div>`);
+  }
+  return `
+    <details class="nested messages-section" open>
+      <summary>Messages (system + user + AI)</summary>
+      <div class="msg-thread">${msgs.join('')}</div>
+    </details>`;
 }
 
 function renderTraceList(trace: TraceShape, execution: EvalCaseExecution): string {
@@ -689,6 +718,19 @@ const STYLES = `
   .hit-title { font-weight: 600; }
   .hit-summary { color: var(--muted); font-size: 12px; }
   a { color: #2563eb; }
+  .messages-section { background: var(--card); }
+  .msg-thread { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .msg { border-radius: 8px; padding: 8px 12px; border: 1px solid var(--border); }
+  .msg-system { background: #f0f4ff; border-color: #c7d2fe; }
+  .msg-user { background: #f0fdf4; border-color: #bbf7d0; }
+  .msg-ai { background: #fffbeb; border-color: #fde68a; }
+  .msg-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .msg-role { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .msg-system .msg-role { color: #4338ca; }
+  .msg-user .msg-role { color: #15803d; }
+  .msg-ai .msg-role { color: #b45309; }
+  .msg-meta { color: var(--muted); font-size: 11px; }
+  .msg-body { margin: 0; font-size: 12px; max-height: 300px; overflow: auto; white-space: pre-wrap; word-break: break-word; background: transparent; padding: 4px 0; border: none; }
 `;
 
 const SCRIPT = `
