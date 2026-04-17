@@ -95,7 +95,7 @@ describe('SystemAiManifestTaskExecutor validate-and-fix loop', () => {
 
     expect(result.manifest).toEqual(validManifest);
     expect(result.error).toBeUndefined();
-    expect((runner as { runTask: { mock: { calls: unknown[][] } } }).runTask.mock.calls).toHaveLength(1);
+    expect((runner as unknown as { runTask: { mock: { calls: unknown[][] } } }).runTask.mock.calls).toHaveLength(1);
   });
 
   it('runs a fix turn when MCP rejects the first manifest, then returns when the fix succeeds', async () => {
@@ -121,8 +121,8 @@ describe('SystemAiManifestTaskExecutor validate-and-fix loop', () => {
 
     expect(result.manifest).toEqual(validManifest);
     expect(result.error).toBeUndefined();
-    expect((runner as { runTask: { mock: { calls: { 0: { taskId: string; metadata?: Record<string, unknown> } }[] } } }).runTask.mock.calls).toHaveLength(2);
-    expect((runner as { runTask: { mock: { calls: { 0: { taskId: string; metadata?: Record<string, unknown> } }[] } } }).runTask.mock.calls[1]![0].taskId).toBe('manifest.fix');
+    expect((runner as unknown as { runTask: { mock: { calls: { 0: { taskId: string; metadata?: Record<string, unknown> } }[] } } }).runTask.mock.calls).toHaveLength(2);
+    expect((runner as unknown as { runTask: { mock: { calls: { 0: { taskId: string; metadata?: Record<string, unknown> } }[] } } }).runTask.mock.calls[1]![0].taskId).toBe('manifest.fix');
   });
 
   it('falls back to in-code Zod validation when the MCP client throws', async () => {
@@ -156,6 +156,6 @@ describe('SystemAiManifestTaskExecutor validate-and-fix loop', () => {
 
     expect(result.manifest).toEqual(broken);
     expect(result.error).toMatch(/Manifest failed mcp validation/);
-    expect((runner as { runTask: { mock: { calls: unknown[][] } } }).runTask.mock.calls).toHaveLength(1);
+    expect((runner as unknown as { runTask: { mock: { calls: unknown[][] } } }).runTask.mock.calls).toHaveLength(1);
   });
 });
