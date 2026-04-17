@@ -114,11 +114,50 @@ describe('compileCellApp', () => {
   it('uses explicit capability.scope when provided', () => {
     const entity = {
       ...validManifest.spec.entities![0],
-      capabilities: [{ key: 'assign', type: 'workflow' as const, workflow: 'assign-ticket', scope: 'global.assign' }],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'global' as const,
+        },
+      ],
     };
     const scopes = deriveEntityScopeRegistry(entity);
     expect(scopes).toContain('global.assign');
     expect(scopes).not.toContain('ticket.assign');
+  });
+
+  it('uses entity-scoped capabilities with the entity namespace', () => {
+    const entity = {
+      ...validManifest.spec.entities![0],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'entity' as const,
+        },
+      ],
+    };
+    const scopes = deriveEntityScopeRegistry(entity);
+    expect(scopes).toContain('ticket.assign');
+  });
+
+  it('uses selection-scoped capabilities with the entity namespace', () => {
+    const entity = {
+      ...validManifest.spec.entities![0],
+      capabilities: [
+        {
+          key: 'assign',
+          type: 'workflow' as const,
+          workflow: 'assign-ticket',
+          scope: 'selection' as const,
+        },
+      ],
+    };
+    const scopes = deriveEntityScopeRegistry(entity);
+    expect(scopes).toContain('ticket.assign');
   });
 
   it('builds entity paths from manifest pages', () => {

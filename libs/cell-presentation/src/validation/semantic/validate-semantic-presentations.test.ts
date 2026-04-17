@@ -409,14 +409,18 @@ describe('validateDetailSectionPresentation', () => {
 
   it('DETAIL_SECTION_CALLOUT_TITLE_REQUIRED for blank callout title', () => {
     const errors = validateDetailSectionPresentation(
-      validDetailSection({ content: { mode: 'callout', callout: { title: '  ' } } }),
+      validDetailSection({
+        content: { mode: 'callout', callout: { tone: 'warning', title: '  ' } },
+      }),
     );
     expect(errors.some((e) => e.code === 'DETAIL_SECTION_CALLOUT_TITLE_REQUIRED')).toBe(true);
   });
 
   it('returns no errors for valid callout content', () => {
     const errors = validateDetailSectionPresentation(
-      validDetailSection({ content: { mode: 'callout', callout: { title: 'Warning' } } }),
+      validDetailSection({
+        content: { mode: 'callout', callout: { tone: 'warning', title: 'Warning' } },
+      }),
     );
     expect(errors).toEqual([]);
   });
@@ -450,7 +454,7 @@ describe('validateDetailSectionPresentation', () => {
 
   it('returns no errors for unknown content mode (default branch)', () => {
     const errors = validateDetailSectionPresentation(
-      validDetailSection({ content: { mode: 'unknown' as never } }),
+      validDetailSection({ content: { mode: 'unknown' as never } as never }),
     );
     expect(errors.some((e) => e.path === 'title')).toBe(false);
   });

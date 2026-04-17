@@ -89,7 +89,7 @@ describe('registerAppInitCommand', () => {
     logSpy.mockRestore();
   });
 
-  function runInit(args: string[]): Promise<void> {
+  function runInit(args: string[]): Promise<Command> {
     const program = new Command();
     program.exitOverride();
     registerAppInitCommand(program);

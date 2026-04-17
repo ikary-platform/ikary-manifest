@@ -301,6 +301,9 @@ describe('createLogSinkSchema', () => {
       retentionHours: 24,
       config: { endpoint: 'https://logs.example.com' },
     });
+    if (r.sinkType !== 'external') {
+      throw new Error('Expected external sink');
+    }
     expect(r.sinkType).toBe('external');
     expect(r.config.timeoutMs).toBe(5000);
   });

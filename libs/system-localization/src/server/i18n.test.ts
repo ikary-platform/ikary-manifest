@@ -157,7 +157,7 @@ describe('registerI18nMissingCommand', () => {
     logSpy.mockRestore();
   });
 
-  function runMissing(args: string[]): Promise<void> {
+  function runMissing(args: string[]): Promise<Command> {
     const program = new Command();
     program.exitOverride();
     registerI18nMissingCommand(program);
@@ -250,7 +250,7 @@ describe('registerI18nSyncCommand', () => {
     logSpy.mockRestore();
   });
 
-  function runSync(args: string[]): Promise<void> {
+  function runSync(args: string[]): Promise<Command> {
     const program = new Command();
     program.exitOverride();
     registerI18nSyncCommand(program);

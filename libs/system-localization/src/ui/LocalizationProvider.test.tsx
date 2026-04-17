@@ -88,7 +88,7 @@ describe('useOptionalLocalization', () => {
       React.createElement(
         QueryClientProvider,
         { client: queryClient },
-        React.createElement(LocalizationProvider, { config: baseConfig, loaders }, children),
+        React.createElement(LocalizationProvider, { config: baseConfig, loaders, children }),
       );
 
     const { result } = renderHook(() => useOptionalLocalization(), { wrapper });
